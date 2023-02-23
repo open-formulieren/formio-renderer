@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "dist",
     "module": "esnext",
     "lib": ["dom", "esnext"],
@@ -15,7 +16,13 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@components": ["src/components/index"],
+      "@hooks": ["src/hooks/index"],
+      "@lib/*": ["src/lib/*"],
+      "@types": ["src/types/index"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "example"]
