@@ -1,22 +1,31 @@
+import { gettext } from '../i18n'
+import { Component, I18N } from '@types'
+import { ValidateOptions } from 'formiojs'
+
 /**
  * Runs all frontend validators based on validate.
  * @param {boolean|number|string} value
- * @param {{maxLength: number, minLength: number, pattern: RegExp|string, required: boolean}} validate Form.io validation object.
+ * @param {Component} component
+ * @param {I18N} i18n
  * @throws {ValidationError[]} As promise rejection if invalid.
  * @return {Promise<boolean>} Promise for true if valid.
  */
 export const validate = async (
   value: boolean | number | string,
-  validate: { maxLength: number; minLength: number; pattern: RegExp | string; required: boolean }
+  component: Component,
+  i18n: I18N = {}
 ): Promise<boolean | void> => {
-  const { maxLength, minLength, pattern, required } = validate
+  const { maxLength, minLength, pattern, required } = component.validate as ValidateOptions
   const errors: ValidationError[] = []
 
+  const c = (e: ValidationError) => errors.push(e)
+  const ctx = { ...component.validate, field: gettext(component.label, i18n).toLowerCase() }
+
   const promises = [
-    await validateMaxLength(value, maxLength).catch((e) => errors.push(e)),
-    await validateMinLength(value, minLength).catch((e) => errors.push(e)),
-    await validatePattern(value, pattern).catch((e) => errors.push(e)),
-    await validateRequired(value, required).catch((e) => errors.push(e))
+    await validateMaxLength(value, maxLength as number, gettext('maxLength', i18n, ctx)).catch(c),
+    await validateMinLength(value, minLength as number, gettext('minLength', i18n, ctx)).catch(c),
+    await validatePattern(value, pattern as string, gettext('pattern', i18n, ctx)).catch(c),
+    await validateRequired(value, required as boolean, gettext('required', i18n, ctx)).catch(c)
   ]
 
   return Promise.all(promises).then(() => {
@@ -41,21 +50,21 @@ export class ValidationError extends Error {
  * Validates whether stringified value is at most maxLength characters.
  * @param {boolean|number|string} value Value to check.
  * @param {number|string} maxLength Maximum length.
+ * @param {string} message Message to show when invalid.
  * @throws {MaxLengthValidationError} As promise rejection if invalid.
  * @return {Promise<boolean>} Promise for true if valid.
  */
 export const validateMaxLength = async (
   value: boolean | number | string,
-  maxLength: number | string
+  maxLength: number | string,
+  message: string
 ): Promise<boolean> => {
   const length = String(value).length
   const limit = parseInt(maxLength as string)
   const valid = Boolean(isNaN(limit) || length <= limit)
 
   if (!valid) {
-    throw new MaxLengthValidationError(
-      `Ensure that this value has at most ${limit} characters (is has ${length}).`
-    )
+    throw new MaxLengthValidationError(message)
   }
   return valid
 }
@@ -68,21 +77,21 @@ export class MaxLengthValidationError extends ValidationError {
  * Validates whether stringified value is at least minLength characters.
  * @param {boolean|number|string} value Value to check.
  * @param {number|string} minLength Minimum length.
+ * @param {string} message Message to show when invalid.
  * @throws {MinLengthValidationError} As promise rejection if invalid.
  * @return {Promise<boolean>} Promise for true if valid.
  */
 export const validateMinLength = async (
   value: boolean | number | string,
-  minLength: number | string
+  minLength: number | string,
+  message: string
 ): Promise<boolean> => {
   const length = String(value).length
   const limit = parseInt(minLength as string)
   const valid = Boolean(isNaN(limit) || length >= limit)
 
   if (!valid) {
-    throw new MinLengthValidationError(
-      `Ensure that this value has at least ${limit} characters (is has ${length}).`
-    )
+    throw new MinLengthValidationError(message)
   }
   return valid
 }
@@ -95,16 +104,18 @@ export class MinLengthValidationError extends ValidationError {
  * Validates whether stringified value matches a (RegExp) pattern.
  * @param {boolean|number|string} value Value to check.
  * @param {RegExp|string} pattern Regular expression.
+ * @param {string} message Message to show when invalid.
  * @throws {PatternValidationError} As promise rejection if invalid.
  * @return {Promise<boolean>} Promise for true if valid.
  */
 export const validatePattern = async (
   value: boolean | number | string,
-  pattern: RegExp | string
+  pattern: RegExp | string,
+  message: string
 ): Promise<boolean> => {
   const valid = Boolean(!pattern || String(value).match(pattern))
   if (!valid) {
-    throw new PatternValidationError('Enter a valid value.')
+    throw new PatternValidationError(message)
   }
   return valid
 }
@@ -117,16 +128,18 @@ export class PatternValidationError extends ValidationError {
  * Validates whether value is truthy and required is true.
  * @param {boolean|number|string} value Value to check.
  * @param {boolean} required
+ * @param {string} message Message to show when invalid.
  * @throws {RequiredValidationError} As promise rejection if invalid.
  * @return {Promise<boolean>} Promise for true if valid.
  */
 export const validateRequired = async (
   value: boolean | number | string,
-  required: boolean
+  required: boolean,
+  message: string
 ): Promise<boolean> => {
   const valid = Boolean(!required || value)
   if (!valid) {
-    throw new RequiredValidationError('Field is required.')
+    throw new RequiredValidationError(message)
   }
   return valid
 }

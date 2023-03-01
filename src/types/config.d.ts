@@ -36,6 +36,8 @@ export interface RenderConfiguration {
   components: ComponentConfiguration[]
 
   renderer: { renderTree: Function; renderBranch: Function; renderLeaf: Function }
+
+  i18n?: I18N
 }
 
 export interface CallbackConfiguration {
@@ -61,3 +63,7 @@ export interface FormErrors {
 }
 
 export type ComponentErrors = string[]
+
+export interface I18N {
+  [index: string]: { [index: string]: string }
+}

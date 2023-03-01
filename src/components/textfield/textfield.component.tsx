@@ -1,5 +1,5 @@
 import { useHTMLRef } from '@hooks'
-import { OF_PREFIX } from '@lib'
+import { gettext, OF_PREFIX } from '@lib'
 import { ComponentProps } from '@types'
 import classNames from 'classnames'
 import React, { useState } from 'react'
@@ -18,7 +18,6 @@ export const TextField = ({
   components,
   ...props
 }: ComponentProps) => {
-  // {"label":"Text Field","prefix":"","suffix":""," "hideLabel":false,"description":"Lorem ipsum dolor sit amet","defaultValue":"Standaardwaarde","labelPosition":"top","showCharCount":true,"showWordCount":false,"customDefaultValue":""}
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(
     String(component.defaultValue).length
@@ -92,7 +91,7 @@ export const TextField = ({
   return (
     <div className={containerClassName} id={component.id} ref={componentRef} {...props}>
       <label className={labelClassName} htmlFor={inputAttrs.id}>
-        {component.label}&nbsp;
+        {gettext(component.label, renderConfiguration.i18n)}&nbsp;
       </label>
 
       <div ref={elementRef}>
@@ -105,11 +104,15 @@ export const TextField = ({
           {...callbacks}
         />
         {component.showCharCount && !pristineState && (
-          <span className='charcount'>{charCountState} karakters</span>
+          <span className='charcount'>
+            {gettext('{{ count }} characters', renderConfiguration.i18n, { count: charCountState })}
+          </span>
         )}
       </div>
 
-      <div className='openforms-help-text'>{component.description}</div>
+      <div className='openforms-help-text'>
+        {gettext(component.description, renderConfiguration.i18n)}
+      </div>
 
       <div
         aria-describedby={component.id}
@@ -117,7 +120,14 @@ export const TextField = ({
         className={errorsClassName}
         ref={messageContainerRef}
       >
-        {errors.map((error) => error)}
+        {errors.map((error, index) => {
+          return (
+            <React.Fragment key={error}>
+              {index > 0 && <br />}
+              {gettext(error, renderConfiguration.i18n)}
+            </React.Fragment>
+          )
+        })}
       </div>
     </div>
   )
