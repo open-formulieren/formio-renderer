@@ -1,5 +1,5 @@
 import { useHTMLRef } from '@hooks'
-import { OF_PREFIX } from '@lib/constants'
+import { OF_PREFIX } from '@lib'
 import { ComponentProps } from '@types'
 import classNames from 'classnames'
 import React, { useState } from 'react'
@@ -9,11 +9,13 @@ import React, { useState } from 'react'
  * @constructor
  */
 export const TextField = ({
-  component,
+  callbacks,
   children,
+  component,
+  formErrors,
+  errors,
   renderConfiguration,
   components,
-  callbacks,
   ...props
 }: ComponentProps) => {
   // {"label":"Text Field","prefix":"","suffix":""," "hideLabel":false,"description":"Lorem ipsum dolor sit amet","defaultValue":"Standaardwaarde","labelPosition":"top","showCharCount":true,"showWordCount":false,"customDefaultValue":""}
@@ -37,8 +39,8 @@ export const TextField = ({
     `utrecht-form-field`,
     {
       'formio-modified': !pristineState,
-      'has-error': true,
-      'has-message': true
+      'has-error': errors.length,
+      'has-message': errors.length
     },
     component.customClass
   )
@@ -89,7 +91,9 @@ export const TextField = ({
 
   return (
     <div className={containerClassName} id={component.id} ref={componentRef} {...props}>
-      <label className={labelClassName} htmlFor={inputAttrs.id}></label>
+      <label className={labelClassName} htmlFor={inputAttrs.id}>
+        {component.label}&nbsp;
+      </label>
 
       <div ref={elementRef}>
         <input
@@ -107,14 +111,13 @@ export const TextField = ({
 
       <div className='openforms-help-text'>{component.description}</div>
 
-      {/* NOT IMPLEMENTED */}
       <div
         aria-describedby={component.id}
         role='alert'
         className={errorsClassName}
         ref={messageContainerRef}
       >
-        Error message
+        {errors.map((error) => error)}
       </div>
     </div>
   )

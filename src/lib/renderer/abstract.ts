@@ -2,16 +2,22 @@ import { BranchConfiguration, LeafConfiguration, TreeConfiguration } from '@type
 
 export abstract class Renderer {
   // @ts-ignore
-  static renderTree({ form, renderConfiguration, callbacks }: TreeConfiguration): any {}
+  static renderTree({ callbacks, form, renderConfiguration, formErrors }: TreeConfiguration): any {}
 
   // @ts-ignore
-  static renderBranch({ components, renderConfiguration, callbacks }: BranchConfiguration): any {}
+  static renderBranch({
+    callbacks,
+    components,
+    renderConfiguration,
+    formErrors
+  }: BranchConfiguration): any {}
 
   // @ts-ignore
   static renderLeaf({
+    callbacks,
     component,
     components,
-    renderConfiguration,
-    callbacks
+    formErrors,
+    renderConfiguration
   }: LeafConfiguration): any {}
 }

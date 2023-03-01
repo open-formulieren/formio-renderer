@@ -1,5 +1,11 @@
-import { OF_PREFIX } from '@lib/constants'
-import { CallbackConfiguration, Column, ComponentProps, RenderConfiguration } from '@types'
+import { OF_PREFIX } from '@lib'
+import {
+  CallbackConfiguration,
+  Column,
+  ComponentProps,
+  FormErrors,
+  RenderConfiguration
+} from '@types'
 import classNames from 'classnames'
 import React from 'react'
 
@@ -7,6 +13,7 @@ import React from 'react'
  * Can be used to layout form across multiple columns.
  * @param component
  * @param children
+ * @param formErrors
  * @param renderConfiguration
  * @param components
  * @param callbacks
@@ -14,11 +21,12 @@ import React from 'react'
  * @constructor
  */
 export const Columns = ({
-  component,
-  children,
-  renderConfiguration,
-  components,
   callbacks,
+  children,
+  component,
+  components,
+  formErrors,
+  renderConfiguration,
   ...props
 }: ComponentProps) => {
   const className = `${OF_PREFIX}-columns`
@@ -28,9 +36,10 @@ export const Columns = ({
       {component.columns.map((column: Column, index: number) => (
         <NestedColumn
           key={`${component.id}-c${index}`}
-          column={column}
-          renderConfiguration={renderConfiguration}
           callbacks={callbacks}
+          column={column}
+          formErrors={formErrors}
+          renderConfiguration={renderConfiguration}
         ></NestedColumn>
       ))}
     </div>
@@ -39,18 +48,22 @@ export const Columns = ({
 
 /**
  * An individual column rendered by <Columns/>
+ * @param callbacks
  * @param column
+ * @param formErrors
  * @param renderConfiguration
  * @constructor
  */
 export const NestedColumn = ({
+  callbacks,
   column,
-  renderConfiguration,
-  callbacks
+  formErrors,
+  renderConfiguration
 }: {
+  callbacks: CallbackConfiguration
   column: Column
   renderConfiguration: RenderConfiguration
-  callbacks: CallbackConfiguration
+  formErrors: FormErrors
 }) => {
   const className = classNames({
     [`${OF_PREFIX}-column`]: true,
@@ -58,9 +71,10 @@ export const NestedColumn = ({
     [`${OF_PREFIX}-column--span-mobile-${column.sizeMobile}`]: column.sizeMobile
   })
   const children = renderConfiguration.renderer.renderBranch({
+    callbacks,
     components: column.components,
     renderConfiguration,
-    callbacks
+    formErrors
   })
   return <div className={className}>{children}</div>
 }

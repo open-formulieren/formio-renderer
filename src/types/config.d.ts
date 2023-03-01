@@ -2,15 +2,19 @@ import { Component } from './component'
 import { Form } from './form'
 
 export interface TreeConfiguration {
+  callbacks: CallbackConfiguration
+
+  formErrors: FormErrors
+
   form: Form
 
   renderConfiguration: RenderConfiguration
-
-  callbacks: CallbackConfiguration
 }
 
 export interface BranchConfiguration {
   components: Component[]
+
+  formErrors: FormErrors
 
   renderConfiguration: RenderConfiguration
 
@@ -18,13 +22,14 @@ export interface BranchConfiguration {
 }
 
 export interface LeafConfiguration {
+  callbacks: CallbackConfiguration
   component: Component
 
   components: Component[]
 
-  renderConfiguration: RenderConfiguration
+  formErrors: FormErrors
 
-  callbacks: CallbackConfiguration
+  renderConfiguration: RenderConfiguration
 }
 
 export interface RenderConfiguration {
@@ -50,3 +55,9 @@ export interface ComponentConfiguration {
 
   component: any
 }
+
+export interface FormErrors {
+  [index: string]: string[]
+}
+
+export type ComponentErrors = string[]

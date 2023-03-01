@@ -1,15 +1,19 @@
 import { Component } from './component'
-import { CallbackConfiguration, RenderConfiguration } from './config'
+import { CallbackConfiguration, ComponentErrors, FormErrors, RenderConfiguration } from './config'
 import React from 'react'
 
 interface ComponentProps {
-  component: Component
+  callbacks: CallbackConfiguration
 
   children: React.ReactNode
 
-  callbacks: CallbackConfiguration
-
-  renderConfiguration: RenderConfiguration
+  component: Component
 
   components: Component[]
+
+  formErrors: FormErrors
+
+  errors: ComponentErrors
+
+  renderConfiguration: RenderConfiguration
 }

@@ -1,5 +1,5 @@
 import { useHTMLRef } from '@hooks'
-import { OF_PREFIX } from '@lib/constants'
+import { OF_PREFIX } from '@lib'
 import { ComponentProps } from '@types'
 import classNames from 'classnames'
 import React from 'react'
@@ -12,8 +12,9 @@ import React from 'react'
 export const Content = ({
   component,
   children,
-  renderConfiguration,
   components,
+  formErrors,
+  renderConfiguration,
   ...props
 }: ComponentProps) => {
   const className = classNames({
