@@ -1,7 +1,7 @@
 import { Component } from './component'
 
 export interface Form {
-  display: string
+  display?: string
 
   components: Component[]
 

@@ -19,6 +19,7 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@components": ["src/components/index"],
+      "@fixtures": ["src/fixtures/index"],
       "@hooks": ["src/hooks/index"],
       "@lib": ["src/lib/index"],
       "@types": ["src/types/index"]

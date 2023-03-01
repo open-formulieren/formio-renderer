@@ -1,5 +1,6 @@
 import { Component } from './component'
 import { Form } from './form'
+import React from 'react'
 
 export interface TreeConfiguration {
   callbacks: CallbackConfiguration
@@ -12,13 +13,13 @@ export interface TreeConfiguration {
 }
 
 export interface BranchConfiguration {
+  callbacks: CallbackConfiguration
+
   components: Component[]
 
   formErrors: FormErrors
 
   renderConfiguration: RenderConfiguration
-
-  callbacks: CallbackConfiguration
 }
 
 export interface LeafConfiguration {
@@ -55,7 +56,7 @@ export type callback = <T>(event: T) => void
 export interface ComponentConfiguration {
   type: string
 
-  component: any
+  component: React.ElementType
 }
 
 export interface FormErrors {

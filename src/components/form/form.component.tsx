@@ -7,7 +7,12 @@ import React from 'react'
  * HTML is passed into dangerouslySetInnerHTML prop.
  * @constructor
  */
-export const Form = ({ callbacks, children, formErrors, ...props }: ComponentProps) => {
+export const Form = ({
+  callbacks,
+  children,
+  formErrors,
+  ...props
+}: ComponentProps): React.ReactNode => {
   const className = classNames(`formio-form`)
 
   return (
