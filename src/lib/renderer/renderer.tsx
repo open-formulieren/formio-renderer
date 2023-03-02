@@ -13,6 +13,9 @@ import React from 'react'
 /**
  * Renderer for rendering a Form.io configuration.
  *
+ * NOTE: Function `renderForm(treeConfiguration: TreeConfiguration)` is exported as alias in the
+ * root of this project.
+ *
  * Introduction
  * ---
  *
@@ -48,7 +51,8 @@ import React from 'react'
  *
  * This library exposes various validators (combined) which can be used to validate obtained values.
  *
- * - See: `src/lib/validation/validation.ts` for provided validators.
+ * - See: [`src/lib/validation/validation.ts`](http://localhost:6006/?path=/docs/libraries-validation-validate--page)
+ *   for provided validators.
  * - See: [obtaining-values](#obtaining-values) section for how to obtain values to validate.
  *
  *

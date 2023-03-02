@@ -1,0 +1,38 @@
+<!-- Checkbox.stories.mdx -->
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Libraries / i18n / gettext" />
+
+# Translation
+
+Translation is required on various places in components and error messages. Components are
+responsible for translating strings, where error messages get translated by the validators.
+
+
+Usage
+---
+
+A translation can be invoked by calling the `gettext` function passing it a `key: string`,
+`i18n: I18N` and optionally `context: { [index: string]: any }` and `locale: string`.
+
+`gettext(key: string, i18n: I18N, [context: { [index: string]: any }, locale: string]): string`
+
+The `gettext` function wil find a `locale` library within `i18n` and search for `key` in that
+library. The resulting string is taken (or `key` is used as a default).
+
+The resulting string may contain {{ placeholder }} style templates. Each entry's key in `context` is
+checked against a placeholder and if found: the placeholder is replaced by the entry's value.
+
+The returned value is a translated string with context applied to it.
+
+
+(Automatic) locale resolution
+---
+
+A `locale` can be passed in which case it's the most favored locale. If it's omitted
+`navigator.languages` is checked. If no match is found with any of the supported localed the first
+locale in `i18n` is used.
+
+1. `locale` argument.
+2. Locales in `navigator.languages` (only the part before the hyphen ("-") is taken).
+3. First locale in `i18n`.

@@ -1,5 +1,7 @@
 import { Component } from './component'
+import { FormErrors } from './errors'
 import { Form } from './form'
+import { I18N } from './i18n'
 import React from 'react'
 
 export interface TreeConfiguration {
@@ -57,14 +59,4 @@ export interface ComponentConfiguration {
   type: string
 
   component: React.ElementType
-}
-
-export interface FormErrors {
-  [index: string]: string[]
-}
-
-export type ComponentErrors = string[]
-
-export interface I18N {
-  [index: string]: { [index: string]: string }
 }

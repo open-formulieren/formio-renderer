@@ -120,7 +120,7 @@ export const TextField = ({
         className={errorsClassName}
         ref={messageContainerRef}
       >
-        {errors.map((error, index) => {
+        {errors.map((error: string, index: number) => {
           return (
             <React.Fragment key={error}>
               {index > 0 && <br />}

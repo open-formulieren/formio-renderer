@@ -1,0 +1,63 @@
+<!-- Checkbox.stories.mdx -->
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Libraries / validation / validate" />
+
+# Validation
+
+Validation should be performed as separate step next to the rendering process. The validators may
+return one or more `ValidationError`s which message is set to the localized error message. The error
+messages can be passed to the renderer which passes them to the rendered components.
+
+
+Usage
+---
+
+All validators return a `Promise` object, the promise resolved if a value is considered valid or
+rejects with `ValidationError` (or a subclass of `ValidationError`). The `validate` function
+combines all validators for a component and can be used to build an errors object.
+
+`validate(value: boolean | number | string, component: Component, i18n: I18N): Promise<true>`
+
+Usage:
+
+```js
+import {validate} from 'formio-renderer';
+
+// Assumed context:
+//
+// value: boolean | number | string - The value to validate.
+// components: Component[] - The Form.io component to validate.
+// i18n: I18N - The translations object.
+
+const formErrors = {};
+
+for (const component of components) {
+  try {
+    await validate(value, component, i18n);
+  } catch (validationErrors) {
+    formErrors[component.key] = validationErrors.map(e => e.message);
+  }
+}
+```
+
+
+Displaying validation errors
+---
+
+The resulting `FormErrors` object can be passed as entry in the configuration of the `renderForm`
+function:
+
+```js
+import {renderForm} from 'formio-renderer';
+
+// Assumed context:
+//
+// configuration: TreeConfiguration - The configuration of the renderForm function.
+// formErrors: FormErrors - The resulting `FormErrors` object.
+
+return renderForm({
+  ...configuration,
+  formErrors: formErrors
+})
+```
