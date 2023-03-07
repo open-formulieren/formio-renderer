@@ -1,83 +1,70 @@
-import { Renderer } from './abstract'
-import {
-  Component,
-  ComponentConfiguration,
-  BranchConfiguration,
-  LeafConfiguration,
-  TreeConfiguration
-} from '@types'
-import React from 'react'
+import { Columns, Content, TextField } from '@components'
+import { IComponentProps, IFormioComponent, IFormioForm, IRenderConfiguration } from '@types'
+import React, { useContext } from 'react'
 
-export class BaseRenderer implements Renderer {
-  static renderTree({ form, renderConfiguration, callbacks }: TreeConfiguration): React.ReactNode {
-    const Form = renderConfiguration.components.find(
-      (c) => String(c.type).toLowerCase() === 'form'
-    )?.component
-
-    if (!Form) {
-      throw new Error('Cant find Form component in renderConfiguration!')
-    }
-
-    const children = renderConfiguration.renderer.renderBranch({
-      components: form.components,
-      renderConfiguration,
-      callbacks
-    })
-
-    return <Form callbacks={callbacks}>{children}</Form>
+export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
+  components: {
+    columns: Columns,
+    content: Content,
+    textfield: TextField
   }
+}
 
-  static renderBranch({
-    components,
-    renderConfiguration,
-    callbacks
-  }: BranchConfiguration): React.ReactNode {
-    return components.map((component: Component) =>
-      renderConfiguration.renderer.renderLeaf({
-        component,
-        renderConfiguration,
-        components,
-        callbacks
-      })
-    )
-  }
+/**
+ * React context providing the renderConfiguration.
+ */
+export const RenderContext = React.createContext(DEFAULT_RENDER_CONFIGURATION)
 
-  static renderLeaf({
-    component,
-    components,
-    renderConfiguration,
-    callbacks
-  }: LeafConfiguration): React.ReactNode {
-    const tree = component.components || []
-    const children = renderConfiguration.renderer.renderBranch({
-      components: tree,
-      renderConfiguration,
-      callbacks
-    })
-    const type = component.type
-    const key = component.id
+interface IRenderFormProps {
+  form: IFormioForm
+}
 
-    const componentConfiguration = renderConfiguration.components.find(
-      (c: ComponentConfiguration) => c.type === type
-    )
-    const Fallback = ({ children }: { children: React.ReactNode }) => (
-      <div>
-        {type}
-        {children}
-      </div>
-    )
-    const Component = componentConfiguration?.component || Fallback
+/**
+ * Renders a Form.io `form`.
+ * @external {RenderContext} Expects `RenderContext` to be available.
+ * @return {React.ReactElement}
+ */
+export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
+  const Form = useComponentType('form')
 
-    return (
-      <Component
-        key={key}
-        component={component}
-        components={components}
-        renderConfiguration={renderConfiguration}
-        callbacks={callbacks}
-      >
-        {children}
-      </Component>
-    )
-  }
+  const children =
+    form.components?.map((component: IFormioComponent) => (
+      <RenderComponent key={component.id} component={component} />
+    )) || null
+
+  return <Form component={{ type: 'form', ...form }}>{children}</Form>
+}
+
+interface IRenderComponentProps {
+  component: IFormioComponent
+}
+
+/**
+ * Renders a Form.io `component` or colum.
+ * @external {RenderContext} Expects `RenderContext` to be available.
+ * @return {React.ReactElement}
+ */
+export const RenderComponent = ({ component }: IRenderComponentProps): React.ReactElement => {
+  const Component = useComponentType(component.type)
+  // TODO: Rows? Editgrid?
+  const tree = component.components || component.columns || []
+  const children = tree.map((c: IFormioComponent, i: number) => (
+    <RenderComponent key={c.id || i} component={c} />
+  ))
+
+  return <Component component={component}>{children}</Component>
+}
+
+/**
+ * Custom hook resolving the `React.ComponentType` from `RenderContext`.
+ * @external {RenderContext} Expects `RenderContext` to be available.
+ * @param {string} type Form.io component type.
+ * @return {React.ComponentType} Resolved `React.ComponentType`, defaults to wrapped `React.ReactFragment`.
+ */
+export const useComponentType = (type: string): React.ComponentType<IComponentProps> => {
+  const renderConfiguration = useContext(RenderContext)
+  const ComponentType = renderConfiguration.components[type]
+  const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</React.Fragment>
+
+  return ComponentType || Fallback
 }

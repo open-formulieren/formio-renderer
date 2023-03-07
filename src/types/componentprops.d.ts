@@ -1,15 +1,10 @@
-import { Component } from './component'
-import { CallbackConfiguration, RenderConfiguration } from './config'
+import { IFormioComponent } from './component'
 import React from 'react'
 
-interface ComponentProps {
-  component: Component
+interface IComponentProps {
+  component: IFormioComponent
 
   children: React.ReactNode
 
-  callbacks: CallbackConfiguration
-
-  renderConfiguration: RenderConfiguration
-
-  components: Component[]
+  [index: string]: any
 }

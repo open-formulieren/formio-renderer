@@ -1,35 +1,28 @@
-import { Columns, Content, Form, TextField } from '@components'
-import { BaseRenderer } from '@lib/renderer'
-import { TreeConfiguration, RenderConfiguration } from '@types'
-
-export const DEFAULT_RENDER_CONFIGURATION: RenderConfiguration = {
-  components: [
-    {
-      component: Form,
-      type: 'form'
-    },
-    {
-      component: Columns,
-      type: 'columns'
-    },
-    {
-      component: Content,
-      type: 'content'
-    },
-    {
-      component: TextField,
-      type: 'textfield'
-    }
-  ],
-  renderer: BaseRenderer
-}
-
-export const renderForm = ({
-  form,
-  renderConfiguration = DEFAULT_RENDER_CONFIGURATION,
-  callbacks = {}
-}: TreeConfiguration): React.ReactNode => {
-  return renderConfiguration.renderer.renderTree({ form, renderConfiguration, callbacks })
-}
+import { DEFAULT_RENDER_CONFIGURATION, RenderContext, RenderForm } from '@lib/renderer'
+import { IFormioForm, IRenderConfiguration } from '@types'
+import React from 'react'
 
 export * from '@components'
+
+export interface FormioFormProps {
+  configuration: IRenderConfiguration
+
+  form: IFormioForm
+}
+
+/**
+ * Renders the Form.io `form` based on the `configuration`.
+ * @param {IRenderConfiguration} configuration
+ * @param {IFormioForm} form The Form.io form.
+ * @return {JSX.Element}
+ */
+export const FormioForm = ({
+  configuration = DEFAULT_RENDER_CONFIGURATION,
+  form
+}: FormioFormProps): React.ReactElement => {
+  return (
+    <RenderContext.Provider value={configuration}>
+      <RenderForm form={form} />
+    </RenderContext.Provider>
+  )
+}

@@ -1,5 +1,7 @@
-export interface Column {
-  components: Component[]
+import { IFormioComponent } from './component'
+
+export interface IFormioColumn {
+  components: IFormioComponent[]
 
   currentWidth: number
 

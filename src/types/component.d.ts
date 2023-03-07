@@ -1,5 +1,7 @@
 import { ComponentSchema } from 'formiojs'
 
-interface Component extends ComponentSchema {
+interface IFormioComponent extends ComponentSchema {
+  type: string
+
   [index: string]: any
 }

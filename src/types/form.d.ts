@@ -1,9 +1,9 @@
-import { Component } from './component'
+import { IFormioComponent } from './component'
 
-export interface Form {
+export interface IFormioForm {
   display: string
 
-  components: Component[]
+  components: IFormioComponent[]
 
   [index: string]: any
 }
