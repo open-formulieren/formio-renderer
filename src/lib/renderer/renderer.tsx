@@ -24,14 +24,11 @@ interface IRenderFormProps {
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
-  const Form = useComponentType('form')
-
   const children =
     form.components?.map((component: IFormioComponent) => (
       <RenderComponent key={component.id} component={component} />
     )) || null
-
-  return <Form component={{ type: 'form', ...form }}>{children}</Form>
+  return <>{children}</>
 }
 
 interface IRenderComponentProps {
