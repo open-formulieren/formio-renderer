@@ -4,8 +4,6 @@ import React from 'react'
 
 /**
  * Label component.
- * @param {IComponentProps} componentProps
- * @return {JSX.Element|null}
  */
 export const Label = (componentProps: IComponentProps): React.ReactElement | null => {
   const { component, htmlFor } = componentProps

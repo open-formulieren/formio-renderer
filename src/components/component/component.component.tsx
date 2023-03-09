@@ -4,8 +4,6 @@ import React from 'react'
 
 /**
  * Wrapper for various parts of the component.
- * @param {IComponentProps} componentProps
- * @return {React.ReactElement}
  */
 export const Component = (componentProps: IComponentProps): React.ReactElement => {
   const className = clsx(`of-${componentProps.component.type}`)

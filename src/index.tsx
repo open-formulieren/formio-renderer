@@ -12,9 +12,7 @@ export interface FormioFormProps {
 
 /**
  * Renders the Form.io `form` based on the `configuration`.
- * @param {IRenderConfiguration} configuration
- * @param {IFormioForm} form The Form.io form.
- * @return {JSX.Element}
+ *
  */
 export const FormioForm = ({
   configuration = DEFAULT_RENDER_CONFIGURATION,

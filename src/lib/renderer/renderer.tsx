@@ -22,7 +22,6 @@ interface IRenderFormProps {
 /**
  * Renders a Form.io `form`.
  * @external {RenderContext} Expects `RenderContext` to be available.
- * @return {React.ReactElement}
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const Form = useComponentType('form')
@@ -42,7 +41,6 @@ interface IRenderComponentProps {
 /**
  * Renders a Form.io `component` or colum.
  * @external {RenderContext} Expects `RenderContext` to be available.
- * @return {React.ReactElement}
  */
 export const RenderComponent = ({ component }: IRenderComponentProps): React.ReactElement => {
   const Component = useComponentType(component.type)
@@ -58,8 +56,6 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
 /**
  * Custom hook resolving the `React.ComponentType` from `RenderContext`.
  * @external {RenderContext} Expects `RenderContext` to be available.
- * @param {string} type Form.io component type.
- * @return {React.ComponentType} Resolved `React.ComponentType`, defaults to wrapped `React.ReactFragment`.
  */
 export const useComponentType = (type: string): React.ComponentType<IComponentProps> => {
   const renderConfiguration = useContext(RenderContext)

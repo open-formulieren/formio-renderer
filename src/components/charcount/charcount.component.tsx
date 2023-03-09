@@ -4,8 +4,6 @@ import React from 'react'
 
 /**
  * Shows `count` as number of characters.
- * @param {IComponentProps} componentProps
- * @return {React.ReactElement|null}
  */
 export const CharCount = (componentProps: IComponentProps): React.ReactElement | null => {
   const { count, pristine } = componentProps

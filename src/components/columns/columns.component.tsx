@@ -6,8 +6,6 @@ import React from 'react'
  * This component can be used for grouping other components, like Text Field, Text Area, Checkbox
  * etc., into configurable columns. It might be useful if you want to display more than one
  * component in one line.
- * @param {IComponentProps} componentProps
- * @return {React.ReactElement}
  */
 export const Columns = (componentProps: IComponentProps): React.ReactElement => {
   const { children, ...props } = componentProps

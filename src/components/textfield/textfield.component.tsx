@@ -6,8 +6,6 @@ import React, { useState } from 'react'
 /**
  * A Text Field can be used for short and general text input. There are options to define input
  * masks and validations, allowing users to mold information into desired formats.
- * @param {IComponentProps} componentProps
- * @return {React.ReactElement}
  */
 export const TextField = (componentProps: IComponentProps): React.ReactElement => {
   const { component, children, ...props } = componentProps

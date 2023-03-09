@@ -4,8 +4,6 @@ import React from 'react'
 
 /**
  * Description/help text section of a component.
- * @param {IComponentProps} componentProps
- * @return {JSX.Element|null}
  */
 export const Description = (componentProps: IComponentProps): React.ReactElement | null => {
   const { component } = componentProps

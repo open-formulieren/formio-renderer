@@ -4,8 +4,6 @@ import React from 'react'
 
 /**
  * Errors section of a component.
- * @param {IComponentProps} componentProps
- * @return {JSX.Element|null}
  */
 export const Errors = (componentProps: IComponentProps): React.ReactElement | null => {
   const { component, errors } = componentProps

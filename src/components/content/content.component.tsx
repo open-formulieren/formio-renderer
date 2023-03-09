@@ -7,8 +7,6 @@ import React from 'react'
  * need instructions at the top of a form that are for display only, use the Content component. The
  * Content component value is not submitted back to the server.
  * WARNING: HTML is passed into dangerouslySetInnerHTML prop.
- * @param {IComponentProps} componentProps
- * @return {React.ReactElement}
  */
 export const Content = (componentProps: IComponentProps): React.ReactElement => {
   const { component, children, ...props } = componentProps
