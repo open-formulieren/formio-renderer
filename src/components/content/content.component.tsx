@@ -1,6 +1,15 @@
-import { IComponentProps } from '@types'
+import { IComponentProps, IFormioComponent } from '@types'
 import clsx from 'clsx'
 import React from 'react'
+
+interface IContent extends IFormioComponent {
+  type: 'content'
+  html: string
+}
+
+interface IContentProps extends IComponentProps {
+  component: IContent
+}
 
 /**
  * A Content component may be added to a form to provide non-field information. For example, if you
@@ -8,9 +17,9 @@ import React from 'react'
  * Content component value is not submitted back to the server.
  * WARNING: HTML is passed into dangerouslySetInnerHTML prop.
  */
-export const Content = (componentProps: IComponentProps): React.ReactElement => {
-  const { component, children, ...props } = componentProps
-  const className = clsx(`of-${componentProps.component.type}`)
+export const Content = (contentProps: IContentProps): React.ReactElement => {
+  const { component, children, ...props } = contentProps
+  const className = clsx(`of-${contentProps.component.type}`)
 
   return (
     <div className={className} {...props}>

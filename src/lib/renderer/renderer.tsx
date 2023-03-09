@@ -28,7 +28,7 @@ export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
     form.components?.map((component: IFormioComponent) => (
       <RenderComponent key={component.id} component={component} />
     )) || null
-  return <>{children}</>
+  return <React.Fragment>{children}</React.Fragment>
 }
 
 interface IRenderComponentProps {
@@ -47,7 +47,11 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
     <RenderComponent key={c.id || i} component={c} />
   ))
 
-  return <Component component={component}>{children}</Component>
+  return (
+    <Component component={component} errors={[]}>
+      {children}
+    </Component>
+  )
 }
 
 /**

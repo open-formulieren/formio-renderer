@@ -6,5 +6,5 @@ interface IComponentProps {
 
   children: React.ReactNode
 
-  [index: string]: any
+  errors: string[]
 }

@@ -11,8 +11,7 @@ export interface FormioFormProps {
 }
 
 /**
- * Renders the Form.io `form` based on the `configuration`.
- *
+ * Renders the Form.io `form` based on the `configuration`
  */
 export const FormioForm = ({
   configuration = DEFAULT_RENDER_CONFIGURATION,

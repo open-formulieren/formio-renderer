@@ -6,11 +6,11 @@ import React from 'react'
  * Label component.
  */
 export const Label = (componentProps: IComponentProps): React.ReactElement | null => {
-  const { component, htmlFor } = componentProps
+  const { component } = componentProps
   const className = clsx()
 
   return (
-    <label className={className} htmlFor={htmlFor}>
+    <label className={className} htmlFor={component.key}>
       {component.label}
     </label>
   )

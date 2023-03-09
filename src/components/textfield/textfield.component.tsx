@@ -39,7 +39,7 @@ export const TextField = (componentProps: IComponentProps): React.ReactElement =
 
   return (
     <Component {...componentProps}>
-      <Label {...componentProps} htmlFor={inputAttrs.id} />
+      <Label {...componentProps} />
 
       <input
         className={inputClassName}
