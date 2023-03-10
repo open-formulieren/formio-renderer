@@ -8,11 +8,11 @@ import React from 'react'
 export const Description = (componentProps: IComponentProps): React.ReactElement | null => {
   const { component } = componentProps
   const className = clsx(`of-${componentProps.component.type}__description`)
-  const innerHtml = component.description
+  const description = component.description
 
-  if (!innerHtml) {
+  if (!description) {
     return null
   }
 
-  return <div className={className} dangerouslySetInnerHTML={{ __html: innerHtml }} />
+  return <div className={className}>{description}</div>
 }
