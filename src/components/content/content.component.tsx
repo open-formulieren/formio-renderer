@@ -18,11 +18,11 @@ interface IContentProps extends IComponentProps {
  * WARNING: HTML is passed into dangerouslySetInnerHTML prop.
  */
 export const Content = (contentProps: IContentProps): React.ReactElement => {
-  const { component, children, ...props } = contentProps
+  const { component, children } = contentProps
   const className = clsx(`of-${contentProps.component.type}`)
 
   return (
-    <div className={className} {...props}>
+    <div className={className}>
       <div dangerouslySetInnerHTML={{ __html: component?.html }} />
       {children}
     </div>
