@@ -1,13 +1,26 @@
 import { CharCount, Component, Description, Errors, Label } from '@components'
 import { IComponentProps } from '@types'
 import clsx from 'clsx'
+import { ComponentSchema } from 'formiojs'
 import React, { useState } from 'react'
+
+interface ITextFieldComponent extends ComponentSchema {
+  id: string
+  inputMask: string
+  mask: string
+  minLength: number
+  maxLength: number
+}
+
+interface ITextFieldProps extends IComponentProps {
+  component: ITextFieldComponent
+}
 
 /**
  * A Text Field can be used for short and general text input. There are options to define input
  * masks and validations, allowing users to mold information into desired formats.
  */
-export const TextField = (componentProps: IComponentProps): React.ReactElement => {
+export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
   const { component, children, ...props } = componentProps
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(

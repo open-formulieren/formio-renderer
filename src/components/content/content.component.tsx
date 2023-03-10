@@ -1,14 +1,15 @@
-import { IComponentProps, IFormioComponent } from '@types'
+import { IComponentProps } from '@types'
 import clsx from 'clsx'
+import { ComponentSchema } from 'formiojs'
 import React from 'react'
 
-interface IContent extends IFormioComponent {
-  type: 'content'
+interface IContentComponent extends ComponentSchema {
   html: string
+  type: 'content'
 }
 
 interface IContentProps extends IComponentProps {
-  component: IContent
+  component: IContentComponent
 }
 
 /**

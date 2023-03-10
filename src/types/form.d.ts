@@ -1,9 +1,9 @@
-import { IFormioComponent } from './component'
+import { ComponentSchema } from 'formiojs'
 
 export interface IFormioForm {
   display: string
 
-  components: IFormioComponent[]
+  components: ComponentSchema[]
 
   [index: string]: any
 }

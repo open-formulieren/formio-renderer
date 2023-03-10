@@ -1,11 +1,14 @@
-import { Columns, Column, Content, TextField, IColumnProps } from '@components'
 import {
-  IComponentProps,
+  Columns,
+  Column,
+  Content,
+  TextField,
+  IColumnProps,
   IFormioColumn,
-  IFormioComponent,
-  IFormioForm,
-  IRenderConfiguration
-} from '@types'
+  IColumnComponent
+} from '@components'
+import { IComponentProps, IFormioForm, IRenderConfiguration } from '@types'
+import { ComponentSchema } from 'formiojs'
 import React, { useContext } from 'react'
 
 export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
@@ -22,6 +25,13 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
  */
 export const RenderContext = React.createContext(DEFAULT_RENDER_CONFIGURATION)
 
+interface IRendererComponent extends ComponentSchema {
+  columns: IFormioColumn[]
+  components: IRendererComponent[]
+  id: string
+  type: string
+}
+
 interface IRenderFormProps {
   form: IFormioForm
 }
@@ -32,14 +42,14 @@ interface IRenderFormProps {
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
-    form.components?.map((component: IFormioComponent) => (
+    form.components?.map((component: IRendererComponent) => (
       <RenderComponent key={component.id} component={component} />
     )) || null
   return <React.Fragment>{children}</React.Fragment>
 }
 
 interface IRenderComponentProps {
-  component: IFormioComponent
+  component: IColumnComponent | IRendererComponent
 }
 
 /**
@@ -55,21 +65,23 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
   //
   // This allows for components to remain simple and increases compatibility with existing design
   // systems.
-  const tree = component.components?.length
-    ? component.components
-    : component.columns
-    ? component.columns.map(
-        (c: IFormioColumn): IColumnProps => ({ ...c, children: null, type: 'column' })
-      )
-    : []
+  const _component = component as IRendererComponent
+  const cComponents = component.components ? component.components : null
+  const cColumns = _component.columns ? _component.columns : null
 
-  const children = tree.map((c: IFormioComponent, i: number) => (
+  // Regular children, either from component or column.
+  const childComponents = cComponents?.map((c: IRendererComponent, i: number) => (
     <RenderComponent key={c.id || i} component={c} />
+  ))
+
+  // Columns from component.
+  const childColumns = cColumns?.map((c: IFormioColumn, i) => (
+    <RenderComponent key={i} component={{ ...c, type: 'column' }} />
   ))
 
   return (
     <Component component={component} errors={[]}>
-      {children}
+      {childComponents || childColumns}
     </Component>
   )
 }
