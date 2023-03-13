@@ -4,13 +4,13 @@ import clsx from 'clsx'
 import { ComponentSchema } from 'formiojs'
 import React, { useState } from 'react'
 
-interface ITextFieldComponent extends ComponentSchema {
+export interface ITextFieldComponent extends ComponentSchema {
   id: string
   inputMask: string
   mask: string
 }
 
-interface ITextFieldProps extends IComponentProps {
+export interface ITextFieldProps extends IComponentProps {
   component: ITextFieldComponent
 }
 

@@ -7,12 +7,12 @@ interface IErrorsComponent extends ComponentSchema {
   id: string
 }
 
-interface IErrorsProps extends IComponentProps {
+export interface IErrorsProps extends IComponentProps {
   component: IErrorsComponent
 }
 
 /**
- * Errors section of a component.
+ * NOT IMPLEMENTED
  */
 export const Errors = (componentProps: IErrorsProps): React.ReactElement | null => {
   const { component, errors } = componentProps

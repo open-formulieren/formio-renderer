@@ -3,11 +3,11 @@ import clsx from 'clsx'
 import { ComponentSchema } from 'formiojs'
 import React from 'react'
 
-interface IColumnsComponent extends ComponentSchema {
+export interface IColumnsComponent extends ComponentSchema {
   type: 'columns'
 }
 
-interface IColumnsProps extends IComponentProps {
+export interface IColumnsProps extends IComponentProps {
   component: IColumnsComponent
 }
 
@@ -23,12 +23,10 @@ export const Columns = (componentProps: IColumnsProps): React.ReactElement => {
   return <div className={className}>{children}</div>
 }
 
-type ColumnSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-
 export interface IFormioColumn {
   components: ComponentSchema[]
-  size: ColumnSize
-  sizeMobile?: ColumnSize
+  size: number
+  sizeMobile?: number
 }
 
 export interface IColumnComponent extends IFormioColumn {
@@ -40,8 +38,6 @@ export interface IColumnComponent extends IFormioColumn {
 }
 
 export interface IColumnProps extends IComponentProps {
-  children: React.ReactNode
-
   component: IColumnComponent
 }
 

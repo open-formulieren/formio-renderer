@@ -6,7 +6,7 @@ import React from 'react'
 interface IComponentProps {
   callbacks: ICallbackConfiguration
 
-  children: React.ReactNode
+  children?: React.ReactNode
 
   component: ComponentSchema
 
