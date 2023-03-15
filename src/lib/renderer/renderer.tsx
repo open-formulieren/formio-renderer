@@ -87,6 +87,13 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
 }
 
 /**
+ * Fallback component, gets used when no other component is found within the `RenderContext`
+ * The Fallback component makes sure (child) components keep being rendered with as little side
+ * effects as possible.
+ */
+const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</React.Fragment>
+
+/**
  * Custom hook resolving the `React.ComponentType` from `RenderContext`.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
@@ -95,7 +102,5 @@ export const useComponentType = (
 ): React.ComponentType<IColumnProps | IComponentProps> => {
   const renderConfiguration = useContext(RenderContext)
   const ComponentType = renderConfiguration.components[type]
-  const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</React.Fragment>
-
   return ComponentType || Fallback
 }

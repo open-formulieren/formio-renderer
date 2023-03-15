@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { ComponentSchema } from 'formiojs'
 import React from 'react'
 
-interface IColumnsComponent {
+interface IColumnsComponent extends ComponentSchema {
   type: 'columns'
 }
 
