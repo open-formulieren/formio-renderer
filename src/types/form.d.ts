@@ -1,7 +1,7 @@
 import { ComponentSchema } from 'formiojs'
 
 export interface IFormioForm {
-  display: string
+  display?: 'form'
 
   components: ComponentSchema[]
 
