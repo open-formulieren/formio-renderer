@@ -19,7 +19,8 @@ interface ITextFieldProps extends IComponentProps {
  * masks and validations, allowing users to mold information into desired formats.
  */
 export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
-  const { component, children, ...props } = componentProps
+  const { children, component, value, callbacks, ...props } = componentProps
+  const { onInput, ..._callbacks } = callbacks
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(
     String(component.defaultValue).length
@@ -33,7 +34,7 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
     minLength: component.validate?.minLength,
     maxLength: component.validate?.maxLength,
     multiple: component.multiple,
-    name: `data[${component.key}`,
+    name: component.key,
     pattern: component.validate?.pattern || undefined,
     placeholder: component.placeholder || component.mask || component.inputMask || undefined,
     required: component.validate?.required,
@@ -43,9 +44,10 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   /**
    * @param {React.FormEvent} event
    */
-  const onInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const _onInput = (event: React.FormEvent<HTMLInputElement>) => {
     setCharCountState(event.currentTarget.value.length)
     setPristineState(false)
+    onInput?.call(event.target, event)
   }
 
   return (
@@ -54,9 +56,10 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
 
       <input
         className={inputClassName}
-        defaultValue={component.defaultValue}
-        onInput={onInput}
+        value={value || ''}
+        onInput={_onInput}
         {...inputAttrs}
+        {..._callbacks}
         {...props}
       />
 
