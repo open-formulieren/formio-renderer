@@ -8,8 +8,6 @@ interface ITextFieldComponent extends ComponentSchema {
   id: string
   inputMask: string
   mask: string
-  minLength: number
-  maxLength: number
 }
 
 interface ITextFieldProps extends IComponentProps {
@@ -32,8 +30,8 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   const inputAttrs = {
     disabled: component.disabled,
     id: component.key,
-    minLength: component.minLength,
-    maxLength: component.maxLength,
+    minLength: component.validate?.minLength,
+    maxLength: component.validate?.maxLength,
     multiple: component.multiple,
     name: `data[${component.key}`,
     pattern: component.validate?.pattern || undefined,
