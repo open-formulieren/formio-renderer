@@ -1,25 +1,43 @@
-import { DEFAULT_RENDER_CONFIGURATION, RenderContext, RenderForm } from '@lib/renderer'
-import { IFormioForm, IRenderConfiguration } from '@types'
+import { IValues } from './types/values'
+import {
+  CallbacksContext,
+  DEFAULT_RENDER_CONFIGURATION,
+  RenderContext,
+  RenderForm,
+  ValuesContext
+} from '@lib/renderer'
+import { ICallbackConfiguration, IFormioForm, IRenderConfiguration } from '@types'
 import React from 'react'
 
 export * from '@components'
+export * from '@lib/renderer'
 
 export interface FormioFormProps {
+  callbacks: ICallbackConfiguration
+
   configuration: IRenderConfiguration
 
   form: IFormioForm
+
+  values: IValues
 }
 
 /**
  * Renders the Form.io `form` based on the `configuration`
  */
 export const FormioForm = ({
+  form,
+  callbacks = {},
   configuration = DEFAULT_RENDER_CONFIGURATION,
-  form
+  values = {}
 }: FormioFormProps): React.ReactElement => {
   return (
-    <RenderContext.Provider value={configuration}>
-      <RenderForm form={form} />
-    </RenderContext.Provider>
+    <CallbacksContext.Provider value={callbacks}>
+      <RenderContext.Provider value={configuration}>
+        <ValuesContext.Provider value={values}>
+          <RenderForm form={form} />
+        </ValuesContext.Provider>
+      </RenderContext.Provider>
+    </CallbacksContext.Provider>
   )
 }
