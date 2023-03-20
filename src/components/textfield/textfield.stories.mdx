@@ -1,0 +1,52 @@
+import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
+import {TextField} from "./textfield.component"; import {useState} from "react";
+
+<Meta title="Components / TextField" component={TextField}/>
+
+export const Template = (args) => <TextField {...args} />
+
+TextField
+===
+
+A Text Field can be used for short and general text input. There are options to define input masks
+and validations, allowing users to mold information into desired formats.
+
+__Uncontrolled TextField__ `<TextField value={value}/>`
+<Canvas>
+  <Story name="Uncontrolled TextField" args={{
+    component: {
+      type: 'textfield',
+      label: 'first name',
+      placeholder: 'Enter your first name.',
+      description: 'Enter your first name'
+    },
+    value: 'The quick brown fox jumps over the lazy dog.'
+  }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+__Controlled TextField__ `<TextField value={value} callbacks={{onChange: onChange}}/>`
+<Canvas>
+  <Story name="Controlled TextField" args={{
+    component: {
+      type: 'textfield',
+      label: 'first name',
+      placeholder: 'Enter your first name.',
+      description: 'Enter your first name'
+    },
+    value: 'The quick brown fox jumps over the lazy dog.',
+  }} decorators={[
+      (Story, args) => {
+        const [state, setState] = useState(args.args.value)
+        args.args.value = state
+        args.args.callbacks = {onChange: (e) => setState(e.target.value)}
+        return Story();
+      }
+  ]}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+
+<ArgsTable of={TextField}/>

@@ -11,7 +11,7 @@ export interface ICharCountProps extends IComponentProps {
 /**
  * Reusable component showing `count` as number of characters typed into the component. Character
  * count is only shown when `pristine=false` indicating that the component's initials state is
- * modified
+ * modified.
  */
 export const CharCount = (charCountProps: ICharCountProps): React.ReactElement | null => {
   const { count, pristine } = charCountProps

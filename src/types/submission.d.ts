@@ -1,5 +1,5 @@
 import { SerializedJSON } from './json'
-import { IValues } from './values'
+import { IValues } from './value'
 
 export interface ISubmission {
   data: IValues

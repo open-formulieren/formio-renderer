@@ -7,6 +7,6 @@ import React from 'react'
  * prop.
  */
 export const Component = (componentProps: IComponentProps): React.ReactElement => {
-  const className = clsx(`of-${componentProps.component.type}`)
+  const className = clsx(`of-component`)
   return <div className={className}>{componentProps.children}</div>
 }

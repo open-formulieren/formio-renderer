@@ -1,3 +1,4 @@
+import { Component } from '@components'
 import { IComponentProps } from '@types'
 import clsx from 'clsx'
 import { ComponentSchema } from 'formiojs'
@@ -20,7 +21,11 @@ export const Columns = (componentProps: IColumnsProps): React.ReactElement => {
   const { children } = componentProps
   const className = clsx(`of-${componentProps.component.type}`)
 
-  return <div className={className}>{children}</div>
+  return (
+    <Component {...componentProps}>
+      <div className={className}>{children}</div>
+    </Component>
+  )
 }
 
 export interface IFormioColumn {

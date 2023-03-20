@@ -56,8 +56,8 @@ export interface IRenderFormProps {
  *
  * `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
  * `useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
- * mapping between a component type and the (React) component. Overriding RenderContext allows for
- * specifying components.
+ * mapping between a component type and the (React) component / Function. Overriding RenderContext
+ * allows for specifying components.
  *
  * All components receive the `IComponentProps` as props containing the required context to render
  * the component. Components should return a React.ReactElement.
@@ -68,8 +68,8 @@ export interface IRenderFormProps {
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
-    form.components?.map((component: IRendererComponent) => (
-      <RenderComponent key={component.id} component={component} />
+    form.components?.map((component: IRendererComponent, i: number) => (
+      <RenderComponent key={component.id || i} component={component} />
     )) || null
   return <React.Fragment>{children}</React.Fragment>
 }
@@ -104,8 +104,8 @@ export interface IRenderComponentProps {
  *
  * `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
  * `useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
- * mapping between a component type and the (React) component. Overriding RenderContext allows for
- * specifying components.
+ * mapping between a component type and the (React) component / Function. Overriding RenderContext
+ * allows for specifying components.
  *
  * @see  {RenderForm} for more information.
  * @external {CallbacksContext} Expects `CallbackContext` to be available.

@@ -8,6 +8,7 @@ export interface ITextFieldComponent extends ComponentSchema {
   id: string
   inputMask: string
   mask: string
+  type: 'textfield'
 }
 
 export interface ITextFieldProps extends IComponentProps {
@@ -19,7 +20,7 @@ export interface ITextFieldProps extends IComponentProps {
  * masks and validations, allowing users to mold information into desired formats.
  */
 export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
-  const { children, component, value, callbacks, ...props } = componentProps
+  const { children, component, value, callbacks = {}, ...props } = componentProps
   const { onChange, ..._callbacks } = callbacks
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(
@@ -55,7 +56,8 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
       <Label {...componentProps} />
       <input
         className={inputClassName}
-        value={value || ''}
+        value={onChange ? value || '' : undefined}
+        defaultValue={!onChange ? value || '' : undefined}
         onChange={_onChange}
         {...inputAttrs}
         {..._callbacks}
