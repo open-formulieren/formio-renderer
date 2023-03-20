@@ -4,7 +4,7 @@ import React from 'react'
 
 /**
  * Description/help text section of a component.
- * Takes `IComponentProps` an shows the given description.
+ * Takes `IComponentProps` and shows the given description.
  */
 export const Description = (componentProps: IComponentProps): React.ReactElement | null => {
   const { component } = componentProps
