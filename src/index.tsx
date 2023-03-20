@@ -19,7 +19,10 @@ export interface FormioFormProps {
 
   form: IFormioForm
 
-  values: IValues
+  submission: {
+    data?: IValues;
+    metadata: JSON;
+  }
 }
 
 /**
