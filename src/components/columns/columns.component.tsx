@@ -32,6 +32,8 @@ export interface IFormioColumn {
 }
 
 export interface IColumnComponent extends IFormioColumn {
+  defaultValue: undefined
+
   key: undefined
 
   type: 'column'

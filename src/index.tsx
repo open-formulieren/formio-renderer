@@ -1,10 +1,10 @@
-import { IValues } from './types/values'
+import { ISubmission } from './types/submission'
 import {
   CallbacksContext,
   DEFAULT_RENDER_CONFIGURATION,
   RenderContext,
   RenderForm,
-  ValuesContext
+  SubmissionContext
 } from '@lib/renderer'
 import { ICallbackConfiguration, IFormioForm, IRenderConfiguration } from '@types'
 import React from 'react'
@@ -19,10 +19,7 @@ export interface FormioFormProps {
 
   form: IFormioForm
 
-  submission: {
-    data?: IValues;
-    metadata: JSON;
-  }
+  submission: ISubmission
 }
 
 /**
@@ -32,14 +29,14 @@ export const FormioForm = ({
   form,
   callbacks = {},
   configuration = DEFAULT_RENDER_CONFIGURATION,
-  values = {}
+  submission = { data: {}, metadata: {} }
 }: FormioFormProps): React.ReactElement => {
   return (
     <CallbacksContext.Provider value={callbacks}>
       <RenderContext.Provider value={configuration}>
-        <ValuesContext.Provider value={values}>
+        <SubmissionContext.Provider value={submission}>
           <RenderForm form={form} />
-        </ValuesContext.Provider>
+        </SubmissionContext.Provider>
       </RenderContext.Provider>
     </CallbacksContext.Provider>
   )

@@ -1,4 +1,5 @@
-import { IValues, value } from '../../types/values'
+import { ISubmission } from '../../types/submission'
+import { value } from '../../types/values'
 import {
   Columns,
   Column,
@@ -27,8 +28,8 @@ export const CallbacksContext = React.createContext<ICallbackConfiguration>({})
 /** React context providing the IRenderConfiguration. */
 export const RenderContext = React.createContext<IRenderConfiguration>(DEFAULT_RENDER_CONFIGURATION)
 
-/** React context providing the IValues. */
-export const ValuesContext = React.createContext<IValues>({})
+/** React context providing the ISubmission. */
+export const SubmissionContext = React.createContext<ISubmission>({ data: {}, metadata: {} })
 
 interface IRendererComponent extends ComponentSchema {
   columns: IFormioColumn[]
@@ -46,7 +47,7 @@ interface IRenderFormProps {
  * provided by the platform.
  * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
- * @external {ValuesContext} Expects `ValuesContext` to be available.
+ * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
@@ -64,7 +65,7 @@ interface IRenderComponentProps {
  * Renders a Form.io `component` or colum.
  * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
- * @external {ValuesContext} Expects `ValuesContext` to be available.
+ * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const RenderComponent = ({ component }: IRenderComponentProps): React.ReactElement => {
   const callbacks = useContext(CallbacksContext)
@@ -88,7 +89,10 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
 
   // Columns from component.
   const childColumns = cColumns?.map((c: IFormioColumn, i) => (
-    <RenderComponent key={i} component={{ ...c, key: undefined, type: 'column' }} />
+    <RenderComponent
+      key={i}
+      component={{ ...c, defaultValue: undefined, key: undefined, type: 'column' }}
+    />
   ))
 
   // Return the component, pass children.
@@ -125,6 +129,6 @@ export const useComponentType = (
 export const useValue = (
   component: IColumnComponent | IRendererComponent
 ): value | value[] | undefined => {
-  const values = useContext(ValuesContext)
-  return component.key ? values[component.key] : undefined
+  const values = useContext(SubmissionContext).data
+  return component.key ? values[component.key] : component.defaultValue
 }

@@ -20,7 +20,7 @@ interface ITextFieldProps extends IComponentProps {
  */
 export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
   const { children, component, value, callbacks, ...props } = componentProps
-  const { onInput, ..._callbacks } = callbacks
+  const { onChange, ..._callbacks } = callbacks
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(
     String(component.defaultValue).length
@@ -44,25 +44,23 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   /**
    * @param {React.FormEvent} event
    */
-  const _onInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const _onChange = (event: React.FormEvent<HTMLInputElement>) => {
     setCharCountState(event.currentTarget.value.length)
     setPristineState(false)
-    onInput?.call(event.target, event)
+    onChange?.call(event.target, event)
   }
 
   return (
     <Component {...componentProps}>
       <Label {...componentProps} />
-
       <input
         className={inputClassName}
         value={value || ''}
-        onInput={_onInput}
+        onChange={_onChange}
         {...inputAttrs}
         {..._callbacks}
         {...props}
       />
-
       <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
       <Description {...componentProps} />
       <Errors {...componentProps} />
