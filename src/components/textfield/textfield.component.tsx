@@ -8,8 +8,6 @@ interface ITextFieldComponent extends ComponentSchema {
   id: string
   inputMask: string
   mask: string
-  minLength: number
-  maxLength: number
 }
 
 interface ITextFieldProps extends IComponentProps {
@@ -21,7 +19,8 @@ interface ITextFieldProps extends IComponentProps {
  * masks and validations, allowing users to mold information into desired formats.
  */
 export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
-  const { component, children, ...props } = componentProps
+  const { children, component, value, callbacks, ...props } = componentProps
+  const { onChange, ..._callbacks } = callbacks
   const [pristineState, setPristineState] = useState<boolean>(true)
   const [charCountState, setCharCountState] = useState<number>(
     String(component.defaultValue).length
@@ -32,10 +31,10 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   const inputAttrs = {
     disabled: component.disabled,
     id: component.key,
-    minLength: component.minLength,
-    maxLength: component.maxLength,
+    minLength: component.validate?.minLength,
+    maxLength: component.validate?.maxLength,
     multiple: component.multiple,
-    name: `data[${component.key}`,
+    name: component.key,
     pattern: component.validate?.pattern || undefined,
     placeholder: component.placeholder || component.mask || component.inputMask || undefined,
     required: component.validate?.required,
@@ -45,23 +44,23 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   /**
    * @param {React.FormEvent} event
    */
-  const onInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const _onChange = (event: React.FormEvent<HTMLInputElement>) => {
     setCharCountState(event.currentTarget.value.length)
     setPristineState(false)
+    onChange?.call(event.target, event)
   }
 
   return (
     <Component {...componentProps}>
       <Label {...componentProps} />
-
       <input
         className={inputClassName}
-        defaultValue={component.defaultValue}
-        onInput={onInput}
+        value={value || ''}
+        onChange={_onChange}
         {...inputAttrs}
+        {..._callbacks}
         {...props}
       />
-
       <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
       <Description {...componentProps} />
       <Errors {...componentProps} />

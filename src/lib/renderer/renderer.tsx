@@ -1,3 +1,5 @@
+import { ISubmission } from '../../types/submission'
+import { value } from '../../types/values'
 import {
   Columns,
   Column,
@@ -7,7 +9,7 @@ import {
   IFormioColumn,
   IColumnComponent
 } from '@components'
-import { IComponentProps, IFormioForm, IRenderConfiguration } from '@types'
+import { ICallbackConfiguration, IComponentProps, IFormioForm, IRenderConfiguration } from '@types'
 import { ComponentSchema } from 'formiojs'
 import React, { useContext } from 'react'
 
@@ -20,10 +22,14 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
   }
 }
 
-/**
- * React context providing the renderConfiguration.
- */
-export const RenderContext = React.createContext(DEFAULT_RENDER_CONFIGURATION)
+/** React context providing the renderConfiguration. */
+export const CallbacksContext = React.createContext<ICallbackConfiguration>({})
+
+/** React context providing the IRenderConfiguration. */
+export const RenderContext = React.createContext<IRenderConfiguration>(DEFAULT_RENDER_CONFIGURATION)
+
+/** React context providing the ISubmission. */
+export const SubmissionContext = React.createContext<ISubmission>({ data: {}, metadata: {} })
 
 interface IRendererComponent extends ComponentSchema {
   columns: IFormioColumn[]
@@ -37,8 +43,11 @@ interface IRenderFormProps {
 }
 
 /**
- * Renders a Form.io `form`.
+ * Renders the components within the form, the `<form>` tag itself is omitted and expected to be
+ * provided by the platform.
+ * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
+ * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
@@ -54,14 +63,18 @@ interface IRenderComponentProps {
 
 /**
  * Renders a Form.io `component` or colum.
+ * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
+ * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const RenderComponent = ({ component }: IRenderComponentProps): React.ReactElement => {
-  const Component = useComponentType(component.type)
+  const callbacks = useContext(CallbacksContext)
+  const value = useValue(component)
+  const Component = useComponentType(component)
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
-  // We deal with this edge cases by extending the schema with a custom (component) type allowing it
-  // to be picked up by the renderer and passed to the parent
+  // We deal with these edge cases by extending the schema with a custom (component) type allowing
+  // it to be picked up by the renderer and passed to the parent
   //
   // This allows for components to remain simple and increases compatibility with existing design
   // systems.
@@ -76,11 +89,15 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
 
   // Columns from component.
   const childColumns = cColumns?.map((c: IFormioColumn, i) => (
-    <RenderComponent key={i} component={{ ...c, type: 'column' }} />
+    <RenderComponent
+      key={i}
+      component={{ ...c, defaultValue: undefined, key: undefined, type: 'column' }}
+    />
   ))
 
+  // Return the component, pass children.
   return (
-    <Component component={component} errors={[]}>
+    <Component callbacks={callbacks} component={component} errors={[]} value={value}>
       {childComponents || childColumns}
     </Component>
   )
@@ -98,9 +115,20 @@ const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</R
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
 export const useComponentType = (
-  type: string
+  component: IColumnComponent | IRendererComponent
 ): React.ComponentType<IColumnProps | IComponentProps> => {
   const renderConfiguration = useContext(RenderContext)
-  const ComponentType = renderConfiguration.components[type]
+  const ComponentType = renderConfiguration.components[component.type]
   return ComponentType || Fallback
+}
+
+/**
+ * Custom hook resolving the value from `ValuesContext`.
+ * @external {RenderContext} Expects `RenderContext` to be available.
+ */
+export const useValue = (
+  component: IColumnComponent | IRendererComponent
+): value | value[] | undefined => {
+  const values = useContext(SubmissionContext).data
+  return component.key ? values[component.key] : component.defaultValue
 }
