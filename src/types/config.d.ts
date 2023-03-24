@@ -1,9 +1,11 @@
 import { IComponentProps } from './componentprops'
 import { IColumnProps } from '@components'
+import { validator } from '@lib/validation'
 import React from 'react'
 
 export interface IRenderConfiguration {
   components: IComponentConfiguration
+  validators: validator[]
 }
 
 /**

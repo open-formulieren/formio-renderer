@@ -9,16 +9,19 @@ interface IErrorsComponent extends ComponentSchema {
 
 export interface IErrorsProps extends IComponentProps {
   component: IErrorsComponent
+
+  pristine: boolean
 }
 
 /**
  * NOT IMPLEMENTED
  */
-export const Errors = (componentProps: IErrorsProps): React.ReactElement | null => {
-  const { component, errors } = componentProps
-  const className = clsx(`of-${componentProps.component.type}__errors`)
+export const Errors = (errorProps: IErrorsProps): React.ReactElement | null => {
+  const {} = errorProps
+  const { errors, pristine, component } = errorProps
+  const className = clsx(`of-${errorProps.component.type}__errors`)
 
-  if (!(errors || []).length) {
+  if (pristine || !(errors || []).length) {
     return null
   }
 

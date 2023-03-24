@@ -8,6 +8,7 @@ export interface ITextFieldComponent extends ComponentSchema {
   id: string
   inputMask: string
   mask: string
+  showCharCount: boolean
   type: 'textfield'
 }
 
@@ -19,7 +20,7 @@ export interface ITextFieldProps extends IComponentProps {
  * A Text Field can be used for short and general text input. There are options to define input
  * masks and validations, allowing users to mold information into desired formats.
  */
-export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
+export const TextField = (componentProps: ITextFieldProps): React.ReactElement | null => {
   const { children, component, value, callbacks = {}, ...props } = componentProps
   const { onChange, ..._callbacks } = callbacks
   const [pristineState, setPristineState] = useState<boolean>(true)
@@ -63,9 +64,11 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
         {..._callbacks}
         {...props}
       />
-      <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
+      {componentProps.component.showCharCount && (
+        <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
+      )}
       <Description {...componentProps} />
-      <Errors {...componentProps} />
+      <Errors pristine={pristineState} {...componentProps} />
     </Component>
   )
 }

@@ -1,0 +1,225 @@
+import {Canvas, Meta, Story} from '@storybook/addon-docs';
+import {expect} from "@storybook/jest";
+import {FormioForm} from "../../index";
+import {useState} from "react";
+import {FORMIO_LENGTH, FORMIO_PATTERN, FORMIO_REQUIRED} from "../../fixtures";
+import {waitFor, within} from "@testing-library/dom";
+import {userEvent} from "@storybook/testing-library";
+
+<Meta title="Libraries / validation"/>
+
+export const Template = (args) => <FormioForm {...args}/>
+
+Textfield with validation
+===
+
+This example show a textfield that validates a Dutch postcode.
+
+<Canvas>
+  <Story
+    name="Pattern validation"
+    args={{
+      form: {
+        display: 'form',
+        components: [
+          FORMIO_PATTERN
+        ],
+      },
+      submission: {
+        data: {}
+      },
+      callbacks: {}
+    }}
+    decorators={[(Story, args) => {
+      const [submissionDataState, setSubmissionDataState] = useState(args.args.submission.data)
+      const onChange = (e) => {
+        const name = e.target.name
+        const value = e.target.value
+        setSubmissionDataState({...submissionDataState, [name]: value})
+      }
+      args.args.submission.data = submissionDataState
+      args.args.callbacks.onChange = onChange
+      return Story();
+    }]}
+    play={async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+      const input = canvas.getByLabelText(FORMIO_PATTERN.label, {
+        selector: 'input',
+      });
+      // Invalid pattern.
+      await userEvent.type(input, '10115 CJ', {delay: 10});
+      expect(await canvas.getByRole("alert")).toBeTruthy()
+      // Empty but required (not pristine).
+      await userEvent.clear(input);
+      expect(await canvas.getByRole("alert")).toBeTruthy()
+      // Valid.
+      await userEvent.type(input, '1015 CJ', {delay: 10});
+      expect(await canvas.queryByRole("alert")).toBeNull()
+    }}>
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Length validation"
+    args={{
+      form: {
+        display: 'form',
+        components: [
+          FORMIO_LENGTH
+        ],
+      },
+      submission: {
+        data: {}
+      },
+      callbacks: {}
+    }}
+    decorators={[(Story, args) => {
+      const [submissionDataState, setSubmissionDataState] = useState(args.args.submission.data)
+      const onChange = (e) => {
+        const name = e.target.name
+        const value = e.target.value
+        setSubmissionDataState({...submissionDataState, [name]: value})
+      }
+      args.args.submission.data = submissionDataState
+      args.args.callbacks.onChange = onChange
+      return Story();
+    }]}
+    play={async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+      const input = canvas.getByLabelText(FORMIO_LENGTH.label, {
+        selector: 'input',
+      });
+      // Too short.
+      await userEvent.type(input, 'Lorem ipsum', {delay: 10});
+      expect(await canvas.getByRole("alert")).toBeTruthy()
+      // Empty but required (not pristine).
+      await userEvent.clear(input);
+      expect(await canvas.getByRole("alert")).toBeTruthy()
+      // Too long.
+      await userEvent.type(input, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', {delay: 10});
+      expect(input.value).toBe('Lorem ipsum dolor sit amet, consectetur adipiscing')
+      expect(await canvas.queryByRole("alert")).toBeNull()
+      // Empty but required (not pristine).
+      await userEvent.clear(input);
+      // Valid.
+      await userEvent.type(input, 'Lorem ipsum dolor sit amet.', {delay: 10});
+      expect(await canvas.queryByRole("alert")).toBeNull()
+    }}>
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Required validation"
+    args={{
+      form: {
+        display: 'form',
+        components: [
+          FORMIO_REQUIRED
+        ],
+      },
+      submission: {
+        data: {}
+      },
+      callbacks: {}
+    }}
+    decorators={[(Story, args) => {
+      const [submissionDataState, setSubmissionDataState] = useState(args.args.submission.data)
+      const onChange = (e) => {
+        const name = e.target.name
+        const value = e.target.value
+        setSubmissionDataState({...submissionDataState, [name]: value})
+      }
+      args.args.submission.data = submissionDataState
+      args.args.callbacks.onChange = onChange
+      return Story();
+    }]}
+    play={async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+      const input = canvas.getByLabelText(FORMIO_REQUIRED.label, {
+        selector: 'input',
+      });
+      // Valid.
+      await userEvent.type(input, 'John', {delay: 10});
+      // Empty but required (not pristine).
+      await userEvent.clear(input);
+      await waitFor(() => expect(canvas.getByRole("alert")).toBeTruthy())
+    }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+Extending validation
+===
+
+Validation (by default) is performed as step in the rendering process based on the validators
+specified the `RenderContext` using the `RenderContext.validators` array containing
+`async function`/`string` tuples. The function being the validator function, the string a message
+used to indicate an invalid value. Each validator is run in order.
+
+The validator function is called with `componentProps` (containing the value) and the error
+`message`. The (async) function should return a `Promise` which either resolves (valid) or rejects
+(invalid) with a (subclass of) `ValidationError` instantiated with `message`.
+
+By default, validators are provided validating against the Form.io `validate` object.
+Additional/alternate validators may be provided by overriding the `RenderContext.validators` array.
+
+_Note: even though validation is part of the render process, state management isn't (as this
+typically relies on the implementation). Please use the `onChange` handler to invoke a change to
+the `submission` to re-trigger rendering and validation._
+
+Validation example.
+---
+
+__Validator function__
+```tsx
+export const validateMaxLength = async (
+  componentProps: IComponentProps,
+  message: string
+): Promise<void> => {
+  const value = String(componentProps.value)
+  const maxLength = componentProps.component.validate?.maxLength || ''
+  const length = value.length
+  const limit = parseInt(maxLength as string)
+  const valid = Boolean(isNaN(limit) || length <= limit)
+
+  if (!valid) {
+    throw new MaxLengthValidationError(message)
+  }
+  return
+}
+
+export class MaxLengthValidationError extends ValidationError {
+  validator = 'maxlength'
+}
+```
+
+__Passing validators to render configuration__
+```tsx
+const RENDER_CONFIGURATION: IRenderConfiguration = {
+  validators: [
+    const [validateMaxLength, 'Er zijn teveel karakters opgegeven.'],
+  ]
+}
+````
+
+__Rendering form__
+```tsx
+const MyComponent = () => {
+  const [submissionDataState, setSubmissionDataState] = useState({})
+
+  const onChange = (e) => {
+    const name = e.target.name
+    const value = e.target.value
+    setSubmissionDataState({...submissionDataState, [name]: value})
+  }
+
+  const callbacks = {
+      onChange: onChange
+  }
+
+  const submission = {
+    data: submissionDataState,
+    metadata: {}
+  }
+
+  return <FormioForm callbacks={callbacks} configuration={RENDER_CONFIGURATION} submission={submission}/>
+}
+```

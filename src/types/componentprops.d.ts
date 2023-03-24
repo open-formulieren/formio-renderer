@@ -1,5 +1,5 @@
 import { ICallbackConfiguration } from './config'
-import { value, values } from './values'
+import { value, values } from './value'
 import { ComponentSchema } from 'formiojs'
 import React from 'react'
 
