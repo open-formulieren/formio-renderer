@@ -1,20 +1,49 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
 import {Errors} from "./errors.component";
+import {FORMIO_REQUIRED} from "../../fixtures";
+import {TextField} from "../textfield";
 
 <Meta title="Components / Reusable / Errors" component={Errors} />
 
 export const Template = (args) => <Errors {...args} />
+export const TextFieldTemplate = (args) => <TextField {...args} />
 
 Errors
 ===
 
-Not implemented.
+Reusable component showing `errors` as list of error messages for the component. Error list  is only
+shown when `pristine=false` indicating that the component's initials state is modified.
 
+__Not pristine__ `<errors pristine={false}/>`
 <Canvas>
-  <Story name="Errors" args={{component: {id: 'foo'}}}>
+  <Story name="Non-pristine Errors (shown)" args={{component: {id: 'foo'}, errors: [
+      'De opgegeven waarde voldoet niet aan het formaat.',
+      'Het verplichte veld is niet ingevuld',
+    ], pristine: false}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable of={Errors}/>
+
+
+__Pristine__ `<errors pristine={true}/>`
+<Canvas>
+  <Story name="Pristine Errors (not shown)" args={{component: {id: 'bar'}, errors: [
+      'De opgegeven waarde voldoet niet aan het formaat.',
+      'Het verplichte veld is niet ingevuld',
+    ], pristine: true}}>
     {Template.bind({})}
   </Story>
 </Canvas>
 
 
-<ArgsTable of={Errors}/>
+__TextField with errors.__
+<Canvas>
+  <Story name="Textfield with errors" args={{component: FORMIO_REQUIRED, errors: [
+      'De opgegeven waarde voldoet niet aan het formaat.',
+      'Het verplichte veld is niet ingevuld',
+    ]}}>
+    {TextFieldTemplate.bind({})}
+  </Story>
+</Canvas>
