@@ -28,18 +28,11 @@ export interface IFormioFormProps {
  * Renderer for rendering a Form.io configuration passed as form. Iterates over children and returns
  * `React.ReactElement` containing the rendered form.
  *
- * Configuring custom components
- * ---
- *
- * `configuration` expects a `IRenderConfiguration` which is made available via
- * `RenderContext`. The IRenderConfiguration's `components` entry should contain a mapping
- * between a component type and the (React) component. Overriding RenderContext allows for
- * specifying components.
- *
- * All components receive the `IComponentProps` as props containing the required context to render
- * the component. Components should return a React.ReactElement.
- *
+ * @see {@link ?path=/docs/libraries-renderer--render-form) for more information.|RenderForm} for
+ *  more information.
+ * @external {CallbacksContext} Provides `RenderContext` with value set to `callbacks`.
  * @external {RenderContext} Provides `RenderContext` with value set to `configuration`.
+ * @external {SubmissionContext} Provides `SubmissionContext` with value set to `submission`.
  */
 export const FormioForm = ({
   form,
