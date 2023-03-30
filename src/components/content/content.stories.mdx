@@ -1,0 +1,31 @@
+import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
+import {
+  Content
+} from "./content.component";
+
+
+<Meta title="Components / Content" component={Content}/>
+
+export const Template = (args) => <Content {...args}/>
+
+Content
+===
+
+A Content component may be added to a form to provide non-field information. For example, if you
+need instructions at the top of a form that are for display only, use the Content component. The
+Content component value is not submitted back to the server.
+
+__WARNING: HTML is passed into dangerouslySetInnerHTML prop.__
+
+<Canvas>
+  <Story name="Content" args={{
+    component: {
+      type: 'content',
+      html: 'The <strong>quick</strong> brown fox jumps over the lazy dog.'
+    }
+  }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable of={Content}/>

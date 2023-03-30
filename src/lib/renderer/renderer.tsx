@@ -1,15 +1,20 @@
 import { ISubmission } from '../../types/submission'
-import { value } from '../../types/values'
 import {
-  Columns,
   Column,
+  Columns,
   Content,
-  TextField,
+  IColumnComponent,
   IColumnProps,
   IFormioColumn,
-  IColumnComponent
+  TextField
 } from '@components'
-import { ICallbackConfiguration, IComponentProps, IFormioForm, IRenderConfiguration } from '@types'
+import {
+  ICallbackConfiguration,
+  IComponentProps,
+  IFormioForm,
+  IRenderConfiguration,
+  value
+} from '@types'
 import { ComponentSchema } from 'formiojs'
 import React, { useContext } from 'react'
 
@@ -31,38 +36,78 @@ export const RenderContext = React.createContext<IRenderConfiguration>(DEFAULT_R
 /** React context providing the ISubmission. */
 export const SubmissionContext = React.createContext<ISubmission>({ data: {}, metadata: {} })
 
-interface IRendererComponent extends ComponentSchema {
+export interface IRendererComponent extends ComponentSchema {
   columns: IFormioColumn[]
   components: IRendererComponent[]
   id: string
   type: string
 }
 
-interface IRenderFormProps {
+export interface IRenderFormProps {
   form: IFormioForm
 }
 
 /**
- * Renders the components within the form, the `<form>` tag itself is omitted and expected to be
- * provided by the platform.
+ * Renderer for rendering a Form.io configuration passed as form. Iterates over children and returns
+ * `React.ReactElement` containing the rendered form.
+ *
+ * Configuring custom components
+ * ---
+ *
+ * `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
+ * `useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
+ * mapping between a component type and the (React) component / Function. Overriding RenderContext
+ * allows for specifying components.
+ *
+ * All components receive the `IComponentProps` as props containing the required context to render
+ * the component. Components should return a React.ReactElement.
+ *
  * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
-    form.components?.map((component: IRendererComponent) => (
-      <RenderComponent key={component.id} component={component} />
+    form.components?.map((component: IRendererComponent, i: number) => (
+      <RenderComponent key={component.id || i} component={component} />
     )) || null
   return <React.Fragment>{children}</React.Fragment>
 }
 
-interface IRenderComponentProps {
+export interface IRendererComponent extends ComponentSchema {
+  columns: IFormioColumn[]
+  components: IRendererComponent[]
+  id: string
+  type: string
+}
+
+export interface IRenderComponentProps {
   component: IColumnComponent | IRendererComponent
 }
 
 /**
- * Renders a Form.io `component` or colum.
+ * Renderer for rendering a Form.io component passed as component. Iterates over children (and
+ * columns) and returns a `React.ReactElement` containing the rendered component.
+ *
+ * Columns
+ * ---
+ *
+ * In certain cases a component (is not defined as) a component but something else (e.g. a column)
+ * We deal with this edge cases by extending the schema with a custom (component) type allowing it
+ * to be picked up by `useComponentType` and rendered.
+ *
+ * This allows for components to remain simple and increases compatibility with existing design
+ * systems.
+ *
+ * Configuring custom components
+ * ---
+ *
+ * `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
+ * `useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
+ * mapping between a component type and the (React) component / Function. Overriding RenderContext
+ * allows for specifying components.
+ *
+ * @see  {RenderForm} for more information.
  * @external {CallbacksContext} Expects `CallbackContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  * @external {SubmissionContext} Expects `SubmissionContext` to be available.
@@ -102,7 +147,6 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
     </Component>
   )
 }
-
 /**
  * Fallback component, gets used when no other component is found within the `RenderContext`
  * The Fallback component makes sure (child) components keep being rendered with as little side

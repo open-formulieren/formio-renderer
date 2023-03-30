@@ -3,12 +3,12 @@ import clsx from 'clsx'
 import { ComponentSchema } from 'formiojs'
 import React from 'react'
 
-interface IContentComponent extends ComponentSchema {
+export interface IContentComponent extends ComponentSchema {
   html: string
   type: 'content'
 }
 
-interface IContentProps extends IComponentProps {
+export interface IContentProps extends IComponentProps {
   component: IContentComponent
 }
 

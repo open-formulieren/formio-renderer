@@ -1,0 +1,20 @@
+import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
+import { Label } from './label.component'
+
+<Meta title="Components / Reusable / Label" component={Label} />
+
+export const Template = (args) => <Label {...args} />
+
+Label
+===
+
+Label component.
+
+<Canvas>
+  <Story name="Label" args={{component: {label: 'first name'}}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+
+<ArgsTable of={Label}/>

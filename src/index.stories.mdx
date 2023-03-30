@@ -1,0 +1,24 @@
+import {ArgsTable, Canvas, Meta, Story} from "@storybook/addon-docs";
+import {FormioForm} from "./index";
+import {FORMIO_EXAMPLE} from "@fixtures";
+
+<Meta title="Getting started / FormioForm" component={FormioForm} />
+
+export const Template = (args) => <FormioForm {...args} />
+
+FormioForm
+===
+
+_Main entrypoint for this library._
+
+Renderer for rendering a Form.io configuration passed as form. Iterates over children and returns
+`React.ReactElement` containing the rendered form.
+
+See [RenderForm](?path=/docs/libraries-renderer--render-form) for more information.
+<Canvas>
+  <Story name="RenderForm" args={{form: {display: 'form', components: FORMIO_EXAMPLE}}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable of={FormioForm}/>
