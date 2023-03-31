@@ -1,8 +1,21 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import {CallbacksContext, RenderComponent, RenderForm} from "./renderer";
-import {FORMIO_EXAMPLE} from "../../fixtures";
+import {expect} from "@storybook/jest";
 
-<Meta title="Libraries / Renderer" component={RenderForm} />
+import {
+  CallbacksContext,
+  DEFAULT_RENDER_CONFIGURATION,
+  RenderComponent,
+  RenderContext,
+  RenderForm,
+  SubmissionContext
+} from "./renderer";
+import {FORMIO_EXAMPLE} from "../../fixtures";
+import {useState} from "react";
+import {FORMIO_CONDITIONAL} from "../../fixtures/formio/formio-conditional";
+import {within} from "@testing-library/dom";
+import {userEvent} from "@storybook/testing-library";
+
+<Meta title="Libraries / Renderer" component={RenderForm}/>
 
 export const RenderFormTemplate = (args) => <RenderForm {...args} />
 
@@ -95,10 +108,93 @@ Rendering a form relies on certain contexts to be provided.
 ```
 
 <Canvas>
-  <Story name="RenderComponent" args={{component: FORMIO_EXAMPLE[0]}}>
+  <Story name="RenderComponent"
+         args={{component: FORMIO_EXAMPLE[0], form: {display: "form", components: FORMIO_EXAMPLE}}}>
     {RenderComponentTemplate.bind({})}
   </Story>
 </Canvas>
 
 <ArgsTable of={RenderComponent}/>
 
+
+export const ConditionalLogicTemplate = (args) => (
+  <CallbacksContext.Provider value={args.callbacks}>
+    <RenderContext.Provider value={args.configuration}>
+      <SubmissionContext.Provider value={args.submission}>
+        <RenderForm form={args.form}/>
+      </SubmissionContext.Provider>
+    </RenderContext.Provider>
+  </CallbacksContext.Provider>
+)
+
+Conditionals
+---
+
+Basic Form.io conditional logic (found in the "Advanced" tab) is evaluated during the render
+process.
+
+<Canvas>
+  <Story
+    name="Conditional logic"
+    args={{
+      configuration: DEFAULT_RENDER_CONFIGURATION,
+      form: {
+        display: 'form',
+        components: FORMIO_CONDITIONAL,
+      },
+      submission: {
+        data: {}
+      },
+      callbacks: {}
+    }}
+    decorators={[(Story, args) => {
+      const [submissionDataState, setSubmissionDataState] = useState(args.args.submission.data)
+      const onChange = (e) => {
+        const name = e.target.name
+        const value = e.target.value
+        setSubmissionDataState({...submissionDataState, [name]: value})
+      }
+      args.args.submission.data = submissionDataState
+      args.args.callbacks.onChange = onChange
+      return Story();
+    }]}
+    play={async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+      const input = canvas.getByLabelText("Favorite animal", {
+        selector: 'input',
+      });
+      expect(await canvas.queryByText("Please motivate why \"cat\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please motivate why \"dog\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please enter you favorite animal.")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"cat\"?")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"dog\"?")).toBeTruthy()
+      await userEvent.type(input, 'horse', {delay: 100});
+      expect(await canvas.queryByText("Please motivate why \"cat\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please motivate why \"dog\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please enter you favorite animal.")).toBeFalsy()
+      expect(await canvas.queryByText("Have you tried \"cat\"?")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"dog\"?")).toBeTruthy()
+      await userEvent.clear(input);
+      await userEvent.type(input, 'cat', {delay: 100});
+      expect(await canvas.queryByText("Please motivate why \"cat\" is your favorite animal...")).toBeTruthy()
+      expect(await canvas.queryByText("Please motivate why \"dog\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please enter you favorite animal.")).toBeFalsy()
+      expect(await canvas.queryByText("Have you tried \"cat\"?")).toBeFalsy()
+      expect(await canvas.queryByText("Have you tried \"dog\"?")).toBeTruthy()
+      await userEvent.clear(input);
+      await userEvent.type(input, 'dog', {delay: 100});
+      expect(await canvas.queryByText("Please motivate why \"cat\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please motivate why \"dog\" is your favorite animal...")).toBeTruthy()
+      expect(await canvas.queryByText("Please enter you favorite animal.")).toBeFalsy()
+      expect(await canvas.queryByText("Have you tried \"cat\"?")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"dog\"?")).toBeFalsy()
+      await userEvent.clear(input);
+      expect(await canvas.queryByText("Please motivate why \"cat\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please motivate why \"dog\" is your favorite animal...")).toBeNull()
+      expect(await canvas.queryByText("Please enter you favorite animal.")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"cat\"?")).toBeTruthy()
+      expect(await canvas.queryByText("Have you tried \"dog\"?")).toBeTruthy()
+    }}>
+    {ConditionalLogicTemplate.bind({})}
+  </Story>
+</Canvas>

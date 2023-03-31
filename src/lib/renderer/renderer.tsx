@@ -37,9 +37,10 @@ export const RenderContext = React.createContext<IRenderConfiguration>(DEFAULT_R
 export const SubmissionContext = React.createContext<ISubmission>({ data: {}, metadata: {} })
 
 export interface IRendererComponent extends ComponentSchema {
-  columns: IFormioColumn[]
-  components: IRendererComponent[]
+  columns?: IFormioColumn[]
+  components?: IRendererComponent[]
   id: string
+  key: string
   type: string
 }
 
@@ -69,20 +70,14 @@ export interface IRenderFormProps {
 export const RenderForm = ({ form }: IRenderFormProps): React.ReactElement => {
   const children =
     form.components?.map((component: IRendererComponent, i: number) => (
-      <RenderComponent key={component.id || i} component={component} />
+      <RenderComponent key={component.id || i} component={component} form={form} />
     )) || null
   return <React.Fragment>{children}</React.Fragment>
 }
 
-export interface IRendererComponent extends ComponentSchema {
-  columns: IFormioColumn[]
-  components: IRendererComponent[]
-  id: string
-  type: string
-}
-
 export interface IRenderComponentProps {
   component: IColumnComponent | IRendererComponent
+  form: IFormioForm
 }
 
 /**
@@ -112,10 +107,19 @@ export interface IRenderComponentProps {
  * @external {RenderContext} Expects `RenderContext` to be available.
  * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
-export const RenderComponent = ({ component }: IRenderComponentProps): React.ReactElement => {
+export const RenderComponent = ({
+  component,
+  form
+}: IRenderComponentProps): React.ReactElement | null => {
+  const show = useConditional(component, form)
   const callbacks = useContext(CallbacksContext)
-  const value = useValue(component)
+  const value = useValue(component, show)
   const Component = useComponentType(component)
+
+  // Basic Form.io conditional.
+  if (!show) {
+    return null
+  }
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing
@@ -129,14 +133,23 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
 
   // Regular children, either from component or column.
   const childComponents = cComponents?.map((c: IRendererComponent, i: number) => (
-    <RenderComponent key={c.id || i} component={c} />
+    <RenderComponent key={c.id || i} component={c} form={form} />
   ))
 
   // Columns from component.
   const childColumns = cColumns?.map((c: IFormioColumn, i) => (
     <RenderComponent
       key={i}
-      component={{ ...c, defaultValue: undefined, key: undefined, type: 'column' }}
+      component={{
+        ...c,
+        clearOnHide: false,
+        conditional: { eq: undefined, show: undefined, when: undefined },
+        defaultValue: undefined,
+        hidden: false,
+        key: undefined,
+        type: 'column'
+      }}
+      form={form}
     />
   ))
 
@@ -147,6 +160,7 @@ export const RenderComponent = ({ component }: IRenderComponentProps): React.Rea
     </Component>
   )
 }
+
 /**
  * Fallback component, gets used when no other component is found within the `RenderContext`
  * The Fallback component makes sure (child) components keep being rendered with as little side
@@ -167,12 +181,71 @@ export const useComponentType = (
 }
 
 /**
- * Custom hook resolving the value from `ValuesContext`.
- * @external {RenderContext} Expects `RenderContext` to be available.
+ * Evaluates the `component.conditional` (if set) and returns whether the component should be shown.
+ * This does not evaluate complex form logic but merely the basic Form.io conditional logic (found
+ * in the "Advanced" tab).
+ *
+ * @external {SubmissionContext} Expects `RenderContext` to be available.
+ * @return {boolean} If a conditional passes, the show argument is returned to respect it's
+ * configuration. If a conditional does not pass, `!component.hidden` is used as return value.
+ */
+export const useConditional = (
+  component: IColumnComponent | IRendererComponent,
+  form: IFormioForm
+) => {
+  const { eq, show, when } = component?.conditional || {}
+  const isConditionalSet = typeof show == 'boolean' && when
+  const otherComponent = getComponentByKey(when as string, form)
+  const otherValue = useValue(otherComponent) || ''
+  const isEqual = eq === otherValue
+
+  if (!isConditionalSet || !otherComponent || !isEqual) {
+    return !component.hidden
+  }
+
+  return show
+}
+
+/**
+ * Custom hook resolving `component` value from `ValuesContext`.
+ * @param component
+ * @param show When set and false, `component` is considered to be hidden. In such case the value is
+ *   set to `null` if `component.clearOnHide` is set.
+ * @external {SubmissionContext} Expects `RenderContext` to be available.
  */
 export const useValue = (
-  component: IColumnComponent | IRendererComponent
-): value | value[] | undefined => {
+  component: IColumnComponent | IRendererComponent | null,
+  show = true
+): value | value[] => {
   const values = useContext(SubmissionContext).data
-  return component.key ? values[component.key] : component.defaultValue
+
+  if (!component?.key) {
+    return null
+  }
+
+  if (!show && component.clearOnHide) {
+    values[component.key] = null
+    return null
+  }
+
+  return values[component.key] || component.defaultValue || null
+}
+
+/**
+ * Finds component with `key` in `form` recursively, return null if the component cannot  be found.
+ */
+export const getComponentByKey = (key: string, form: IFormioForm): IRendererComponent | null => {
+  return (
+    (form.components
+      .reduce((acc, val: IRendererComponent) => {
+        const components = val.components || []
+        const columns = val.columns || []
+        const columnComponents = columns.reduce(
+          (acc, val) => [...acc, ...val.components],
+          form.components
+        )
+        return [...acc, ...components, ...columnComponents]
+      }, [])
+      .find((c) => c.key === key) as IRendererComponent) || null
+  )
 }

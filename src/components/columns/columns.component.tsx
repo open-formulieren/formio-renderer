@@ -37,11 +37,16 @@ export interface IFormioColumn {
 }
 
 export interface IColumnComponent extends IFormioColumn {
+  clearOnHide: false
   defaultValue: undefined
-
+  hidden: false
   key: undefined
-
   type: 'column'
+  conditional: {
+    eq: undefined
+    show: undefined
+    when: undefined
+  }
 }
 
 export interface IColumnProps extends IComponentProps {
