@@ -1,16 +1,16 @@
 {
-  "name": "formio-renderer",
+  "name": "@open-formulieren/formio-renderer",
   "version": "1.0.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "author": "",
   "license": "MIT",
-  "repository": "/formio-renderer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-formulieren/formio-renderer.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
