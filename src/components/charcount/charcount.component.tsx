@@ -1,11 +1,11 @@
-import { IComponentProps } from '@types'
-import clsx from 'clsx'
-import React from 'react'
+import {IComponentProps} from '@types';
+import clsx from 'clsx';
+import React from 'react';
 
 export interface ICharCountProps extends IComponentProps {
-  count: number
+  count: number;
 
-  pristine: boolean
+  pristine: boolean;
 }
 
 /**
@@ -14,12 +14,12 @@ export interface ICharCountProps extends IComponentProps {
  * modified.
  */
 export const CharCount = (charCountProps: ICharCountProps): React.ReactElement | null => {
-  const { count, pristine } = charCountProps
-  const className = clsx(`of-${charCountProps.component.type}__charcount`)
+  const {count, pristine} = charCountProps;
+  const className = clsx(`of-${charCountProps.component.type}__charcount`);
 
   if (pristine) {
-    return null
+    return null;
   }
 
-  return <span className={className}>{count} characters</span>
-}
+  return <span className={className}>{count} characters</span>;
+};

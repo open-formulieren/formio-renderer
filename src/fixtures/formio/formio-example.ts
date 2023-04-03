@@ -6,7 +6,7 @@ export const FORMIO_EXAMPLE = [
     placeholder: 'Enter your first name.',
     input: true,
     tooltip: 'Enter your first name',
-    description: 'Enter your first name'
+    description: 'Enter your first name',
   },
   {
     type: 'textfield',
@@ -15,7 +15,7 @@ export const FORMIO_EXAMPLE = [
     placeholder: 'Enter your last name',
     input: true,
     tooltip: 'Enter your last name',
-    description: 'Enter your last name'
+    description: 'Enter your last name',
   },
   {
     type: 'select',
@@ -26,31 +26,31 @@ export const FORMIO_EXAMPLE = [
       values: [
         {
           value: 'raindropsOnRoses',
-          label: 'Raindrops on roses'
+          label: 'Raindrops on roses',
         },
         {
           value: 'whiskersOnKittens',
-          label: 'Whiskers on Kittens'
+          label: 'Whiskers on Kittens',
         },
         {
           value: 'brightCopperKettles',
-          label: 'Bright Copper Kettles'
+          label: 'Bright Copper Kettles',
         },
         {
           value: 'warmWoolenMittens',
-          label: 'Warm Woolen Mittens'
-        }
-      ]
+          label: 'Warm Woolen Mittens',
+        },
+      ],
     },
     dataSrc: 'values',
     template: '<span>{{ item.label }}</span>',
     multiple: true,
-    input: true
+    input: true,
   },
   {
     type: 'button',
     action: 'submit',
     label: 'Submit',
-    theme: 'primary'
-  }
-]
+    theme: 'primary',
+  },
+];

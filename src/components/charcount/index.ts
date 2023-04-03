@@ -1,1 +1,1 @@
-export * from './charcount.component'
+export * from './charcount.component';

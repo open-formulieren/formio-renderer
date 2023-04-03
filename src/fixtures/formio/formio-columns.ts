@@ -19,7 +19,7 @@ export const FORMIO_COLUMNS = {
       offset: 0,
       components: [],
       sizeMobile: 4,
-      currentWidth: 6
+      currentWidth: 6,
     },
     {
       pull: 0,
@@ -29,8 +29,8 @@ export const FORMIO_COLUMNS = {
       offset: 0,
       components: [],
       sizeMobile: 4,
-      currentWidth: 6
-    }
+      currentWidth: 6,
+    },
   ],
   dbIndex: false,
   overlay: {
@@ -38,7 +38,7 @@ export const FORMIO_COLUMNS = {
     left: '',
     style: '',
     width: '',
-    height: ''
+    height: '',
   },
   tooltip: '',
   disabled: false,
@@ -51,7 +51,7 @@ export const FORMIO_COLUMNS = {
     multiple: false,
     required: false,
     customPrivate: false,
-    strictDateValidation: false
+    strictDateValidation: false,
   },
   autofocus: false,
   encrypted: false,
@@ -70,7 +70,7 @@ export const FORMIO_COLUMNS = {
   conditional: {
     eq: '',
     show: null,
-    when: null
+    when: null,
   },
   customClass: '',
   description: '',
@@ -84,5 +84,5 @@ export const FORMIO_COLUMNS = {
   calculateServer: false,
   allowMultipleMasks: false,
   customDefaultValue: '',
-  allowCalculateOverride: false
-}
+  allowCalculateOverride: false,
+};

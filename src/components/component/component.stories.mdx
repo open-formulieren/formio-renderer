@@ -1,14 +1,14 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import {Component} from "./component.component";
 
-<Meta title="Components / Reusable / Component" component={Component}/>
+import {Component} from './component.component';
 
-export const Template = (args) => <Component {...args}>
-  The quick brown fox jumps over the lazy dog.
-</Component>
+<Meta title="Components / Reusable / Component" component={Component} />
 
-Component
-===
+export const Template = args => (
+  <Component {...args}>The quick brown fox jumps over the lazy dog.</Component>
+);
+
+# Component
 
 Structural wrapper for the component. A component's implementation should be placed in `children`
 prop.
@@ -19,4 +19,4 @@ prop.
   </Story>
 </Canvas>
 
-<ArgsTable of={Component}/>
+<ArgsTable of={Component} />

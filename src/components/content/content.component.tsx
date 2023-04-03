@@ -1,15 +1,15 @@
-import { IComponentProps } from '@types'
-import clsx from 'clsx'
-import { ComponentSchema } from 'formiojs'
-import React from 'react'
+import {IComponentProps} from '@types';
+import clsx from 'clsx';
+import {ComponentSchema} from 'formiojs';
+import React from 'react';
 
 export interface IContentComponent extends ComponentSchema {
-  html: string
-  type: 'content'
+  html: string;
+  type: 'content';
 }
 
 export interface IContentProps extends IComponentProps {
-  component: IContentComponent
+  component: IContentComponent;
 }
 
 /**
@@ -19,13 +19,13 @@ export interface IContentProps extends IComponentProps {
  * WARNING: HTML is passed into dangerouslySetInnerHTML prop.
  */
 export const Content = (contentProps: IContentProps): React.ReactElement => {
-  const { component, children } = contentProps
-  const className = clsx(`of-${contentProps.component.type}`)
+  const {component, children} = contentProps;
+  const className = clsx(`of-${contentProps.component.type}`);
 
   return (
     <div className={className}>
-      <div dangerouslySetInnerHTML={{ __html: component?.html }} />
+      <div dangerouslySetInnerHTML={{__html: component?.html}} />
       {children}
     </div>
-  )
-}
+  );
+};

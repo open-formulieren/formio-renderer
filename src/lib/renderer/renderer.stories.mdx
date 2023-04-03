@@ -1,35 +1,34 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import {CallbacksContext, RenderComponent, RenderForm} from "./renderer";
-import {FORMIO_EXAMPLE} from "../../fixtures";
+
+import {FORMIO_EXAMPLE} from '../../fixtures';
+import {CallbacksContext, RenderComponent, RenderForm} from './renderer';
 
 <Meta title="Libraries / Renderer" component={RenderForm} />
 
-export const RenderFormTemplate = (args) => <RenderForm {...args} />
+export const RenderFormTemplate = args => <RenderForm {...args} />;
 
-RenderForm
-===
+# RenderForm
 
 Renderer for rendering a Form.io configuration passed as form. Iterates over children and returns
 `React.ReactElement` containing the rendered form.
 
-Configuring custom components
----
+## Configuring custom components
 
 `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
-`useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
-mapping between a component type and the (React) component / Function. Overriding RenderContext
-allows for specifying components.
+`useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a mapping
+between a component type and the (React) component / Function. Overriding RenderContext allows for
+specifying components.
 
-All components receive the `IComponentProps` as props containing the required context to render
-the component. Components should return a React.ReactElement.
+All components receive the `IComponentProps` as props containing the required context to render the
+component. Components should return a React.ReactElement.
 
-Context
----
+## Context
+
 Rendering a form relies on certain contexts to be provided.
 
- - Expects `CallbackContext` to be available.
- - Expects `RenderContext` to be available.
- - Expects `SubmissionContext` to be available.
+- Expects `CallbackContext` to be available.
+- Expects `RenderContext` to be available.
+- Expects `SubmissionContext` to be available.
 
 ```tsx
 <CallbacksContext.Provider value={ICallbackConfiguration}>
@@ -47,42 +46,38 @@ Rendering a form relies on certain contexts to be provided.
   </Story>
 </Canvas>
 
-<ArgsTable of={RenderForm}/>
+<ArgsTable of={RenderForm} />
 
+export const RenderComponentTemplate = args => <RenderComponent {...args} />;
 
-export const RenderComponentTemplate = (args) => <RenderComponent {...args} />
+# Component
 
-Component
-===
+Renderer for rendering a Form.io component passed as component. Iterates over children (and columns)
+and returns a `React.ReactElement` containing the rendered component.
 
-Renderer for rendering a Form.io component passed as component. Iterates over children (and
-columns) and returns a `React.ReactElement` containing the rendered component.
+## Columns
 
-Columns
----
-
-In certain cases a component (is not defined as) a component but something else (e.g. a column)
-We deal with this edge cases by extending the schema with a custom (component) type allowing it
-to be picked up by `useComponentType` and rendered.
+In certain cases a component (is not defined as) a component but something else (e.g. a column) We
+deal with this edge cases by extending the schema with a custom (component) type allowing it to be
+picked up by `useComponentType` and rendered.
 
 This allows for components to remain simple and increases compatibility with existing design
 systems.
 
-Configuring custom components
----
+## Configuring custom components
 
 `RenderContext` expects a `IRenderConfiguration` which is expected to be available via
-`useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a
-mapping between a component type and the (React) component / Function. Overriding RenderContext
-allows for specifying components.
+`useContext(RenderContext)`. The IRenderConfiguration's `components` entry should contain a mapping
+between a component type and the (React) component / Function. Overriding RenderContext allows for
+specifying components.
 
-Context
----
+## Context
+
 Rendering a form relies on certain contexts to be provided.
 
- - Expects `CallbackContext` to be available.
- - Expects `RenderContext` to be available.
- - Expects `SubmissionContext` to be available.
+- Expects `CallbackContext` to be available.
+- Expects `RenderContext` to be available.
+- Expects `SubmissionContext` to be available.
 
 ```tsx
 <CallbacksContext.Provider value={ICallbackConfiguration}>
@@ -100,5 +95,4 @@ Rendering a form relies on certain contexts to be provided.
   </Story>
 </Canvas>
 
-<ArgsTable of={RenderComponent}/>
-
+<ArgsTable of={RenderComponent} />

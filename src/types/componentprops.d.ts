@@ -1,16 +1,17 @@
-import { ICallbackConfiguration } from './config'
-import { value, values } from './values'
-import { ComponentSchema } from 'formiojs'
-import React from 'react'
+import {ComponentSchema} from 'formiojs';
+import React from 'react';
+
+import {ICallbackConfiguration} from './config';
+import {value, values} from './values';
 
 interface IComponentProps {
-  callbacks: ICallbackConfiguration
+  callbacks: ICallbackConfiguration;
 
-  children?: React.ReactNode
+  children?: React.ReactNode;
 
-  component: ComponentSchema
+  component: ComponentSchema;
 
-  errors: string[]
+  errors: string[];
 
-  value: value | values | undefined
+  value: value | values | undefined;
 }

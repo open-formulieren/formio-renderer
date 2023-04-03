@@ -1,18 +1,18 @@
-import { CharCount, Component, Description, Errors, Label } from '@components'
-import { IComponentProps } from '@types'
-import clsx from 'clsx'
-import { ComponentSchema } from 'formiojs'
-import React, { useState } from 'react'
+import {CharCount, Component, Description, Errors, Label} from '@components';
+import {IComponentProps} from '@types';
+import clsx from 'clsx';
+import {ComponentSchema} from 'formiojs';
+import React, {useState} from 'react';
 
 export interface ITextFieldComponent extends ComponentSchema {
-  id: string
-  inputMask: string
-  mask: string
-  type: 'textfield'
+  id: string;
+  inputMask: string;
+  mask: string;
+  type: 'textfield';
 }
 
 export interface ITextFieldProps extends IComponentProps {
-  component: ITextFieldComponent
+  component: ITextFieldComponent;
 }
 
 /**
@@ -20,14 +20,14 @@ export interface ITextFieldProps extends IComponentProps {
  * masks and validations, allowing users to mold information into desired formats.
  */
 export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
-  const { children, component, value, callbacks = {}, ...props } = componentProps
-  const { onChange, ..._callbacks } = callbacks
-  const [pristineState, setPristineState] = useState<boolean>(true)
+  const {children, component, value, callbacks = {}, ...props} = componentProps;
+  const {onChange, ..._callbacks} = callbacks;
+  const [pristineState, setPristineState] = useState<boolean>(true);
   const [charCountState, setCharCountState] = useState<number>(
     String(component.defaultValue).length
-  )
+  );
 
-  const inputClassName = clsx(`of-${componentProps.component.type}`)
+  const inputClassName = clsx(`of-${componentProps.component.type}`);
 
   const inputAttrs = {
     disabled: component.disabled,
@@ -39,17 +39,17 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
     pattern: component.validate?.pattern || undefined,
     placeholder: component.placeholder || component.mask || component.inputMask || undefined,
     required: component.validate?.required,
-    ...component.widget // TODO: Check if component.hidden should be used manually or even component.inputType.
-  }
+    ...component.widget, // TODO: Check if component.hidden should be used manually or even component.inputType.
+  };
 
   /**
    * @param {React.FormEvent} event
    */
   const _onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setCharCountState(event.currentTarget.value.length)
-    setPristineState(false)
-    onChange?.call(event.target, event)
-  }
+    setCharCountState(event.currentTarget.value.length);
+    setPristineState(false);
+    onChange?.call(event.target, event);
+  };
 
   return (
     <Component {...componentProps}>
@@ -67,5 +67,5 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
       <Description {...componentProps} />
       <Errors {...componentProps} />
     </Component>
-  )
-}
+  );
+};
