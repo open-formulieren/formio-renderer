@@ -1,1 +1,1 @@
-export * from './formio'
+export * from './formio';

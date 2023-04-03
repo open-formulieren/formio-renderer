@@ -1,25 +1,26 @@
-import { ISubmission } from './types/submission'
 import {
   CallbacksContext,
   DEFAULT_RENDER_CONFIGURATION,
   RenderContext,
   RenderForm,
-  SubmissionContext
-} from '@lib/renderer'
-import { ICallbackConfiguration, IFormioForm, IRenderConfiguration } from '@types'
-import React from 'react'
+  SubmissionContext,
+} from '@lib/renderer';
+import {ICallbackConfiguration, IFormioForm, IRenderConfiguration} from '@types';
+import React from 'react';
 
-export * from '@components'
-export * from '@lib/renderer'
+import {ISubmission} from './types/submission';
+
+export * from '@components';
+export * from '@lib/renderer';
 
 export interface IFormioFormProps {
-  callbacks: ICallbackConfiguration
+  callbacks: ICallbackConfiguration;
 
-  configuration: IRenderConfiguration
+  configuration: IRenderConfiguration;
 
-  form: IFormioForm
+  form: IFormioForm;
 
-  submission: ISubmission
+  submission: ISubmission;
 }
 
 /**
@@ -38,7 +39,7 @@ export const FormioForm = ({
   form,
   callbacks = {},
   configuration = DEFAULT_RENDER_CONFIGURATION,
-  submission = { data: {}, metadata: {} }
+  submission = {data: {}, metadata: {}},
 }: IFormioFormProps): React.ReactElement => {
   return (
     <CallbacksContext.Provider value={callbacks}>
@@ -48,5 +49,5 @@ export const FormioForm = ({
         </SubmissionContext.Provider>
       </RenderContext.Provider>
     </CallbacksContext.Provider>
-  )
-}
+  );
+};

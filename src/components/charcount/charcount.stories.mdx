@@ -1,33 +1,32 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import {CharCount} from './charcount.component'
 
+import {CharCount} from './charcount.component';
 
-<Meta title="Components / Reusable / CharCount" component={CharCount}/>
+<Meta title="Components / Reusable / CharCount" component={CharCount} />
 
-export const Template = (args) => <CharCount {...args} />
+export const Template = args => <CharCount {...args} />;
 
-CharCount
-===
+# CharCount
 
-Reusable component showing `count` as number of characters typed into the component. Character
-count is only shown when `pristine=false` indicating that the component's initials state is
-modified.
+Reusable component showing `count` as number of characters typed into the component. Character count
+is only shown when `pristine=false` indicating that the component's initials state is modified.
 
-__Not pristine__ `<charcount pristine={false}/>`
+**Not pristine** `<charcount pristine={false}/>`
+
 <Canvas>
   <Story name="Non-pristine CharCount (shown)" args={{component: {}, count: 10, pristine: false}}>
     {Template.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable of={CharCount}/>
+<ArgsTable of={CharCount} />
 
+**Pristine** `<charcount pristine={true}/>`
 
-__Pristine__ `<charcount pristine={true}/>`
 <Canvas>
   <Story name="Pristine CharCount (not shown)" args={{component: {}, count: 10, pristine: true}}>
     {Template.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable of={CharCount}/>
+<ArgsTable of={CharCount} />

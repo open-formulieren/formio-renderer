@@ -1,21 +1,18 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import {Column, Columns} from "./columns.component";
-import {FORMIO_COLUMNS} from "../../fixtures";
 
+import {FORMIO_COLUMNS} from '../../fixtures';
+import {Column, Columns} from './columns.component';
 
-<Meta title="Components / Columns" component={Columns}/>
+<Meta title="Components / Columns" component={Columns} />
 
-export const Template = (args) => <Columns {...args}>
-  <Column component={{type: 'column'}}>
-    The quick brown fox jumps over the lazy dog.
-  </Column>
-  <Column component={{type: 'column'}}>
-    The quick brown fox jumps over the lazy dog.
-  </Column>
-</Columns>
+export const Template = args => (
+  <Columns {...args}>
+    <Column component={{type: 'column'}}>The quick brown fox jumps over the lazy dog.</Column>
+    <Column component={{type: 'column'}}>The quick brown fox jumps over the lazy dog.</Column>
+  </Columns>
+);
 
-Columns
-===
+# Columns
 
 This component can be used for grouping other components, like Text Field, Text Area, Checkbox etc.,
 into configurable columns. It might be useful if you want to display more than one component in one
@@ -27,4 +24,4 @@ line.
   </Story>
 </Canvas>
 
-<ArgsTable of={Columns}/>
+<ArgsTable of={Columns} />

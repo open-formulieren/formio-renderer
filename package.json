@@ -1,20 +1,19 @@
 {
-  "name": "formio-renderer",
+  "name": "@open-formulieren/formio-renderer",
   "version": "1.0.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "author": "",
-  "license": "MIT",
-  "repository": "/formio-renderer",
+  "license": "EUPL-1.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-formulieren/formio-renderer.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
-    "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
     "test:lint": "eslint .",
@@ -22,7 +21,10 @@
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "build:storybook": "build-storybook --webpack-stats-json",
+    "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
+    "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'"
   },
   "peerDependencies": {
     "react": "^17.0.2"
@@ -34,12 +36,13 @@
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",
     "@storybook/addon-links": "^6.5.16",
-    "@storybook/builder-webpack4": "^6.5.16",
-    "@storybook/manager-webpack4": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/user-event": "^7.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.38",
     "@types/react": "^18.0.28",

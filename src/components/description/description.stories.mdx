@@ -1,20 +1,22 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import { Description } from './description.component'
+
+import {Description} from './description.component';
 
 <Meta title="Components / Reusable / Description" component={Description} />
 
-export const Template = (args) => <Description {...args} />
+export const Template = args => <Description {...args} />;
 
-Description
-===
+# Description
 
 Description/help text section of a component.
 
 <Canvas>
-  <Story name="Description" args={{component: {description: 'The quick brown fox jumps over the lazy dog.'}}}>
+  <Story
+    name="Description"
+    args={{component: {description: 'The quick brown fox jumps over the lazy dog.'}}}
+  >
     {Template.bind({})}
   </Story>
 </Canvas>
 
-
-<ArgsTable of={Description}/>
+<ArgsTable of={Description} />

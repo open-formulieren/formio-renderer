@@ -1,12 +1,12 @@
 import {ArgsTable, Canvas, Meta, Story} from '@storybook/addon-docs';
-import { Label } from './label.component'
+
+import {Label} from './label.component';
 
 <Meta title="Components / Reusable / Label" component={Label} />
 
-export const Template = (args) => <Label {...args} />
+export const Template = args => <Label {...args} />;
 
-Label
-===
+# Label
 
 Label component.
 
@@ -16,5 +16,4 @@ Label component.
   </Story>
 </Canvas>
 
-
-<ArgsTable of={Label}/>
+<ArgsTable of={Label} />

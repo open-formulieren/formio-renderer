@@ -1,2 +1,2 @@
-export * from './formio-columns'
-export * from './formio-example'
+export * from './formio-columns';
+export * from './formio-example';

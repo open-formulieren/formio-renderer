@@ -1,9 +1,10 @@
-import { IComponentProps } from './componentprops'
-import { IColumnProps } from '@components'
-import React from 'react'
+import {IColumnProps} from '@components';
+import React from 'react';
+
+import {IComponentProps} from './componentprops';
 
 export interface IRenderConfiguration {
-  components: IComponentConfiguration
+  components: IComponentConfiguration;
 }
 
 /**
@@ -11,14 +12,14 @@ export interface IRenderConfiguration {
  * as third-party systems might need different callbacks.
  */
 export interface ICallbackConfiguration {
-  onBlur?: callback | undefined
-  onChange?: callback | undefined
-  onSubmit?: callback | undefined
-  [index: string]: callback | undefined
+  onBlur?: callback | undefined;
+  onChange?: callback | undefined;
+  onSubmit?: callback | undefined;
+  [index: string]: callback | undefined;
 }
 
-export type callback = (e: Event | React.BaseSyntheticEvent) => void
+export type callback = (e: Event | React.BaseSyntheticEvent) => void;
 
 export interface IComponentConfiguration {
-  [index: string]: React.ComponentType<IColumnProps | IComponentProps>
+  [index: string]: React.ComponentType<IColumnProps | IComponentProps>;
 }

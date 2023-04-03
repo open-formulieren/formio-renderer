@@ -1,15 +1,15 @@
-import { Component } from '@components'
-import { IComponentProps } from '@types'
-import clsx from 'clsx'
-import { ComponentSchema } from 'formiojs'
-import React from 'react'
+import {Component} from '@components';
+import {IComponentProps} from '@types';
+import clsx from 'clsx';
+import {ComponentSchema} from 'formiojs';
+import React from 'react';
 
 export interface IColumnsComponent extends ComponentSchema {
-  type: 'columns'
+  type: 'columns';
 }
 
 export interface IColumnsProps extends IComponentProps {
-  component: IColumnsComponent
+  component: IColumnsComponent;
 }
 
 /**
@@ -18,34 +18,34 @@ export interface IColumnsProps extends IComponentProps {
  * component in one line.
  */
 export const Columns = (componentProps: IColumnsProps): React.ReactElement => {
-  const { children } = componentProps
-  const className = clsx(`of-${componentProps.component.type}`)
+  const {children} = componentProps;
+  const className = clsx(`of-${componentProps.component.type}`);
 
   return (
     <Component {...componentProps}>
       <div className={className}>{children}</div>
     </Component>
-  )
-}
+  );
+};
 
-type ColumnSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+type ColumnSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export interface IFormioColumn {
-  components: ComponentSchema[]
-  size: ColumnSize
-  sizeMobile?: ColumnSize
+  components: ComponentSchema[];
+  size: ColumnSize;
+  sizeMobile?: ColumnSize;
 }
 
 export interface IColumnComponent extends IFormioColumn {
-  defaultValue: undefined
+  defaultValue: undefined;
 
-  key: undefined
+  key: undefined;
 
-  type: 'column'
+  type: 'column';
 }
 
 export interface IColumnProps extends IComponentProps {
-  component: IColumnComponent
+  component: IColumnComponent;
 }
 
 /**
@@ -54,8 +54,8 @@ export interface IColumnProps extends IComponentProps {
  * entry in a Form.io component.
  */
 export const Column = (columnProps: IColumnProps): React.ReactElement => {
-  const { children } = columnProps
-  const className = clsx(`of-column`)
+  const {children} = columnProps;
+  const className = clsx(`of-column`);
 
-  return <section className={className}>{children}</section>
-}
+  return <section className={className}>{children}</section>;
+};

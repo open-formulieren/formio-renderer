@@ -1,1 +1,1 @@
-export * from './columns.component'
+export * from './columns.component';
