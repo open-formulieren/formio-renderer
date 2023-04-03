@@ -21,7 +21,9 @@
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
+    "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'"
   },
   "peerDependencies": {
     "react": "^17.0.2"
@@ -39,6 +41,7 @@
     "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/user-event": "^7.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.38",
     "@types/react": "^18.0.28",
