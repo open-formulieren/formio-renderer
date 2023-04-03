@@ -22,6 +22,7 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
     "storybook": "start-storybook -p 6006",
+    "build:storybook": "build-storybook --webpack-stats-json",
     "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
     "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'"
   },
@@ -35,8 +36,6 @@
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",
     "@storybook/addon-links": "^6.5.16",
-    "@storybook/builder-webpack4": "^6.5.16",
-    "@storybook/manager-webpack4": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^4.2.4",
