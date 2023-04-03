@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "author": "",
-  "license": "MIT",
+  "license": "EUPL-1.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/open-formulieren/formio-renderer.git"
