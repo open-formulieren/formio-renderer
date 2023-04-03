@@ -29,7 +29,7 @@ jobs:
       - name: Build library
         run: yarn build
 
-      # Not set up/configured yet
+      # TODO: Not set up/configured yet
       # - name: Run tests
       #   run: yarn test
 

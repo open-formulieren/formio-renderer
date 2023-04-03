@@ -62,6 +62,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1
 
+  # TODO
   # chromatic:
   #   name: Visual regression test with Chromatic
   #   runs-on: ubuntu-latest
