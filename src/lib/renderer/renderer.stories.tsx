@@ -2,6 +2,7 @@ import {FORMIO_EXAMPLE} from '@fixtures';
 import {DEFAULT_RENDER_CONFIGURATION, RenderComponent, RenderForm} from '@lib/renderer/renderer';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
+import {Formik} from 'formik';
 import React from 'react';
 
 const meta: Meta<typeof RenderForm> = {
@@ -56,3 +57,10 @@ renderComponent.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John');
 };
+renderComponent.decorators = [
+  Story => (
+    <Formik initialValues={{}} onSubmit={() => {}}>
+      {Story()}
+    </Formik>
+  ),
+];
