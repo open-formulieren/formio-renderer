@@ -12,10 +12,13 @@ import {
   IComponentProps,
   IFormioForm,
   IRenderConfiguration,
+  IValues,
   value,
 } from '@types';
+import {Formik} from 'formik';
+import {FormikHelpers} from 'formik/dist/types';
 import {ComponentSchema} from 'formiojs';
-import React, {useContext} from 'react';
+import React, {FormHTMLAttributes, useContext} from 'react';
 
 import {ISubmission} from '../../types/submission';
 
@@ -39,20 +42,25 @@ export const RenderContext = React.createContext<IRenderConfiguration>(
 /** React context providing the ISubmission. */
 export const SubmissionContext = React.createContext<ISubmission>({data: {}, metadata: {}});
 
-export interface IRendererComponent extends ComponentSchema {
-  columns: IFormioColumn[];
-  components: IRendererComponent[];
-  id: string;
-  type: string;
-}
-
 export interface IRenderFormProps {
+  children: React.ReactNode;
+  configuration: IRenderConfiguration;
   form: IFormioForm;
+  formAttrs: FormHTMLAttributes<HTMLFormElement>;
+  initialValues: IValues;
+  onSubmit: (values: IValues, formikHelpers: FormikHelpers<IValues>) => void | Promise<any>;
 }
 
 /**
  * Renderer for rendering a Form.io configuration passed as form. Iterates over children and returns
  * `React.ReactElement` containing the rendered form.
+ *
+ * Submit form
+ * ---
+ *
+ * The submit button is not provided by `RenderForm` but can be passed using a child component
+ * (tree) which is rendered after the rendered form components.
+ *
  *
  * Configuring custom components
  * ---
@@ -65,22 +73,59 @@ export interface IRenderFormProps {
  * All components receive the `IComponentProps` as props containing the required context to render
  * the component. Components should return a React.ReactElement.
  *
- * @external {CallbacksContext} Expects `CallbackContext` to be available.
- * @external {RenderContext} Expects `RenderContext` to be available.
- * @external {SubmissionContext} Expects `SubmissionContext` to be available.
+ * @external {RenderContext} Provides `RenderContext`.
+ * @external {CallbacksContext} Provides `CallbackContext`.
+ * @external {SubmissionContext} Provides `SubmissionContext`.
  */
-export const RenderForm = ({form}: IRenderFormProps): React.ReactElement => {
-  const children =
+export const RenderForm = ({
+  children,
+  configuration,
+  form,
+  formAttrs,
+  initialValues,
+  onSubmit,
+}: IRenderFormProps): React.ReactElement => {
+  const submissionContext = useContext(SubmissionContext);
+
+  const childComponents =
     form.components?.map((component: IRendererComponent, i: number) => (
       <RenderComponent key={component.id || i} component={component} />
     )) || null;
-  return <React.Fragment>{children}</React.Fragment>;
+
+  return (
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      {props => {
+        const callbacks = {
+          onChange: props.handleChange,
+          onBlur: props.handleBlur,
+        };
+
+        const submission = {
+          data: props.values,
+          metadata: submissionContext.metadata,
+        };
+
+        return (
+          <form onSubmit={props.handleSubmit} {...formAttrs}>
+            <CallbacksContext.Provider value={callbacks}>
+              <SubmissionContext.Provider value={submission}>
+                <RenderContext.Provider value={configuration}>
+                  {childComponents}
+                  {children}
+                </RenderContext.Provider>
+              </SubmissionContext.Provider>
+            </CallbacksContext.Provider>
+          </form>
+        );
+      }}
+    </Formik>
+  );
 };
 
 export interface IRendererComponent extends ComponentSchema {
-  columns: IFormioColumn[];
-  components: IRendererComponent[];
-  id: string;
+  columns?: IFormioColumn[];
+  components?: IRendererComponent[];
+  id?: string;
   type: string;
 }
 
@@ -171,7 +216,7 @@ export const useComponentType = (
 
 /**
  * Custom hook resolving the value from `ValuesContext`.
- * @external {RenderContext} Expects `RenderContext` to be available.
+ * @external {SubmissionContext} Expects `SubmissionContext` to be available.
  */
 export const useValue = (
   component: IColumnComponent | IRendererComponent
