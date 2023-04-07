@@ -7,6 +7,7 @@ import {
   IFormioColumn,
   TextField,
 } from '@components';
+import {validateForm} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
 import {Formik, useField} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
@@ -74,18 +75,32 @@ export const RenderForm = ({
     )) || null;
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {({handleSubmit}) => {
-        return (
-          <form onSubmit={handleSubmit} {...formAttrs}>
-            <RenderContext.Provider value={configuration}>
+    <RenderContext.Provider value={configuration}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validate={async values => {
+          // Convert the validation errors to messages.
+          // TODO: Implement translations.
+          // TODO: Implement "threshold" for errors to figure if/what error(s) should be shown.
+          const result = await validateForm(form, values); // TODO: Pass validators
+          const entries = Object.entries(result).map(([key, validationErrors]) => {
+            const messages = validationErrors.map(validationError => validationError.message);
+            return [key, messages];
+          });
+          return Object.fromEntries(entries);
+        }}
+      >
+        {props => {
+          return (
+            <form onSubmit={props.handleSubmit} {...formAttrs}>
               {childComponents}
               {children}
-            </RenderContext.Provider>
-          </form>
-        );
-      }}
-    </Formik>
+            </form>
+          );
+        }}
+      </Formik>
+    </RenderContext.Provider>
   );
 };
 
@@ -135,6 +150,9 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
   const {value, onBlur, onChange} = field[0];
   const callbacks = {onBlur, onChange};
 
+  // @ts-ignore -- Formik (typing) does not seem to be able to cope well with multiple errors.
+  const errors: string[] = field[1].error || [];
+
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing
   // it to be picked up by the renderer and passed to the parent
@@ -160,7 +178,7 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
 
   // Return the component, pass children.
   return (
-    <Component callbacks={callbacks} component={component} errors={[]} value={value}>
+    <Component callbacks={callbacks} component={component} errors={errors} value={value}>
       {childComponents || childColumns}
     </Component>
   );

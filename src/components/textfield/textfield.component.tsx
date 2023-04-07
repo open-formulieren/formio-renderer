@@ -65,7 +65,7 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
       />
       <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
       <Description {...componentProps} />
-      <Errors {...componentProps} />
+      <Errors pristine={pristineState} {...componentProps} />
     </Component>
   );
 };

@@ -9,29 +9,36 @@ interface IErrorsComponent extends ComponentSchema {
 
 export interface IErrorsProps extends IComponentProps {
   component: IErrorsComponent;
+  pristine: boolean;
 }
 
 /**
- * NOT IMPLEMENTED
+ * Reusable component showing `errors` as list of error messages for the component.
+ * Error list  is only shown when `pristine=false` indicating that the component's initials state is
+ * modified.
  */
-export const Errors = (componentProps: IErrorsProps): React.ReactElement | null => {
-  const {component, errors} = componentProps;
-  const className = clsx(`of-${componentProps.component.type}__errors`);
+export const Errors = (errorProps: IErrorsProps): React.ReactElement | null => {
+  const {} = errorProps;
+  const {errors, pristine, component} = errorProps;
+  const className = clsx(`of-${errorProps.component.type}__error-list`);
+  const listItemClassName = clsx(`of-${errorProps.component.type}__error-list-item`);
+  const labelClassName = clsx(`of-${errorProps.component.type}__error-message`);
 
-  if (!(errors || []).length) {
+  if (pristine || !(errors || []).length) {
     return null;
   }
 
   return (
-    <div className={className} aria-describedby={component.id} role="alert">
-      {errors?.map((error: string, index: number) => {
+    <ul className={className} aria-describedby={component.id}>
+      {errors?.map((error: string) => {
         return (
-          <React.Fragment key={error}>
-            {index > 0 && <br />}
-            {error}
-          </React.Fragment>
+          <li key={error} className={listItemClassName}>
+            <label className={labelClassName} htmlFor={component.key} role="alert">
+              {error}
+            </label>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 };
