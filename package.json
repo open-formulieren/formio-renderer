@@ -76,6 +76,7 @@
     "dist"
   ],
   "dependencies": {
+    "formik": "^2.2.9",
     "clsx": "^1.2.1"
   }
 }
