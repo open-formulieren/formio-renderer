@@ -75,9 +75,9 @@ export const RenderForm = ({
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {props => {
+      {({handleSubmit}) => {
         return (
-          <form onSubmit={props.handleSubmit} {...formAttrs}>
+          <form onSubmit={handleSubmit} {...formAttrs}>
             <RenderContext.Provider value={configuration}>
               {childComponents}
               {children}
