@@ -69,9 +69,9 @@ export const validateForm = async (
  * @param validators An array of `async function`/`string` tuples. The function being the validator
  * function, the string a message used to indicate an invalid value. Each validator is run in order.
  *
- *  The validator function is called with `componentProps` (containing the value) and the error
- *  `message`. The (async) function should return a `Promise` which either resolves (valid) or
- *  rejects (invalid) with a (subclass of) `ValidationError` instantiated with `message`.
+ *  The validator function is called with `componentSchema`, the `value` and the error `message`.
+ *  The (async/sync) function should return a `Promise` which either resolves (valid) or rejects
+ *  (invalid) with a (subclass of) `ValidationError` instantiated with `message`.
  *
  * @throws {ValidationError[]} As promise rejection if invalid.
  *
@@ -86,9 +86,10 @@ export const validate = async (
   // Map all validators into an array of `Promise`s, implementing a catch handler building the
   // `errors` array.
   const errors: ValidationError[] = [];
-  const promises = validators.map(([validatorFunction, message]) =>
-    validatorFunction(componentSchema, value, message).catch((e: ValidationError) => errors.push(e))
-  );
+  const promises = validators.map(([validatorFunction, message]) => {
+    const promise = Promise.resolve(validatorFunction(componentSchema, value, message)); // (a)sync2async
+    return promise.catch((e: ValidationError) => errors.push(e));
+  });
 
   // Wait until all promises are completed. When so: check if the `errors` array contains items,
   // indicating that at least one validation error exists in the array.

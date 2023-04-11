@@ -1,10 +1,12 @@
 import {IColumnProps} from '@components';
+import {validator} from '@lib/validation';
 import React from 'react';
 
 import {IComponentProps} from './componentprops';
 
 export interface IRenderConfiguration {
   components: IComponentConfiguration;
+  validators: validator[];
 }
 
 /**
