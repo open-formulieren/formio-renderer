@@ -87,7 +87,9 @@ export const RenderForm = ({
 
           // Convert the validation errors to messages.
           const entries = Object.entries(result).map(([key, validationErrors]) => {
-            const messages = validationErrors.map(validationError => validationError.message);
+            const messages = validationErrors
+              .map(validationError => validationError.message.trim())
+              .join('\n');
             return [key, messages];
           });
           return Object.fromEntries(entries);
@@ -151,9 +153,7 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
   const field = useField(component.key || OF_MISSING_KEY);
   const {value, onBlur, onChange} = field[0];
   const callbacks = {onBlur, onChange};
-
-  // @ts-ignore -- Formik (typing) does not seem to be able to cope well with multiple errors.
-  const errors: string[] = field[1].error || [];
+  const errors = field[1].error?.split('\n') || []; // Reconstruct array.
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing

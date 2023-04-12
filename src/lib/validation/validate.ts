@@ -10,7 +10,12 @@ import {IFormioForm, IValues, value} from '@types';
 import {ComponentSchema} from 'formiojs';
 
 export type validator = [
-  (componentSchema: ComponentSchema, value: value, message: string) => Promise<void>,
+  (
+    componentSchema: ComponentSchema,
+    value: value,
+    message: string,
+    values?: IValues
+  ) => Promise<void>,
   string
 ];
 
@@ -46,7 +51,7 @@ export const validateForm = async (
     const component = getComponentByKey(key, form);
 
     try {
-      await validate(component, value as value, validators);
+      await validate(component, value as value, values, validators);
     } catch (e) {
       errors[key] = e;
     }
@@ -65,6 +70,7 @@ export const validateForm = async (
  *
  * @param componentSchema Formio component passed to each validator.
  * @param value The value to validate.
+ * @param formValues All the form values.
  *
  * @param validators An array of `async function`/`string` tuples. The function being the validator
  * function, the string a message used to indicate an invalid value. Each validator is run in order.
@@ -81,14 +87,18 @@ export const validateForm = async (
 export const validate = async (
   componentSchema: ComponentSchema,
   value: value,
+  formValues: IValues,
   validators = DEFAULT_VALIDATORS
 ): Promise<void> => {
   // Map all validators into an array of `Promise`s, implementing a catch handler building the
   // `errors` array.
   const errors: ValidationError[] = [];
-  const promises = validators.map(([validatorFunction, message]) => {
-    const promise = Promise.resolve(validatorFunction(componentSchema, value, message)); // (a)sync2async
-    return promise.catch((e: ValidationError) => errors.push(e));
+  const promises = validators.map(async ([validatorFunction, message]) => {
+    try {
+      await validatorFunction(componentSchema, value, message, formValues);
+    } catch (e) {
+      errors.push(e);
+    }
   });
 
   // Wait until all promises are completed. When so: check if the `errors` array contains items,
