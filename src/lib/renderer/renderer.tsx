@@ -7,7 +7,7 @@ import {
   IFormioColumn,
   TextField,
 } from '@components';
-import {DEFAULT_VALIDATORS, validateForm} from '@lib/validation';
+import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
 import {Formik, useField} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
@@ -80,20 +80,7 @@ export const RenderForm = ({
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
-        validate={async values => {
-          // TODO: Implement translations.
-          // TODO: Implement "threshold" for errors to figure if/what error(s) should be shown.
-          const result = await validateForm(form, values, configuration?.validators);
-
-          // Convert the validation errors to messages.
-          const entries = Object.entries(result).map(([key, validationErrors]) => {
-            const messages = validationErrors
-              .map(validationError => validationError.message.trim())
-              .join('\n');
-            return [key, messages];
-          });
-          return Object.fromEntries(entries);
-        }}
+        validate={values => getFormErrors(form, values, configuration.validators)}
       >
         {props => {
           return (

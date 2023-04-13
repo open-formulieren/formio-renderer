@@ -7,6 +7,7 @@ import {
   validateRequired,
 } from '@lib/validation/validators';
 import {IFormioForm, IValues, value} from '@types';
+import {FormikErrors} from 'formik';
 import {ComponentSchema} from 'formiojs';
 
 export type validator = [
@@ -27,25 +28,58 @@ export const DEFAULT_VALIDATORS: validator[] = [
 ];
 
 /**
- * Validates a form.
+ * Validates `form` and combines errors for each component.
+ * TODO: Implement "scoring/thresholds" for validators (determine what errors to show in specific cases).
+ * TODO: Implement translations.
+ * @param form Formio form.
+ * @param values The values to validate.
+ * @param validators See `validate` for more information.
+ * @return A promise which resolves (`void`) if all `values` are considered valid and rejects
+ * (`FormikErrors<value>`) it is considered invalid.
+ */
+export const getFormErrors = async (
+  form: IFormioForm,
+  values: IValues,
+  validators: validator[] = DEFAULT_VALIDATORS
+): Promise<FormikErrors<value> | void> => {
+  try {
+    await validateForm(form, values, validators);
+    return;
+  } catch (result) {
+    // Convert the validation errors to messages.
+    const entries = Object.entries(result).map(
+      ([key, validationErrors]: [string, ValidationError[]]) => {
+        const messages = validationErrors
+          .map(validationError => validationError.message.trim())
+          .join('\n');
+        return [key, messages];
+      }
+    );
+
+    return Object.fromEntries(entries);
+  }
+};
+
+/**
+ * Validates `form`.
  *
- * Finds each component in `form` and validates matching `values` using `validators`.
+ * Finds each Formio component schema in `form` and validates matching `values` using `validators`.
  * If all validators resolve a form is considered valid and the returned `Promise` resolves.
  * If not: the returned `Promise` rejects with an object mapping component keys to (an array of)
  * `ValidationError`s.
  *
  * @param form Formio form.
  * @param values The values to validate.
- * @param validators See `validate` for more information. *
+ * @param validators See `validate` for more information.
  * @throws {ValidationError[]} As promise rejection if invalid.
- * @return A promise which resolves (`void`) if a component is considered valid and rejects
+ * @return A promise which resolves (`void`) if all `values` are considered valid and rejects
  * (`{[index: string]: ValidationError[]}`) it is considered invalid.
  */
 export const validateForm = async (
   form: IFormioForm,
   values: IValues,
   validators = DEFAULT_VALIDATORS
-): Promise<{[index: string]: ValidationError[]}> => {
+): Promise<{[index: string]: ValidationError[]} | void> => {
   const errors = {};
   const promises = Object.entries(values).map(async ([key, value]) => {
     const component = getComponentByKey(key, form);
@@ -58,7 +92,10 @@ export const validateForm = async (
   });
 
   await Promise.all(promises);
-  return errors;
+  if (Object.keys(errors).length) {
+    return Promise.reject(errors);
+  }
+  return;
 };
 
 /**
@@ -68,7 +105,7 @@ export const validateForm = async (
  * If all validators resolve a components is considered valid and the returned `Promise` resolves.
  * If not: the returned `Promise` rejects with an array of `ValidationError` (subclasses).
  *
- * @param componentSchema Formio component passed to each validator.
+ * @param componentSchema Formio component schema passed to each validator.
  * @param value The value to validate.
  * @param formValues All the form values.
  *
@@ -81,7 +118,7 @@ export const validateForm = async (
  *
  * @throws {ValidationError[]} As promise rejection if invalid.
  *
- * @return A promise which resolves (`void`) if a component is considered valid and rejects
+ * @return A promise which resolves (`void`) if `value` is considered valid and rejects
  * (`ValidationError[]`) it is considered invalid.
  */
 export const validate = async (
@@ -111,7 +148,8 @@ export const validate = async (
 };
 
 /**
- * Finds component with `key` in `form` recursively, return null if the component cannot  be found.
+ * Finds Formio component schema with `key` in `form` recursively.
+ * @throws {Error} if component cannot be found.
  */
 export function getComponentByKey(key: string, form: IFormioForm): ComponentSchema {
   const component = form.components
@@ -127,7 +165,7 @@ export function getComponentByKey(key: string, form: IFormioForm): ComponentSche
     .find(c => c.key === key);
 
   if (!component) {
-    throw new Error(`Cant find component with key ${key}`);
+    throw new Error(`Cant find component schema with key ${key}`);
   }
   return component;
 }
