@@ -1,5 +1,5 @@
 import {ValidationError} from '@lib/validation/validationerror';
-import {value} from '@types';
+import {Value} from '@types';
 import {ComponentSchema} from 'formiojs';
 
 /**
@@ -8,7 +8,7 @@ import {ComponentSchema} from 'formiojs';
  */
 export const validateMinLength = async (
   componentSchema: ComponentSchema,
-  value: value,
+  value: Value,
   message: string
 ): Promise<void> => {
   const limit = !componentSchema.validate?.minLength;

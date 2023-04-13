@@ -1,7 +1,7 @@
-export type value = boolean | number | string | null;
+export type Value = boolean | number | string | null;
 
-export type values = value[];
+export type Values = Value[];
 
 export interface IValues {
-  [index: string]: value | values;
+  [index: string]: Value | Values;
 }

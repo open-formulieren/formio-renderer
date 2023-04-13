@@ -6,14 +6,14 @@ import {
   validatePattern,
   validateRequired,
 } from '@lib/validation/validators';
-import {IFormioForm, IValues, value} from '@types';
+import {IFormioForm, IValues, Value} from '@types';
 import {FormikErrors} from 'formik';
 import {ComponentSchema} from 'formiojs';
 
 export type validator = [
   (
     componentSchema: ComponentSchema,
-    value: value,
+    value: Value,
     message: string,
     values?: IValues
   ) => Promise<void>,
@@ -41,7 +41,7 @@ export const getFormErrors = async (
   form: IFormioForm,
   values: IValues,
   validators: validator[] = DEFAULT_VALIDATORS
-): Promise<FormikErrors<value> | void> => {
+): Promise<FormikErrors<Value> | void> => {
   try {
     await validateForm(form, values, validators);
     return;
@@ -85,7 +85,7 @@ export const validateForm = async (
     const component = getComponentByKey(key, form);
 
     try {
-      await validate(component, value as value, values, validators);
+      await validate(component, value as Value, values, validators);
     } catch (e) {
       errors[key] = e;
     }
@@ -123,7 +123,7 @@ export const validateForm = async (
  */
 export const validate = async (
   componentSchema: ComponentSchema,
-  value: value,
+  value: Value,
   formValues: IValues,
   validators = DEFAULT_VALIDATORS
 ): Promise<void> => {
