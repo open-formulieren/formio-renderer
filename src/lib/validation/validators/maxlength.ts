@@ -11,7 +11,7 @@ export const validateMaxLength = async (
   value: Value,
   message: string
 ): Promise<void> => {
-  const limit = !componentSchema.validate?.maxLength;
+  const limit = componentSchema.validate?.maxLength;
   const valid = typeof limit !== 'number' || String(value).length <= limit;
 
   if (!valid) {

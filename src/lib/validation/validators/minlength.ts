@@ -11,7 +11,7 @@ export const validateMinLength = async (
   value: Value,
   message: string
 ): Promise<void> => {
-  const limit = !componentSchema.validate?.minLength;
+  const limit = componentSchema.validate?.minLength;
   const valid = typeof limit !== 'number' || String(value).length >= limit;
 
   if (!valid) {

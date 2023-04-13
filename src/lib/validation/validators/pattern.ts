@@ -12,7 +12,7 @@ export const validatePattern = async (
   message: string
 ): Promise<void> => {
   const pattern = componentProps.validate?.pattern;
-  const valid = Boolean(!pattern || String(value).match(pattern));
+  const valid = Boolean(!pattern || String(value).match(new RegExp(pattern)));
 
   if (!valid) {
     throw new PatternValidationError(message);

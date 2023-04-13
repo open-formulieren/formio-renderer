@@ -24,7 +24,7 @@ export const DEFAULT_VALIDATORS: validator[] = [
   [validateMaxLength, 'Er zijn teveel karakters opgegeven.'],
   [validateMinLength, 'Er zijn te weinig karakters opgegeven.'],
   [validatePattern, 'De opgegeven waarde voldoet niet aan het formaat.'],
-  [validateRequired, 'Het verplichte veld is niet ingevuld'],
+  [validateRequired, 'Het verplichte veld is niet ingevuld.'],
 ];
 
 /**

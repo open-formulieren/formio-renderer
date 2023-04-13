@@ -1,12 +1,13 @@
-import {FORMIO_EXAMPLE} from '@fixtures';
+import {FORMIO_EXAMPLE, FORMIO_LENGTH, FORMIO_PATTERN, FORMIO_REQUIRED} from '@fixtures';
 import {DEFAULT_RENDER_CONFIGURATION, RenderComponent, RenderForm} from '@lib/renderer/renderer';
+import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
 import {Formik} from 'formik';
 import React from 'react';
 
 const meta: Meta<typeof RenderForm> = {
-  title: 'Libraries / Renderer',
+  title: 'Usage / Renderer',
   component: RenderForm,
   decorators: [],
   parameters: {},
@@ -35,10 +36,81 @@ renderForm.args = {
 renderForm.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
-  await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John');
-  await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[1].label), 'Doe');
+  await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John', {delay: 30});
+  await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[1].label), 'Doe', {delay: 30});
   await userEvent.click(canvas.getByText('Submit'));
 };
+export const renderFormWithValidation: ComponentStory<typeof RenderForm> = args => (
+  <RenderForm {...args}>
+    <button type="submit">Submit</button>
+  </RenderForm>
+);
+
+renderFormWithValidation.args = {
+  configuration: DEFAULT_RENDER_CONFIGURATION,
+  form: {
+    display: 'form',
+    // @ts-ignore
+    components: [FORMIO_LENGTH, FORMIO_PATTERN, FORMIO_REQUIRED],
+  },
+};
+renderFormWithValidation.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+
+  // Pristine state should not show validation errors.
+  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')).toBeNull();
+  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).toBeNull();
+
+  // Type invalid values in each field.
+  await userEvent.type(canvas.getByLabelText(FORMIO_LENGTH.label), 'Lorem ipsum dolor', {
+    delay: 30,
+  });
+  expect(await canvas.findByText('Er zijn te weinig karakters opgegeven.'));
+
+  await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '123A', {delay: 30});
+  expect(await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.'));
+
+  await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
+  await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
+  expect(await canvas.findByText('Het verplichte veld is niet ingevuld.'));
+
+  // Clear values.
+  await userEvent.clear(canvas.getByLabelText(FORMIO_LENGTH.label));
+  await userEvent.clear(canvas.getByLabelText(FORMIO_PATTERN.label));
+  await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
+
+  // Unpristine state should show validation errors.
+  expect(await canvas.findAllByText('Er zijn te weinig karakters opgegeven.'));
+  expect(await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.'));
+  expect(await canvas.findAllByText('Het verplichte veld is niet ingevuld.'));
+
+  // Type valid values in each field.
+  await userEvent.type(
+    canvas.getByLabelText(FORMIO_LENGTH.label),
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  );
+  // Maxlength on input should prevent excessive input.
+  expect(await canvas.getByLabelText(FORMIO_LENGTH.label)).toHaveValue(
+    'Lorem ipsum dolor sit amet, consectetur adipiscing'
+  );
+  await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '1234AB', {delay: 30});
+  await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
+
+  // Valid values show not show validation errors.
+  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')).toBeNull();
+  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).toBeNull();
+};
+renderFormWithValidation.decorators = [
+  Story => (
+    <Formik initialValues={{}} onSubmit={() => {}}>
+      {Story()}
+    </Formik>
+  ),
+];
 
 //
 // renderComponent
