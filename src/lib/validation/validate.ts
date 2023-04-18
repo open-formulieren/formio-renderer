@@ -1,3 +1,4 @@
+import {IRendererComponent} from '@lib/renderer';
 import {ValidationError} from '@lib/validation/validationerror';
 import {
   validateMaxLength,
@@ -7,7 +8,7 @@ import {
 } from '@lib/validation/validators';
 import {IFormioForm, IValues, Value} from '@types';
 import {FormikErrors} from 'formik';
-import {ExtendedComponentSchema, Utils} from 'formiojs';
+import {ExtendedComponentSchema} from 'formiojs';
 
 export type validator = [
   (
@@ -82,7 +83,7 @@ export const validateForm = async (
 ): Promise<{[index: string]: ValidationError[]} | void> => {
   const errors = {};
   const promises = Object.entries(values).map(async ([key, value]) => {
-    const component = Utils.getComponent(form.components, key, false);
+    const component = getComponentByKey(key, form);
 
     try {
       await validate(component, value as Value, values, validators);
@@ -146,3 +147,26 @@ export const validate = async (
   }
   return Promise.resolve();
 };
+
+/**
+ * Finds Formio component schema with `key` in `form` recursively.
+ * @throws {Error} if component cannot be found.
+ */
+export function getComponentByKey(key: string, form: IFormioForm): ExtendedComponentSchema {
+  const component = form.components
+    .reduce((acc, val: IRendererComponent) => {
+      const components = val.components || [];
+      const columns = val.columns || [];
+      const columnComponents = columns.reduce(
+        (acc, val) => [...acc, ...val.components],
+        form.components
+      );
+      return [...acc, ...components, ...columnComponents];
+    }, [])
+    .find(c => c.key === key);
+
+  if (!component) {
+    throw new Error(`Cant find component schema with key ${key}`);
+  }
+  return component;
+}
