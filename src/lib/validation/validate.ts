@@ -31,6 +31,7 @@ export const DEFAULT_VALIDATORS: validator[] = [
  * Validates `form` and combines errors for each component.
  * TODO: Implement "scoring/thresholds" for validators (determine what errors to show in specific cases).
  * TODO: Implement translations.
+ * TODO: implement interpolation in validation error messages.
  * @param form Formio form.
  * @param values The values to validate.
  * @param validators See `validate` for more information.
