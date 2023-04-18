@@ -67,14 +67,14 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.type(canvas.getByLabelText(FORMIO_LENGTH.label), 'Lorem ipsum dolor', {
     delay: 30,
   });
-  expect(await canvas.findByText('Er zijn te weinig karakters opgegeven.'));
+  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
 
   await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '123A', {delay: 30});
-  expect(await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.'));
+  await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.');
 
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
-  expect(await canvas.findByText('Het verplichte veld is niet ingevuld.'));
+  await canvas.findByText('Het verplichte veld is niet ingevuld.');
 
   // Clear values.
   await userEvent.clear(canvas.getByLabelText(FORMIO_LENGTH.label));
@@ -82,9 +82,9 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
 
   // Unpristine state should show validation errors.
-  expect(await canvas.findAllByText('Er zijn te weinig karakters opgegeven.'));
-  expect(await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.'));
-  expect(await canvas.findAllByText('Het verplichte veld is niet ingevuld.'));
+  await canvas.findAllByText('Er zijn te weinig karakters opgegeven.');
+  await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.');
+  await canvas.findAllByText('Het verplichte veld is niet ingevuld.');
 
   // Type valid values in each field.
   await userEvent.type(
@@ -99,14 +99,25 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
 
   // Valid values show not show validation errors.
-  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
-  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).toBeNull();
-  expect(await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')).toBeNull();
-  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).toBeNull();
+  expect(
+    await canvas.queryByText('Er zijn te weinig karakters opgegeven.')
+  ).not.toBeInTheDocument();
+  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).not.toBeInTheDocument();
+  expect(
+    await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')
+  ).not.toBeInTheDocument();
+  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).not.toBeInTheDocument();
 };
 renderFormWithValidation.decorators = [
   Story => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
+    <Formik
+      initialValues={{
+        [FORMIO_LENGTH.key]: '',
+        [FORMIO_PATTERN.key]: '',
+        [FORMIO_REQUIRED.key]: '',
+      }}
+      onSubmit={() => {}}
+    >
       {Story()}
     </Formik>
   ),
@@ -131,7 +142,12 @@ renderComponent.play = async ({canvasElement}) => {
 };
 renderComponent.decorators = [
   Story => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
+    <Formik
+      initialValues={{
+        [FORMIO_EXAMPLE[0].key as string]: '',
+      }}
+      onSubmit={() => {}}
+    >
       {Story()}
     </Formik>
   ),
