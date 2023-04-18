@@ -138,9 +138,9 @@ export const OF_MISSING_KEY = 'OF_MISSING_KEY';
 export const RenderComponent = ({component}: IRenderComponentProps): React.ReactElement => {
   const Component = useComponentType(component);
   const field = useField(component.key || OF_MISSING_KEY);
-  const {value, onBlur, onChange} = field[0];
+  const [{value, onBlur, onChange}, {error}] = field;
   const callbacks = {onBlur, onChange};
-  const errors = field[1].error?.split('\n') || []; // Reconstruct array.
+  const errors = error?.split('\n') || []; // Reconstruct array.
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing
