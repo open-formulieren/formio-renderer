@@ -7,11 +7,11 @@ import {
 } from '@lib/validation/validators';
 import {IFormioForm, IValues, Value} from '@types';
 import {FormikErrors} from 'formik';
-import {ComponentSchema, Utils} from 'formiojs';
+import {ExtendedComponentSchema, Utils} from 'formiojs';
 
 export type validator = [
   (
-    componentSchema: ComponentSchema,
+    ExtendedComponentSchema: ExtendedComponentSchema,
     value: Value,
     message: string,
     values?: IValues
@@ -101,18 +101,18 @@ export const validateForm = async (
 /**
  * Validates a component.
  *
- * Runs each function in `validators` and passing it `componentSchema` and `message`.
+ * Runs each function in `validators` and passing it `ExtendedComponentSchema` and `message`.
  * If all validators resolve a components is considered valid and the returned `Promise` resolves.
  * If not: the returned `Promise` rejects with an array of `ValidationError` (subclasses).
  *
- * @param componentSchema Formio component schema passed to each validator.
+ * @param ExtendedComponentSchema Formio component schema passed to each validator.
  * @param value The value to validate.
  * @param formValues All the form values.
  *
  * @param validators An array of `async function`/`string` tuples. The function being the validator
  * function, the string a message used to indicate an invalid value. Each validator is run in order.
  *
- *  The validator function is called with `componentSchema`, the `value` and the error `message`.
+ *  The validator function is called with `ExtendedComponentSchema`, the `value` and the error `message`.
  *  The (async/sync) function should return a `Promise` which either resolves (valid) or rejects
  *  (invalid) with a (subclass of) `ValidationError` instantiated with `message`.
  *
@@ -122,7 +122,7 @@ export const validateForm = async (
  * (`ValidationError[]`) it is considered invalid.
  */
 export const validate = async (
-  componentSchema: ComponentSchema,
+  ExtendedComponentSchema: ExtendedComponentSchema,
   value: Value,
   formValues: IValues,
   validators = DEFAULT_VALIDATORS
@@ -132,7 +132,7 @@ export const validate = async (
   const errors: ValidationError[] = [];
   const promises = validators.map(async ([validatorFunction, message]) => {
     try {
-      await validatorFunction(componentSchema, value, message, formValues);
+      await validatorFunction(ExtendedComponentSchema, value, message, formValues);
     } catch (e) {
       errors.push(e);
     }

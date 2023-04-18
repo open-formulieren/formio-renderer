@@ -1,13 +1,13 @@
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
-import {ComponentSchema} from 'formiojs';
+import {ExtendedComponentSchema} from 'formiojs';
 
 /**
  * Validates whether value matches the (RegExp) pattern.
  * @throws {PatternValidationError} As promise rejection if invalid.
  */
 export const validatePattern = async (
-  componentProps: ComponentSchema,
+  componentProps: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {

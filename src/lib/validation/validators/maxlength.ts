@@ -1,13 +1,13 @@
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
-import {ComponentSchema} from 'formiojs';
+import {ExtendedComponentSchema} from 'formiojs';
 
 /**
  * Validates whether value is at most maxLength characters.
  * @throws {MaxLengthValidationError} As promise rejection if invalid.
  */
 export const validateMaxLength = async (
-  componentSchema: ComponentSchema,
+  componentSchema: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {
