@@ -2,7 +2,7 @@ import {ComponentSchema} from 'formiojs';
 import React from 'react';
 
 import {ICallbackConfiguration} from './config';
-import {value, values} from './value';
+import {Value, Values} from './value';
 
 interface IComponentProps {
   callbacks: ICallbackConfiguration;
@@ -13,5 +13,5 @@ interface IComponentProps {
 
   errors: string[];
 
-  value: value | values | undefined;
+  value: Value | Values | undefined;
 }
