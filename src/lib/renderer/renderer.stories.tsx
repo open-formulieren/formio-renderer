@@ -151,6 +151,44 @@ renderFormWithNestedKeyValidation.play = async ({canvasElement}) => {
   await canvas.findByText('Er zijn te weinig karakters opgegeven.');
 };
 
+export const formValidationWithLayoutComponent: ComponentStory<typeof RenderForm> = args => (
+  <RenderForm {...args}>
+    <button type="submit">Submit</button>
+  </RenderForm>
+);
+formValidationWithLayoutComponent.args = {
+  configuration: DEFAULT_RENDER_CONFIGURATION,
+  form: {
+    display: 'form',
+    components: [
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        label: 'Fieldset',
+        components: [
+          {
+            type: 'textfield',
+            key: 'textfield',
+            label: 'Text input',
+            validate: {minLength: 5},
+          },
+        ],
+      },
+    ],
+  },
+  initialValues: {
+    textfield: 'foobar',
+  },
+};
+formValidationWithLayoutComponent.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+
+  // Pristine state should not show validation errors.
+  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  await userEvent.clear(canvas.getByLabelText('Text input'));
+  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
+};
+
 //
 // renderComponent
 //

@@ -1,7 +1,7 @@
-import {ComponentSchema} from 'formiojs';
+import {ExtendedComponentSchema} from 'formiojs';
 
 export interface IFormioForm {
   display?: 'form';
 
-  components: ComponentSchema[];
+  components: ExtendedComponentSchema[];
 }
