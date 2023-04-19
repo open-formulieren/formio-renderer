@@ -1,4 +1,5 @@
 import {IRendererComponent} from '@lib/renderer';
+import {OF_MISSING_KEY} from '@lib/renderer';
 import {ValidationError} from '@lib/validation/validationerror';
 import {
   validateMaxLength,
@@ -8,7 +9,7 @@ import {
 } from '@lib/validation/validators';
 import {IFormioForm, IValues, Value} from '@types';
 import {FormikErrors} from 'formik';
-import {ExtendedComponentSchema} from 'formiojs';
+import {ExtendedComponentSchema, Utils} from 'formiojs';
 
 export type validator = [
   (
@@ -27,6 +28,12 @@ export const DEFAULT_VALIDATORS: validator[] = [
   [validateRequired, 'Het verplichte veld is niet ingevuld.'],
 ];
 
+type ErrorMap =
+  | Record<string, string>
+  | {
+      [key: string]: ErrorMap;
+    };
+
 /**
  * Validates `form` and combines errors for each component.
  * TODO: Implement "scoring/thresholds" for validators (determine what errors to show in specific cases).
@@ -42,22 +49,29 @@ export const getFormErrors = async (
   form: IFormioForm,
   values: IValues,
   validators: validator[] = DEFAULT_VALIDATORS
-): Promise<FormikErrors<Value> | void> => {
+): Promise<FormikErrors<IValues> | void> => {
   try {
     await validateForm(form, values, validators);
     return;
   } catch (result) {
+    const errors: FormikErrors<IValues> = {};
     // Convert the validation errors to messages.
-    const entries = Object.entries(result).map(
-      ([key, validationErrors]: [string, ValidationError[]]) => {
-        const messages = validationErrors
-          .map(validationError => validationError.message.trim())
-          .join('\n');
-        return [key, messages];
-      }
-    );
-
-    return Object.fromEntries(entries);
+    Object.entries(result).forEach(([key, validationErrors]: [string, ValidationError[]]) => {
+      const [tail, ...bits] = key.split('.').reverse();
+      let localErrorObject = errors as ErrorMap;
+      // deep-assign errors
+      bits.forEach(bit => {
+        if (!localErrorObject[bit]) {
+          localErrorObject[bit] = {};
+        }
+        localErrorObject = localErrorObject[bit] as ErrorMap;
+      });
+      const messages = validationErrors
+        .map(validationError => validationError.message.trim())
+        .join('\n');
+      localErrorObject[tail] = messages;
+    });
+    return errors;
   }
 };
 
@@ -82,11 +96,29 @@ export const validateForm = async (
   validators = DEFAULT_VALIDATORS
 ): Promise<{[index: string]: ValidationError[]} | void> => {
   const errors = {};
-  const promises = Object.entries(values).map(async ([key, value]) => {
-    const component = getComponentByKey(key, form);
+
+  // Collect all the components in the form definition so that each components set of
+  // validators can run
+  const componentsToValidate: ExtendedComponentSchema[] = [];
+  Utils.eachComponent(form.components, (component: ExtendedComponentSchema) => {
+    componentsToValidate.push(component);
+  });
+
+  // Run validation for all components in the form definition
+  const promises = componentsToValidate.map(async component => {
+    const key = component.key || OF_MISSING_KEY;
+    // lodash.get like to support nested data structures/keys with dots
+    // TODO: works only for objects right now
+    const value: Value = key.split('.').reduce((acc: Value | IValues, bit: string) => {
+      if (Array.isArray(acc)) {
+        throw new Error('Arrays not supported yet');
+      }
+      if (acc === null) return null;
+      return acc[bit];
+    }, values);
 
     try {
-      await validate(component, value as Value, values, validators);
+      await validate(component, value, values, validators);
     } catch (e) {
       errors[key] = e;
     }

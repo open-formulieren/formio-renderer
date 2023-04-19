@@ -123,6 +123,34 @@ renderFormWithValidation.decorators = [
   ),
 ];
 
+export const renderFormWithNestedKeyValidation: ComponentStory<typeof RenderForm> = args => (
+  <RenderForm {...args}>
+    <button type="submit">Submit</button>
+  </RenderForm>
+);
+renderFormWithNestedKeyValidation.args = {
+  configuration: DEFAULT_RENDER_CONFIGURATION,
+  form: {
+    display: 'form',
+    components: [
+      {type: 'textfield', key: 'nested.textfield', label: 'Nested input', validate: {minLength: 5}},
+    ],
+  },
+  initialValues: {
+    nested: {
+      textfield: 'foobar',
+    },
+  },
+};
+renderFormWithNestedKeyValidation.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+
+  // Pristine state should not show validation errors.
+  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  await userEvent.clear(canvas.getByLabelText('Nested input'));
+  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
+};
+
 //
 // renderComponent
 //
