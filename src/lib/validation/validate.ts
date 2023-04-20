@@ -6,7 +6,7 @@ import {
   validatePattern,
   validateRequired,
 } from '@lib/validation/validators';
-import {IFormioForm, IValues, Value} from '@types';
+import {IFormioForm, IValues, Value, Values} from '@types';
 import {FormikErrors} from 'formik';
 import {ExtendedComponentSchema, Utils} from 'formiojs';
 
@@ -74,6 +74,12 @@ export const getFormErrors = async (
   }
 };
 
+function isScalarValue(obj: IValues | Value | Values): obj is Value {
+  if (Array.isArray(obj)) return false;
+  if (obj == null) return true;
+  return typeof obj !== 'object';
+}
+
 /**
  * Validates `form`.
  *
@@ -94,7 +100,7 @@ export const validateForm = async (
   values: IValues,
   validators = DEFAULT_VALIDATORS
 ): Promise<{[index: string]: ValidationError[]} | void> => {
-  const errors = {};
+  const errors: {[key: string]: Error} = {};
 
   // Collect all the components in the form definition so that each components set of
   // validators can run
@@ -108,13 +114,19 @@ export const validateForm = async (
     const key = component.key || OF_MISSING_KEY;
     // lodash.get like to support nested data structures/keys with dots
     // TODO: works only for objects right now
-    const value: Value = key.split('.').reduce((acc: Value | IValues, bit: string) => {
+    // FIXME: types can be more complex, value of a file upload is not a scaler, but an
+    // object!
+    const value = key.split('.').reduce((acc: Value | IValues, bit: string) => {
       if (Array.isArray(acc)) {
         throw new Error('Arrays not supported yet');
       }
       if (acc === null) return null;
-      return acc[bit];
-    }, values);
+      const nestedProp = (acc as IValues)[bit];
+      if (isScalarValue(nestedProp)) {
+        return nestedProp;
+      }
+      return nestedProp;
+    }, values) as Value;
 
     try {
       await validate(component, value, values, validators);

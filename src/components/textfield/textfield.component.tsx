@@ -48,7 +48,7 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
   const _onChange = (event: React.FormEvent<HTMLInputElement>) => {
     setCharCountState(event.currentTarget.value.length);
     setPristineState(false);
-    onChange?.call(event.target, event);
+    onChange && onChange(event);
   };
 
   return (

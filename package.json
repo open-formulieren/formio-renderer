@@ -1,37 +1,50 @@
 {
   "name": "@open-formulieren/formio-renderer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
-  "author": "",
-  "license": "EUPL-1.2",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "source": "src/index.tsx",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/cjs/index.js"
+    },
+    "./esm/": "./dist/esm/"
+  },
+  "scripts": {
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build:storybook": "build-storybook --webpack-stats-json",
+    "build": "npm-run-all build:*",
+    "test": "run-s test:lint",
+    "test:lint": "eslint src/**/*.ts[x]",
+    "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'",
+    "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
+    "start": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006"
+  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/open-formulieren/formio-renderer.git"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
-  "source": "src/index.tsx",
-  "scripts": {
-    "build": "microbundle-crl --no-compress --format modern,cjs",
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
-    "test": "run-s test:unit test:lint test:build",
-    "test:build": "run-s build",
-    "test:lint": "eslint .",
-    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build",
-    "storybook": "start-storybook -p 6006",
-    "build:storybook": "build-storybook --webpack-stats-json",
-    "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
-    "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'"
+  "author": "Maykin Media",
+  "license": "EUPL-1.2",
+  "bugs": {
+    "url": "https://github.com/open-formulieren/formio-renderer/issues"
   },
+  "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
+    "formiojs": "~4.13.0 || ~4.14.0",
     "react": "^17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
-    "@babel/plugin-transform-regenerator": "^7.20.5",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",
@@ -41,17 +54,12 @@
     "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/user-event": "^7.2.1",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^12.12.38",
     "@types/react": "^18.0.28",
-    "@typescript-eslint/eslint-plugin": "^2.26.0",
-    "@typescript-eslint/parser": "^2.26.0",
-    "babel-eslint": "^10.0.3",
+    "@types/webpack": "^5.28.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
     "babel-loader": "^8.3.0",
-    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-standard": "^14.1.0",
@@ -62,20 +70,14 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
-    "formiojs": "4.13",
-    "gh-pages": "^2.2.0",
-    "microbundle-crl": "^0.13.10",
+    "formiojs": "~4.13.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.0.4",
+    "prettier": "^2.8.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^3.4.1",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^4.9.5"
   },
-  "files": [
-    "dist"
-  ],
   "dependencies": {
     "clsx": "^1.2.1",
     "formik": "^2.2.9"

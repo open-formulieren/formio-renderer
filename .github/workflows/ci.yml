@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run tsc for type checks
-        run: ./node_modules/.bin/tsc --noEmit
-
       - name: Build library
         run: yarn build
 
