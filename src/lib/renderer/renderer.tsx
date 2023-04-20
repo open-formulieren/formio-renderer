@@ -7,6 +7,7 @@ import {
   IFormioColumn,
   TextField,
 } from '@components';
+import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
 import {Formik, useField} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
@@ -20,6 +21,7 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
     content: Content,
     textfield: TextField,
   },
+  validators: DEFAULT_VALIDATORS,
 };
 
 /** React context providing the IRenderConfiguration. */
@@ -74,18 +76,22 @@ export const RenderForm = ({
     )) || null;
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {({handleSubmit}) => {
-        return (
-          <form onSubmit={handleSubmit} {...formAttrs}>
-            <RenderContext.Provider value={configuration}>
+    <RenderContext.Provider value={configuration}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validate={values => getFormErrors(form, values, configuration.validators)}
+      >
+        {props => {
+          return (
+            <form onSubmit={props.handleSubmit} {...formAttrs}>
               {childComponents}
               {children}
-            </RenderContext.Provider>
-          </form>
-        );
-      }}
-    </Formik>
+            </form>
+          );
+        }}
+      </Formik>
+    </RenderContext.Provider>
   );
 };
 
@@ -132,8 +138,9 @@ export const OF_MISSING_KEY = 'OF_MISSING_KEY';
 export const RenderComponent = ({component}: IRenderComponentProps): React.ReactElement => {
   const Component = useComponentType(component);
   const field = useField(component.key || OF_MISSING_KEY);
-  const {value, onBlur, onChange} = field[0];
+  const [{value, onBlur, onChange}, {error}] = field;
   const callbacks = {onBlur, onChange};
+  const errors = error?.split('\n') || []; // Reconstruct array.
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing
@@ -160,7 +167,7 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
 
   // Return the component, pass children.
   return (
-    <Component callbacks={callbacks} component={component} errors={[]} value={value}>
+    <Component callbacks={callbacks} component={component} errors={errors} value={value}>
       {childComponents || childColumns}
     </Component>
   );
