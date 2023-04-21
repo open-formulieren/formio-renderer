@@ -18,7 +18,6 @@ export interface IErrorsProps extends IComponentProps {
  * modified.
  */
 export const Errors = (errorProps: IErrorsProps): React.ReactElement | null => {
-  const {} = errorProps;
   const {errors, pristine, component} = errorProps;
   const className = clsx(`of-${errorProps.component.type}__error-list`);
   const listItemClassName = clsx(`of-${errorProps.component.type}__error-list-item`);
