@@ -9,10 +9,12 @@ import {
 } from '@components';
 import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
-import {Formik, useField} from 'formik';
+import {Formik, useField, useFormikContext} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
-import {ComponentSchema} from 'formiojs';
+import {ComponentSchema, Utils} from 'formiojs';
 import React, {FormHTMLAttributes, useContext} from 'react';
+
+import getComponent = Utils.getComponent;
 
 export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
   components: {
@@ -28,6 +30,14 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
 export const RenderContext = React.createContext<IRenderConfiguration>(
   DEFAULT_RENDER_CONFIGURATION
 );
+
+export interface IRendererComponent extends ComponentSchema {
+  columns?: IFormioColumn[];
+  components?: IRendererComponent[];
+  id: string;
+  key: string;
+  type: string;
+}
 
 export interface IRenderFormProps {
   children: React.ReactNode;
@@ -72,7 +82,7 @@ export const RenderForm = ({
 }: IRenderFormProps): React.ReactElement => {
   const childComponents =
     form.components?.map((component: IRendererComponent, i: number) => (
-      <RenderComponent key={component.id || i} component={component} />
+      <RenderComponent key={component.id || i} component={component} form={form} />
     )) || null;
 
   return (
@@ -95,15 +105,9 @@ export const RenderForm = ({
   );
 };
 
-export interface IRendererComponent extends ComponentSchema {
-  columns?: IFormioColumn[];
-  components?: IRendererComponent[];
-  id?: string;
-  type: string;
-}
-
 export interface IRenderComponentProps {
   component: IColumnComponent | IRendererComponent;
+  form: IFormioForm;
 }
 
 /** @const Form.io does not guarantee a key for a form component, we use this as a fallback. */
@@ -135,9 +139,25 @@ export const OF_MISSING_KEY = 'OF_MISSING_KEY';
  * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
-export const RenderComponent = ({component}: IRenderComponentProps): React.ReactElement => {
+export const RenderComponent = ({
+  component,
+  form,
+}: IRenderComponentProps): React.ReactElement | null => {
+  const {setFieldValue} = useFormikContext();
   const Component = useComponentType(component);
   const field = useField(component.key || OF_MISSING_KEY);
+
+  // Basic Form.io conditional.
+  const show = useConditional(component, form);
+
+  if (!show && component.clearOnHide) {
+    setFieldValue(component.key || OF_MISSING_KEY, null);
+  }
+
+  if (!show) {
+    return null;
+  }
+
   const [{value, onBlur, onChange}, {error}] = field;
   const callbacks = {onBlur, onChange};
   const errors = error?.split('\n') || []; // Reconstruct array.
@@ -154,14 +174,23 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
 
   // Regular children, either from component or column.
   const childComponents = cComponents?.map((c: IRendererComponent, i: number) => (
-    <RenderComponent key={c.id || i} component={c} />
+    <RenderComponent key={c.id || i} component={c} form={form} />
   ));
 
   // Columns from component.
   const childColumns = cColumns?.map((c: IFormioColumn, i) => (
     <RenderComponent
       key={i}
-      component={{...c, defaultValue: undefined, key: undefined, type: 'column'}}
+      component={{
+        ...c,
+        clearOnHide: undefined,
+        conditional: {eq: undefined, show: undefined, when: undefined},
+        defaultValue: undefined,
+        hidden: false,
+        key: undefined,
+        type: 'column',
+      }}
+      form={form}
     />
   ));
 
@@ -172,6 +201,7 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
     </Component>
   );
 };
+
 /**
  * Fallback component, gets used when no other component is found within the `RenderContext`
  * The Fallback component makes sure (child) components keep being rendered with as little side
@@ -189,4 +219,30 @@ export const useComponentType = (
   const renderConfiguration = useContext(RenderContext);
   const ComponentType = renderConfiguration.components[component.type];
   return ComponentType || Fallback;
+};
+
+/**
+ * Evaluates the `component.conditional` (if set) and returns whether the component should be shown.
+ * This does not evaluate complex form logic but merely the basic Form.io conditional logic (found
+ * in the "Advanced" tab).
+ *
+ * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
+ * @return {boolean} If a conditional passes, the show argument is returned to respect it's
+ * configuration. If a conditional does not pass, `!component.hidden` is used as return value.
+ */
+export const useConditional = (
+  component: IColumnComponent | IRendererComponent,
+  form: IFormioForm
+) => {
+  const {eq, show, when} = component?.conditional || {};
+  const isConditionalSet = typeof show == 'boolean' && when;
+  const otherComponent = getComponent(form.components, when as string, false);
+  const [{value}] = useField(otherComponent.key || OF_MISSING_KEY);
+  const isEqual = eq === value;
+
+  if (!isConditionalSet || !otherComponent || !isEqual) {
+    return !component.hidden;
+  }
+
+  return show;
 };

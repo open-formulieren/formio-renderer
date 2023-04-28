@@ -36,11 +36,9 @@ export interface IFormioColumn {
   sizeMobile?: ColumnSize;
 }
 
-export interface IColumnComponent extends IFormioColumn {
-  defaultValue: undefined;
+type IFormioColumnComponentSchema = IFormioColumn & ComponentSchema;
 
-  key: undefined;
-
+export interface IColumnComponent extends IFormioColumnComponentSchema {
   type: 'column';
 }
 

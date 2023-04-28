@@ -1,5 +1,16 @@
-import {FORMIO_EXAMPLE, FORMIO_LENGTH, FORMIO_PATTERN, FORMIO_REQUIRED} from '@fixtures';
-import {DEFAULT_RENDER_CONFIGURATION, RenderComponent, RenderForm} from '@lib/renderer/renderer';
+import {
+  FORMIO_CONDITIONAL,
+  FORMIO_EXAMPLE,
+  FORMIO_LENGTH,
+  FORMIO_PATTERN,
+  FORMIO_REQUIRED,
+} from '@fixtures';
+import {
+  DEFAULT_RENDER_CONFIGURATION,
+  IRendererComponent,
+  RenderComponent,
+  RenderForm,
+} from '@lib/renderer/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
@@ -151,6 +162,78 @@ renderFormWithNestedKeyValidation.play = async ({canvasElement}) => {
   await canvas.findByText('Er zijn te weinig karakters opgegeven.');
 };
 
+export const renderFormWithConditionalLogic: ComponentStory<typeof RenderForm> = args => (
+  <RenderForm {...args}>
+    <button type="submit">Submit</button>
+  </RenderForm>
+);
+renderFormWithConditionalLogic.args = {
+  configuration: DEFAULT_RENDER_CONFIGURATION,
+  form: {
+    display: 'form',
+    components: FORMIO_CONDITIONAL,
+  },
+  initialValues: {
+    favoriteAnimal: '',
+    motivationCat: '',
+    motivationDog: '',
+    content: '',
+  },
+};
+renderFormWithConditionalLogic.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const input = canvas.getByLabelText('Favorite animal', {
+    selector: 'input',
+  });
+  expect(
+    await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeNull();
+  expect(
+    await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
+  ).toBeNull();
+  await canvas.findByText('Please enter you favorite animal.');
+  await canvas.findByText('Have you tried "cat"?');
+  await canvas.findByText('Have you tried "dog"?');
+  await userEvent.type(input, 'horse', {delay: 30});
+  expect(
+    await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeNull();
+  expect(
+    await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
+  ).toBeNull();
+  expect(await canvas.queryByText('Please enter you favorite animal.')).toBeNull();
+  await canvas.findByText('Have you tried "cat"?');
+  await canvas.findByText('Have you tried "dog"?');
+  await userEvent.clear(input);
+  await userEvent.type(input, 'cat', {delay: 30});
+  await canvas.findByText('Please motivate why "cat" is your favorite animal...');
+  expect(
+    await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
+  ).toBeNull();
+  expect(await canvas.queryByText('Please enter you favorite animal.')).toBeNull();
+  expect(await canvas.queryByText('Have you tried "cat"?')).toBeNull();
+  await canvas.findByText('Have you tried "dog"?');
+  await userEvent.clear(input);
+  await userEvent.type(input, 'dog', {delay: 30});
+  expect(
+    await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeNull();
+  await canvas.findByText('Please motivate why "dog" is your favorite animal...');
+  expect(await canvas.queryByText('Please enter you favorite animal.')).toBeNull();
+  await canvas.findByText('Have you tried "cat"?');
+  expect(await canvas.queryByText('Have you tried "dog"?')).toBeNull();
+  await userEvent.clear(input);
+  expect(
+    await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeNull();
+  expect(
+    await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
+  ).toBeNull();
+  await canvas.findByText('Please enter you favorite animal.');
+  await canvas.findByText('Have you tried "cat"?');
+  await canvas.findByText('Have you tried "dog"?');
+};
+
 export const formValidationWithLayoutComponent: ComponentStory<typeof RenderForm> = args => (
   <RenderForm {...args}>
     <button type="submit">Submit</button>
@@ -199,7 +282,11 @@ export const renderComponent: ComponentStory<typeof RenderComponent> = args => (
   </RenderComponent>
 );
 renderComponent.args = {
-  component: FORMIO_EXAMPLE[0],
+  component: FORMIO_EXAMPLE[0] as IRendererComponent,
+  form: {
+    display: 'form',
+    components: FORMIO_EXAMPLE,
+  },
 };
 renderComponent.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
