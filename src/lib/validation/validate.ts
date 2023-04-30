@@ -74,11 +74,10 @@ export const getFormErrors = async (
   }
 };
 
-function isScalarValue(obj: IValues | Value | Values): obj is Value {
-  if (Array.isArray(obj)) return false;
-  if (obj == null) return true;
+const isSingleValue = (obj: IValues | Value | Values): obj is Value => {
+  if (obj === null) return true; // typeof null === 'object'
   return typeof obj !== 'object';
-}
+};
 
 /**
  * Validates `form`.
@@ -114,15 +113,17 @@ export const validateForm = async (
     const key = component.key || OF_MISSING_KEY;
     // lodash.get like to support nested data structures/keys with dots
     // TODO: works only for objects right now
-    // FIXME: types can be more complex, value of a file upload is not a scaler, but an
+    // FIXME: types can be more complex, value of a file upload is not a scalar, but an
     // object!
+    // FIXME: the accumulator casting is also less than ideal, it should be possible
+    // to infer this correctly.
     const value = key.split('.').reduce((acc: Value | IValues, bit: string) => {
       if (Array.isArray(acc)) {
         throw new Error('Arrays not supported yet');
       }
       if (acc === null) return null;
       const nestedProp = (acc as IValues)[bit];
-      if (isScalarValue(nestedProp)) {
+      if (isSingleValue(nestedProp)) {
         return nestedProp;
       }
       return nestedProp;
