@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
+    "@formio/react": "^5.2.4-rc.1",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",
