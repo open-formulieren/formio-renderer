@@ -1,4 +1,13 @@
-import {Column, Columns, Content, IColumnProps, TextField} from '@components';
+import {
+  Button,
+  Column,
+  Columns,
+  Content,
+  IColumnComponent,
+  IColumnProps,
+  IFormioColumn,
+  TextField,
+} from '@components';
 import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
 import {Formik, useField, useFormikContext} from 'formik';
@@ -9,6 +18,7 @@ import React, {FormHTMLAttributes, useContext} from 'react';
 
 export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
   components: {
+    button: Button,
     columns: Columns,
     column: Column,
     content: Content,

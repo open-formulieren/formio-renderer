@@ -8,6 +8,7 @@ export interface ITextFieldComponent extends ComponentSchema {
   id: string;
   inputMask: string;
   mask: string;
+  showCharCount: true;
   type: 'textfield';
 }
 
@@ -63,7 +64,12 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
         {..._callbacks}
         {...props}
       />
-      <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
+      <CharCount
+        count={charCountState}
+        pristine={pristineState}
+        showCharCount={component.showCharCount}
+        {...componentProps}
+      />
       <Description {...componentProps} />
       <Errors pristine={pristineState} {...componentProps} />
     </Component>

@@ -1,3 +1,4 @@
+export * from './button';
 export * from './charcount';
 export * from './columns';
 export * from './component';

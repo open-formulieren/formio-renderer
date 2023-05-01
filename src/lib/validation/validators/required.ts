@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -15,7 +16,7 @@ export const validateRequired = async (
   const valid = Boolean(!required || value);
 
   if (!valid) {
-    throw new RequiredValidationError(message);
+    throw new RequiredValidationError(substitute(message, {...componentProps, value}));
   }
 };
 

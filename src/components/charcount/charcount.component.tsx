@@ -4,8 +4,8 @@ import React from 'react';
 
 export interface ICharCountProps extends IComponentProps {
   count: number;
-
   pristine: boolean;
+  showCharCount: boolean;
 }
 
 /**
@@ -14,10 +14,10 @@ export interface ICharCountProps extends IComponentProps {
  * modified.
  */
 export const CharCount = (charCountProps: ICharCountProps): React.ReactElement | null => {
-  const {count, pristine} = charCountProps;
+  const {count, pristine, showCharCount} = charCountProps;
   const className = clsx(`of-${charCountProps.component.type}__charcount`);
 
-  if (pristine) {
+  if (pristine || !showCharCount) {
     return null;
   }
 

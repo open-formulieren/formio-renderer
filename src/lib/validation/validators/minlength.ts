@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -7,15 +8,18 @@ import {ExtendedComponentSchema} from 'formiojs';
  * @throws {MinLengthValidationError} As promise rejection if invalid.
  */
 export const validateMinLength = async (
-  ExtendedComponentSchema: ExtendedComponentSchema,
+  componentProps: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {
-  const limit = ExtendedComponentSchema.validate?.minLength;
-  const valid = typeof limit !== 'number' || String(value).length >= limit;
+  const length = String(value).length;
+  const limit = componentProps.validate?.minLength;
+  const valid = typeof limit !== 'number' || length >= limit;
 
   if (!valid) {
-    throw new MinLengthValidationError(message);
+    throw new MinLengthValidationError(
+      substitute(message, {...componentProps, length, limit, value})
+    );
   }
 };
 

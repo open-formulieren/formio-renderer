@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -15,7 +16,7 @@ export const validatePattern = async (
   const valid = Boolean(!pattern || String(value).match(new RegExp(pattern)));
 
   if (!valid) {
-    throw new PatternValidationError(message);
+    throw new PatternValidationError(substitute(message, {...componentProps, pattern, value}));
   }
 };
 
