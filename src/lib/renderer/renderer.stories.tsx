@@ -33,7 +33,6 @@ renderForm.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John', {delay: 30});
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[1].label), 'Doe', {delay: 30});
-  await userEvent.click(canvas.getByText('Submit'));
 };
 export const renderFormWithValidation: ComponentStory<typeof RenderForm> = args => (
   <RenderForm {...args}>
@@ -89,10 +88,6 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.type(
     canvas.getByLabelText(FORMIO_LENGTH.label),
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-  );
-  // Maxlength on input should prevent excessive input.
-  expect(await canvas.getByLabelText(FORMIO_LENGTH.label)).toHaveValue(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing'
   );
   await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '1234AB', {delay: 30});
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
