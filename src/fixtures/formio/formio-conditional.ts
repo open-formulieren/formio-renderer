@@ -1,7 +1,4 @@
-import {IContentComponent} from '@components';
-import {IRendererComponent} from '@lib/renderer';
-
-export const FORMIO_CONDITIONAL: Array<IRendererComponent | IContentComponent> = [
+export const FORMIO_CONDITIONAL = [
   // Reference field.
   {
     id: 'favoriteAnimal',
