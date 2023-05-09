@@ -5,12 +5,7 @@ import {
   FORMIO_PATTERN,
   FORMIO_REQUIRED,
 } from '@fixtures';
-import {
-  DEFAULT_RENDER_CONFIGURATION,
-  IRendererComponent,
-  RenderComponent,
-  RenderForm,
-} from '@lib/renderer/renderer';
+import {DEFAULT_RENDER_CONFIGURATION, RenderComponent, RenderForm} from '@lib/renderer/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
@@ -282,7 +277,7 @@ export const renderComponent: ComponentStory<typeof RenderComponent> = args => (
   </RenderComponent>
 );
 renderComponent.args = {
-  component: FORMIO_EXAMPLE[0] as IRendererComponent,
+  component: FORMIO_EXAMPLE[0],
   form: {
     display: 'form',
     components: FORMIO_EXAMPLE,

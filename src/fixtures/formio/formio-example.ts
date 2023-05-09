@@ -47,10 +47,4 @@ export const FORMIO_EXAMPLE = [
     multiple: true,
     input: true,
   },
-  {
-    type: 'button',
-    action: 'submit',
-    label: 'Submit',
-    theme: 'primary',
-  },
 ];
