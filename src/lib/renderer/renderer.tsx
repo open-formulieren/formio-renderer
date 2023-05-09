@@ -7,8 +7,6 @@ import {Utils} from 'formiojs';
 import {ConditionalOptions} from 'formiojs/types/components/schema';
 import React, {FormHTMLAttributes, useContext} from 'react';
 
-const getComponent = Utils.getComponent;
-
 export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
   components: {
     columns: Columns,
@@ -150,12 +148,14 @@ export const RenderComponent = ({
   form,
 }: IRenderComponentProps): React.ReactElement | null => {
   const key = component.key || OF_MISSING_KEY;
-  const {setFieldValue} = useFormikContext();
+  const {setFieldValue, values} = useFormikContext();
   const Component = useComponentType(component);
   const field = useField(key);
 
   // Basic Form.io conditional.
-  const show = useConditional(component, form);
+  const show = Utils.hasCondition(component)
+    ? Utils.checkCondition(component, null, values, form, null)
+    : !component.hidden;
 
   if (!show && component.clearOnHide) {
     setFieldValue(key, null);
@@ -221,27 +221,4 @@ export const useComponentType = (
   const renderConfiguration = useContext(RenderContext);
   const ComponentType = renderConfiguration.components[component.type];
   return ComponentType || Fallback;
-};
-
-/**
- * Evaluates the `component.conditional` (if set) and returns whether the component should be shown.
- * This does not evaluate complex form logic but merely the basic Form.io conditional logic (found
- * in the "Advanced" tab).
- *
- * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
- * @return {boolean} If a conditional passes, the show argument is returned to respect it's
- * configuration. If a conditional does not pass, `!component.hidden` is used as return value.
- */
-export const useConditional = (component: IRenderable, form: IFormioForm) => {
-  const {eq, show, when} = component?.conditional || {};
-  const isConditionalSet = typeof show == 'boolean' && when;
-  const otherComponent = getComponent(form.components, when as string, false);
-  const [{value}] = useField(otherComponent.key || OF_MISSING_KEY);
-  const isEqual = eq === value;
-
-  if (!isConditionalSet || !otherComponent || !isEqual) {
-    return !component.hidden;
-  }
-
-  return show;
 };
