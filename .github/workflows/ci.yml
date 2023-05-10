@@ -12,7 +12,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-test:
+  tests:
+    name: Serve storybook and run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Build Storybook docs
+        run: |
+          yarn install
+          npx playwright install --with-deps
+          yarn build-storybook --quiet
+
+      - name: Serve storybook and run tests
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --quiet" \
+            "npx wait-on -l http://127.0.0.1:6006 && npm test"
+
+  build:
     name: Create 'production' build
     runs-on: ubuntu-latest
 
@@ -28,10 +51,6 @@ jobs:
 
       - name: Build library
         run: yarn build
-
-      # TODO: Not set up/configured yet
-      # - name: Run tests
-      #   run: yarn test
 
       - name: Store build artifact
         uses: actions/upload-artifact@v3
