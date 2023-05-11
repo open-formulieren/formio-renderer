@@ -1,17 +1,10 @@
-import {
-  Column,
-  Columns,
-  Content,
-  IColumnComponent,
-  IColumnProps,
-  IFormioColumn,
-  TextField,
-} from '@components';
+import {Column, Columns, Content, IColumnProps, TextField} from '@components';
 import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
-import {Formik, useField} from 'formik';
+import {Formik, useField, useFormikContext} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
-import {ComponentSchema} from 'formiojs';
+import {Utils} from 'formiojs';
+import {ConditionalOptions} from 'formiojs/types/components/schema';
 import React, {FormHTMLAttributes, useContext} from 'react';
 
 export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
@@ -28,6 +21,30 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
 export const RenderContext = React.createContext<IRenderConfiguration>(
   DEFAULT_RENDER_CONFIGURATION
 );
+
+/** Form.io does not guarantee a key for a form component, we use this as a fallback. */
+export const OF_MISSING_KEY = 'OF_MISSING_KEY';
+
+/**
+ * Specifies the required and optional properties for a schema which can be rendered by the
+ * renderer.
+ *
+ * A schema implementing `IRenderable` is not limited to `ComponentSchema` (as columns can be
+ * rendered) and components will be rendered with the full (Component)Schema.
+ */
+export interface IRenderable {
+  key: string;
+  type: string;
+
+  components?: IRenderable[];
+  clearOnHide?: boolean;
+  columns?: IRenderable[];
+  conditional?: ConditionalOptions;
+  hidden?: boolean;
+  id?: string;
+
+  [index: string]: any;
+}
 
 export interface IRenderFormProps {
   children: React.ReactNode;
@@ -71,8 +88,8 @@ export const RenderForm = ({
   onSubmit,
 }: IRenderFormProps): React.ReactElement => {
   const childComponents =
-    form.components?.map((component: IRendererComponent, i: number) => (
-      <RenderComponent key={component.id || i} component={component} />
+    form.components?.map((c: IRenderable) => (
+      <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} />
     )) || null;
 
   return (
@@ -95,19 +112,10 @@ export const RenderForm = ({
   );
 };
 
-export interface IRendererComponent extends ComponentSchema {
-  columns?: IFormioColumn[];
-  components?: IRendererComponent[];
-  id?: string;
-  type: string;
-}
-
 export interface IRenderComponentProps {
-  component: IColumnComponent | IRendererComponent;
+  component: IRenderable;
+  form: IFormioForm;
 }
-
-/** @const Form.io does not guarantee a key for a form component, we use this as a fallback. */
-export const OF_MISSING_KEY = 'OF_MISSING_KEY';
 
 /**
  * Renderer for rendering a Form.io component passed as component. Iterates over children (and
@@ -135,9 +143,28 @@ export const OF_MISSING_KEY = 'OF_MISSING_KEY';
  * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
-export const RenderComponent = ({component}: IRenderComponentProps): React.ReactElement => {
+export const RenderComponent = ({
+  component,
+  form,
+}: IRenderComponentProps): React.ReactElement | null => {
+  const key = component.key || OF_MISSING_KEY;
+  const {setFieldValue, values} = useFormikContext();
   const Component = useComponentType(component);
-  const field = useField(component.key || OF_MISSING_KEY);
+  const field = useField(key);
+
+  // Basic Form.io conditional.
+  const show = Utils.hasCondition(component)
+    ? Utils.checkCondition(component, null, values, form, null)
+    : !component.hidden;
+
+  if (!show && component.clearOnHide) {
+    setFieldValue(key, null);
+  }
+
+  if (!show) {
+    return null;
+  }
+
   const [{value, onBlur, onChange}, {error}] = field;
   const callbacks = {onBlur, onChange};
   const errors = error?.split('\n') || []; // Reconstruct array.
@@ -148,20 +175,24 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
   //
   // This allows for components to remain simple and increases compatibility with existing design
   // systems.
-  const _component = component as IRendererComponent;
-  const cComponents = component.components ? component.components : null;
-  const cColumns = _component.columns ? _component.columns : null;
+  const cComponents = component.components || null;
+  const cColumns = component.columns || null;
 
   // Regular children, either from component or column.
-  const childComponents = cComponents?.map((c: IRendererComponent, i: number) => (
-    <RenderComponent key={c.id || i} component={c} />
+  const childComponents = cComponents?.map(c => (
+    <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} />
   ));
 
   // Columns from component.
-  const childColumns = cColumns?.map((c: IFormioColumn, i) => (
+  const childColumns = cColumns?.map(c => (
     <RenderComponent
-      key={i}
-      component={{...c, defaultValue: undefined, key: undefined, type: 'column'}}
+      key={`${c.id}-${c.key}`}
+      component={{
+        ...c,
+        key: OF_MISSING_KEY,
+        type: 'column',
+      }}
+      form={form}
     />
   ));
 
@@ -172,6 +203,7 @@ export const RenderComponent = ({component}: IRenderComponentProps): React.React
     </Component>
   );
 };
+
 /**
  * Fallback component, gets used when no other component is found within the `RenderContext`
  * The Fallback component makes sure (child) components keep being rendered with as little side
@@ -184,7 +216,7 @@ const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</R
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
 export const useComponentType = (
-  component: IColumnComponent | IRendererComponent
+  component: IRenderable
 ): React.ComponentType<IColumnProps | IComponentProps> => {
   const renderConfiguration = useContext(RenderContext);
   const ComponentType = renderConfiguration.components[component.type];
