@@ -15,8 +15,8 @@
     "./esm/": "./dist/esm/"
   },
   "scripts": {
-    "build:esm": "tsc && tsc-alias",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs && tsc-alias --outDir dist/cjs",
+    "build:esm": "tsc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
+    "build:cjs": "tsc -p tsconfig.prod.json --module commonjs --outDir dist/cjs && tsc-alias -p tsconfig.prod.json --outDir dist/cjs",
     "build:storybook": "build-storybook --webpack-stats-json",
     "build": "npm-run-all build:*",
     "test": "run-s test:lint",
