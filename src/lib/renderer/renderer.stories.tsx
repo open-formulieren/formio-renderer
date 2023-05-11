@@ -1,10 +1,4 @@
-import {
-  FORMIO_CONDITIONAL,
-  FORMIO_EXAMPLE,
-  FORMIO_LENGTH,
-  FORMIO_PATTERN,
-  FORMIO_REQUIRED,
-} from '@fixtures';
+import {FORMIO_EXAMPLE, FORMIO_LENGTH, FORMIO_PATTERN, FORMIO_REQUIRED} from '@fixtures';
 import {DEFAULT_RENDER_CONFIGURATION, RenderComponent, RenderForm} from '@lib/renderer/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
@@ -166,7 +160,89 @@ renderFormWithConditionalLogic.args = {
   configuration: DEFAULT_RENDER_CONFIGURATION,
   form: {
     display: 'form',
-    components: FORMIO_CONDITIONAL,
+    components: [
+      // Reference field.
+      {
+        id: 'favoriteAnimal',
+        type: 'textfield',
+        label: 'Favorite animal',
+        key: 'favoriteAnimal',
+      },
+
+      // Case: hide unless "cat"
+      {
+        conditional: {
+          eq: 'cat',
+          show: true,
+          when: 'favoriteAnimal',
+        },
+        id: 'motivationCat',
+        hidden: true,
+        type: 'textfield',
+        key: 'motivation',
+        label: 'Motivation',
+        placeholder: 'I like cats because...',
+        description: 'Please motivate why "cat" is your favorite animal...',
+      },
+
+      // Case hide unless "dog"
+      {
+        conditional: {
+          eq: 'dog',
+          show: true,
+          when: 'favoriteAnimal',
+        },
+        id: 'motivationDog',
+        hidden: true,
+        type: 'textfield',
+        key: 'motivation',
+        label: 'Motivation',
+        placeholder: 'I like dogs because...',
+        description: 'Please motivate why "dog" is your favorite animal...',
+      },
+
+      // Case hide unless "" (empty string)
+      {
+        conditional: {
+          eq: '',
+          show: true,
+          when: 'favoriteAnimal',
+        },
+        id: 'content1',
+        hidden: true,
+        type: 'content',
+        key: 'content',
+        html: 'Please enter you favorite animal.',
+      },
+
+      // Case show unless "cat"
+      {
+        conditional: {
+          eq: 'cat',
+          show: false,
+          when: 'favoriteAnimal',
+        },
+        id: 'content2',
+        hidden: false,
+        type: 'content',
+        key: 'content',
+        html: 'Have you tried "cat"?',
+      },
+
+      // Case show unless "dog"
+      {
+        conditional: {
+          eq: 'dog',
+          show: false,
+          when: 'favoriteAnimal',
+        },
+        id: 'content3',
+        hidden: false,
+        type: 'content',
+        key: 'content',
+        html: 'Have you tried "dog"?',
+      },
+    ],
   },
   initialValues: {
     favoriteAnimal: '',
@@ -177,9 +253,7 @@ renderFormWithConditionalLogic.args = {
 };
 renderFormWithConditionalLogic.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  const input = canvas.getByLabelText('Favorite animal', {
-    selector: 'input',
-  });
+  const input = canvas.getByLabelText('Favorite animal');
   expect(
     await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
   ).toBeNull();
