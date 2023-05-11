@@ -9,10 +9,40 @@ on:
     tags:
       - '*'
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      # - ready_for_review  relevant for chromatic, at some point
   workflow_dispatch:
 
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref_name }}' # unique builds for branch/tag name
+  cancel-in-progress: false  # do not cancel in progress, but only in-between builds
+
 jobs:
-  build-and-test:
+  storybook:
+    name: Create storybook build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Build Storybook docs
+        run: |
+          yarn install
+          yarn build-storybook --quiet
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./storybook-static
+
+  build-package:
     name: Create 'production' build
     runs-on: ubuntu-latest
 
@@ -27,11 +57,8 @@ jobs:
         run: yarn install
 
       - name: Build library
-        run: yarn build
-
-      # TODO: Not set up/configured yet
-      # - name: Run tests
-      #   run: yarn test
+        run: |
+          yarn build
 
       - name: Store build artifact
         uses: actions/upload-artifact@v3
@@ -41,7 +68,7 @@ jobs:
           retention-days: 1
 
   prettier:
-    name: Check frontend code formatting with prettier
+    name: prettier (code formatting)
     runs-on: ubuntu-latest
 
     steps:
@@ -57,12 +84,57 @@ jobs:
       - name: Run prettier linter
         run: yarn checkformat
 
+  eslint:
+    name: eslint (code formatting)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run ESLint
+        run: yarn test:lint
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - storybook
+      - prettier
+      - eslint
+    # do not run in forks & only publish main branch
+    if: github.ref_name == 'main' && github.repository_owner == 'open-formulieren'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+
   publish:
     name: Publish the NPM package
     runs-on: ubuntu-latest
     needs:
-      - build-and-test
+      - build-package
       - prettier
+      - eslint
 
     # do not publish in forks or non-tag pushes
     if: startsWith(github.ref, 'refs/tags/') && github.repository_owner == 'open-formulieren'
@@ -77,7 +149,7 @@ jobs:
           scope: '@open-formulieren'
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install
 
       - name: Download build artifact
         uses: actions/download-artifact@v3
