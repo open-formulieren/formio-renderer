@@ -85,5 +85,8 @@
   "dependencies": {
     "clsx": "^1.2.1",
     "formik": "^2.2.9"
+  },
+  "resolutions": {
+    "react-formio/formiojs": "~4.13.0"
   }
 }
