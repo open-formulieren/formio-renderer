@@ -1,5 +1,5 @@
 import {DEFAULT_RENDER_CONFIGURATION, RenderForm} from '@lib/renderer';
-import {DEFAULT_VALIDATORS} from '@lib/validation';
+import {DEFAULT_VALIDATORS, validator} from '@lib/validation';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
@@ -14,7 +14,12 @@ const meta: Meta<typeof RenderForm> = {
 };
 export default meta;
 
-DEFAULT_VALIDATORS[3][1] = 'Vul het verplichte veld in';
+const VALIDATORS = DEFAULT_VALIDATORS.map(([fn, mssg], index): validator => {
+  if (index === 3) {
+    return [fn, 'Vul het verplichte veld in'];
+  }
+  return [fn, mssg];
+});
 
 const BootstrapInput: React.FC<IComponentProps> = ({callbacks, component, errors, value}) => (
   <>
@@ -55,6 +60,7 @@ renderFormWithCustomComponent.args = {
     components: {
       textfield: BootstrapInput,
     },
+    validators: VALIDATORS,
   },
   form: {
     display: 'form',
