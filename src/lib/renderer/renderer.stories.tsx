@@ -4,7 +4,6 @@ import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
 import {Formik} from 'formik';
-import React from 'react';
 
 const meta: Meta<typeof RenderForm> = {
   title: 'Usage / Renderer',

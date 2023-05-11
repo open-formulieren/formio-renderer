@@ -15,8 +15,8 @@
     "./esm/": "./dist/esm/"
   },
   "scripts": {
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build:esm": "tsc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
+    "build:cjs": "tsc -p tsconfig.prod.json --module commonjs --outDir dist/cjs && tsc-alias -p tsconfig.prod.json --outDir dist/cjs",
     "build:storybook": "build-storybook --webpack-stats-json",
     "build": "npm-run-all build:*",
     "test": "run-s test:lint",
@@ -75,6 +75,7 @@
     "prettier": "^2.8.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "tsc-alias": "^1.8.6",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^4.9.5"
   },
