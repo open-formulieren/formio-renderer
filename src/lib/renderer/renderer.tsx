@@ -1,6 +1,7 @@
 import {Column, Columns, Content, IColumnProps, TextField} from '@components';
+import {Multiple} from '@containers';
 import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
-import {IComponentProps, IFormioForm, IRenderConfiguration, IValues} from '@types';
+import {IComponentProps, IFormioForm, IRenderConfiguration, IValues, Value, Values} from '@types';
 import {Formik, useField, useFormikContext} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
 import {Utils} from 'formiojs';
@@ -13,6 +14,9 @@ export const DEFAULT_RENDER_CONFIGURATION: IRenderConfiguration = {
     column: Column,
     content: Content,
     textfield: TextField,
+  },
+  containers: {
+    multiple: Multiple,
   },
   validators: DEFAULT_VALIDATORS,
 };
@@ -87,10 +91,18 @@ export const RenderForm: React.FC<IRenderFormProps> = ({
   initialValues = {},
   onSubmit,
 }) => {
-  const childComponents =
-    form.components?.map((c: IRenderable) => (
-      <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} />
-    )) || null;
+  const childComponents: React.ReactElement[] = [];
+  // TODO: Refactor types
+  Utils.eachComponent(
+    form.components,
+    (c: IRenderable, path: string) => {
+      const component = (
+        <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} path={path} />
+      );
+      childComponents.push(component);
+    },
+    true
+  );
 
   return (
     <RenderContext.Provider value={configuration}>
@@ -115,6 +127,8 @@ export const RenderForm: React.FC<IRenderFormProps> = ({
 export interface IRenderComponentProps {
   component: IRenderable;
   form: IFormioForm;
+  path: string;
+  value?: Value | Values;
 }
 
 /**
@@ -143,9 +157,14 @@ export interface IRenderComponentProps {
  * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
-export const RenderComponent: React.FC<IRenderComponentProps> = ({component, form}) => {
-  const {setFieldValue, values} = useFormikContext();
+export const RenderComponent: React.FC<IRenderComponentProps> = ({
+  component,
+  form,
+  path,
+  value = undefined,
+}) => {
   const key = component.key || OF_MISSING_KEY;
+  const {setFieldValue, values} = useFormikContext();
   const Component = useComponentType(component);
   const field = useField(key);
 
@@ -162,7 +181,11 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({component, for
     return null;
   }
 
-  const [{value, onBlur, onChange}, {error}] = field;
+  const [{onBlur, onChange}, {error}] = field;
+
+  // Allow the value to be overriden.
+  const _value = value !== undefined ? value : field[0].value;
+
   const callbacks = {onBlur, onChange};
   const errors = error?.split('\n') || []; // Reconstruct array.
 
@@ -177,7 +200,7 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({component, for
 
   // Regular children, either from component or column.
   const childComponents = cComponents?.map(c => (
-    <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} />
+    <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} path={path} />
   ));
 
   // Columns from component.
@@ -190,12 +213,21 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({component, for
         type: 'column',
       }}
       form={form}
+      path={path}
     />
   ));
 
   // Return the component, pass children.
   return (
-    <Component callbacks={callbacks} component={component} errors={errors} value={value}>
+    <Component
+      callbacks={callbacks}
+      component={component}
+      form={form}
+      errors={errors}
+      path={path}
+      value={_value}
+      setValue={setFieldValue}
+    >
       {childComponents || childColumns}
     </Component>
   );
@@ -209,13 +241,33 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({component, for
 const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</React.Fragment>;
 
 /**
- * Custom hook resolving the `React.ComponentType` from `RenderContext`.
+ * Custom hook resolving the `React.ComponentType` based on the configuration in `RenderContext`.
+ * Resolving is performed in the following order:
+ *
+ *   1. - A `React.ComponentType` configured for a certain "containers" entry indicating an internal
+ *        edge case.
+ *   2. - A `React.ComponentType` configured for a certain "components" entry indicating a regular
+ *        component.
+ *   3. - A fallback component solely rendering `props.children`.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
 export const useComponentType = (
   component: IRenderable
 ): React.ComponentType<IColumnProps | IComponentProps> => {
   const renderConfiguration = useContext(RenderContext);
+  const ContainerType = useContainerConfiguration(component);
   const ComponentType = renderConfiguration.components[component.type];
-  return ComponentType || Fallback;
+  return ContainerType || ComponentType || Fallback;
+};
+
+/**
+ * Returns the applicable `containerConfiguration` (if any) for component.
+ * @see {IContainerConfiguration}
+ */
+export const useContainerConfiguration = (component: IRenderable) => {
+  const renderConfiguration = useContext(RenderContext);
+  if (component.multiple) {
+    return renderConfiguration.containers.multiple || null;
+  }
+  return null;
 };
