@@ -1,7 +1,7 @@
 import {RenderForm} from '@lib/renderer';
 import {expect} from '@storybook/jest';
 import type {Meta} from '@storybook/react';
-import {userEvent, within} from '@storybook/testing-library';
+import {userEvent, waitFor, within} from '@storybook/testing-library';
 
 import {compatibilityStoriesFactory} from '../utils/compatibility-stories-factory';
 import {delay} from '../utils/delay';
@@ -34,11 +34,12 @@ export const [FormioTextfieldWithMaxLengthValidation, RenderFormTextfieldWithMax
     async ({canvasElement}) => {
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
-      input.focus();
+      userEvent.click(input);
       await delay();
       await userEvent.type(input, 'The quick brown fox jumps over the lazy dog', {delay: 10});
-      await delay(300);
-      expect(canvas.queryByText('first name must have no more than 10 characters.')).toBeTruthy();
+      await waitFor(async () =>
+        canvas.findByText('first name must have no more than 10 characters.')
+      );
     }
   );
 
@@ -62,11 +63,10 @@ export const [FormioTextfieldWithMinLengthValidation, RenderFormTextfieldWithMin
     async ({canvasElement}) => {
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
-      input.focus();
-      await delay();
+      userEvent.click(input);
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, 'The quick', {delay: 10});
-      await delay(300);
-      expect(canvas.queryByText('first name must have at least 10 characters.')).toBeTruthy();
+      await waitFor(async () => canvas.findByText('first name must have at least 10 characters.'));
     }
   );
 
@@ -90,13 +90,12 @@ export const [FormioTextfieldWithPatternValidation, RenderFormTextfieldWithPatte
     async ({canvasElement}) => {
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('Postcode');
-      input.focus();
-      await delay();
+      userEvent.click(input);
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, '123 AB', {delay: 10});
-      await delay(300);
       expect(
-        canvas.queryByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
-      ).toBeTruthy();
+        await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+      ).toBeVisible();
     }
   );
 
@@ -120,11 +119,10 @@ export const [FormioTextfieldWithRequiredValidation, RenderFormTextfieldWithRequ
     async ({canvasElement}) => {
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
-      input.focus();
-      await delay();
+      userEvent.click(input);
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, 'John', {delay: 10});
       await userEvent.clear(input);
-      await delay(300);
-      expect(canvas.queryByText('first name is required')).toBeTruthy();
+      expect(await canvas.findByText('first name is required')).toBeVisible();
     }
   );

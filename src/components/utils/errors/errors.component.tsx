@@ -16,9 +16,9 @@ export const Errors: React.FC<IErrorsProps> = ({componentId, errors}) => {
 
   return (
     <ul className={className} aria-describedby={componentId}>
-      {errors?.map((error: string) => {
+      {errors?.map((error: string, index: number) => {
         return (
-          <li key={error} className={listItemClassName}>
+          <li key={index} className={listItemClassName}>
             <label className={labelClassName} htmlFor={componentId} role="alert">
               {error}
             </label>

@@ -1,7 +1,7 @@
 import {RenderForm} from '@lib/renderer';
 import {expect} from '@storybook/jest';
 import type {Meta} from '@storybook/react';
-import {userEvent, within} from '@storybook/testing-library';
+import {userEvent, waitFor, within} from '@storybook/testing-library';
 
 import {compatibilityStoriesFactory} from '../utils/compatibility-stories-factory';
 import {delay} from '../utils/delay';
@@ -26,7 +26,7 @@ export const [FormioTextfieldHasNoCharcountByDefault, RenderFormTextfieldHasNoCh
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
       userEvent.click(input);
-      await delay(300);
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, 'John', {delay: 10});
       await delay(300);
       expect(canvas.queryByText('4 characters')).toBeNull();
@@ -47,10 +47,9 @@ export const [FormioTextfieldWithCharcount, RenderFormTextfieldWithCharcount] =
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
       userEvent.click(input);
-      await delay();
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, 'John', {delay: 30});
-      await delay(300);
-      expect(canvas.queryByText('4 characters')).toBeTruthy();
+      expect(await canvas.findByText('4 characters')).toBeVisible();
     }
   );
 
@@ -68,7 +67,7 @@ export const [FormioTextfieldWithoutCharcount, RenderFormTextfieldWithoutCharcou
       const canvas = within(canvasElement);
       const input = await canvas.findByLabelText('first name');
       userEvent.click(input);
-      await delay();
+      await waitFor(() => expect(input).toHaveFocus());
       await userEvent.type(input, 'John', {delay: 10});
       await delay(300);
       expect(canvas.queryByText('4 characters')).toBeNull();
@@ -92,7 +91,6 @@ export const [FormioTextfieldWithDescription, RenderFormTextfieldWithDescription
     },
     async ({canvasElement}) => {
       const canvas = within(canvasElement);
-      await delay(300);
-      expect(canvas.queryByText('Enter your first name')).toBeTruthy();
+      expect(await canvas.findByText('Enter your first name')).toBeVisible();
     }
   );

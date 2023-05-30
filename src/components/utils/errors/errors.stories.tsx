@@ -18,8 +18,8 @@ errors.args = {
 };
 errors.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  expect(canvas.getByText('Postcode is required')).toBeTruthy();
+  expect(await canvas.findByText('Postcode is required')).toBeVisible();
   expect(
-    canvas.getByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
-  ).toBeTruthy();
+    await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeVisible();
 };

@@ -1,10 +1,11 @@
-import {Content, IContentComponent} from '@components';
-import {IRenderComponentProps, RenderComponent} from '@lib/renderer';
+import {Content} from '@components';
+import {RenderComponent} from '@lib/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {within} from '@storybook/testing-library';
-import {Formik} from 'formik';
 import React from 'react';
+
+import {FormikDecorator} from '../../../tests/utils/decorators';
 
 const meta: Meta<typeof Content> = {
   title: 'Components / Formio / Content',
@@ -14,23 +15,18 @@ const meta: Meta<typeof Content> = {
 };
 export default meta;
 
-export const content: ComponentStory<React.FC<IRenderComponentProps<IContentComponent>>> = args => (
+export const content: ComponentStory<typeof RenderComponent> = args => (
   <RenderComponent {...args} />
 );
 content.args = {
   component: {
+    key: 'foo',
     type: 'content',
     html: 'The <b>quick</b> brown fox jumps over the lazy dog.',
   },
 };
 content.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  expect(canvas.getByText('quick')).toBeTruthy();
+  expect(await canvas.findByText('quick')).toBeVisible();
 };
-content.decorators = [
-  Story => (
-    <Formik initialValues={{content: null}} onSubmit={() => {}}>
-      {Story()}
-    </Formik>
-  ),
-];
+content.decorators = [FormikDecorator];

@@ -15,9 +15,7 @@ export const compatibilityStoriesFactory = (args: Args, play: PlayFunction) => {
   FormioStory.play = play;
 
   const RenderFormStory: ComponentStory<typeof RenderForm> = args => <RenderForm {...args} />;
-  RenderFormStory.args = {
-    ...args,
-  };
+  RenderFormStory.args = structuredClone(args);
   RenderFormStory.play = play;
 
   return [FormioStory, RenderFormStory];

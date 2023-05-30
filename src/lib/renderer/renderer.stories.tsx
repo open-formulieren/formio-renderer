@@ -5,6 +5,8 @@ import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
 import {Formik} from 'formik';
 
+import {FormikDecorator} from '../../tests/utils/decorators';
+
 const meta: Meta<typeof RenderForm> = {
   title: 'Usage / Renderer',
   component: RenderForm,
@@ -65,14 +67,16 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.type(canvas.getByLabelText(FORMIO_LENGTH.label), 'Lorem ipsum dolor', {
     delay: 30,
   });
-  await canvas.findByText('Motivation must have at least 20 characters.');
+  expect(await canvas.findByText('Motivation must have at least 20 characters.')).toBeVisible();
 
   await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '123A', {delay: 30});
-  await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$');
+  expect(
+    await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeVisible();
 
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
-  await canvas.findByText('first name is required');
+  expect(await canvas.findByText('first name is required')).toBeVisible();
 
   // Clear values.
   await userEvent.clear(canvas.getByLabelText(FORMIO_LENGTH.label));
@@ -80,8 +84,10 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
 
   // Unpristine state should show validation errors.
-  await canvas.findAllByText('Postcode must have at least 6 characters.');
-  await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$');
+  expect(await canvas.findByText('Postcode must have at least 6 characters.')).toBeVisible();
+  expect(
+    await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeVisible();
   await canvas.findAllByText('Postcode is required');
 
   // Type valid values in each field.
@@ -142,7 +148,7 @@ renderFormWithNestedKeyValidation.play = async ({canvasElement}) => {
   // Pristine state should not show validation errors.
   expect(await canvas.queryByText('Nested input must have at least 5 characters.')).toBeNull();
   await userEvent.clear(canvas.getByLabelText('Nested input'));
-  await canvas.findByText('Nested input must have at least 5 characters.');
+  expect(await canvas.findByText('Nested input must have at least 5 characters.')).toBeVisible();
 };
 
 export const renderFormWithConditionalLogic: ComponentStory<typeof RenderForm> = args => (
@@ -254,9 +260,9 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
-  await canvas.findByText('Please enter you favorite animal.');
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Please enter you favorite animal.')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
   await userEvent.type(input, 'horse', {delay: 30});
   expect(
     await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
@@ -265,11 +271,13 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
   expect(await canvas.queryByText('Please enter you favorite animal.')).toBeNull();
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
   await userEvent.clear(input);
   await userEvent.type(input, 'cat', {delay: 30});
-  await canvas.findByText('Please motivate why "cat" is your favorite animal...');
+  expect(
+    await canvas.findByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeVisible();
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
@@ -292,9 +300,9 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
-  await canvas.findByText('Please enter you favorite animal.');
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Please enter you favorite animal.')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
 };
 
 export const formValidationWithLayoutComponent: ComponentStory<typeof RenderForm> = args => (
@@ -356,15 +364,4 @@ renderComponent.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John');
 };
-renderComponent.decorators = [
-  Story => (
-    <Formik
-      initialValues={{
-        [FORMIO_EXAMPLE[0].key as string]: '',
-      }}
-      onSubmit={() => {}}
-    >
-      {Story()}
-    </Formik>
-  ),
-];
+renderComponent.decorators = [FormikDecorator];

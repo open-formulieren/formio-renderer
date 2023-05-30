@@ -1,9 +1,8 @@
+import {Component} from '@components/utils';
 import {IComponentProps} from '@types';
 import clsx from 'clsx';
 import {ComponentSchema} from 'formiojs';
 import React from 'react';
-
-import {Component} from '../../utils';
 
 export interface IColumnsComponent extends ComponentSchema {
   type: 'columns';

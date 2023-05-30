@@ -1,5 +1,6 @@
 import {FORMIO_EXAMPLE} from '@fixtures';
 import {RenderForm} from '@lib/renderer';
+import {expect} from '@storybook/jest';
 import type {Meta} from '@storybook/react';
 import {within} from '@storybook/testing-library';
 
@@ -22,7 +23,7 @@ export const [FormioRendersTextfield, RenderFormRendersTextField] = compatibilit
   },
   async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await canvas.findByLabelText(FORMIO_EXAMPLE[0].label);
-    await canvas.findByLabelText(FORMIO_EXAMPLE[1].label);
+    expect(await canvas.findByLabelText(FORMIO_EXAMPLE[0].label)).toBeVisible();
+    expect(await canvas.findByLabelText(FORMIO_EXAMPLE[1].label)).toBeVisible();
   }
 );

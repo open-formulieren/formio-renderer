@@ -18,5 +18,5 @@ charcount.args = {
 };
 charcount.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  expect(canvas.getByText('3 characters')).toBeTruthy();
+  expect(await canvas.findByText('3 characters')).toBeVisible();
 };

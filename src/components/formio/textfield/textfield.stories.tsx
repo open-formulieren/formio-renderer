@@ -1,10 +1,11 @@
-import {ITextFieldComponent, TextField} from '@components';
-import {IRenderComponentProps, RenderComponent} from '@lib/renderer';
+import {TextField} from '@components';
+import {RenderComponent} from '@lib/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
-import {Formik} from 'formik';
 import React from 'react';
+
+import {FormikDecorator} from '../../../tests/utils/decorators';
 
 const meta: Meta<typeof TextField> = {
   title: 'Components / Formio / Textfield',
@@ -14,9 +15,9 @@ const meta: Meta<typeof TextField> = {
 };
 export default meta;
 
-export const textfield: ComponentStory<
-  React.FC<IRenderComponentProps<ITextFieldComponent>>
-> = args => <RenderComponent {...args} />;
+export const textfield: ComponentStory<typeof RenderComponent> = args => (
+  <RenderComponent {...args} />
+);
 textfield.args = {
   component: {
     description: 'Enter your first name',
@@ -32,15 +33,9 @@ textfield.args = {
 textfield.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
   const input = canvas.getByLabelText('first name');
-  expect(canvas.getByText('Enter your first name')).toBeTruthy();
+  expect(await canvas.findByText('Enter your first name')).toBeVisible();
   expect(canvas.queryByText('0 characters')).toBeNull();
   await userEvent.type(input, 'The quick brown fox jumps over the lazy dog.', {delay: 10});
-  expect(canvas.queryByText('44 characters')).toBeTruthy();
+  expect(await canvas.findByText('44 characters')).toBeVisible();
 };
-textfield.decorators = [
-  Story => (
-    <Formik initialValues={{firstName: null}} onSubmit={() => {}}>
-      {Story()}
-    </Formik>
-  ),
-];
+textfield.decorators = [FormikDecorator];

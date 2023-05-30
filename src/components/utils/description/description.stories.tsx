@@ -18,5 +18,5 @@ description.args = {
 };
 description.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  expect(canvas.getByText('The quick brown fox jumps over the lazy dog.')).toBeTruthy();
+  expect(await canvas.findByText('The quick brown fox jumps over the lazy dog.')).toBeVisible();
 };

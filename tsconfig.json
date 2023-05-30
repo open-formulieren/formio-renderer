@@ -20,6 +20,7 @@
     "sourceMap": true,
     "paths": {
       "@components": ["src/components/index"],
+      "@components/*": ["src/components/*"],
       "@fixtures": ["src/fixtures/index"],
       "@lib/*": ["src/lib/*"],
       "@types": ["src/types/index"]

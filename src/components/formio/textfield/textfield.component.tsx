@@ -1,9 +1,8 @@
+import {CharCount, Component, Description, Errors, Label} from '@components/utils';
 import {IComponentProps} from '@types';
 import clsx from 'clsx';
 import {ComponentSchema} from 'formiojs';
 import React, {useState} from 'react';
-
-import {CharCount, Component, Description, Errors, Label} from '../../utils';
 
 export interface ITextFieldComponent extends ComponentSchema {
   id: string;
@@ -11,10 +10,11 @@ export interface ITextFieldComponent extends ComponentSchema {
   key: string;
   label: string;
   mask: string;
-  showCharCount: true;
+  showCharCount: boolean;
   type: 'textfield';
 }
 
+// TODO: replace with @open-formulieren/open-forms-types TextFieldSchema type when its available
 export interface ITextFieldProps extends IComponentProps {
   component: ITextFieldComponent;
   value: string;
