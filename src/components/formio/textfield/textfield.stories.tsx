@@ -3,7 +3,6 @@ import {RenderComponent} from '@lib/renderer';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
-import React from 'react';
 
 import {FormikDecorator} from '../../../tests/utils/decorators';
 

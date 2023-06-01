@@ -1,7 +1,6 @@
 import {RenderForm} from '@lib/renderer';
 import {PlayFunction} from '@storybook/csf/dist/story';
 import {Args, ComponentStory} from '@storybook/react';
-import React from 'react';
 // @ts-ignore
 import {Form} from 'react-formio';
 

@@ -2,7 +2,6 @@ import {Errors} from '@components';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {within} from '@storybook/testing-library';
-import React from 'react';
 
 const meta: Meta<typeof Errors> = {
   title: 'Components / Utils / Errors',

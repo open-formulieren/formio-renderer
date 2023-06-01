@@ -1,7 +1,6 @@
 import {DecoratorFunction} from '@storybook/csf';
 import {ReactFramework} from '@storybook/react';
 import {Formik} from 'formik';
-import React from 'react';
 
 export const FormikDecorator: DecoratorFunction<ReactFramework> = (Story, context) => {
   const initialValues = context.parameters?.formik?.initialValues || {};
