@@ -21,7 +21,7 @@ export interface IMultipleProps extends IComponentProps {
  */
 export const Multiple: React.FC<IMultipleProps> = props => {
   const {component, form, path, value = [], setValue} = props; // FIXME: Awaits future pr.
-  const [keys, setKeys] = useState<number[]>(Array.from({length: 1}, (_, i) => i));
+  const [keys, setKeys] = useState<number[]>([0]);
 
   /** Finds next key by increasing the max key with 1. */
   const getKey = (): number => {
@@ -47,7 +47,7 @@ export const Multiple: React.FC<IMultipleProps> = props => {
 
   /** Renders individual components utilizing <RenderComponent/>. */
   const renderComponents = () =>
-    Array.from({length: keys.length}, (_, index) => {
+    keys.map((key, index) => {
       // Clone and adjust component to fit nested needs.
       const renderable: IRenderable = {
         ...structuredClone(component),
@@ -58,7 +58,7 @@ export const Multiple: React.FC<IMultipleProps> = props => {
       };
 
       return (
-        <tr key={keys[index]}>
+        <tr key={key}>
           <td>
             <RenderComponent component={renderable} form={form} path={path} value={value[index]} />
           </td>
@@ -79,7 +79,7 @@ export const Multiple: React.FC<IMultipleProps> = props => {
         <tfoot>
           <tr>
             <td>
-              <button type="button" onClick={() => add()}>
+              <button type="button" onClick={add}>
                 Add another
               </button>
             </td>
