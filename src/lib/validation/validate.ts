@@ -21,10 +21,10 @@ export type validator = [
 ];
 
 export const DEFAULT_VALIDATORS: validator[] = [
-  [validateMaxLength, 'Er zijn teveel karakters opgegeven.'],
-  [validateMinLength, 'Er zijn te weinig karakters opgegeven.'],
-  [validatePattern, 'De opgegeven waarde voldoet niet aan het formaat.'],
-  [validateRequired, 'Het verplichte veld is niet ingevuld.'],
+  [validateMaxLength, '{{ label }} must have no more than {{ limit }} characters.'],
+  [validateMinLength, '{{ label }} must have at least {{ limit }} characters.'],
+  [validatePattern, '{{ label }} does not match the pattern {{ pattern }}'],
+  [validateRequired, '{{ label }} is required'],
 ];
 
 type ErrorMap =

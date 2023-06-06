@@ -94,7 +94,7 @@ renderFormWithCustomComponent.play = async ({canvasElement}) => {
 
   // Assert rendered component shows error when invalid.
   await userEvent.clear(input);
-  await canvas.findByText('Vul het verplichte veld in');
+  expect(await canvas.findByText('Vul het verplichte veld in')).toBeVisible();
 
   // Assert rendered component removes error when valid.
   await userEvent.type(input, 'John', {delay: 30});

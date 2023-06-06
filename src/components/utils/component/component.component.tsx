@@ -1,4 +1,3 @@
-import {IComponentProps} from '@types';
 import clsx from 'clsx';
 import React from 'react';
 
@@ -6,7 +5,7 @@ import React from 'react';
  * Structural wrapper for the component. A component's implementation should be placed in `children`
  * prop.
  */
-export const Component = (componentProps: IComponentProps): React.ReactElement => {
+export const Component: React.FC<React.PropsWithChildren> = ({children}) => {
   const className = clsx(`of-component`);
-  return <div className={className}>{componentProps.children}</div>;
+  return <div className={className}>{children}</div>;
 };

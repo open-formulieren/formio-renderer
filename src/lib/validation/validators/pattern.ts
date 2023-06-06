@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -7,15 +8,15 @@ import {ExtendedComponentSchema} from 'formiojs';
  * @throws {PatternValidationError} As promise rejection if invalid.
  */
 export const validatePattern = async (
-  componentProps: ExtendedComponentSchema,
+  component: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {
-  const pattern = componentProps.validate?.pattern;
+  const pattern = component.validate?.pattern;
   const valid = Boolean(!pattern || String(value).match(new RegExp(pattern)));
 
   if (!valid) {
-    throw new PatternValidationError(message);
+    throw new PatternValidationError(substitute(message, {...component, pattern, value}));
   }
 };
 

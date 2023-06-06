@@ -1,4 +1,4 @@
-import {Component} from '@components';
+import {Component} from '@components/utils';
 import {IComponentProps} from '@types';
 import clsx from 'clsx';
 import {ComponentSchema} from 'formiojs';
@@ -6,6 +6,7 @@ import React from 'react';
 
 export interface IColumnsComponent extends ComponentSchema {
   type: 'columns';
+  columns: IFormioColumn[];
 }
 
 export interface IColumnsProps extends IComponentProps {

@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -7,15 +8,15 @@ import {ExtendedComponentSchema} from 'formiojs';
  * @throws {RequiredValidationError} As promise rejection if invalid.
  */
 export const validateRequired = async (
-  componentProps: ExtendedComponentSchema,
+  component: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {
-  const required = componentProps.validate?.required;
+  const required = component.validate?.required;
   const valid = Boolean(!required || value);
 
   if (!valid) {
-    throw new RequiredValidationError(message);
+    throw new RequiredValidationError(substitute(message, {...component, value}));
   }
 };
 

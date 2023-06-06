@@ -1,4 +1,4 @@
-import {CharCount, Component, Description, Errors, Label} from '@components';
+import {CharCount, Component, Description, Errors, Label} from '@components/utils';
 import {IComponentProps} from '@types';
 import clsx from 'clsx';
 import {ComponentSchema} from 'formiojs';
@@ -7,33 +7,32 @@ import React, {useState} from 'react';
 export interface ITextFieldComponent extends ComponentSchema {
   id: string;
   inputMask: string;
+  key: string;
+  label: string;
   mask: string;
+  showCharCount: boolean;
   type: 'textfield';
 }
 
+// TODO: replace with @open-formulieren/open-forms-types TextFieldSchema type when its available
 export interface ITextFieldProps extends IComponentProps {
   component: ITextFieldComponent;
+  value: string;
 }
 
 /**
  * A Text Field can be used for short and general text input. There are options to define input
  * masks and validations, allowing users to mold information into desired formats.
  */
-export const TextField = (componentProps: ITextFieldProps): React.ReactElement => {
-  const {children, component, value, callbacks = {}, ...props} = componentProps;
+export const TextField: React.FC<ITextFieldProps> = ({callbacks, component, value, errors}) => {
   const {onChange, ..._callbacks} = callbacks;
   const [pristineState, setPristineState] = useState<boolean>(true);
-  const [charCountState, setCharCountState] = useState<number>(
-    String(component.defaultValue).length
-  );
-
-  const inputClassName = clsx(`of-${componentProps.component.type}`);
+  const inputClassName = clsx(`of-${component.type}`);
+  const componentId = `${component.id}-${component.key}`;
 
   const inputAttrs = {
     disabled: component.disabled,
-    id: component.key,
-    minLength: component.validate?.minLength,
-    maxLength: component.validate?.maxLength,
+    id: componentId,
     multiple: component.multiple,
     name: component.key,
     pattern: component.validate?.pattern || undefined,
@@ -46,14 +45,14 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
    * @param {React.FormEvent} event
    */
   const _onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setCharCountState(event.currentTarget.value.length);
     setPristineState(false);
     onChange && onChange(event);
   };
 
   return (
-    <Component {...componentProps}>
-      <Label {...componentProps} />
+    <Component>
+      <Label componentId={componentId} label={component.label} />
+
       <input
         className={inputClassName}
         value={onChange ? value || '' : undefined}
@@ -61,11 +60,11 @@ export const TextField = (componentProps: ITextFieldProps): React.ReactElement =
         onChange={_onChange}
         {...inputAttrs}
         {..._callbacks}
-        {...props}
       />
-      <CharCount count={charCountState} pristine={pristineState} {...componentProps} />
-      <Description {...componentProps} />
-      <Errors pristine={pristineState} {...componentProps} />
+
+      {!pristineState && component.showCharCount && <CharCount value={value} />}
+      {component.description && <Description description={component.description} />}
+      {!pristineState && errors?.length > 0 && <Errors componentId={componentId} errors={errors} />}
     </Component>
   );
 };

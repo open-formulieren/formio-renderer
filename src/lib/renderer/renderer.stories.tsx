@@ -5,6 +5,8 @@ import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
 import {Formik} from 'formik';
 
+import {FormikDecorator} from '../../tests/utils/decorators';
+
 const meta: Meta<typeof RenderForm> = {
   title: 'Usage / Renderer',
   component: RenderForm,
@@ -17,11 +19,7 @@ export default meta;
 // renderForm
 //
 
-export const renderForm: ComponentStory<typeof RenderForm> = args => (
-  <RenderForm {...args}>
-    <button type="submit">Submit</button>
-  </RenderForm>
-);
+export const renderForm: ComponentStory<typeof RenderForm> = args => <RenderForm {...args} />;
 renderForm.args = {
   configuration: DEFAULT_RENDER_CONFIGURATION,
   form: {
@@ -37,7 +35,6 @@ renderForm.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John', {delay: 30});
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[1].label), 'Doe', {delay: 30});
-  await userEvent.click(canvas.getByText('Submit'));
 };
 export const renderFormWithValidation: ComponentStory<typeof RenderForm> = args => (
   <RenderForm {...args}>
@@ -57,23 +54,29 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
 
   // Pristine state should not show validation errors.
-  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
-  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).toBeNull();
-  expect(await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')).toBeNull();
-  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).toBeNull();
+  expect(await canvas.queryByText('Motivation must have at least 20 characters.')).toBeNull();
+  expect(await canvas.queryByText('Postcode must have at least 6 characters.')).toBeNull();
+  expect(
+    await canvas.queryByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeNull();
+  expect(await canvas.queryByText('Motivation is required')).toBeNull();
+  expect(await canvas.queryByText('Postcode is required')).toBeNull();
+  expect(await canvas.queryByText('first name is required')).toBeNull();
 
   // Type invalid values in each field.
   await userEvent.type(canvas.getByLabelText(FORMIO_LENGTH.label), 'Lorem ipsum dolor', {
     delay: 30,
   });
-  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
+  expect(await canvas.findByText('Motivation must have at least 20 characters.')).toBeVisible();
 
   await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '123A', {delay: 30});
-  await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.');
+  expect(
+    await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeVisible();
 
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
-  await canvas.findByText('Het verplichte veld is niet ingevuld.');
+  expect(await canvas.findByText('first name is required')).toBeVisible();
 
   // Clear values.
   await userEvent.clear(canvas.getByLabelText(FORMIO_LENGTH.label));
@@ -81,31 +84,29 @@ renderFormWithValidation.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_REQUIRED.label));
 
   // Unpristine state should show validation errors.
-  await canvas.findAllByText('Er zijn te weinig karakters opgegeven.');
-  await canvas.findByText('De opgegeven waarde voldoet niet aan het formaat.');
-  await canvas.findAllByText('Het verplichte veld is niet ingevuld.');
+  expect(await canvas.findByText('Postcode must have at least 6 characters.')).toBeVisible();
+  expect(
+    await canvas.findByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeVisible();
+  await canvas.findAllByText('Postcode is required');
 
   // Type valid values in each field.
   await userEvent.type(
     canvas.getByLabelText(FORMIO_LENGTH.label),
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
   );
-  // Maxlength on input should prevent excessive input.
-  expect(await canvas.getByLabelText(FORMIO_LENGTH.label)).toHaveValue(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing'
-  );
   await userEvent.type(canvas.getByLabelText(FORMIO_PATTERN.label), '1234AB', {delay: 30});
   await userEvent.type(canvas.getByLabelText(FORMIO_REQUIRED.label), 'foo', {delay: 30});
 
   // Valid values show not show validation errors.
+  expect(await canvas.queryByText('Motivation must have at least 20 characters.')).toBeNull();
+  expect(await canvas.queryByText('Postcode must have at least 6 characters.')).toBeNull();
   expect(
-    await canvas.queryByText('Er zijn te weinig karakters opgegeven.')
-  ).not.toBeInTheDocument();
-  expect(await canvas.queryByText('Er zijn teveel karakters opgegeven.')).not.toBeInTheDocument();
-  expect(
-    await canvas.queryByText('De opgegeven waarde voldoet niet aan het formaat.')
-  ).not.toBeInTheDocument();
-  expect(await canvas.queryByText('Het verplichte veld is niet ingevuld.')).not.toBeInTheDocument();
+    await canvas.queryByText('Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$')
+  ).toBeNull();
+  expect(await canvas.queryByText('Motivation is required')).toBeNull();
+  expect(await canvas.queryByText('Postcode is required')).toBeNull();
+  expect(await canvas.queryByText('first name is required')).toBeNull();
 };
 renderFormWithValidation.decorators = [
   Story => (
@@ -145,9 +146,9 @@ renderFormWithNestedKeyValidation.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
 
   // Pristine state should not show validation errors.
-  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('Nested input must have at least 5 characters.')).toBeNull();
   await userEvent.clear(canvas.getByLabelText('Nested input'));
-  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
+  expect(await canvas.findByText('Nested input must have at least 5 characters.')).toBeVisible();
 };
 
 export const renderFormWithConditionalLogic: ComponentStory<typeof RenderForm> = args => (
@@ -259,9 +260,9 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
-  await canvas.findByText('Please enter you favorite animal.');
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Please enter you favorite animal.')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
   await userEvent.type(input, 'horse', {delay: 30});
   expect(
     await canvas.queryByText('Please motivate why "cat" is your favorite animal...')
@@ -270,11 +271,13 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
   expect(await canvas.queryByText('Please enter you favorite animal.')).toBeNull();
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
   await userEvent.clear(input);
   await userEvent.type(input, 'cat', {delay: 30});
-  await canvas.findByText('Please motivate why "cat" is your favorite animal...');
+  expect(
+    await canvas.findByText('Please motivate why "cat" is your favorite animal...')
+  ).toBeVisible();
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
@@ -297,9 +300,9 @@ renderFormWithConditionalLogic.play = async ({canvasElement}) => {
   expect(
     await canvas.queryByText('Please motivate why "dog" is your favorite animal...')
   ).toBeNull();
-  await canvas.findByText('Please enter you favorite animal.');
-  await canvas.findByText('Have you tried "cat"?');
-  await canvas.findByText('Have you tried "dog"?');
+  expect(await canvas.findByText('Please enter you favorite animal.')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "cat"?')).toBeVisible();
+  expect(await canvas.findByText('Have you tried "dog"?')).toBeVisible();
 };
 
 export const formValidationWithLayoutComponent: ComponentStory<typeof RenderForm> = args => (
@@ -335,9 +338,9 @@ formValidationWithLayoutComponent.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
 
   // Pristine state should not show validation errors.
-  expect(await canvas.queryByText('Er zijn te weinig karakters opgegeven.')).toBeNull();
+  expect(await canvas.queryByText('Text input must have at least 5 characters.')).toBeNull();
   await userEvent.clear(canvas.getByLabelText('Text input'));
-  await canvas.findByText('Er zijn te weinig karakters opgegeven.');
+  await canvas.findByText('Text input must have at least 5 characters.');
 };
 
 //
@@ -361,15 +364,4 @@ renderComponent.play = async ({canvasElement}) => {
   await userEvent.clear(canvas.getByLabelText(FORMIO_EXAMPLE[0].label));
   await userEvent.type(canvas.getByLabelText(FORMIO_EXAMPLE[0].label), 'John');
 };
-renderComponent.decorators = [
-  Story => (
-    <Formik
-      initialValues={{
-        [FORMIO_EXAMPLE[0].key as string]: '',
-      }}
-      onSubmit={() => {}}
-    >
-      {Story()}
-    </Formik>
-  ),
-];
+renderComponent.decorators = [FormikDecorator];

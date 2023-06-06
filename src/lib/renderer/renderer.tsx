@@ -79,14 +79,14 @@ export interface IRenderFormProps {
  *
  * @external {RenderContext} Provides `RenderContext`.
  */
-export const RenderForm = ({
+export const RenderForm: React.FC<IRenderFormProps> = ({
   children,
-  configuration,
+  configuration = DEFAULT_RENDER_CONFIGURATION,
   form,
   formAttrs,
   initialValues = {},
   onSubmit,
-}: IRenderFormProps): React.ReactElement => {
+}) => {
   const childComponents =
     form.components?.map((c: IRenderable) => (
       <RenderComponent key={`${c.id}-${c.key}`} component={c} form={form} />
@@ -143,12 +143,9 @@ export interface IRenderComponentProps {
  * @external {FormikContext} Expects `Formik`/`FormikContext` to be available.
  * @external {RenderContext} Expects `RenderContext` to be available.
  */
-export const RenderComponent = ({
-  component,
-  form,
-}: IRenderComponentProps): React.ReactElement | null => {
-  const key = component.key || OF_MISSING_KEY;
+export const RenderComponent: React.FC<IRenderComponentProps> = ({component, form}) => {
   const {setFieldValue, values} = useFormikContext();
+  const key = component.key || OF_MISSING_KEY;
   const Component = useComponentType(component);
   const field = useField(key);
 

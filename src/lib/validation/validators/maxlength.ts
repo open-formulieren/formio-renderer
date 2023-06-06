@@ -1,3 +1,4 @@
+import {substitute} from '@lib/format';
 import {ValidationError} from '@lib/validation/validationerror';
 import {Value} from '@types';
 import {ExtendedComponentSchema} from 'formiojs';
@@ -7,15 +8,16 @@ import {ExtendedComponentSchema} from 'formiojs';
  * @throws {MaxLengthValidationError} As promise rejection if invalid.
  */
 export const validateMaxLength = async (
-  componentSchema: ExtendedComponentSchema,
+  component: ExtendedComponentSchema,
   value: Value,
   message: string
 ): Promise<void> => {
-  const limit = componentSchema.validate?.maxLength;
-  const valid = typeof limit !== 'number' || String(value).length <= limit;
+  const length = String(value).length;
+  const limit = component.validate?.maxLength;
+  const valid = typeof limit !== 'number' || length <= limit;
 
   if (!valid) {
-    throw new MaxLengthValidationError(message);
+    throw new MaxLengthValidationError(substitute(message, {...component, length, limit, value}));
   }
 };
 
