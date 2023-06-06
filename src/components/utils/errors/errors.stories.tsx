@@ -13,7 +13,11 @@ export default meta;
 
 export const errors: ComponentStory<typeof Errors> = args => <Errors {...args} />;
 errors.args = {
-  errors: ['Postcode is required', 'Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$'],
+  // errors: [{message: 'Postcode is required'}, {message: 'Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$'}],
+  errors: [
+    {name: 'required', message: 'Postcode is required'},
+    {name: 'pattern', message: 'Postcode does not match the pattern ^\\d{4}\\s?[a-zA-Z]{2}$'},
+  ],
 };
 errors.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);

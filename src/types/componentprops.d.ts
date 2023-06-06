@@ -1,3 +1,4 @@
+import {ValidationError} from '@lib/validation';
 import {ComponentSchema} from 'formiojs';
 import React from 'react';
 
@@ -8,7 +9,7 @@ import {Value, Values} from './value';
 export interface IComponentProps {
   callbacks: ICallbackConfiguration;
   component: ComponentSchema;
-  errors: string[];
+  errors: ValidationError[];
   form: IFormioForm;
   value: Value | Values | undefined;
   path: string;

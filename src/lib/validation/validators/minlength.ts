@@ -22,5 +22,5 @@ export const validateMinLength = async (
 };
 
 export class MinLengthValidationError extends ValidationError {
-  validator = 'minlength';
+  name = 'minlength';
 }

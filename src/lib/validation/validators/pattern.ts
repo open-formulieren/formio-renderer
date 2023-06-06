@@ -21,5 +21,5 @@ export const validatePattern = async (
 };
 
 export class PatternValidationError extends ValidationError {
-  validator = 'pattern';
+  name = 'pattern';
 }

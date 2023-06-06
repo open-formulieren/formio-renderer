@@ -1,9 +1,10 @@
+import {ValidationError} from '@lib/validation';
 import clsx from 'clsx';
 import React from 'react';
 
 export interface IErrorsProps {
   componentId: string;
-  errors: string[];
+  errors: ValidationError[];
 }
 
 /**
@@ -16,11 +17,11 @@ export const Errors: React.FC<IErrorsProps> = ({componentId, errors}) => {
 
   return (
     <ul className={className} aria-describedby={componentId}>
-      {errors?.map((error: string, index: number) => {
+      {errors?.map((error, index: number) => {
         return (
           <li key={index} className={listItemClassName}>
             <label className={labelClassName} htmlFor={componentId} role="alert">
-              {error}
+              {error.message}
             </label>
           </li>
         );

@@ -21,5 +21,5 @@ export const validateRequired = async (
 };
 
 export class RequiredValidationError extends ValidationError {
-  validator = 'required';
+  name = 'required';
 }

@@ -22,5 +22,5 @@ export const validateMaxLength = async (
 };
 
 export class MaxLengthValidationError extends ValidationError {
-  validator = 'maxlength';
+  name = 'maxlength';
 }

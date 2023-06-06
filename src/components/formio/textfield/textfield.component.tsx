@@ -62,7 +62,7 @@ export const TextField: React.FC<ITextFieldProps> = ({callbacks, component, valu
         {..._callbacks}
       />
 
-      {!pristineState && component.showCharCount && <CharCount value={value} />}
+      {!pristineState && component.showCharCount && value && <CharCount value={value} />}
       {component.description && <Description description={component.description} />}
       {!pristineState && errors?.length > 0 && <Errors componentId={componentId} errors={errors} />}
     </Component>

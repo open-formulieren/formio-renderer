@@ -1,5 +1,5 @@
 import {DEFAULT_RENDER_CONFIGURATION, RenderForm} from '@lib/renderer';
-import {DEFAULT_VALIDATORS, validator} from '@lib/validation';
+import {DEFAULT_VALIDATORS, Validator} from '@lib/validation';
 import {expect} from '@storybook/jest';
 import type {ComponentStory, Meta} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
@@ -14,7 +14,7 @@ const meta: Meta<typeof RenderForm> = {
 };
 export default meta;
 
-const VALIDATORS = DEFAULT_VALIDATORS.map(([fn, mssg], index): validator => {
+const VALIDATORS = DEFAULT_VALIDATORS.map(([fn, mssg], index): Validator => {
   if (index === 3) {
     return [fn, 'Vul het verplichte veld in'];
   }
@@ -42,9 +42,9 @@ const BootstrapInput: React.FC<IComponentProps> = ({callbacks, component, errors
         {...callbacks}
       />
 
-      {errors.map(error => (
-        <div key={error} className="invalid-feedback">
-          {error}
+      {errors.map((error, i) => (
+        <div key={i} className="invalid-feedback">
+          {error.message}
         </div>
       ))}
     </div>

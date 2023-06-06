@@ -1,6 +1,6 @@
 import {Column, Columns, Content, IColumnProps, TextField} from '@components';
 import {Multiple} from '@containers';
-import {DEFAULT_VALIDATORS, getFormErrors} from '@lib/validation';
+import {DEFAULT_VALIDATORS, ValidationError, getFormErrors} from '@lib/validation';
 import {IComponentProps, IFormioForm, IRenderConfiguration, IValues, Value, Values} from '@types';
 import {Formik, useField, useFormikContext} from 'formik';
 import {FormikHelpers} from 'formik/dist/types';
@@ -109,7 +109,7 @@ export const RenderForm: React.FC<IRenderFormProps> = ({
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
-        validate={values => getFormErrors(form, values, configuration.validators)}
+        validate={async values => await getFormErrors(form, values, configuration.validators)}
       >
         {props => {
           return (
@@ -182,12 +182,12 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({
   }
 
   const [{onBlur, onChange}, {error}] = field;
+  const errors = error || [];
 
   // Allow the value to be overriden.
   const _value = value !== undefined ? value : field[0].value;
 
   const callbacks = {onBlur, onChange};
-  const errors = error?.split('\n') || []; // Reconstruct array.
 
   // In certain cases a component (is not defined as) a component but something else (e.g. a column)
   // We deal with these edge cases by extending the schema with a custom (component) type allowing
@@ -223,7 +223,7 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({
       callbacks={callbacks}
       component={component}
       form={form}
-      errors={errors}
+      errors={errors as unknown as ValidationError[]} // Formik typing issue.
       path={path}
       value={_value}
       setValue={setFieldValue}

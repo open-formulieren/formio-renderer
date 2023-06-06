@@ -73,7 +73,9 @@ export const Multiple: React.FC<IMultipleProps> = props => {
 
   return (
     <Component {...props}>
-      <Label {...props} />
+      {props.component.label && (
+        <Label label={props.component.label} componentId={props.component.key as string} />
+      )}
       <table>
         <tbody>{renderComponents()}</tbody>
         <tfoot>
@@ -87,7 +89,7 @@ export const Multiple: React.FC<IMultipleProps> = props => {
         </tfoot>
       </table>
       <table />
-      <Description {...props} />
+      {props.component.description && <Description description={props.component.description} />}
     </Component>
   );
 };
