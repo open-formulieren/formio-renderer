@@ -238,7 +238,7 @@ export const RenderComponent: React.FC<IRenderComponentProps> = ({
  * The Fallback component makes sure (child) components keep being rendered with as little side
  * effects as possible.
  */
-const Fallback = (props: IComponentProps) => <React.Fragment>{props.children}</React.Fragment>;
+const Fallback = () => <React.Fragment />;
 
 /**
  * Custom hook resolving the `React.ComponentType` based on the configuration in `RenderContext`.
