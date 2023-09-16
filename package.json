@@ -55,6 +55,7 @@
     "@babel/preset-typescript": "^7.22.15",
     "@formatjs/cli": "^6.1.5",
     "@formatjs/ts-transformer": "^3.13.5",
+    "@open-formulieren/design-tokens": "^0.39.0",
     "@open-formulieren/types": "^0.9.0",
     "@storybook/addon-actions": "^7.3.2",
     "@storybook/addon-essentials": "^7.3.2",

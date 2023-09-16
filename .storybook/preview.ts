@@ -1,3 +1,4 @@
+import '@open-formulieren/design-tokens/dist/index.css';
 import {Preview} from '@storybook/react';
 import '@utrecht/component-library-css';
 
