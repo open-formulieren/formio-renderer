@@ -1,4 +1,5 @@
 import {Preview} from '@storybook/react';
+import '@utrecht/component-library-css';
 
 import {reactIntl} from './reactIntl';
 
