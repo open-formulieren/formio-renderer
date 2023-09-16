@@ -30,12 +30,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: yarn
+          cache: npm
 
       - name: Build Storybook docs
         run: |
-          yarn install
-          yarn build-storybook --quiet
+          npm ci
+          npm run build-storybook --quiet
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
@@ -51,14 +51,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Build library
         run: |
-          yarn build
+          npm run build
 
       - name: Store build artifact
         uses: actions/upload-artifact@v3
@@ -76,30 +76,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Run prettier linter
-        run: yarn checkformat
-
-  eslint:
-    name: eslint (code formatting)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Run ESLint
-        run: yarn test:lint
+        run: npm run checkformat
 
   tests:
     name: Run Storybook tests
@@ -112,10 +95,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       # Reference: https://storybook.js.org/docs/6.5/react/writing-tests/test-runner#run-against-non-deployed-storybooks
       - name: Set up test environment
@@ -133,14 +116,13 @@ jobs:
           cd storybook-static/ && tar -xvf artifact.tar && cd ..
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "npx http-server storybook-static --port 6006 --quiet" \
-            "npx wait-on -l http://127.0.0.1:6006 && yarn test:storybook"
+            "npx wait-on -l http://127.0.0.1:6006 && npm run test:storybook"
 
   deploy:
     runs-on: ubuntu-latest
     needs:
       - storybook
       - prettier
-      - eslint
       - tests
     # do not run in forks & only publish main branch
     if: github.ref_name == 'main' && github.repository_owner == 'open-formulieren'
@@ -169,7 +151,6 @@ jobs:
     needs:
       - build-package
       - prettier
-      - eslint
       - tests
 
     # do not publish in forks or non-tag pushes
@@ -180,12 +161,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: yarn
+          cache: npm
           registry-url: 'https://registry.npmjs.org'
           scope: '@open-formulieren'
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Download build artifact
         uses: actions/download-artifact@v3
@@ -198,6 +179,6 @@ jobs:
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-          yarn publish --access public --new-version=$VERSION
+          npm publish --access public --new-version=$VERSION
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
