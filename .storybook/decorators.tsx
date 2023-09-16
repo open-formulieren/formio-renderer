@@ -1,6 +1,7 @@
 import type {StoryContext, StoryFn} from '@storybook/react';
 import {Formik} from 'formik';
-import React from 'react';
+
+import {ConfigurationContext} from '@/context';
 
 export const withFormik = (Story: StoryFn, context: StoryContext) => {
   const isDisabled = context.parameters?.formik?.disable ?? false;
@@ -27,5 +28,15 @@ export const withFormik = (Story: StoryFn, context: StoryContext) => {
         <Story />
       )}
     </Formik>
+  );
+};
+
+export const withConfig = (Story: StoryFn, context: StoryContext) => {
+  const config = context.parameters?.config;
+  if (!config) return <Story />;
+  return (
+    <ConfigurationContext.Provider value={{...config}}>
+      <Story />
+    </ConfigurationContext.Provider>
   );
 };

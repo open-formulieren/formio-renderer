@@ -1,14 +1,15 @@
 import {expect} from '@storybook/jest';
+import {Meta, StoryObj} from '@storybook/react';
 import {userEvent, within} from '@storybook/testing-library';
 
-import {ConfigDecorator, FormikDecorator} from 'story-utils/decorators';
+import {withConfig, withFormik} from '@/sb-decorators';
 
 import TextField from './TextField';
 
 export default {
-  title: 'Pure React Components / Forms / TextField',
+  title: 'Forms / Fields / TextField',
   component: TextField,
-  decorators: [FormikDecorator],
+  decorators: [withFormik],
   parameters: {
     formik: {
       initialValues: {
@@ -16,30 +17,32 @@ export default {
       },
     },
   },
-};
-
-export const Default = {
   args: {
     name: 'test',
-    id: 'test',
     label: 'test',
     description: 'This is a custom description',
     disabled: false,
     isRequired: true,
   },
+} satisfies Meta<typeof TextField>;
+
+type Story = StoryObj<typeof TextField>;
+
+export const Default: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('textbox')).toBeVisible();
     await expect(canvas.getByText('test')).toBeVisible();
     await expect(canvas.getByText('This is a custom description')).toBeVisible();
+
     // Check if clicking on the label focuses the input
     const label = canvas.getByText('test');
-    userEvent.click(label);
+    await userEvent.click(label);
     await expect(canvas.getByRole('textbox')).toHaveFocus();
   },
 };
 
-export const ValidationError = {
+export const ValidationError: Story = {
   name: 'Validation error',
   parameters: {
     formik: {
@@ -67,12 +70,12 @@ export const ValidationError = {
   },
 };
 
-export const NoAsterisks = {
+export const NoAsterisks: Story = {
   name: 'No asterisk for required',
-  decorators: [ConfigDecorator],
+  decorators: [withConfig],
   parameters: {
     config: {
-      requiredFieldsWithAsterisk: false,
+      asteriskForRequired: false,
     },
   },
   args: {
