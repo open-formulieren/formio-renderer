@@ -1,4 +1,5 @@
 import {Paragraph, Textbox, FormField as UtrechtFormField} from '@utrecht/component-library-react';
+import {TextboxTypes} from '@utrecht/component-library-react/dist/Textbox';
 import {useField} from 'formik';
 import React, {useRef} from 'react';
 
@@ -16,11 +17,12 @@ export interface TextFieldProps {
 }
 
 export interface TextFieldInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  type?: 'text';
+  type?: TextboxTypes;
 }
 
 export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
   name,
+  type = 'text',
   label = '',
   isRequired = false,
   description = '',
@@ -30,7 +32,7 @@ export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
   ...inputProps
 }) => {
   const id = React.useId();
-  const [field, meta] = useField<string>({name, ...inputProps});
+  const [field, meta] = useField<string>({name, type, ...inputProps});
   const invalid = useIsInvalid(name);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,13 +43,14 @@ export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
 
   return (
     <Wrapper>
-      <UtrechtFormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
+      <UtrechtFormField type={type} invalid={invalid} className="utrecht-form-field--openforms">
         <Label id={id} isRequired={isRequired} disabled={disabled}>
           {label}
         </Label>
         <Paragraph>
           <Textbox
             ref={inputRef}
+            type={type}
             {...field}
             id={id}
             className="utrecht-textbox--openforms"
