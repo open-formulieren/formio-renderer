@@ -1,8 +1,8 @@
 import {Paragraph, Textbox, FormField as UtrechtFormField} from '@utrecht/component-library-react';
 import {useField} from 'formik';
-import React from 'react';
+import React, {useRef} from 'react';
 
-import {HelpText, Label, ValidationErrors, Wrapper} from '@/components/utils';
+import {CharCount, HelpText, Label, ValidationErrors, Wrapper} from '@/components/utils';
 import useIsInvalid from '@/hooks/useIsInvalid';
 
 export interface TextFieldProps {
@@ -11,6 +11,8 @@ export interface TextFieldProps {
   isRequired?: boolean;
   description?: string;
   disabled?: boolean;
+  tooltip?: string;
+  showCharCount?: boolean;
 }
 
 export interface TextFieldInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -23,11 +25,20 @@ export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
   isRequired = false,
   description = '',
   disabled = false,
+  tooltip = '',
+  showCharCount = false,
   ...inputProps
 }) => {
   const id = React.useId();
-  const [field] = useField<string>({name, ...inputProps});
+  const [field, meta] = useField<string>({name, ...inputProps});
   const invalid = useIsInvalid(name);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const hasFocus = inputRef.current === document.activeElement;
+  const {touched} = meta;
+  const {value} = field;
+  const charCount = showCharCount && (touched || hasFocus) && value && <CharCount value={value} />;
+
   return (
     <Wrapper>
       <UtrechtFormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
@@ -36,6 +47,7 @@ export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
         </Label>
         <Paragraph>
           <Textbox
+            ref={inputRef}
             {...field}
             id={id}
             className="utrecht-textbox--openforms"
@@ -43,6 +55,7 @@ export const TextField: React.FC<TextFieldProps & TextFieldInputProps> = ({
             invalid={invalid}
             {...inputProps}
           />
+          {charCount}
         </Paragraph>
         <HelpText>{description}</HelpText>
         <ValidationErrors name={name} />

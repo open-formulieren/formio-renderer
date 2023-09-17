@@ -42,6 +42,35 @@ export const Default: Story = {
   },
 };
 
+export const WithToolTip: Story = {
+  args: {
+    label: 'With tooltip',
+    tooltip: 'Hiya!',
+    required: false,
+  },
+};
+
+export const WithCharCount: Story = {
+  parameters: {
+    formik: {
+      initialValues: {
+        test: 'A non-empty value',
+      },
+      initialTouched: {
+        test: true,
+      },
+    },
+  },
+  args: {
+    label: 'With charcount',
+    showCharCount: true,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('17 characters')).toBeVisible();
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   parameters: {
