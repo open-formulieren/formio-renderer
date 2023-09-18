@@ -13,3 +13,23 @@ export interface FormioConfiguration {
   settings?: any; // unused by us
   components: AnyComponentSchema[];
 }
+
+// Values must be JSON-serializable
+export type ComponentValue =
+  | string
+  | number
+  | boolean
+  | null
+  | ComponentValue[]
+  | {[key: string]: ComponentValue};
+
+export type SubmissionData = {
+  [key: string]: ComponentValue;
+};
+
+export interface Submission {
+  data: SubmissionData;
+  // unused by us, but Form.io stores timezone info in here so not a bad idea to anticipate
+  // usage
+  metadata?: {[key: string]: unknown};
+}

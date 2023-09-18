@@ -4,8 +4,15 @@ import {FormioComponentRenderer} from '@/components/formio';
 import {TextField} from '@/components/forms';
 
 const RenderTextField: FormioComponentRenderer<TextFieldComponentSchema> = ({component}) => {
-  const {key, label, description, tooltip, showCharCount, autocomplete, multiple} = component;
-  console.log(key, multiple);
+  const {
+    key,
+    label,
+    description,
+    tooltip,
+    showCharCount,
+    autocomplete,
+    multiple = false,
+  } = component;
   return (
     <TextField
       name={key}

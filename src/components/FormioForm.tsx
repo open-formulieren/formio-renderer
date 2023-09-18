@@ -1,26 +1,9 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
+import {Form, Formik} from 'formik';
 
-import {FormioConfiguration} from '@/types';
-
-// Values must be JSON-serializable
-export type ComponentValue =
-  | string
-  | number
-  | boolean
-  | null
-  | ComponentValue[]
-  | {[key: string]: ComponentValue};
-
-export type SubmissionData = {
-  [key: string]: ComponentValue;
-};
-
-export interface Submission {
-  data: SubmissionData;
-  // unused by us, but Form.io stores timezone info in here so not a bad idea to anticipate
-  // usage
-  metadata?: {[key: string]: unknown};
-}
+import {FormioComponent} from '@/components';
+import {FormioConfiguration, Submission, SubmissionData} from '@/types';
+import {getInitialValues} from '@/utils/initial-values';
 
 export interface ChangeContext {
   // could probably derive keys from FormioConfiguration type, but that makes little sense
@@ -63,7 +46,7 @@ export interface FormioFormProps {
    * If this callback fires, then it means that the form fields all validated on the
    * client side and the data is ready to be submitted to a backend.
    */
-  onSubmit: (data: SubmissionData) => void;
+  onSubmit: (data: SubmissionData) => Promise<void>;
 }
 
 const FormioForm: React.FC<FormioFormProps> = ({
@@ -72,12 +55,29 @@ const FormioForm: React.FC<FormioFormProps> = ({
   onChange,
   onSubmit,
 }) => {
-  console.log(onChange, onSubmit);
+  console.log(onChange);
   const {finalConfiguration, finalSubmission} = evaluateFormLogic(configuration, submission);
   // use the final submission for the form initialvalues
   // use the final configuration for rendering
-  console.log(finalConfiguration, finalSubmission);
-  return null;
+  // build ZOD validation schema from finalConfiguration and use inferred type
+  const initialValues = getInitialValues(finalConfiguration, finalSubmission);
+  return (
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={async (data, helpers) => {
+        await onSubmit(data);
+        helpers.setSubmitting(false);
+      }}
+    >
+      <Form>
+        {finalConfiguration.components.map((component, index) => (
+          <FormioComponent key={component.id || `component-${index}`} component={component} />
+        ))}
+        {/* TODO: add slot for submit button row? */}
+      </Form>
+    </Formik>
+  );
 };
 
 // TODO: actually implement this! Keep in mind:
