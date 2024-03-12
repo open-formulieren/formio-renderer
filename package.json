@@ -2,33 +2,36 @@
   "name": "@open-formulieren/formio-renderer",
   "version": "0.1.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
   "source": "src/index.tsx",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "default": "./dist/cjs/index.js"
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js",
+      "default": "./lib/cjs/index.js"
     },
-    "./esm/": "./dist/esm/"
+    "./esm/": "./lib/esm/",
+    "./lib/": "./lib/"
   },
   "scripts": {
-    "build:esm": "tsc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
-    "build:cjs": "tsc -p tsconfig.prod.json --module commonjs --outDir dist/cjs && tsc-alias -p tsconfig.prod.json --outDir dist/cjs",
-    "build:storybook": "build-storybook --webpack-stats-json",
+    "build:esm": "ttsc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
+    "build:cjs": "ttsc -p tsconfig.prod.json --module commonjs --outDir lib/cjs && tsc-alias -p tsconfig.prod.json --outDir lib/cjs",
     "build": "npm-run-all build:*",
     "test": "npm-run-all test:*",
-    "test:lint": "eslint src/**/*.ts[x]",
     "test:storybook": "test-storybook",
-    "checkformat": "prettier --check 'src/**/*.{js,scss,ts,tsx,mdx}'",
-    "format": "prettier --write 'src/**/*.{js,scss,ts,tsx,mdx}'",
-    "start": "start-storybook -p 6006",
-    "storybook": "start-storybook -p 6006"
+    "test:jest": "jest",
+    "format": "prettier --write 'src/**/*' '.storybook/**/*'",
+    "checkformat": "prettier --check 'src/**/*' '.storybook/**/*'",
+    "start": "npm run storybook",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "makemessages": "formatjs extract",
+    "watch": "ttsc -p tsconfig.prod.json --watch"
   },
   "files": [
-    "dist"
+    "lib"
   ],
   "repository": {
     "type": "git",
@@ -41,52 +44,38 @@
   },
   "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
-    "formiojs": "~4.13.0 || ~4.14.0",
-    "react": "^17.0.2"
+    "react": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
-    "react-formio": "^4.3.0",
-    "@storybook/addon-actions": "^6.5.16",
-    "@storybook/addon-essentials": "^6.5.16",
-    "@storybook/addon-interactions": "^6.5.16",
-    "@storybook/addon-links": "^6.5.16",
-    "@storybook/builder-webpack5": "^6.5.16",
-    "@storybook/jest": "^0.0.10",
-    "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/react": "^6.5.16",
-    "@storybook/test-runner": "^0.10.0",
-    "@storybook/testing-library": "^0.0.13",
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/react": "^18.0.28",
-    "@types/webpack": "^5.28.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "babel-loader": "^8.3.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-config-standard-react": "^9.2.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-standard": "^4.0.1",
-    "formiojs": "~4.13.0",
+    "@babel/core": "^7.24.0",
+    "@formatjs/ts-transformer": "^3.12.0",
+    "@storybook/addon-actions": "^8.0.0",
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/addon-interactions": "^8.0.0",
+    "@storybook/addon-links": "^8.0.0",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/react": "^8.0.0",
+    "@storybook/react-webpack5": "^8.0.0",
+    "@storybook/test-runner": "^0.17.0",
+    "@storybook/testing-library": "^0.2.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/react": "^18.2.65",
+    "@types/webpack": "^5.28.5",
+    "babel-loader": "^9.1.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "tsc-alias": "^1.8.6",
-    "tsconfig-paths-webpack-plugin": "^4.0.1",
-    "typescript": "^4.9.5"
+    "prettier": "^3.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^8.0.0",
+    "storybook-react-intl": "^3.0.1",
+    "tsc-alias": "^1.8.8",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "ttypescript": "^1.5.15",
+    "typescript": "^5.4.2"
   },
   "dependencies": {
-    "clsx": "^1.2.1",
-    "formik": "^2.2.9"
-  },
-  "resolutions": {
-    "react-formio/formiojs": "~4.13.0"
+    "@storybook/test": "^8.0.0",
+    "clsx": "^2.1.0",
+    "formik": "^2.4.5"
   }
 }
