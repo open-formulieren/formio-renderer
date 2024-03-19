@@ -16,8 +16,8 @@
     "./lib/": "./lib/"
   },
   "scripts": {
-    "build:esm": "ttsc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
-    "build:cjs": "ttsc -p tsconfig.prod.json --module commonjs --outDir lib/cjs && tsc-alias -p tsconfig.prod.json --outDir lib/cjs",
+    "build:esm": "tspc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
+    "build:cjs": "tspc -p tsconfig.prod.json --module commonjs --outDir lib/cjs && tsc-alias -p tsconfig.prod.json --outDir lib/cjs",
     "build": "npm-run-all build:*",
     "test": "npm-run-all test:*",
     "test:storybook": "test-storybook",
@@ -28,7 +28,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "makemessages": "formatjs extract",
-    "watch": "ttsc -p tsconfig.prod.json --watch"
+    "watch": "tspc -p tsconfig.prod.json --watch"
   },
   "files": [
     "lib"
@@ -68,9 +68,9 @@
     "react-dom": "^18.2.0",
     "storybook": "^8.0.0",
     "storybook-react-intl": "^3.0.1",
+    "ts-patch": "^3.1.2",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "ttypescript": "^1.5.15",
     "typescript": "^5.4.2"
   },
   "dependencies": {
