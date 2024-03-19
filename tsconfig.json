@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "dist/esm",
+    "baseUrl": "src",
+    "outDir": "lib/esm",
     "module": "esnext",
     "target": "es2017",
     "lib": ["dom"],
@@ -17,15 +17,20 @@
     "strictBindCallApply": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "noErrorTruncation": true,
     "paths": {
-      "@components": ["src/components/index"],
-      "@components/*": ["src/components/*"],
-      "@fixtures": ["src/fixtures/index"],
-      "@lib/*": ["src/lib/*"],
-      "@types": ["src/types/index"]
-    }
+      "@/*": ["./*"],
+    },
+    "plugins": [
+      {
+        "transform": "@formatjs/ts-transformer",
+        "import": "transform",
+        "type": "config",
+        "overrideIdFn": "[sha512:contenthash:base64:6]",
+        "ast": true
+      }
+    ]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "lib"]
 }
