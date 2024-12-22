@@ -2,22 +2,11 @@
   "name": "@open-formulieren/formio-renderer",
   "version": "0.1.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
-  "source": "src/index.tsx",
-  "exports": {
-    ".": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js",
-      "default": "./lib/cjs/index.js"
-    },
-    "./esm/": "./lib/esm/",
-    "./lib/": "./lib/"
-  },
+  "exports": "./dist/index.js",
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build:esm": "tspc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
-    "build:cjs": "tspc -p tsconfig.prod.json --module commonjs --outDir lib/cjs && tsc-alias -p tsconfig.prod.json --outDir lib/cjs",
     "build": "npm-run-all build:*",
     "test": "npm-run-all test:*",
     "test:storybook": "test-storybook",
@@ -31,7 +20,7 @@
     "watch": "tspc -p tsconfig.prod.json --watch"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -68,10 +57,10 @@
     "react-dom": "^18.2.0",
     "storybook": "^8.0.0",
     "storybook-react-intl": "^3.0.1",
-    "ts-patch": "^3.1.2",
+    "ts-patch": "^3.3.0",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@storybook/test": "^8.0.0",
