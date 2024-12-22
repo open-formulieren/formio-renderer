@@ -1,11 +1,14 @@
 import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 
+import {withFormik} from '@/sb-decorators';
+
 import FormioComponent from './FormioComponent';
 
 export default {
   title: 'Internal API / FormioComponent',
   component: FormioComponent,
+  decorators: [withFormik],
 } satisfies Meta<typeof FormioComponent>;
 
 type Story = StoryObj<typeof FormioComponent>;
@@ -18,6 +21,15 @@ export const TextField: Story = {
       key: 'my.textfield',
       label: 'A simple textfield',
     } satisfies TextFieldComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: 'some initial value',
+        },
+      },
+    },
   },
 };
 
@@ -39,6 +51,15 @@ export const FieldSet: Story = {
       ],
     } satisfies FieldsetComponentSchema,
   },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: 'some initial value',
+        },
+      },
+    },
+  },
 };
 
 // TODO: remove story when all component types are implemented
@@ -50,6 +71,13 @@ export const UnregisteredComponent: Story = {
       key: 'component-unregistered',
       label: 'Unregistered component',
       validateOn: 'blur',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        'component-unregistered': '',
+      },
     },
   },
 };

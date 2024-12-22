@@ -1,10 +1,13 @@
 import type {Meta, StoryObj} from '@storybook/react';
 
+import {withFormik} from '@/sb-decorators';
+
 import Fieldset from './';
 
 export default {
   title: 'Component registry / layout / fieldset',
   component: Fieldset,
+  decorators: [withFormik],
 } satisfies Meta<typeof Fieldset>;
 
 type Story = StoryObj<typeof Fieldset>;
@@ -25,6 +28,15 @@ export const MinimalConfiguration: Story = {
           label: 'A simple textfield',
         },
       ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: '',
+        },
+      },
     },
   },
 };

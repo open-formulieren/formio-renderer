@@ -1,15 +1,17 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
 
-export interface TextFieldProps {
+import TextField from '@/components/forms/TextField';
+
+export interface FormioTextFieldProps {
   componentDefinition: TextFieldComponentSchema;
 }
 
-const TextField: React.FC<TextFieldProps> = ({componentDefinition: {key, label}}) => {
+const FormioTextField: React.FC<FormioTextFieldProps> = ({
+  componentDefinition: {key, label, description, validate},
+}) => {
   return (
-    <div>
-      I am a text field with name {key} and label {label}!
-    </div>
+    <TextField name={key} label={label} description={description} isRequired={validate?.required} />
   );
 };
 
-export default TextField;
+export default FormioTextField;
