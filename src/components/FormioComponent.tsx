@@ -1,10 +1,10 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
-export interface FormioComponentProps {
+export interface FormioComponentProps<S extends AnyComponentSchema = AnyComponentSchema> {
   /**
    * The Formio.js component definition, limited to the features supported in Open Forms.
    */
-  componentDefinition: AnyComponentSchema;
+  componentDefinition: S;
 }
 
 /**
