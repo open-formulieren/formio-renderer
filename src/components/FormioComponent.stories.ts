@@ -40,3 +40,16 @@ export const FieldSet: Story = {
     } satisfies FieldsetComponentSchema,
   },
 };
+
+// TODO: remove story when all component types are implemented
+export const UnregisteredComponent: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component-unregistered',
+      type: 'cosign',
+      key: 'component-unregistered',
+      label: 'Unregistered component',
+      validateOn: 'blur',
+    },
+  },
+};
