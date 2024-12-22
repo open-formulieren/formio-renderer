@@ -69,6 +69,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@utrecht/component-library-react": "^1.0.0-alpha.353",
     "clsx": "^2.1.0",
     "formik": "^2.4.5"
   }
