@@ -20,16 +20,7 @@
     "noErrorTruncation": true,
     "paths": {
       "@/*": ["./*"]
-    },
-    "plugins": [
-      {
-        "transform": "@formatjs/ts-transformer",
-        "import": "transform",
-        "type": "config",
-        "overrideIdFn": "[sha512:contenthash:base64:6]",
-        "ast": true
-      }
-    ]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
