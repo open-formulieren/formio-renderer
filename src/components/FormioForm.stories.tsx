@@ -10,7 +10,7 @@ export default {
   args: {
     onSubmit: fn(),
     children: (
-      <div>
+      <div style={{marginBlockStart: '20px'}}>
         <button type="submit">Submit</button>
       </div>
     ),

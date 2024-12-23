@@ -1,6 +1,9 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik} from 'formik';
 
+import FormFieldContainer from './FormFieldContainer';
+import FormioComponent from './FormioComponent';
+
 /**
  * Props for a complete Formio form definition.
  *
@@ -30,7 +33,12 @@ const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children})
       }}
     >
       <Form>
-        Form with {components.length} components.
+        <FormFieldContainer>
+          {/* TODO: pre-process components to ensure they have an ID? */}
+          {components.map((definition, index) => (
+            <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+          ))}
+        </FormFieldContainer>
         {children}
       </Form>
     </Formik>
