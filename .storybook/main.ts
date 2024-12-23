@@ -1,5 +1,6 @@
 import type {StorybookConfig} from '@storybook/react-webpack5';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
+import path from 'path';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 const config: StorybookConfig = {
@@ -35,7 +36,12 @@ const config: StorybookConfig = {
               'css-loader',
               {
                 loader: 'sass-loader',
-                options: {implementation: require.resolve('sass')},
+                options: {
+                  implementation: require.resolve('sass'),
+                  sassOptions: {
+                    quietDeps: true,
+                  },
+                },
               },
             ],
           },
@@ -49,6 +55,11 @@ const config: StorybookConfig = {
       config.resolve = {};
     }
     config.resolve.plugins = [new TsconfigPathsPlugin()];
+
+    if (!config.resolve.alias) {
+      config.resolve.alias = {};
+    }
+    config.resolve.alias['@/scss'] = path.resolve('src/scss');
 
     if (!config.plugins) {
       config.plugins = [];

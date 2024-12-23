@@ -1,5 +1,7 @@
 import {FormFieldDescription} from '@utrecht/component-library-react';
 
+import './ValidationErrors.scss';
+
 export interface ValidationErrorsProps {
   id: string;
   error: string;
