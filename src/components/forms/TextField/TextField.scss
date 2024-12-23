@@ -3,3 +3,5 @@
 @use '@utrecht/components/dist/paragraph/css/index' as paragraph;
 @use '@utrecht/components/dist/form-field/css/index' as form-field;
 @use '@utrecht/components/dist/textbox/css/index' as textbox;
+
+@use '@/scss/form-field-override';
