@@ -14,6 +14,7 @@ const preview: Preview = {
       },
     },
   },
+  tags: ['private'],
 };
 
 export default preview;
