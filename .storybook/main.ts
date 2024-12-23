@@ -1,4 +1,5 @@
 import type {StorybookConfig} from '@storybook/react-webpack5';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 const config: StorybookConfig = {
@@ -24,6 +25,15 @@ const config: StorybookConfig = {
       config.resolve = {};
     }
     config.resolve.plugins = [new TsconfigPathsPlugin()];
+
+    if (!config.plugins) {
+      config.plugins = [];
+    }
+    config.plugins.push(
+      new CircularDependencyPlugin({
+        failOnError: true,
+      })
+    );
     return config;
   },
 };

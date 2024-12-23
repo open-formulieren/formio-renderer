@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react';
 
+import FormioComponent from '@/components/FormioComponent';
 import {withFormik} from '@/sb-decorators';
 
 import Fieldset from './';
@@ -8,6 +9,9 @@ export default {
   title: 'Component registry / layout / fieldset',
   component: Fieldset,
   decorators: [withFormik],
+  args: {
+    renderNested: FormioComponent,
+  },
 } satisfies Meta<typeof Fieldset>;
 
 type Story = StoryObj<typeof Fieldset>;
