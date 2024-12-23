@@ -4,6 +4,8 @@ import {useId} from 'react';
 
 import {HelpText, Label, ValidationErrors} from '@/components/forms';
 
+import './TextField.scss';
+
 export interface TextFieldProps {
   /**
    * The name of the form field/input, used to set/track the field value in the form state.

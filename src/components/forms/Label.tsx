@@ -1,7 +1,7 @@
 import {FormLabel, Paragraph} from '@utrecht/component-library-react';
-import '@utrecht/components/dist/form-label/css/index.css';
-import '@utrecht/components/dist/paragraph/css/index.css';
 import clsx from 'clsx';
+
+import './Label.scss';
 
 export interface LabelContentProps {
   id: string;

@@ -1,6 +1,8 @@
 import {FormFieldDescription} from '@utrecht/component-library-react';
 import clsx from 'clsx';
 
+import './HelpText.scss';
+
 export type HelpTextProps = {
   children: React.ReactNode;
 };
