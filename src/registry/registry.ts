@@ -13,9 +13,13 @@ export const getRegistryEntry = (
 
 const REGISTRY: Registry = {
   // basic
-  textfield: TextField,
+  textfield: {
+    formField: TextField,
+  },
   // special types
   // layout
-  fieldset: Fieldset,
+  fieldset: {
+    formField: Fieldset,
+  },
   // deprecated
 };

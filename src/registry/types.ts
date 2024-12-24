@@ -20,7 +20,9 @@ export interface RenderComponentProps<S extends AnyComponentSchema = AnyComponen
 }
 
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
-  ? React.FC<RenderComponentProps<S>>
+  ? {
+      formField: React.FC<RenderComponentProps<S>>;
+    }
   : never;
 
 export type Registry = {

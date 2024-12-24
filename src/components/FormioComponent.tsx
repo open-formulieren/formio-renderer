@@ -19,14 +19,15 @@ export interface FormioComponentProps<S extends AnyComponentSchema = AnyComponen
  * Render a single formio component definition as a form field/component.
  */
 const FormioComponent: React.FC<FormioComponentProps> = ({componentDefinition}) => {
-  const TypeSpecificComponent = getRegistryEntry(componentDefinition);
-  if (TypeSpecificComponent === undefined) {
+  const entry = getRegistryEntry(componentDefinition);
+  if (entry === undefined) {
     return (
       <div>
         Unkonwn component type <code>{componentDefinition.type}</code>
       </div>
     );
   }
+  const TypeSpecificComponent = entry.formField;
   return (
     <TypeSpecificComponent
       componentDefinition={componentDefinition}
