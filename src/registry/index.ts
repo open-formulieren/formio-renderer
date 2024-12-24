@@ -1,0 +1,1 @@
+export {getRegistryEntry} from './registry';
