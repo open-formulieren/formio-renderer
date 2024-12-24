@@ -32,6 +32,10 @@ export interface TextFieldProps {
    * information that is contextual/background typically belongs in a tooltip.
    */
   description?: React.ReactNode;
+  /**
+   * Placeholder when no (default) value is available.
+   */
+  placeholder?: string;
 }
 
 /**
@@ -46,7 +50,7 @@ const TextField: React.FC<TextFieldProps> = ({
   isRequired = false,
   description = '',
   isDisabled = false,
-  ...inputProps
+  placeholder,
 }) => {
   const [props, {error = '', touched}] = useField({name, type: 'text'});
   const id = useId();
@@ -67,7 +71,7 @@ const TextField: React.FC<TextFieldProps> = ({
           disabled={isDisabled}
           invalid={invalid}
           aria-describedby={errorMessageId}
-          {...inputProps}
+          placeholder={placeholder}
         />
       </Paragraph>
       <HelpText>{description}</HelpText>

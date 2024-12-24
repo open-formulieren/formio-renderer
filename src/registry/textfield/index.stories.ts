@@ -31,3 +31,22 @@ export const MinimalConfiguration: Story = {
     },
   },
 };
+
+export const WithPlaceholder: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'textfield',
+      label: 'A simple textfield',
+      placeholder: 'Ada',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        textfield: '',
+      },
+    },
+  },
+};

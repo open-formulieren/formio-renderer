@@ -7,10 +7,16 @@ export interface FormioTextFieldProps {
 }
 
 const FormioTextField: React.FC<FormioTextFieldProps> = ({
-  componentDefinition: {key, label, description, validate},
+  componentDefinition: {key, label, description, placeholder, validate},
 }) => {
   return (
-    <TextField name={key} label={label} description={description} isRequired={validate?.required} />
+    <TextField
+      name={key}
+      label={label}
+      description={description}
+      isRequired={validate?.required}
+      placeholder={placeholder}
+    />
   );
 };
 
