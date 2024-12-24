@@ -1,6 +1,8 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik} from 'formik';
 
+import type {JSONObject} from '@/types';
+
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
 
@@ -17,12 +19,12 @@ export interface FormioFormProps {
    */
   components: AnyComponentSchema[];
   // enforce it to be async, makes Formik call setSubmitting when it resolves
-  onSubmit: (values: unknown) => Promise<void>;
+  onSubmit: (values: JSONObject) => Promise<void>;
   children: React.ReactNode;
 }
 
 const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
-  const initialValues: any = {};
+  const initialValues: JSONObject = {};
   console.log(initialValues);
 
   return (

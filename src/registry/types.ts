@@ -1,6 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
+import type {JSONValue} from '@/types';
 
 /**
  * The props that every field render component must support.
@@ -22,6 +23,14 @@ export interface RenderComponentProps<S extends AnyComponentSchema = AnyComponen
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
       formField: React.FC<RenderComponentProps<S>>;
+      /**
+       * Derive the default/initial values from the compnent, optionally recursing.
+       *
+       * The callback must return an array of [name, value] tuples, as a layout
+       * component may contain nested input components each with their own default
+       * values.
+       */
+      getInitialValues?: (componentDefinition: S) => Array<[string, JSONValue]>;
     }
   : never;
 
