@@ -2,7 +2,8 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, setIn} from 'formik';
 
 import {getRegistryEntry} from '@/registry';
-import type {JSONObject, JSONValue} from '@/types';
+import type {JSONObject} from '@/types';
+import {extractInitialValues} from '@/utils';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
@@ -26,16 +27,7 @@ export interface FormioFormProps {
 
 const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
   // build the initial values from the component definitions
-  const initialValuePairs: [string, JSONValue][] = components
-    .map(componentDefinition => {
-      const getInitialValues = getRegistryEntry(componentDefinition)?.getInitialValues;
-      if (getInitialValues === undefined) return [];
-      return getInitialValues(componentDefinition);
-    })
-    .reduce((acc: [string, JSONValue][], currentValue: [string, JSONValue][]) => {
-      acc.push(...currentValue);
-      return acc;
-    }, []);
+  const initialValuePairs = extractInitialValues(components, getRegistryEntry);
 
   // assign all the default values from the component definitions
   let initialValues: JSONObject = {};

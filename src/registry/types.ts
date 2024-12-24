@@ -3,6 +3,10 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import type {JSONValue} from '@/types';
 
+export type GetRegistryEntry = (
+  componentDefinition: AnyComponentSchema
+) => RegistryEntry<AnyComponentSchema> | undefined;
+
 /**
  * The props that every field render component must support.
  *
@@ -30,7 +34,11 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * component may contain nested input components each with their own default
        * values.
        */
-      getInitialValues?: (componentDefinition: S) => Array<[string, JSONValue]>;
+      getInitialValues?: (
+        componentDefinition: S,
+        // dependency injection to avoid circular imports
+        getRegistryEntry: GetRegistryEntry
+      ) => Array<[string, JSONValue]>;
     }
   : never;
 

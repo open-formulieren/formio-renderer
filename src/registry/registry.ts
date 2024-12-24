@@ -1,10 +1,10 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
-import Fieldset from './fieldset';
+import Fieldset, {getInitialValues as fieldsetGetInitialValues} from './fieldset';
 import TextField, {getInitialValues as textFieldGetInitialValues} from './textfield';
-import type {Registry, RegistryEntry} from './types';
+import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
-export const getRegistryEntry = (
+export const getRegistryEntry: GetRegistryEntry = (
   componentDefinition: AnyComponentSchema
 ): RegistryEntry<AnyComponentSchema> | undefined => {
   const entry = REGISTRY[componentDefinition.type];
@@ -21,6 +21,7 @@ const REGISTRY: Registry = {
   // layout
   fieldset: {
     formField: Fieldset,
+    getInitialValues: fieldsetGetInitialValues,
   },
   // deprecated
 };

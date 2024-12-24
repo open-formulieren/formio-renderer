@@ -1,6 +1,6 @@
-import {TextFieldComponentSchema} from '@open-formulieren/types';
+import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, within} from '@storybook/test';
+import {expect, fn, userEvent, within} from '@storybook/test';
 
 import FormioForm from './FormioForm';
 
@@ -54,5 +54,57 @@ export const FlatLayout: Story = {
 
     const textField2 = canvas.getByLabelText('Text field 2');
     expect(textField2).toHaveDisplayValue('Default/initial value');
+  },
+};
+
+export const NestedLayout: Story = {
+  args: {
+    components: [
+      {
+        id: 'fieldset',
+        type: 'fieldset',
+        key: 'fieldset',
+        label: 'Fielset',
+        hideHeader: true,
+        components: [
+          {
+            id: 'textfield',
+            type: 'textfield',
+            key: 'textfield',
+            label: 'Nested text field',
+            defaultValue: 'initial value',
+          } satisfies TextFieldComponentSchema,
+          {
+            id: 'textfield-bis',
+            type: 'textfield',
+            key: 'nested.textfield',
+            label: 'Second text field',
+            defaultValue: 'nested value',
+          } satisfies TextFieldComponentSchema,
+        ],
+      } satisfies FieldsetComponentSchema,
+    ],
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+
+    await step('Form fields have initial values', () => {
+      const textField = canvas.getByLabelText('Nested text field');
+      expect(textField).toHaveDisplayValue('initial value');
+
+      const nestedTextField = canvas.getByLabelText('Second text field');
+      expect(nestedTextField).toHaveDisplayValue('nested value');
+    });
+
+    await step('Submitted data is correct', async () => {
+      const submitButton = canvas.getByRole('button', {name: 'Submit'});
+      await userEvent.click(submitButton);
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        nested: {
+          textfield: 'nested value',
+        },
+        textfield: 'initial value',
+      });
+    });
   },
 };
