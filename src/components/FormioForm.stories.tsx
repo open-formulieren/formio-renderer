@@ -1,6 +1,6 @@
 import {TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
-import {fn} from '@storybook/test';
+import {expect, fn, within} from '@storybook/test';
 
 import FormioForm from './FormioForm';
 
@@ -44,5 +44,15 @@ export const FlatLayout: Story = {
         defaultValue: 'Default/initial value',
       } satisfies TextFieldComponentSchema,
     ],
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textField1 = canvas.getByLabelText('Text field 1');
+    expect(textField1).toHaveDisplayValue('');
+
+    const textField2 = canvas.getByLabelText('Text field 2');
+    expect(textField2).toHaveDisplayValue('Default/initial value');
   },
 };
