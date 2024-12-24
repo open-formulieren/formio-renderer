@@ -1,0 +1,28 @@
+@use '@/scss/bem';
+
+.openforms-fieldset {
+  border-width: 2px 0 0 0;
+  border-style: solid;
+  border-color: black;
+  padding: 0;
+  margin: 0;
+
+  // fix for file upload overflowing, https://github.com/open-formulieren/open-forms/issues/1316
+  min-inline-size: 100%; // instead of browser default of min-content
+
+  @include bem.modifier('no-header') {
+    border-width: 0;
+  }
+
+  @include bem.element('legend') {
+    margin-inline-start: 1em;
+    padding-block: 1em;
+    padding-inline: 5px;
+    color: var(--of-fieldset-legend-color);
+    font-family: var(--of-typography-sans-serif-font-family);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 1.333;
+  }
+}
