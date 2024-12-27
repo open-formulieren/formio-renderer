@@ -24,7 +24,7 @@ export interface FormioFormProps {
   components: AnyComponentSchema[];
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
