@@ -25,7 +25,7 @@ export interface FormioFormProps {
   components: AnyComponentSchema[];
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /**
    * Mark required fields with an asterisk. If asterisks are not used, then a suffix
    * is added to the label of optional fields to specify the field is not required.
