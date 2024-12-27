@@ -1,3 +1,5 @@
+import {expect, within} from '@storybook/test';
+
 import {ReferenceMeta, storyFactory} from './utils';
 
 /**
@@ -18,14 +20,25 @@ const {custom: Hidden, reference: HiddenReference} = storyFactory({
         id: 'textfieldVisible',
         key: 'textfieldVisible',
         label: 'Textfield visible',
+        hidden: false,
       },
       {
         type: 'textfield',
         id: 'textfieldHidden',
         key: 'textfieldHidden',
         label: 'Textfield hidden',
+        hidden: true,
       },
     ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const visibleField = await canvas.findByLabelText('Textfield visible');
+    expect(visibleField).toBeVisible();
+
+    const hiddenField = canvas.queryByLabelText('Textfield hidden');
+    expect(hiddenField).not.toBeInTheDocument();
   },
 });
 
