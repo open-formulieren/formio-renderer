@@ -27,13 +27,6 @@ const FormioComponent: React.FC<FormioComponentProps> = ({componentDefinition}) 
       </div>
     );
   }
-
-  // components that support the 'hidden' property that are marked hidden may not be
-  // displayed
-  if ('hidden' in componentDefinition && componentDefinition.hidden) {
-    return null;
-  }
-
   const TypeSpecificComponent = entry.formField;
   return (
     <TypeSpecificComponent
