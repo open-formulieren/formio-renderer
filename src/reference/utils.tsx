@@ -16,6 +16,9 @@ export type ReferenceMeta = Meta<ReferenceStoryArgs> & {
 
 export type Story = StoryObj<ReferenceStoryArgs>;
 
+// usage: await sleep(3000);
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const renderCustom = (args: ReferenceStoryArgs) => <FormioForm onSubmit={fn()} {...args} />;
 
 const renderReference = (args: ReferenceStoryArgs) => (
@@ -41,8 +44,19 @@ const renderReference = (args: ReferenceStoryArgs) => (
 );
 
 export const storyFactory = (story: Story): {custom: Story; reference: Story} => {
+  const play = story.play;
   const ourStory: Story = {...story, render: renderCustom};
-  const referenceStory: Story = {...story, render: renderReference};
+  const referenceStory: Story = {
+    ...story,
+    render: renderReference,
+    play: play
+      ? // wrap play function with a timer because Formio takes time to initialize
+        async (...args) => {
+          await sleep(100);
+          await play(...args);
+        }
+      : undefined,
+  };
   return {
     custom: ourStory,
     reference: referenceStory,

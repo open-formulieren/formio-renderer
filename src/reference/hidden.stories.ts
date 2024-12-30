@@ -1,4 +1,4 @@
-import {expect, within} from '@storybook/test';
+import {expect, userEvent, waitFor, within} from '@storybook/test';
 
 import {ReferenceMeta, storyFactory} from './utils';
 
@@ -43,3 +43,45 @@ const {custom: Hidden, reference: HiddenReference} = storyFactory({
 });
 
 export {Hidden, HiddenReference};
+
+const {custom: ConditionallyHidden, reference: ConditionallyHiddenReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'textfieldTrigger',
+        key: 'textfieldTrigger',
+        label: 'Trigger',
+      },
+      {
+        type: 'textfield',
+        id: 'textfieldHide',
+        key: 'textfieldHide',
+        label: 'Dynamically hidden',
+        conditional: {
+          when: 'textfieldTrigger',
+          eq: 'hide other field',
+          show: false,
+        },
+      },
+    ],
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const triggerField = await canvas.findByLabelText('Trigger');
+    const followerField = await canvas.findByLabelText('Dynamically hidden');
+    expect(followerField).toBeVisible();
+
+    await userEvent.type(triggerField, 'hide other field');
+    expect(triggerField).toHaveDisplayValue('hide other field');
+
+    await waitFor(() => {
+      expect(canvas.queryByLabelText('Dynamically hidden')).not.toBeInTheDocument();
+      expect(canvas.queryAllByRole('textbox')).toHaveLength(1);
+    });
+  },
+});
+
+export {ConditionallyHidden, ConditionallyHiddenReference};
