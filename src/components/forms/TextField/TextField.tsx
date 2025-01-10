@@ -1,4 +1,5 @@
 import {Paragraph, Textbox, FormField as UtrechtFormField} from '@utrecht/component-library-react';
+import type {TextboxProps} from '@utrecht/component-library-react/dist/Textbox';
 import {useField} from 'formik';
 import {useId} from 'react';
 
@@ -44,13 +45,14 @@ export interface TextFieldProps {
  * The form field state is managed with Formik, but this should only be an
  * implementation detail within this library.
  */
-const TextField: React.FC<TextFieldProps> = ({
+const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   name,
   label = '',
   isRequired = false,
   description = '',
   isDisabled = false,
   placeholder,
+  ...extraProps
 }) => {
   const [props, {error = '', touched}] = useField({name, type: 'text'});
   const id = useId();
@@ -72,6 +74,7 @@ const TextField: React.FC<TextFieldProps> = ({
           invalid={invalid}
           aria-describedby={errorMessageId}
           placeholder={placeholder}
+          {...extraProps}
         />
       </Paragraph>
       <HelpText>{description}</HelpText>

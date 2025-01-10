@@ -1,5 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
+import Email, {getInitialValues as emailGetInitialValues} from './email';
 import Fieldset, {getInitialValues as fieldsetGetInitialValues} from './fieldset';
 import TextField, {getInitialValues as textFieldGetInitialValues} from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
@@ -16,6 +17,10 @@ const REGISTRY: Registry = {
   textfield: {
     formField: TextField,
     getInitialValues: textFieldGetInitialValues,
+  },
+  email: {
+    formField: Email,
+    getInitialValues: emailGetInitialValues,
   },
   // special types
   // layout
