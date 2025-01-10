@@ -43,7 +43,7 @@ const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children})
         await onSubmit(values);
       }}
     >
-      <Form>
+      <Form noValidate>
         <FormFieldContainer>
           {/* TODO: pre-process components to ensure they have an ID? */}
           {components.map((definition, index) => (

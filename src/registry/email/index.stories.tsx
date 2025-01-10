@@ -1,5 +1,8 @@
+import {EmailComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
+import {expect, fn, userEvent, within} from '@storybook/test';
 
+import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
 import FormioEmail from './';
@@ -73,5 +76,51 @@ export const WithAutoComplete: Story = {
         email: '',
       },
     },
+  },
+};
+
+interface ValidationStoryArgs {
+  component: EmailComponentSchema;
+  onSubmit: FormioFormProps['onSubmit'];
+}
+
+type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+const BaseValidationStory: ValidationStory = {
+  render: (args: ValidationStoryArgs) => (
+    <FormioForm onSubmit={args.onSubmit} components={[args.component]}>
+      <div style={{marginBlockStart: '20px'}}>
+        <button type="submit">Submit</button>
+      </div>
+    </FormioForm>
+  ),
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValidateEmailFormat: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    component: {
+      id: 'component1',
+      type: 'email',
+      key: 'my.email',
+      label: 'Your email',
+      // TODO: implement!
+      validateOn: 'blur',
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = canvas.getByLabelText('Your email');
+    await userEvent.type(emailField, 'invalid');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid email address')).toBeVisible();
   },
 };
