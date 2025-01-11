@@ -17,7 +17,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    'storybook-react-intl',
+    // 'storybook-react-intl',
     '@storybook/addon-webpack5-compiler-babel',
     {
       name: '@storybook/addon-styling-webpack',
@@ -67,6 +67,7 @@ const config: StorybookConfig = {
     config.plugins.push(
       new CircularDependencyPlugin({
         failOnError: true,
+        exclude: /node_modules/,
       })
     );
     return config;

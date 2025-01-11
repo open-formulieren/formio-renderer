@@ -1,7 +1,9 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, setIn} from 'formik';
+import {Form, Formik, setIn, useFormikContext} from 'formik';
+import {useMemo} from 'react';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import {isHidden} from '@/formio';
 import {extractInitialValues} from '@/initialValues';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
@@ -24,7 +26,7 @@ export interface FormioFormProps {
   components: AnyComponentSchema[];
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
@@ -37,6 +39,7 @@ const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children})
     {} satisfies JSONObject
   );
   // build the validation schema from the component definitions
+  // TODO: take into account hidden components!
   const zodSchema = buildValidationSchema(components, getRegistryEntry);
 
   return (
@@ -49,16 +52,40 @@ const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children})
         await onSubmit(values);
       }}
     >
-      <Form noValidate>
-        <FormFieldContainer>
-          {/* TODO: pre-process components to ensure they have an ID? */}
-          {components.map((definition, index) => (
-            <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
-          ))}
-        </FormFieldContainer>
-        {children}
-      </Form>
+      {/* TODO: pre-process components to ensure they have an ID? */}
+      <InnerFormioForm components={components}>{children}</InnerFormioForm>
     </Formik>
+  );
+};
+
+export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'children'>;
+
+/**
+ * The FormioForm component inner children, with access to the Formik state.
+ */
+const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, children}) => {
+  const {values} = useFormikContext<JSONObject>();
+
+  const componentsToRender: AnyComponentSchema[] = useMemo(() => {
+    // TODO: handle layout/nesting components
+    const visibleComponents = components.filter(component => {
+      const hidden = isHidden(component, values);
+      // TODO: ensure that clearOnHide behaviour is invoked here!
+      if (hidden) console.debug(`Component ${component.key} is not visible`);
+      return !hidden;
+    });
+    return visibleComponents;
+  }, [components, values]);
+
+  return (
+    <Form noValidate>
+      <FormFieldContainer>
+        {componentsToRender.map((definition, index) => (
+          <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+        ))}
+      </FormFieldContainer>
+      {children}
+    </Form>
   );
 };
 
