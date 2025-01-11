@@ -31,3 +31,5 @@ export const extractInitialValues = (
     .flat(1);
   return initialValuePairs;
 };
+
+export {buildValidationSchema} from './validationSchema';

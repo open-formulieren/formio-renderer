@@ -1,4 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
+import {z} from 'zod';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import type {JSONValue} from '@/types';
@@ -24,6 +25,12 @@ export interface RenderComponentProps<S extends AnyComponentSchema = AnyComponen
   renderNested?: React.FC<FormioComponentProps>;
 }
 
+export type GetValidationSchema<S> = (
+  componentDefinition: S,
+  // dependency injection to avoid circular imports
+  getRegistryEntry: GetRegistryEntry
+) => Record<string, z.ZodFirstPartySchemaTypes>;
+
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
       formField: React.FC<RenderComponentProps<S>>;
@@ -39,6 +46,10 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
         // dependency injection to avoid circular imports
         getRegistryEntry: GetRegistryEntry
       ) => Array<[string, JSONValue]>;
+      /**
+       * Build the validation schema from the component definition.
+       */
+      getValidationSchema?: GetValidationSchema<S>;
     }
   : never;
 

@@ -110,7 +110,7 @@ export const ValidateEmailFormat: ValidationStory = {
       type: 'email',
       key: 'my.email',
       label: 'Your email',
-      // TODO: implement!
+      // TODO: implement or just ignore it?
       validateOn: 'blur',
     },
   },
@@ -121,6 +121,33 @@ export const ValidateEmailFormat: ValidationStory = {
     await userEvent.type(emailField, 'invalid');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid email address')).toBeVisible();
+    expect(await canvas.findByText('Invalid email')).toBeVisible();
+  },
+};
+
+export const ValidateEmailRequired: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    component: {
+      id: 'component1',
+      type: 'email',
+      key: 'my.email',
+      label: 'Your email',
+      // TODO: implement or just ignore it?
+      validateOn: 'blur',
+      validate: {
+        required: true,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = canvas.getByLabelText('Your email');
+    expect(emailField).toBeVisible();
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
   },
 };
