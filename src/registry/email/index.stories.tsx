@@ -80,15 +80,15 @@ export const WithAutoComplete: Story = {
 };
 
 interface ValidationStoryArgs {
-  component: EmailComponentSchema;
+  componentDefinition: EmailComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
 }
 
 type ValidationStory = StoryObj<ValidationStoryArgs>;
 
 const BaseValidationStory: ValidationStory = {
-  render: (args: ValidationStoryArgs) => (
-    <FormioForm onSubmit={args.onSubmit} components={[args.component]}>
+  render: args => (
+    <FormioForm onSubmit={args.onSubmit} components={[args.componentDefinition]}>
       <div style={{marginBlockStart: '20px'}}>
         <button type="submit">Submit</button>
       </div>
@@ -105,7 +105,7 @@ export const ValidateEmailFormat: ValidationStory = {
   ...BaseValidationStory,
   args: {
     onSubmit: fn(),
-    component: {
+    componentDefinition: {
       id: 'component1',
       type: 'email',
       key: 'my.email',
@@ -129,7 +129,7 @@ export const ValidateEmailRequired: ValidationStory = {
   ...BaseValidationStory,
   args: {
     onSubmit: fn(),
-    component: {
+    componentDefinition: {
       id: 'component1',
       type: 'email',
       key: 'my.email',
@@ -149,5 +149,32 @@ export const ValidateEmailRequired: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const PassesAllValidations: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      key: 'my.email',
+      label: 'Your email',
+      // TODO: implement or just ignore it?
+      validateOn: 'blur',
+      validate: {
+        required: true,
+      },
+    },
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = canvas.getByLabelText('Your email');
+    await userEvent.type(emailField, 'info@example.com');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalled();
   },
 };

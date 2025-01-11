@@ -5,7 +5,10 @@ import Email, {
   getValidationSchema as emailGetValidationSchema,
 } from './email';
 import Fieldset, {getInitialValues as fieldsetGetInitialValues} from './fieldset';
-import TextField, {getInitialValues as textFieldGetInitialValues} from './textfield';
+import TextField, {
+  getInitialValues as textFieldGetInitialValues,
+  getValidationSchema as textFieldGetValidationSchema,
+} from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
 export const getRegistryEntry: GetRegistryEntry = (
@@ -20,6 +23,7 @@ const REGISTRY: Registry = {
   textfield: {
     formField: TextField,
     getInitialValues: textFieldGetInitialValues,
+    getValidationSchema: textFieldGetValidationSchema,
   },
   email: {
     formField: Email,

@@ -22,3 +22,4 @@ const FormioTextField: React.FC<FormioTextFieldProps> = ({
 
 export default FormioTextField;
 export {default as getInitialValues} from './initialValues';
+export {default as getValidationSchema} from './validationSchema';
