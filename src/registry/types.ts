@@ -25,6 +25,12 @@ export interface RenderComponentProps<S extends AnyComponentSchema = AnyComponen
   renderNested?: React.FC<FormioComponentProps>;
 }
 
+export type GetInitialValues<S, V = JSONValue> = (
+  componentDefinition: S,
+  // dependency injection to avoid circular imports
+  getRegistryEntry: GetRegistryEntry
+) => Record<string, V>;
+
 export type GetValidationSchema<S> = (
   componentDefinition: S,
   // dependency injection to avoid circular imports
@@ -37,15 +43,12 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
       /**
        * Derive the default/initial values from the compnent, optionally recursing.
        *
-       * The callback must return an array of [name, value] tuples, as a layout
-       * component may contain nested input components each with their own default
-       * values.
+       * The callback must return an object with component key strings as keys and the
+       * initial value as value for that key. Multiple keys may be returned, since a
+       * layout component may contain nested input components each with their own
+       * default values.
        */
-      getInitialValues?: (
-        componentDefinition: S,
-        // dependency injection to avoid circular imports
-        getRegistryEntry: GetRegistryEntry
-      ) => Array<[string, JSONValue]>;
+      getInitialValues?: GetInitialValues<S>;
       /**
        * Build the validation schema from the component definition.
        */

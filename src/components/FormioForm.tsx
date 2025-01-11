@@ -2,9 +2,10 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, setIn} from 'formik';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import {extractInitialValues} from '@/initialValues';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
-import {buildValidationSchema, extractInitialValues} from '@/utils';
+import {buildValidationSchema} from '@/validationSchema';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
@@ -27,16 +28,16 @@ export interface FormioFormProps {
 }
 
 const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
-  // build the initial values from the component definitions
-  const initialValuePairs = extractInitialValues(components, getRegistryEntry);
-  const zodSchema = buildValidationSchema(components, getRegistryEntry);
-
   // assign all the default values from the component definitions
-  let initialValues: JSONObject = {};
-  initialValuePairs.forEach(pair => {
-    const [key, value] = pair;
-    initialValues = setIn(initialValues, key, value);
-  });
+  const initialValues = Object.entries(extractInitialValues(components, getRegistryEntry)).reduce(
+    (acc: JSONObject, [key, value]) => {
+      acc = setIn(acc, key, value);
+      return acc;
+    },
+    {} satisfies JSONObject
+  );
+  // build the validation schema from the component definitions
+  const zodSchema = buildValidationSchema(components, getRegistryEntry);
 
   return (
     <Formik

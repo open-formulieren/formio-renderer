@@ -1,16 +1,18 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
 
-const getInitialValues = ({
+import type {GetInitialValues} from '@/registry/types';
+
+const getInitialValues: GetInitialValues<TextFieldComponentSchema, string | string[]> = ({
   key,
   defaultValue,
   multiple = false,
-}: TextFieldComponentSchema): [string, string | string[]][] => {
+}: TextFieldComponentSchema) => {
   // if no default value is explicitly specified, return the empty value, depending on
   // whether it's multiple false/true on this component.
   if (defaultValue === undefined) {
     defaultValue = multiple ? [] : '';
   }
-  return [[key, defaultValue]];
+  return {[key]: defaultValue};
 };
 
 export default getInitialValues;
