@@ -1,16 +1,15 @@
 import type {FieldsetComponentSchema} from '@open-formulieren/types';
 
-import type {GetRegistryEntry} from '@/registry/types';
+import {extractInitialValues} from '@/initialValues';
+import type {GetInitialValues, GetRegistryEntry} from '@/registry/types';
 import type {JSONValue} from '@/types';
-import {extractInitialValues} from '@/utils';
 
-const getInitialValues = (
+const getInitialValues: GetInitialValues<FieldsetComponentSchema, JSONValue> = (
   {components}: FieldsetComponentSchema,
   getRegistryEntry: GetRegistryEntry
-): [string, JSONValue][] => {
+) => {
   // extract the default values of the nested components
-  const initialValuePairs = extractInitialValues(components, getRegistryEntry);
-  return initialValuePairs;
+  return extractInitialValues(components, getRegistryEntry);
 };
 
 export default getInitialValues;

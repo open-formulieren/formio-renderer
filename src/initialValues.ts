@@ -18,16 +18,17 @@ import type {JSONValue} from '@/types';
 export const extractInitialValues = (
   components: AnyComponentSchema[],
   getRegistryEntry: GetRegistryEntry
-): [string, JSONValue][] => {
-  const initialValuePairs: [string, JSONValue][] = components
-    // map over all the components and process them one by one
-    .map(componentDefinition => {
+): Record<string, JSONValue> => {
+  const initialValues = components.reduce(
+    (acc: Record<string, JSONValue>, componentDefinition) => {
       const getInitialValues = getRegistryEntry(componentDefinition)?.getInitialValues;
-      if (getInitialValues === undefined) return [];
-      return getInitialValues(componentDefinition, getRegistryEntry);
-    })
-    // since each component returns an *array* of pairs, we flatten this again into a
-    // single array
-    .flat(1);
-  return initialValuePairs;
+      if (getInitialValues !== undefined) {
+        const extraInitialValues = getInitialValues(componentDefinition, getRegistryEntry);
+        acc = {...acc, ...extraInitialValues};
+      }
+      return acc;
+    },
+    {} satisfies Record<string, JSONValue>
+  );
+  return initialValues;
 };

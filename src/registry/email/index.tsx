@@ -24,3 +24,4 @@ const FormioEmail: React.FC<FormioEmailProps> = ({
 
 export default FormioEmail;
 export {default as getInitialValues} from './initialValues';
+export {default as getValidationSchema} from './validationSchema';

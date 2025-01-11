@@ -30,3 +30,4 @@ const Fieldset: React.FC<FieldsetProps> = ({
 
 export default Fieldset;
 export {default as getInitialValues} from './initialValues';
+export {default as getValidationSchema} from './validationSchema';
