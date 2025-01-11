@@ -10,7 +10,7 @@ type SchemaTree = {
   [k: string]: z.ZodFirstPartySchemaTypes | SchemaTree;
 };
 
-type SchemaRecord = Record<string, z.ZodFirstPartySchemaTypes>;
+export type SchemaRecord = Record<string, z.ZodFirstPartySchemaTypes>;
 
 /**
  * Process key-value pairs where keys are Formio component keys that may have dots in

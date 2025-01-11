@@ -4,7 +4,10 @@ import Email, {
   getInitialValues as emailGetInitialValues,
   getValidationSchema as emailGetValidationSchema,
 } from './email';
-import Fieldset, {getInitialValues as fieldsetGetInitialValues} from './fieldset';
+import Fieldset, {
+  getInitialValues as fieldsetGetInitialValues,
+  getValidationSchema as fieldsetGetValidationSchema,
+} from './fieldset';
 import TextField, {
   getInitialValues as textFieldGetInitialValues,
   getValidationSchema as textFieldGetValidationSchema,
@@ -35,6 +38,7 @@ const REGISTRY: Registry = {
   fieldset: {
     formField: Fieldset,
     getInitialValues: fieldsetGetInitialValues,
+    getValidationSchema: fieldsetGetValidationSchema,
   },
   // deprecated
 };
