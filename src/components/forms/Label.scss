@@ -1,2 +1,21 @@
 @use '@utrecht/components/dist/form-label/css/index' as form-label;
 @use '@utrecht/components/dist/paragraph/css/index' as paragraph;
+
+@use '@/scss/bem';
+
+.utrecht-form-label {
+  @include bem.modifier('openforms') {
+    display: block;
+    line-height: 1.333;
+    hyphens: auto;
+    overflow-wrap: break-word; // see open-formulieren/open-forms#576
+  }
+
+  @include bem.modifier('openforms-required') {
+    &:after {
+      content: ' *';
+      color: var(--of-color-danger);
+      z-index: 0; // otherwise this is above the progress indicator in some browsers
+    }
+  }
+}
