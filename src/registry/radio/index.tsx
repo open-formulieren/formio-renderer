@@ -1,14 +1,16 @@
+import type {RadioComponentSchema} from '@open-formulieren/types';
+
 import RadioField from '@/components/forms/RadioField';
 
-import type {RadioComponentSchema} from './types';
+import {assertManualValues} from './types';
 
 export interface FormioRadioFieldProps {
   componentDefinition: RadioComponentSchema;
 }
 
-const FormioRadioField: React.FC<FormioRadioFieldProps> = ({
-  componentDefinition: {key, label, description, validate = {}, values},
-}) => {
+const FormioRadioField: React.FC<FormioRadioFieldProps> = ({componentDefinition}) => {
+  assertManualValues(componentDefinition);
+  const {key, label, description, validate = {}, values} = componentDefinition;
   const {required = false} = validate;
   return (
     <RadioField

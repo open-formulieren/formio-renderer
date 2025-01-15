@@ -5,7 +5,7 @@ import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
 import RadioField from './';
-import type {RadioComponentSchema} from './types';
+import type {ManualRadioValuesSchema} from './types';
 
 export default {
   title: 'Component registry / basic / radio',
@@ -14,6 +14,13 @@ export default {
 } satisfies Meta<typeof RadioField>;
 
 type Story = StoryObj<typeof RadioField>;
+
+const extensionBoilerplate: Pick<ManualRadioValuesSchema, 'openForms'> = {
+  openForms: {
+    dataSrc: 'manual',
+    translations: {},
+  },
+};
 
 export const MinimalConfiguration: Story = {
   args: {
@@ -33,7 +40,8 @@ export const MinimalConfiguration: Story = {
         },
       ],
       defaultValue: null,
-    } satisfies RadioComponentSchema,
+      ...extensionBoilerplate,
+    } satisfies ManualRadioValuesSchema,
   },
   parameters: {
     formik: {
@@ -43,5 +51,58 @@ export const MinimalConfiguration: Story = {
         },
       },
     },
+  },
+};
+
+interface ValidationStoryArgs {
+  componentDefinition: ManualRadioValuesSchema;
+  onSubmit: FormioFormProps['onSubmit'];
+}
+
+type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+const BaseValidationStory: ValidationStory = {
+  render: args => (
+    <FormioForm onSubmit={args.onSubmit} components={[args.componentDefinition]}>
+      <div style={{marginBlockStart: '20px'}}>
+        <button type="submit">Submit</button>
+      </div>
+    </FormioForm>
+  ),
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValidateRequired: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio field',
+      defaultValue: null,
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: true,
+      },
+      ...extensionBoilerplate,
+    } satisfies ManualRadioValuesSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const radioField = canvas.getByLabelText('A radio field');
+    expect(radioField).toBeVisible();
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
   },
 };

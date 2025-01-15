@@ -8,6 +8,7 @@ import Fieldset, {
   getInitialValues as fieldsetGetInitialValues,
   getValidationSchema as fieldsetGetValidationSchema,
 } from './fieldset';
+import RadioField from './radio';
 import TextField, {
   getInitialValues as textFieldGetInitialValues,
   getValidationSchema as textFieldGetValidationSchema,
@@ -32,6 +33,9 @@ const REGISTRY: Registry = {
     formField: Email,
     getInitialValues: emailGetInitialValues,
     getValidationSchema: emailGetValidationSchema,
+  },
+  radio: {
+    formField: RadioField,
   },
   // special types
   // layout
