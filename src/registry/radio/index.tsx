@@ -24,3 +24,5 @@ const FormioRadioField: React.FC<FormioRadioFieldProps> = ({componentDefinition}
 };
 
 export default FormioRadioField;
+export {default as getInitialValues} from './initialValues';
+export {default as getValidationSchema} from './validationSchema';

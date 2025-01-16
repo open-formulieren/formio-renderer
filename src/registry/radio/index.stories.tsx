@@ -85,7 +85,7 @@ export const ValidateRequired: ValidationStory = {
       type: 'radio',
       key: 'my.radio',
       label: 'A radio field',
-      defaultValue: null,
+      defaultValue: '',
       values: [
         {value: 'option1', label: 'Option 1'},
         {value: 'option2', label: 'Option 2'},
@@ -99,10 +99,41 @@ export const ValidateRequired: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const radioField = canvas.getByLabelText('A radio field');
-    expect(radioField).toBeVisible();
+    const radioLabel = canvas.getByText('A radio field');
+    expect(radioLabel).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const ValidateOptionalNull: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio field',
+      defaultValue: null,
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: false,
+      },
+      ...extensionBoilerplate,
+    } satisfies ManualRadioValuesSchema,
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const radioLabel = canvas.getByText('A radio field');
+    expect(radioLabel).toBeVisible();
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledOnce();
   },
 };
