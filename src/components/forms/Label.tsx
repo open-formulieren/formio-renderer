@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import './Label.scss';
 
 export interface LabelContentProps {
-  id: string;
+  id?: string;
   children: React.ReactNode;
   isDisabled?: boolean;
   isRequired?: boolean;

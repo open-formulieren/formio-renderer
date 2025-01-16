@@ -13,6 +13,12 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['Introduction', 'Public API', 'Component registry', 'Internal API'],
+      },
+    },
   },
   tags: ['private'],
 };
