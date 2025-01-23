@@ -63,7 +63,11 @@ type ValidationStory = StoryObj<ValidationStoryArgs>;
 
 const BaseValidationStory: ValidationStory = {
   render: args => (
-    <FormioForm onSubmit={args.onSubmit} components={[args.componentDefinition]}>
+    <FormioForm
+      onSubmit={args.onSubmit}
+      components={[args.componentDefinition]}
+      requiredFieldsWithAsterisk
+    >
       <div style={{marginBlockStart: '20px'}}>
         <button type="submit">Submit</button>
       </div>

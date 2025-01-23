@@ -2,6 +2,143 @@ import {Meta} from '@storybook/addon-docs';
 
 <Meta title="Introduction" />
 
-# Open Forms Formio Renderer
+# Open Forms' Formio Renderer
 
-This package contains the (WIP) formio renderer replacement.
+`@open-formulieren/formio-renderer` is a pure React based renderer for Formio form definitions.
+
+## Quickstart
+
+**NOTE** - this library is still in active development and _NOT_ stable.
+
+There is one public component available - it renders a form given a Formio definition.
+
+```tsx
+import {FormioForm} from '@open-formulieren/formio-renderer';
+import {IntlProvider} from 'react-intl';
+
+const FORMIO_FORM = {
+  display: 'form',
+  components: [
+    {
+      id: '123',
+      type: 'textfield',
+      key: 'someTextfield',
+      label: 'Some textfield',
+      defaultValue: 'a default value',
+      validate: {
+        required: true,
+        maxLength: 100,
+      },
+    },
+  ],
+};
+
+const MyComponent: React.FC = () => (
+  // there must be an outer IntlProvider - it's your responsibility to set this up properly
+  <IntlProvider messages={{}} locale="nl" defaultLocale="nl">
+    <FormioForm
+      components={FORMIO_FORM.components}
+      onSubmit={values => console.log(values)}
+      requiredFieldsWithAsterisk
+    >
+      <button type="submit">Submit</button>
+    </FormioForm>
+  </IntlProvider>
+);
+```
+
+- We only support react-intl for translations.
+- The `onSubmit` callback receives the submission data values as sole argument.
+- You must pass at least a submit button in the children - you can provide more elements in case you
+  need a button toolbar (like the SDK does).
+
+## Why does this exist?
+
+Open Forms has used [Formio](https://github.com/formio/formio.js/) since its inception, and probably
+wouldn't be as adopted as it is without Formio. We're extremely thankfull that this solution is
+available as Open Source software.
+
+However, the way we use Formio as part of a larger software ("Open Forms") shows that it's not a
+perfect fit to be able to implement all the features we need. We have build _a lot_ of things around
+or on top of Formio with particular form flows and tight integration with Dutch government systems.
+
+On top of that, we only expose (and officially) support a small subset of the myriad of features
+that Formio has, with quite a different approach to themes/styling/templating and we really like
+using React for our SPA-like application/frontend development. To summarize - we need to use in very
+specific ways and that doesn't work well with how _we_ would like to do things.
+
+So, we have decided to stick to the Formio principles of configuring forms as JSON definitions and
+aim for compatibility with their SDK as a reference implementations on existing features that we
+re-implement. There are some deviations in places where we think that Formio got things wrong, and
+we have a number of extensions. This library is built to accomodate that in a way that provides a
+good developer experience and a great user experience for people using the forms built with Open
+Forms.
+
+## Roadmap
+
+Implementing a formio render is ambitious and frankly, a daunting task. To keep the work manageable
+and gain experience and information as we go along, we have divided the work up in a number of
+phases to build a feature complete solution.
+
+1. Phase 1 - MVP renderer with a limited set of component types
+
+   - Support textfield, email, radio, number and date components (vanilla formio)
+   - Support bsn and phone number components (Open Forms custom types)
+   - Support default/initial values
+   - Support barebones validation (email format, max length, required)
+   - Support nested data structures (keys with a <kbd>.</kbd> in them)
+   - Uses NL Design System components for styling, supports default Open Forms theme
+
+2. Phase 2 - Replace "Contact details" step form field rendering in `@open-formulieren/sdk` with the
+   `FormioForm` component from this library. This must be a drop-in replacement.
+
+3. Phase 3 - Support simple conditionals logic
+
+   - Support conditionally displaying/hiding components based on submission data that updates as the
+     user fills out the form. Must have identical behaviour as the formio.js SDK referenence.
+   - Support the `clearOnHide` behaviour. We may have slightly different behaviour here to be
+     type-safe and possibly the Open Forms backend will have to be adapted.
+
+4. Phase 4 - Remaining features to support the same feature set as our SDK currently does.
+
+## Design goals
+
+We're building this library to solve some specific problems, captured in the design goals listed
+below.
+
+**It must solve "Open Forms problems"**
+
+Open Forms uses Formio, not the other way around. When conflicts arise between Open Forms' needs and
+the reference SDK implementation we pick the solution that benefits Open Forms. Being able to use
+form definitions from Formio.js in Open Forms in a nice to have, but no hard requirement.
+
+That said - it must be a last resort if it cannot be reasonably solved in a compatible way. We also
+try to properly namespace Open Forms' specific extensions to maintain compatibility (best effort).
+
+**End-users must have a performant and accessible solution**
+
+A snappy UI that is properly localized/translated and supports assistive technology out of the box
+is essential.
+
+Users don't fill out forms for fun, it is typically a chore - let's try to make the experience as
+positive as it can be.
+
+**Developer experience**
+
+Formio's codebase is vast and requires quite a bit of knowledge before you can properly start
+hacking on it and make the correct implementation choices. In thise codebase, we want to make
+extending and/or modifying the behaviour of a specific component straight forward and easy to get
+started with.
+
+- You shouldn't need to know more than React and HTML to get started.
+- Typescript to catch type errors at compile time - we ensure you can reason about a strict
+  component schema.
+- Generic code is abstracted away and (try to) avoid leaky abstractions.
+
+The code base is structured so that:
+
+- `components` contains pure React components, with varying complexity.
+- `registry` contains a directory for each supported Formio component type where the behaviour for
+  that component type is implemented (completely). They can be and are tested in isolation.
+- we build on top of `@open-formulieren/types` so that we only worry about the features that Open
+  Forms provides/supports.

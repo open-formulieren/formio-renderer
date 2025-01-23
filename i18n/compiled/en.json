@@ -1,0 +1,30 @@
+{
+  "3C29X9": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "label"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 1,
+              "value": "label"
+            },
+            {
+              "type": 0,
+              "value": " (not required)"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "addNotRequiredSuffix"
+    }
+  ]
+}

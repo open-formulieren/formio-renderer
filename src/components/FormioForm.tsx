@@ -9,6 +9,7 @@ import {buildValidationSchema} from '@/validationSchema';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
+import RendererSettingsProvider from './RendererSettingsProvider';
 
 /**
  * Props for a complete Formio form definition.
@@ -25,9 +26,19 @@ export interface FormioFormProps {
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
   children: React.ReactNode;
+  /**
+   * Mark required fields with an asterisk. If asterisks are not used, then a suffix
+   * is added to the label of optional fields to specify the field is not required.
+   */
+  requiredFieldsWithAsterisk?: boolean;
 }
 
-const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children}) => {
+const FormioForm: React.FC<FormioFormProps> = ({
+  components,
+  onSubmit,
+  children,
+  requiredFieldsWithAsterisk,
+}) => {
   // assign all the default values from the component definitions
   const initialValues = Object.entries(extractInitialValues(components, getRegistryEntry)).reduce(
     (acc: JSONObject, [key, value]) => {
@@ -40,25 +51,27 @@ const FormioForm: React.FC<FormioFormProps> = ({components, onSubmit, children})
   const zodSchema = buildValidationSchema(components, getRegistryEntry);
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validateOnChange={false}
-      validateOnBlur
-      validationSchema={toFormikValidationSchema(zodSchema)}
-      onSubmit={async values => {
-        await onSubmit(values);
-      }}
-    >
-      <Form noValidate>
-        <FormFieldContainer>
-          {/* TODO: pre-process components to ensure they have an ID? */}
-          {components.map((definition, index) => (
-            <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
-          ))}
-        </FormFieldContainer>
-        {children}
-      </Form>
-    </Formik>
+    <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
+      <Formik
+        initialValues={initialValues}
+        validateOnChange={false}
+        validateOnBlur
+        validationSchema={toFormikValidationSchema(zodSchema)}
+        onSubmit={async values => {
+          await onSubmit(values);
+        }}
+      >
+        <Form noValidate>
+          <FormFieldContainer>
+            {/* TODO: pre-process components to ensure they have an ID? */}
+            {components.map((definition, index) => (
+              <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+            ))}
+          </FormFieldContainer>
+          {children}
+        </Form>
+      </Formik>
+    </RendererSettingsProvider>
   );
 };
 

@@ -1,0 +1,7 @@
+{
+  "3C29X9": {
+    "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }",
+    "description": "Form field label content/wrapper",
+    "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
+  }
+}

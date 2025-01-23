@@ -17,6 +17,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "makemessages": "formatjs extract",
+    "compilemessages": "formatjs compile-folder --ast i18n/messages i18n/compiled",
     "watch": "tspc -p tsconfig.prod.json --watch"
   },
   "files": [
@@ -33,13 +34,16 @@
   },
   "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-intl": "^6.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
+    "@formatjs/cli": "^6.5.1",
+    "@formatjs/ts-transformer": "^3.13.31",
     "@open-formulieren/design-tokens": "^0.55.0",
     "@open-formulieren/types": "^0.38.0",
     "@storybook/addon-actions": "^8.4.7",
@@ -59,6 +63,7 @@
     "@types/webpack": "^5.28.5",
     "@utrecht/components": "1.0.0-alpha.565",
     "babel-loader": "^9.1.3",
+    "babel-plugin-formatjs": "^10.5.34",
     "circular-dependency-plugin": "^5.2.2",
     "formiojs": "~4.13.0",
     "microscope-sass": "^2.0.0",
@@ -69,7 +74,7 @@
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
     "storybook": "^8.4.7",
-    "storybook-react-intl": "^3.2.2",
+    "storybook-react-intl": "^3.2.3",
     "ts-patch": "^3.3.0",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
