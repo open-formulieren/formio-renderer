@@ -1,5 +1,8 @@
 import {FormLabel, Paragraph} from '@utrecht/component-library-react';
 import clsx from 'clsx';
+import {FormattedMessage} from 'react-intl';
+
+import {useRendererSettings} from '@/hooks';
 
 import './Label.scss';
 
@@ -18,18 +21,31 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   type,
   children,
 }) => {
-  // TODO: add support for required-fields-with-asterisk configuration (via context)
+  const {requiredFieldsWithAsterisk} = useRendererSettings();
+
+  const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk;
+
   return (
     <FormLabel
       htmlFor={id}
       disabled={isDisabled}
       className={clsx({
         'utrecht-form-label--openforms': true,
-        'utrecht-form-label--openforms-required': isRequired,
+        'utrecht-form-label--openforms-required': isRequired && requiredFieldsWithAsterisk,
         [`utrecht-form-label--${type}`]: type,
       })}
     >
-      {children}
+      <FormattedMessage
+        description="Form field label content/wrapper"
+        defaultMessage={`{addNotRequiredSuffix, select,
+          true {{label} (not required)}
+          other {{label}}
+        }`}
+        values={{
+          label: children,
+          addNotRequiredSuffix,
+        }}
+      />
     </FormLabel>
   );
 };

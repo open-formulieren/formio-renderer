@@ -14,6 +14,7 @@ export default {
         <button type="submit">Submit</button>
       </div>
     ),
+    requiredFieldsWithAsterisk: true,
   },
   argTypes: {
     children: {
@@ -106,5 +107,35 @@ export const NestedLayout: Story = {
         textfield: 'initial value',
       });
     });
+  },
+};
+
+export const AsterisksForRequiredFields: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Text field 1',
+        validate: {required: true},
+      } satisfies TextFieldComponentSchema,
+    ],
+    requiredFieldsWithAsterisk: true,
+  },
+};
+
+export const NoAsterisksForRequiredFields: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Text field 1',
+        validate: {required: true},
+      } satisfies TextFieldComponentSchema,
+    ],
+    requiredFieldsWithAsterisk: false,
   },
 };

@@ -16,3 +16,9 @@ export default {
 type Story = StoryObj<typeof Label>;
 
 export const Default: Story = {};
+
+export const JSXLabel: Story = {
+  args: {
+    children: <strong>JSX label</strong>,
+  },
+};

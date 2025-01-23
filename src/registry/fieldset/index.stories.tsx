@@ -69,6 +69,7 @@ const BaseValidationStory: ValidationStory = {
           components: args.nestedComponents,
         },
       ]}
+      requiredFieldsWithAsterisk
     >
       <div style={{marginBlockStart: '20px'}}>
         <button type="submit">Submit</button>
