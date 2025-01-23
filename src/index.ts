@@ -1,1 +1,1 @@
-// Dummy entrypoint
+export {default as FormioForm} from '@/components/FormioForm';

@@ -34,7 +34,8 @@
   },
   "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-intl": "^6.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
