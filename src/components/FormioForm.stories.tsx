@@ -28,6 +28,19 @@ export default {
 
 type Story = StoryObj<typeof FormioForm>;
 
+export const Example: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Text field 1',
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+};
+
 export const FlatLayout: Story = {
   args: {
     components: [

@@ -67,6 +67,7 @@ const config: StorybookConfig = {
     config.plugins.push(
       new CircularDependencyPlugin({
         failOnError: true,
+        exclude: /node_modules/,
       })
     );
     return config;

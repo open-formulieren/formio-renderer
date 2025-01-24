@@ -2,7 +2,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
-import type {JSONValue} from '@/types';
+import type {JSONObject, JSONValue} from '@/types';
 
 export type GetRegistryEntry = (
   componentDefinition: AnyComponentSchema
@@ -37,6 +37,13 @@ export type GetValidationSchema<S> = (
   getRegistryEntry: GetRegistryEntry
 ) => Record<string, z.ZodFirstPartySchemaTypes>;
 
+export type ExcludeHiddenComponents<S> = (
+  componentDefinition: S,
+  values: JSONObject,
+  // dependency injection to avoid circular imports
+  getRegistryEntry: GetRegistryEntry
+) => S;
+
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
       formField: React.FC<RenderComponentProps<S>>;
@@ -53,6 +60,10 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * Build the validation schema from the component definition.
        */
       getValidationSchema?: GetValidationSchema<S>;
+      /**
+       * Filter out hidden (nested) components so they don't get displayed.
+       */
+      excludeHiddenComponents?: ExcludeHiddenComponents<S>;
     }
   : never;
 

@@ -5,6 +5,7 @@ import Email, {
   getValidationSchema as emailGetValidationSchema,
 } from './email';
 import Fieldset, {
+  excludeHiddenComponents as fieldsetExcludeHiddenComponents,
   getInitialValues as fieldsetGetInitialValues,
   getValidationSchema as fieldsetGetValidationSchema,
 } from './fieldset';
@@ -48,6 +49,7 @@ const REGISTRY: Registry = {
     formField: Fieldset,
     getInitialValues: fieldsetGetInitialValues,
     getValidationSchema: fieldsetGetValidationSchema,
+    excludeHiddenComponents: fieldsetExcludeHiddenComponents,
   },
   // deprecated
 };
