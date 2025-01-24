@@ -3,11 +3,11 @@ import {Form, Formik, setIn, useFormikContext} from 'formik';
 import {useMemo} from 'react';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
-import {isHidden} from '@/formio';
 import {extractInitialValues} from '@/initialValues';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
+import {filterVisibleComponents} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
@@ -80,14 +80,7 @@ const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, children})
   const {values} = useFormikContext<JSONObject>();
 
   const componentsToRender: AnyComponentSchema[] = useMemo(() => {
-    // TODO: handle layout/nesting components
-    const visibleComponents = components.filter(component => {
-      const hidden = isHidden(component, values);
-      // TODO: ensure that clearOnHide behaviour is invoked here!
-      if (hidden) console.debug(`Component ${component.key} is not visible`);
-      return !hidden;
-    });
-    return visibleComponents;
+    return filterVisibleComponents(components, values, getRegistryEntry);
   }, [components, values]);
 
   return (
