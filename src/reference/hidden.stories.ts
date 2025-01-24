@@ -85,3 +85,34 @@ const {custom: ConditionallyHidden, reference: ConditionallyHiddenReference} = s
 });
 
 export {ConditionallyHidden, ConditionallyHiddenReference};
+
+const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'fieldset',
+        id: 'fieldset',
+        key: 'fieldset',
+        label: 'Layout container',
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            id: 'hiddenTextfield',
+            key: 'hiddenTextfield',
+            label: 'Hidden textfield',
+            hidden: true,
+          },
+        ],
+      },
+    ],
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.queryByLabelText('Hidden textfield')).not.toBeInTheDocument();
+  },
+});
+
+export {NestedHidden, NestedHiddenReference};
