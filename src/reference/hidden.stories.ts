@@ -116,3 +116,52 @@ const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
 });
 
 export {NestedHidden, NestedHiddenReference};
+
+const {custom: ConditionallyNestedVisible, reference: ConditionallyNestedVisibleReference} =
+  storyFactory({
+    args: {
+      components: [
+        {
+          type: 'fieldset',
+          id: 'fieldset',
+          key: 'fieldset',
+          label: 'Layout container',
+          hideHeader: false,
+          components: [
+            {
+              type: 'textfield',
+              id: 'textfieldTrigger',
+              key: 'textfieldTrigger',
+              label: 'Trigger',
+            },
+            {
+              type: 'textfield',
+              id: 'textfieldHide',
+              key: 'textfieldHide',
+              label: 'Dynamically visible',
+              conditional: {
+                when: 'textfieldTrigger',
+                eq: 'show other field',
+                show: true,
+              },
+            },
+          ],
+        },
+      ],
+    },
+
+    play: async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+
+      const triggerField = await canvas.findByLabelText('Trigger');
+      expect(canvas.queryByLabelText('Dynamically visible')).not.toBeInTheDocument();
+
+      await userEvent.type(triggerField, 'show other field');
+      expect(triggerField).toHaveDisplayValue('show other field');
+
+      const followerField = await canvas.findByLabelText('Dynamically visible');
+      expect(followerField).toBeVisible();
+    },
+  });
+
+export {ConditionallyNestedVisible, ConditionallyNestedVisibleReference};
