@@ -3,7 +3,9 @@ import type {TextboxProps} from '@utrecht/component-library-react/dist/Textbox';
 import {useField} from 'formik';
 import {useId} from 'react';
 
-import {HelpText, Label, ValidationErrors} from '@/components/forms';
+import HelpText from '@/components/forms/HelpText';
+import Label from '@/components/forms/Label';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import './TextField.scss';
 

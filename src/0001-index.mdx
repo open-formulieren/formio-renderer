@@ -10,6 +10,8 @@ import {Meta} from '@storybook/addon-docs';
 
 **NOTE** - this library is still in active development and _NOT_ stable.
 
+**High level API**
+
 There is one public component available - it renders a form given a Formio definition.
 
 ```tsx
@@ -51,6 +53,21 @@ const MyComponent: React.FC = () => (
 - The `onSubmit` callback receives the submission data values as sole argument.
 - You must pass at least a submit button in the children - you can provide more elements in case you
   need a button toolbar (like the SDK does).
+
+**Low level API**
+
+The high level API is built with a number of low level API components that you can use to render
+Formik-based forms without Formio requirements.
+
+```tsx
+import {
+  HelpText,
+  Label,
+  RadioField,
+  TextField,
+  ValidationErrors,
+} from '@open-formulieren/formio-renderer';
+```
 
 ## Why does this exist?
 
