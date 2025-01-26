@@ -1,8 +1,10 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
-import {HelpText, ValidationErrors} from 'components/forms';
 import {LabelContent} from 'components/forms/Label';
 import {useField} from 'formik';
 import {useId} from 'react';
+
+import HelpText from '@/components/forms/HelpText';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import './RadioField.scss';
 import RadioOption from './RadioOption';
