@@ -6,8 +6,9 @@ import type {GetValidationSchema} from '@/registry/types';
 import {assertManualValues} from './types';
 
 type ValuesEnum = z.ZodEnum<[string, ...string[]]>;
-type MaybeOptionalSchema = ValuesEnum | z.ZodOptional<ValuesEnum>;
-type ValidationSchema = MaybeOptionalSchema | z.ZodUnion<[MaybeOptionalSchema, z.ZodNull]>;
+type ValidationSchema =
+  | ValuesEnum
+  | z.ZodUnion<[z.ZodOptional<ValuesEnum>, z.ZodNull, z.ZodLiteral<''>]>;
 
 const getValidationSchema: GetValidationSchema<RadioComponentSchema> = componentDefinition => {
   assertManualValues(componentDefinition);
@@ -21,7 +22,7 @@ const getValidationSchema: GetValidationSchema<RadioComponentSchema> = component
   const [head, ...rest] = enumMembers;
   let schema: ValidationSchema = z.enum([head, ...rest]);
   if (!required) {
-    schema = schema.optional().or(z.null());
+    schema = z.union([schema.optional(), z.null(), z.literal('')]);
   }
 
   return {[key]: schema};
