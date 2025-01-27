@@ -9,8 +9,20 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = compo
 
   let schema: z.ZodString | z.ZodOptional<z.ZodString> = z.string();
   if (maxLength !== undefined) schema = schema.max(maxLength);
-  if (pattern) schema = schema.regex(new RegExp(pattern));
-  if (!required) schema = schema.optional();
+
+  if (pattern) {
+    let normalizedPattern = pattern;
+    // Formio implicitly adds the ^ and $ markers to consider the whole value
+    if (!normalizedPattern.startsWith('^')) normalizedPattern = `^${normalizedPattern}`;
+    if (!normalizedPattern.endsWith('$')) normalizedPattern = `${normalizedPattern}$`;
+    schema = schema.regex(new RegExp(normalizedPattern));
+  }
+
+  if (required) {
+    schema = schema.min(1);
+  } else {
+    schema = schema.optional();
+  }
 
   return {[key]: schema};
 };

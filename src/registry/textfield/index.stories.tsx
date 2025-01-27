@@ -166,7 +166,7 @@ export const PassesAllValidations: ValidationStory = {
       label: 'A textfield',
       validate: {
         required: true,
-        pattern: '[0-9]{2,4}',
+        pattern: '[a-zA-Z]{2}[0-9]{2,4}.*',
         maxLength: 10,
       },
     } satisfies TextFieldComponentSchema,

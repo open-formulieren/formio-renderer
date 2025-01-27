@@ -84,7 +84,25 @@ jobs:
       - name: Run prettier linter
         run: npm run checkformat
 
-  tests:
+  unit-tests:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: |
+          npm run test:jest
+
+  interaction-tests:
     name: Run Storybook tests
     runs-on: ubuntu-22.04
     needs:
@@ -122,6 +140,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - storybook
+      - unit-tests
+      - interaction-tests
       - prettier
     # do not run in forks & only publish main branch
     if: github.ref_name == 'main' && github.repository_owner == 'open-formulieren'
@@ -149,6 +169,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-package
+      - unit-tests
+      - interaction-tests
       - prettier
 
     # do not publish in forks or non-tag pushes

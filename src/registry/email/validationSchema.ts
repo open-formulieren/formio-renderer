@@ -8,7 +8,12 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = component
   const required = validate?.required;
 
   let schema: z.ZodFirstPartySchemaTypes = z.string().email();
-  if (!required) schema = schema.optional();
+
+  if (required) {
+    schema = schema.min(1);
+  } else {
+    schema = schema.or(z.literal('')).optional();
+  }
 
   return {[key]: schema};
 };

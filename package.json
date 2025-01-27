@@ -97,7 +97,8 @@
       "<rootDir>/src"
     ],
     "moduleNameMapper": {
-      "@/(.*)$": "<rootDir>/src/$1"
+      "@/(.*)$": "<rootDir>/src/$1",
+      "^.*\\.scss$": "<rootDir>/tests/stylesStub.ts"
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!uuid)/"
