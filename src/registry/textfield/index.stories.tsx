@@ -5,7 +5,7 @@ import {expect, fn, userEvent, within} from '@storybook/test';
 import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
-import TextField from './';
+import {FormioTextField as TextField} from './';
 
 export default {
   title: 'Component registry / basic / textfield',

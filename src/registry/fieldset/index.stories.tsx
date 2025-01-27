@@ -6,7 +6,7 @@ import FormioComponent from '@/components/FormioComponent';
 import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
-import Fieldset from './';
+import {Fieldset} from './';
 
 export default {
   title: 'Component registry / layout / fieldset',

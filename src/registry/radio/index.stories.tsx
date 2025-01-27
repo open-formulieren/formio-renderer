@@ -4,16 +4,16 @@ import {expect, fn, userEvent, within} from '@storybook/test';
 import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
-import RadioField from './';
+import {FormioRadioField} from './';
 import type {ManualRadioValuesSchema} from './types';
 
 export default {
   title: 'Component registry / basic / radio',
-  component: RadioField,
+  component: FormioRadioField,
   decorators: [withFormik],
-} satisfies Meta<typeof RadioField>;
+} satisfies Meta<typeof FormioRadioField>;
 
-type Story = StoryObj<typeof RadioField>;
+type Story = StoryObj<typeof FormioRadioField>;
 
 const extensionBoilerplate: Pick<ManualRadioValuesSchema, 'openForms'> = {
   openForms: {
