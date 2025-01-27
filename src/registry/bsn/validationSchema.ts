@@ -23,14 +23,14 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = componentDe
   const {key, validate} = componentDefinition;
   const required = validate?.required;
 
+  // TODO: localize!
+  const message = 'A BSN must be 9 digits';
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
-    .length(9)
-    .regex(/[0-9]{9}/);
-
-  if (required) {
-    schema = schema.min(1);
-  } else {
+    .length(9, {message})
+    .regex(/[0-9]{9}/, {message})
+    .refine(isValidBsn, {message: 'Invalid BSN'});
+  if (!required) {
     schema = schema.or(z.literal('')).optional();
   }
 
