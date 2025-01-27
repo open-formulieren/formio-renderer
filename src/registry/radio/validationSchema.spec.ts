@@ -1,15 +1,18 @@
 import type {RadioComponentSchema} from '@open-formulieren/types';
+import {createIntl} from 'react-intl';
 
 import {getRegistryEntry} from '@/registry/registry';
 
 import getValidationSchema from './validationSchema';
 
+const intl = createIntl({locale: 'en', messages: {}});
 const BASE_COMPONENT: RadioComponentSchema = {
   type: 'radio',
   id: 'radio',
   key: 'radio',
   label: 'Radio field',
   openForms: {dataSrc: 'manual', translations: {}},
+  defaultValue: null,
   values: [
     {
       value: 'option1',
@@ -23,7 +26,7 @@ const BASE_COMPONENT: RadioComponentSchema = {
 };
 
 const buildValidationSchema = (component: RadioComponentSchema) => {
-  const schemas = getValidationSchema(component, getRegistryEntry);
+  const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
 };
 

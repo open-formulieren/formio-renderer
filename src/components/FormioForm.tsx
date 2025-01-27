@@ -1,6 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, setIn, useFormikContext} from 'formik';
 import {useMemo} from 'react';
+import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import {extractInitialValues} from '@/initialValues';
@@ -41,6 +42,8 @@ const FormioForm: React.FC<FormioFormProps> = ({
   children,
   requiredFieldsWithAsterisk,
 }) => {
+  const intl = useIntl();
+
   // assign all the default values from the component definitions
   const initialValues = Object.entries(extractInitialValues(components, getRegistryEntry)).reduce(
     (acc: JSONObject, [key, value]) => {
@@ -51,7 +54,7 @@ const FormioForm: React.FC<FormioFormProps> = ({
   );
   // build the validation schema from the component definitions
   // TODO: take into account hidden components!
-  const zodSchema = buildValidationSchema(components, getRegistryEntry);
+  const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
 
   return (
     <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>

@@ -1,8 +1,11 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import {createIntl} from 'react-intl';
 
 import {getRegistryEntry} from '@/registry/registry';
 
 import getValidationSchema from './validationSchema';
+
+const intl = createIntl({locale: 'en', messages: {}});
 
 const BASE_COMPONENT: TextFieldComponentSchema = {
   type: 'textfield',
@@ -12,7 +15,7 @@ const BASE_COMPONENT: TextFieldComponentSchema = {
 };
 
 const buildValidationSchema = (component: TextFieldComponentSchema) => {
-  const schemas = getValidationSchema(component, getRegistryEntry);
+  const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
 };
 

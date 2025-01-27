@@ -1,7 +1,18 @@
 import type {BsnComponentSchema} from '@open-formulieren/types';
+import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+
+const BSN_STRUCTURE_MESSAGE = defineMessage({
+  description: 'Validation error describing shape of BSN.',
+  defaultMessage: 'A BSN must be 9 digits',
+});
+
+const BSN_INVALID_MESSAGE = defineMessage({
+  description: 'Validation error for BSN that does not pass the 11-test.',
+  defaultMessage: 'Invalid BSN',
+});
 
 const isValidBsn = (value: string): boolean => {
   // Formula taken from https://nl.wikipedia.org/wiki/Burgerservicenummer#11-proef
@@ -19,17 +30,19 @@ const isValidBsn = (value: string): boolean => {
   return elevenTestValue % 11 === 0;
 };
 
-const getValidationSchema: GetValidationSchema<BsnComponentSchema> = componentDefinition => {
+const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
+  componentDefinition,
+  intl
+) => {
   const {key, validate} = componentDefinition;
   const required = validate?.required;
 
   // TODO: localize!
-  const message = 'A BSN must be 9 digits';
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
-    .length(9, {message})
-    .regex(/[0-9]{9}/, {message})
-    .refine(isValidBsn, {message: 'Invalid BSN'});
+    .length(9, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
+    .regex(/[0-9]{9}/, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
+    .refine(isValidBsn, {message: intl.formatMessage(BSN_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();
   }

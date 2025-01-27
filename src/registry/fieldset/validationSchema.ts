@@ -5,12 +5,13 @@ import type {SchemaRecord} from '@/validationSchema';
 
 const getValidationSchema: GetValidationSchema<FieldsetComponentSchema> = (
   {components},
+  intl,
   getRegistryEntry: GetRegistryEntry
 ) => {
   const componentSchemas = components.reduce((acc: SchemaRecord, componentDefinition) => {
     const getValidationSchema = getRegistryEntry(componentDefinition)?.getValidationSchema;
     if (getValidationSchema !== undefined) {
-      const schemaRecord = getValidationSchema(componentDefinition, getRegistryEntry);
+      const schemaRecord = getValidationSchema(componentDefinition, intl, getRegistryEntry);
       acc = {...acc, ...schemaRecord};
     }
     return acc;

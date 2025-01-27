@@ -1,8 +1,11 @@
 import type {EmailComponentSchema} from '@open-formulieren/types';
+import {createIntl} from 'react-intl';
 
 import {getRegistryEntry} from '@/registry/registry';
 
 import getValidationSchema from './validationSchema';
+
+const intl = createIntl({locale: 'en', messages: {}});
 
 const BASE_COMPONENT: EmailComponentSchema = {
   type: 'email',
@@ -13,7 +16,7 @@ const BASE_COMPONENT: EmailComponentSchema = {
 };
 
 const buildValidationSchema = (component: EmailComponentSchema) => {
-  const schemas = getValidationSchema(component, getRegistryEntry);
+  const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
 };
 
