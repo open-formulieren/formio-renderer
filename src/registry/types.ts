@@ -1,4 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
+import {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
@@ -33,6 +34,8 @@ export type GetInitialValues<S, V = JSONValue> = (
 
 export type GetValidationSchema<S> = (
   componentDefinition: S,
+  // intl object to localize error messages
+  intl: IntlShape,
   // dependency injection to avoid circular imports
   getRegistryEntry: GetRegistryEntry
 ) => Record<string, z.ZodFirstPartySchemaTypes>;

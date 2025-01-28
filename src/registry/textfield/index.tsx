@@ -1,12 +1,16 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
 
 import TextField from '@/components/forms/TextField';
+import type {RegistryEntry} from '@/registry/types';
+
+import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
 
 export interface FormioTextFieldProps {
   componentDefinition: TextFieldComponentSchema;
 }
 
-const FormioTextField: React.FC<FormioTextFieldProps> = ({
+export const FormioTextField: React.FC<FormioTextFieldProps> = ({
   componentDefinition: {key, label, description, placeholder, validate},
 }) => {
   return (
@@ -20,6 +24,10 @@ const FormioTextField: React.FC<FormioTextFieldProps> = ({
   );
 };
 
-export default FormioTextField;
-export {default as getInitialValues} from './initialValues';
-export {default as getValidationSchema} from './validationSchema';
+const TextFieldComponent: RegistryEntry<TextFieldComponentSchema> = {
+  formField: FormioTextField,
+  getInitialValues,
+  getValidationSchema,
+};
+
+export default TextFieldComponent;

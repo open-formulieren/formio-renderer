@@ -5,7 +5,7 @@ import {expect, fn, userEvent, within} from '@storybook/test';
 import FormioForm, {FormioFormProps} from '@/components/FormioForm';
 import {withFormik} from '@/sb-decorators';
 
-import FormioEmail from './';
+import {FormioEmail} from './';
 
 export default {
   title: 'Component registry / basic / email',

@@ -1,5 +1,6 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
+import {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetRegistryEntry} from '@/registry/types';
@@ -45,6 +46,7 @@ export const composeValidationSchemas = (pairs: KeySchemaPair[]): z.ZodObject<an
  */
 export const buildValidationSchema = (
   components: AnyComponentSchema[],
+  intl: IntlShape,
   getRegistryEntry: GetRegistryEntry
 ): z.ZodFirstPartySchemaTypes => {
   // visit all components and ask them to produce their validation schema. Merge all that
@@ -55,7 +57,7 @@ export const buildValidationSchema = (
   const allSchemas = components.reduce((acc: SchemaRecord, componentDefinition) => {
     const getValidationSchema = getRegistryEntry(componentDefinition)?.getValidationSchema;
     if (getValidationSchema !== undefined) {
-      const schemaRecord = getValidationSchema(componentDefinition, getRegistryEntry);
+      const schemaRecord = getValidationSchema(componentDefinition, intl, getRegistryEntry);
       acc = {...acc, ...schemaRecord};
     }
     return acc;

@@ -3,15 +3,19 @@ import clsx from 'clsx';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
+import type {RegistryEntry} from '@/registry/types';
 
 import './Fieldset.scss';
+import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
+import excludeHiddenComponents from './visibility';
 
 export interface FieldsetProps {
   componentDefinition: FieldsetComponentSchema;
   renderNested: React.FC<FormioComponentProps>;
 }
 
-const Fieldset: React.FC<FieldsetProps> = ({
+export const Fieldset: React.FC<FieldsetProps> = ({
   // TODO: display tooltip, if specified
   componentDefinition: {components, hideHeader = false, label},
   renderNested: FormioComponent,
@@ -28,7 +32,11 @@ const Fieldset: React.FC<FieldsetProps> = ({
   );
 };
 
-export default Fieldset;
-export {default as getInitialValues} from './initialValues';
-export {default as getValidationSchema} from './validationSchema';
-export {default as excludeHiddenComponents} from './visibility';
+const FieldsetComponent: RegistryEntry<FieldsetComponentSchema> = {
+  formField: Fieldset,
+  getInitialValues,
+  getValidationSchema,
+  excludeHiddenComponents,
+};
+
+export default FieldsetComponent;

@@ -1,12 +1,16 @@
 import type {EmailComponentSchema} from '@open-formulieren/types';
 
 import TextField from '@/components/forms/TextField';
+import type {RegistryEntry} from '@/registry/types';
+
+import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
 
 export interface FormioEmailProps {
   componentDefinition: EmailComponentSchema;
 }
 
-const FormioEmail: React.FC<FormioEmailProps> = ({
+export const FormioEmail: React.FC<FormioEmailProps> = ({
   componentDefinition: {key, label, description, placeholder, validate, autocomplete},
 }) => {
   return (
@@ -22,6 +26,10 @@ const FormioEmail: React.FC<FormioEmailProps> = ({
   );
 };
 
-export default FormioEmail;
-export {default as getInitialValues} from './initialValues';
-export {default as getValidationSchema} from './validationSchema';
+const EmailComponent: RegistryEntry<EmailComponentSchema> = {
+  formField: FormioEmail,
+  getInitialValues,
+  getValidationSchema,
+};
+
+export default EmailComponent;
