@@ -26,5 +26,17 @@
       "type": 5,
       "value": "addNotRequiredSuffix"
     }
+  ],
+  "ht1O2Z": [
+    {
+      "type": 0,
+      "value": "Ongeldig BSN"
+    }
+  ],
+  "sGwqUb": [
+    {
+      "type": 0,
+      "value": "Een BSN moet uit 9 cijfers bestaan"
+    }
   ]
 }

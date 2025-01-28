@@ -26,5 +26,17 @@
       "type": 5,
       "value": "addNotRequiredSuffix"
     }
+  ],
+  "ht1O2Z": [
+    {
+      "type": 0,
+      "value": "Invalid BSN"
+    }
+  ],
+  "sGwqUb": [
+    {
+      "type": 0,
+      "value": "A BSN must be 9 digits"
+    }
   ]
 }

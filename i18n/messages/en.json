@@ -3,5 +3,15 @@
     "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }",
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
+  },
+  "ht1O2Z": {
+    "defaultMessage": "Invalid BSN",
+    "description": "Validation error for BSN that does not pass the 11-test.",
+    "originalDefault": "Invalid BSN"
+  },
+  "sGwqUb": {
+    "defaultMessage": "A BSN must be 9 digits",
+    "description": "Validation error describing shape of BSN.",
+    "originalDefault": "A BSN must be 9 digits"
   }
 }
