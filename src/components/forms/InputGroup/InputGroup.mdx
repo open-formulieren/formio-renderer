@@ -1,0 +1,33 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/blocks';
+
+import {InputGroup} from '.';
+import * as InputGroupStories from './index.stories';
+
+<Meta of={InputGroupStories} />
+
+# Input group
+
+An input group is a set of closely related inputs that should be considered a single value, for
+example:
+
+- parts of a date
+- date + time
+- parts of a duration
+
+<Canvas of={InputGroupStories.Default} />
+
+## Usage
+
+The input group is a low level component, intended to replace a regular `Textbox` or `Select`
+component.
+
+It should be composed with the `FormField`, `FormLabel`, `HelpText` and `ValidationErrors`
+components.
+
+## Props
+
+<ArgTypes of={InputGroup} />
+
+## References
+
+- [NL Design System](https://nl-design-system.github.io/utrecht/storybook/?path=/docs/css_css-form-fieldset--docs)
