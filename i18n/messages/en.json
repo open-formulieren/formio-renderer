@@ -13,5 +13,10 @@
     "defaultMessage": "A BSN must be 9 digits",
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits"
+  },
+  "sP3xMn": {
+    "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
+    "description": "Validation error for phone number format.",
+    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   }
 }

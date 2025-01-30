@@ -13,5 +13,10 @@
     "defaultMessage": "Een BSN moet uit 9 cijfers bestaan",
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits"
+  },
+  "sP3xMn": {
+    "defaultMessage": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78.",
+    "description": "Validation error for phone number format.",
+    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   }
 }
