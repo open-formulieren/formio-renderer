@@ -1,5 +1,6 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
+import {useFormikContext} from 'formik';
 
 import {withFormik} from '@/sb-decorators';
 
@@ -133,5 +134,50 @@ export const InputGroupWithInitialValue: Story = {
     expect(canvas.getByLabelText('Year')).toHaveDisplayValue('2024');
 
     expect(canvas.getByText('A validation error')).toBeVisible();
+  },
+};
+
+export const InputGroupReflectsExternalUpdates: Story = {
+  decorators: [
+    (Story, {args: {name}}) => {
+      const {setFieldValue} = useFormikContext();
+      return (
+        <>
+          <Story />
+          <button
+            type="button"
+            onClick={event => {
+              event.preventDefault();
+              setFieldValue(name, '2025-01-01');
+            }}
+          >
+            Alter value
+          </button>
+        </>
+      );
+    },
+  ],
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Assert initial state', () => {
+      expect(canvas.getByLabelText('Day')).toHaveDisplayValue('');
+      expect(canvas.getByLabelText('Month')).toHaveDisplayValue('');
+      expect(canvas.getByLabelText('Year')).toHaveDisplayValue('');
+    });
+
+    await step('Change form field value from external trigger', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Alter value'}));
+      expect(canvas.getByLabelText('Day')).toHaveDisplayValue('1');
+      expect(canvas.getByLabelText('Month')).toHaveDisplayValue('1');
+      expect(canvas.getByLabelText('Year')).toHaveDisplayValue('2025');
+    });
+
+    await step('Do not clear inputs for already invalid date', async () => {
+      await userEvent.clear(canvas.getByLabelText('Month'));
+      expect(canvas.getByLabelText('Day')).toHaveDisplayValue('1');
+      expect(canvas.getByLabelText('Month')).toHaveDisplayValue('');
+      expect(canvas.getByLabelText('Year')).toHaveDisplayValue('2025');
+    });
   },
 };

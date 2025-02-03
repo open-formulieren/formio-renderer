@@ -1,11 +1,24 @@
 import {useField} from 'formik';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {InputGroup} from '@/components/forms/InputGroup';
 
 import DateInputItems from './DateInputItems';
 import type {DatePart, DatePartValues} from './types';
 import {parseDate, partsToISO8601} from './utils';
+
+const dateStringToParts = (value: string): DatePartValues => {
+  const dateValue = parseDate(value);
+  const datePartsFromValue: DatePartValues = dateValue
+    ? {
+        year: String(dateValue.getFullYear()),
+        // In JS dates, month 0 is January, but in user inputs this shows as '1'
+        month: String(dateValue.getMonth() + 1),
+        day: String(dateValue.getDate()),
+      }
+    : {year: '', month: '', day: ''};
+  return datePartsFromValue;
+};
 
 export interface DateInputGroupProps {
   /**
@@ -56,14 +69,26 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
   const [{value}, {error}, {setTouched, setValue}] = useField<string>(name);
 
-  const dateValue = parseDate(value);
+  const datePartsFromValue = dateStringToParts(value);
+  const [{year, month, day}, setDateParts] = useState<DatePartValues>(datePartsFromValue);
 
-  const [{year, month, day}, setDateParts] = useState<DatePartValues>({
-    year: dateValue ? String(dateValue.getFullYear()) : '',
-    // In JS dates, month 0 is January, but in user inputs this shows as '1'
-    month: dateValue ? String(dateValue.getMonth() + 1) : '',
-    day: dateValue ? String(dateValue.getDate()) : '',
-  });
+  // synchronize with external changes if we have a value and our date parts don't
+  // reflect it
+  useEffect(
+    () => {
+      // if an empty part leads to an invalid date, the value in Formik state is reset,
+      // but this may not clear the other parts if the user is still making changes.
+      const shouldIgnore = value === '' && (year === '' || month === '' || day === '');
+      const newValueParts = dateStringToParts(value);
+      const isInconsistent =
+        newValueParts.year !== year || newValueParts.month !== month || newValueParts.day !== day;
+      if (isInconsistent && !shouldIgnore) {
+        setDateParts(newValueParts);
+      }
+    },
+    // we deliberately exclude year, month, day from the dependencies
+    [value]
+  );
 
   const onPartChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // we must cast here since we can't pass the valid input names as a generic.
@@ -74,8 +99,11 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
     const newDateParts = {year, month, day, [name]: value};
     setDateParts(newDateParts);
 
+    const hasAllParts =
+      newDateParts.year !== '' && newDateParts.month !== '' && newDateParts.day !== '';
+
     // update the formik state accordingly - we only allow valid dates or empty values
-    const formikValue = partsToISO8601(newDateParts);
+    const formikValue = hasAllParts ? partsToISO8601(newDateParts) : '';
     setValue(formikValue ?? '');
   };
 
