@@ -31,6 +31,7 @@ export interface DateInputGroupProps {
    * Any valid autocomplete attribute.
    */
   autoComplete?: string;
+  'aria-describedby'?: string;
 }
 
 /**
@@ -50,6 +51,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   isRequired,
   isDisabled,
   autoComplete,
+  'aria-describedby': ariaDescribedBy,
 }) => {
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
   const [{value}, {error}, {setTouched, setValue}] = useField<string>(name);
@@ -78,7 +80,13 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   };
 
   return (
-    <InputGroup label={label} isRequired={isRequired} isDisabled={isDisabled} isInvalid={!!error}>
+    <InputGroup
+      label={label}
+      isRequired={isRequired}
+      isDisabled={isDisabled}
+      isInvalid={!!error}
+      aria-describedby={ariaDescribedBy}
+    >
       <DateInputItems
         year={year}
         month={month}

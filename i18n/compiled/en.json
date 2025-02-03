@@ -27,16 +27,58 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "DBTNgI": [
+    {
+      "type": 0,
+      "value": "d"
+    }
+  ],
+  "MJXZYI": [
+    {
+      "type": 0,
+      "value": "m"
+    }
+  ],
+  "RSPyzt": [
+    {
+      "type": 0,
+      "value": "Month"
+    }
+  ],
   "ht1O2Z": [
     {
       "type": 0,
       "value": "Invalid BSN"
     }
   ],
+  "nfRRDu": [
+    {
+      "type": 0,
+      "value": "yyyy"
+    }
+  ],
   "sGwqUb": [
     {
       "type": 0,
       "value": "A BSN must be 9 digits"
+    }
+  ],
+  "sP3xMn": [
+    {
+      "type": 0,
+      "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+    }
+  ],
+  "vCObuG": [
+    {
+      "type": 0,
+      "value": "Day"
+    }
+  ],
+  "yKo62N": [
+    {
+      "type": 0,
+      "value": "Year"
     }
   ]
 }

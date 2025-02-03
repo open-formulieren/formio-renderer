@@ -78,8 +78,7 @@ const DateField: React.FC<DateFieldProps> = ({
           label={label}
           isRequired={isRequired}
           isDisabled={isDisabled}
-          // @todo
-          // aria-desribedby={errorMessageId}
+          aria-describedby={errorMessageId}
         />
       );
       break;

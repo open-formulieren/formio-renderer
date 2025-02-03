@@ -4,10 +4,30 @@
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
+  "DBTNgI": {
+    "defaultMessage": "d",
+    "description": "Placeholder for day part of a date",
+    "originalDefault": "d"
+  },
+  "MJXZYI": {
+    "defaultMessage": "m",
+    "description": "Placeholder for month part of a date",
+    "originalDefault": "m"
+  },
+  "RSPyzt": {
+    "defaultMessage": "Month",
+    "description": "Date input group: month label",
+    "originalDefault": "Month"
+  },
   "ht1O2Z": {
     "defaultMessage": "Invalid BSN",
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN"
+  },
+  "nfRRDu": {
+    "defaultMessage": "yyyy",
+    "description": "Placeholder for year part of a date",
+    "originalDefault": "yyyy"
   },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
@@ -18,5 +38,15 @@
     "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+  },
+  "vCObuG": {
+    "defaultMessage": "Day",
+    "description": "Date input group: day label",
+    "originalDefault": "Day"
+  },
+  "yKo62N": {
+    "defaultMessage": "Year",
+    "description": "Date input group: year label",
+    "originalDefault": "Year"
   }
 }

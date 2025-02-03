@@ -10,6 +10,11 @@ export default {
   component: DateField,
   decorators: [withFormik],
   args: {
+    name: 'test',
+    label: 'Test date field',
+    isRequired: true,
+    isDisabled: false,
+    description: '',
     widget: 'inputGroup',
   },
   parameters: {
@@ -100,5 +105,33 @@ export const InputGroupSubmit: Story = {
     expect(onSubmit).toHaveBeenCalledWith({
       test: '2025-02-15',
     });
+  },
+};
+
+export const InputGroupWithInitialValue: Story = {
+  args: {
+    widget: 'inputGroup',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: '2024-02-03',
+      },
+      initialErrors: {
+        test: 'A validation error',
+      },
+      initialTouched: {
+        test: true,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByLabelText('Day')).toHaveDisplayValue('3');
+    expect(canvas.getByLabelText('Month')).toHaveDisplayValue('2');
+    expect(canvas.getByLabelText('Year')).toHaveDisplayValue('2024');
+
+    expect(canvas.getByText('A validation error')).toBeVisible();
   },
 };
