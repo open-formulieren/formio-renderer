@@ -2,6 +2,7 @@ import {FormLabel, Textbox} from '@utrecht/component-library-react';
 import {useId} from 'react';
 import {FormattedMessage, type MessageDescriptor, defineMessages, useIntl} from 'react-intl';
 
+import './DatePartInput.scss';
 import type {DatePart} from './types';
 
 const PART_PLACEHOLDERS: Record<DatePart, MessageDescriptor> = defineMessages({
