@@ -42,7 +42,7 @@
   "RSPyzt": [
     {
       "type": 0,
-      "value": "Month"
+      "value": "Maand"
     }
   ],
   "ht1O2Z": [
@@ -54,7 +54,7 @@
   "nfRRDu": [
     {
       "type": 0,
-      "value": "yyyy"
+      "value": "jjjj"
     }
   ],
   "sGwqUb": [
@@ -72,13 +72,13 @@
   "vCObuG": [
     {
       "type": 0,
-      "value": "Day"
+      "value": "Dag"
     }
   ],
   "yKo62N": [
     {
       "type": 0,
-      "value": "Year"
+      "value": "Jaar"
     }
   ]
 }

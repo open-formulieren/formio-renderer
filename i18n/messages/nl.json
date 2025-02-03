@@ -7,15 +7,17 @@
   "DBTNgI": {
     "defaultMessage": "d",
     "description": "Placeholder for day part of a date",
+    "isTranslated": true,
     "originalDefault": "d"
   },
   "MJXZYI": {
     "defaultMessage": "m",
     "description": "Placeholder for month part of a date",
+    "isTranslated": true,
     "originalDefault": "m"
   },
   "RSPyzt": {
-    "defaultMessage": "Month",
+    "defaultMessage": "Maand",
     "description": "Date input group: month label",
     "originalDefault": "Month"
   },
@@ -25,7 +27,7 @@
     "originalDefault": "Invalid BSN"
   },
   "nfRRDu": {
-    "defaultMessage": "yyyy",
+    "defaultMessage": "jjjj",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
   },
@@ -40,12 +42,12 @@
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
   "vCObuG": {
-    "defaultMessage": "Day",
+    "defaultMessage": "Dag",
     "description": "Date input group: day label",
     "originalDefault": "Day"
   },
   "yKo62N": {
-    "defaultMessage": "Year",
+    "defaultMessage": "Jaar",
     "description": "Date input group: year label",
     "originalDefault": "Year"
   }
