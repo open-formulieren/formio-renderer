@@ -7,7 +7,7 @@ import {withFormik} from '@/sb-decorators';
 import DateField from './DateField';
 
 export default {
-  title: 'Internal API / Forms / DateField',
+  title: 'Internal API / Forms / DateField / InputGroup',
   component: DateField,
   decorators: [withFormik],
   args: {
