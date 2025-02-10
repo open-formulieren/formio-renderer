@@ -1,6 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import BSN from './bsn';
+import DateField from './date';
 import Email from './email';
 import Fieldset from './fieldset';
 import PhoneNumber from './phoneNumber';
@@ -19,6 +20,7 @@ const REGISTRY: Registry = {
   // basic
   textfield: TextField,
   email: Email,
+  date: DateField,
   phoneNumber: PhoneNumber,
   radio: RadioField,
   // special types

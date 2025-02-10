@@ -14,7 +14,7 @@ export interface InputGroupProps {
 const InputGroup: React.FC<InputGroupProps> = ({
   children,
   label,
-  isRequired = true,
+  isRequired = false,
   isDisabled = false,
   isInvalid = false,
   'aria-describedby': ariaDescribedBy,

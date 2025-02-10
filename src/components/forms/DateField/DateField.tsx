@@ -40,6 +40,10 @@ export interface DateFieldProps {
    */
   description?: React.ReactNode;
   /**
+   * How to autocomplete the field from the browser.
+   */
+  autoComplete?: string;
+  /**
    * The kind of date input widget.
    */
   widget: DateFieldWidget;
@@ -60,6 +64,7 @@ const DateField: React.FC<DateFieldProps> = ({
   isRequired,
   isDisabled,
   description,
+  autoComplete,
   widget,
 }) => {
   const id = useId();
@@ -78,6 +83,7 @@ const DateField: React.FC<DateFieldProps> = ({
           label={label}
           isRequired={isRequired}
           isDisabled={isDisabled}
+          autoComplete={autoComplete}
           aria-describedby={errorMessageId}
         />
       );
