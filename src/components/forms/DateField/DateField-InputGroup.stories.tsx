@@ -181,3 +181,46 @@ export const InputGroupReflectsExternalUpdates: Story = {
     });
   },
 };
+
+// Invalid input needs to be handled by form validation and not automatically
+// reject inputs because of accessibility reasons - non-sighted users otherwise don't
+// get feedback that the value was cleared. It's better to provide a clear error message
+// that the value is not a valid date.
+export const LeavesInvalidInputAlone: Story = {
+  args: {
+    widget: 'inputGroup',
+    name: 'test',
+    label: 'Test invalid inputs',
+    isDisabled: false,
+    isRequired: false,
+  },
+  decorators: [
+    Story => (
+      <>
+        <Story />
+        <button type="submit">Submit</button>
+      </>
+    ),
+  ],
+  parameters: {
+    formik: {
+      initialValues: {test: ''},
+      onSubmit: fn(),
+    },
+  },
+
+  play: async ({canvasElement, parameters}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.type(canvas.getByLabelText('Day'), '9');
+    await userEvent.type(canvas.getByLabelText('Month'), '13');
+    await userEvent.type(canvas.getByLabelText('Year'), '55555');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const onSubmit = parameters.formik.onSubmit;
+    expect(onSubmit).toHaveBeenCalledWith({
+      test: '55555-13-09',
+    });
+  },
+};

@@ -5,10 +5,11 @@ import {InputGroup} from '@/components/forms/InputGroup';
 
 import DateInputItems from './DateInputItems';
 import type {DatePart, DatePartValues} from './types';
-import {parseDate, partsToISO8601} from './utils';
+import {parseDate, partsToUnvalidatedISO8601} from './utils';
 
 const dateStringToParts = (value: string): DatePartValues => {
   const dateValue = parseDate(value);
+  const [fallbackYear = '', fallbackMonth = '', fallbackDay = ''] = value.split('-');
   const datePartsFromValue: DatePartValues = dateValue
     ? {
         year: String(dateValue.getFullYear()),
@@ -16,7 +17,7 @@ const dateStringToParts = (value: string): DatePartValues => {
         month: String(dateValue.getMonth() + 1),
         day: String(dateValue.getDate()),
       }
-    : {year: '', month: '', day: ''};
+    : {year: fallbackYear, month: fallbackMonth, day: fallbackDay};
   return datePartsFromValue;
 };
 
@@ -80,8 +81,12 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
       // but this may not clear the other parts if the user is still making changes.
       const shouldIgnore = value === '' && (year === '' || month === '' || day === '');
       const newValueParts = dateStringToParts(value);
-      const isInconsistent =
-        newValueParts.year !== year || newValueParts.month !== month || newValueParts.day !== day;
+
+      const yearInconsistent = parseInt(newValueParts.year) !== parseInt(year);
+      const monthInconsistent = parseInt(newValueParts.month) !== parseInt(month);
+      const dayInconsistent = parseInt(newValueParts.day) !== parseInt(day);
+
+      const isInconsistent = yearInconsistent || monthInconsistent || dayInconsistent;
       if (isInconsistent && !shouldIgnore) {
         setDateParts(newValueParts);
       }
@@ -102,9 +107,14 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
     const hasAllParts =
       newDateParts.year !== '' && newDateParts.month !== '' && newDateParts.day !== '';
 
-    // update the formik state accordingly - we only allow valid dates or empty values
-    const formikValue = hasAllParts ? partsToISO8601(newDateParts) : '';
-    setValue(formikValue ?? '');
+    if (!hasAllParts) {
+      // as soon as one part is missing, treat as if the entire field was cleared
+      setValue('');
+    } else {
+      // otherwise we have all parts to construct a date, BUT it may be nonsense. It's
+      // up to validation libraries to check this.
+      setValue(partsToUnvalidatedISO8601(newDateParts));
+    }
   };
 
   return (

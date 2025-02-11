@@ -85,3 +85,38 @@ export const ValidateRequired: ValidationStory = {
     expect(await canvas.findByText('Required')).toBeVisible();
   },
 };
+
+export const ValidateValidDate: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      validate: {
+        required: false,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const monthInput = canvas.getByLabelText('Month');
+    await userEvent.type(monthInput, '13');
+
+    const dayInput = canvas.getByLabelText('Day');
+    await userEvent.type(dayInput, '8');
+
+    const yearInput = canvas.getByLabelText('Year');
+    await userEvent.type(yearInput, '2000');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid input')).toBeVisible();
+
+    expect(monthInput).toHaveDisplayValue('13');
+    expect(dayInput).toHaveDisplayValue('8');
+    expect(yearInput).toHaveDisplayValue('2000');
+  },
+};

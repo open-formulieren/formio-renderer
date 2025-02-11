@@ -24,16 +24,13 @@ export const parseDate = (value: string): Date | null => {
  * Try to parse the date parts into a valid date and return the ISO-8601 string. If the
  * date is not valid, returns `null`.
  */
-export const partsToISO8601 = (parts: DatePartValues): string | null => {
+export const partsToUnvalidatedISO8601 = (parts: DatePartValues): string => {
   const bits = [
     parts.year.padStart(4, '0'),
     parts.month.padStart(2, '0'),
     parts.day.padStart(2, '0'),
   ];
-  const dateString = bits.join('-');
-  const parsed = parseDate(dateString);
-  if (parsed === null) return null;
-  return dateString;
+  return bits.join('-');
 };
 
 export interface LocaleMeta {
