@@ -4,10 +4,32 @@
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
+  "DBTNgI": {
+    "defaultMessage": "d",
+    "description": "Placeholder for day part of a date",
+    "isTranslated": true,
+    "originalDefault": "d"
+  },
+  "MJXZYI": {
+    "defaultMessage": "m",
+    "description": "Placeholder for month part of a date",
+    "isTranslated": true,
+    "originalDefault": "m"
+  },
+  "RSPyzt": {
+    "defaultMessage": "Maand",
+    "description": "Date input group: month label",
+    "originalDefault": "Month"
+  },
   "ht1O2Z": {
     "defaultMessage": "Ongeldig BSN",
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN"
+  },
+  "nfRRDu": {
+    "defaultMessage": "jjjj",
+    "description": "Placeholder for year part of a date",
+    "originalDefault": "yyyy"
   },
   "sGwqUb": {
     "defaultMessage": "Een BSN moet uit 9 cijfers bestaan",
@@ -18,5 +40,15 @@
     "defaultMessage": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78.",
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+  },
+  "vCObuG": {
+    "defaultMessage": "Dag",
+    "description": "Date input group: day label",
+    "originalDefault": "Day"
+  },
+  "yKo62N": {
+    "defaultMessage": "Jaar",
+    "description": "Date input group: year label",
+    "originalDefault": "Year"
   }
 }

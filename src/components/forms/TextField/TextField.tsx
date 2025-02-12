@@ -1,4 +1,4 @@
-import {Paragraph, Textbox, FormField as UtrechtFormField} from '@utrecht/component-library-react';
+import {FormField, Paragraph, Textbox} from '@utrecht/component-library-react';
 import type {TextboxProps} from '@utrecht/component-library-react/dist/Textbox';
 import {useField} from 'formik';
 import {useId} from 'react';
@@ -63,7 +63,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
 
   return (
-    <UtrechtFormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
+    <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
       <Label id={id} isRequired={isRequired} isDisabled={isDisabled}>
         {label}
       </Label>
@@ -81,7 +81,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       </Paragraph>
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
-    </UtrechtFormField>
+    </FormField>
   );
 };
 

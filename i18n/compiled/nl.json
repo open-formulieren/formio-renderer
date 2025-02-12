@@ -27,16 +27,58 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "DBTNgI": [
+    {
+      "type": 0,
+      "value": "d"
+    }
+  ],
+  "MJXZYI": [
+    {
+      "type": 0,
+      "value": "m"
+    }
+  ],
+  "RSPyzt": [
+    {
+      "type": 0,
+      "value": "Maand"
+    }
+  ],
   "ht1O2Z": [
     {
       "type": 0,
       "value": "Ongeldig BSN"
     }
   ],
+  "nfRRDu": [
+    {
+      "type": 0,
+      "value": "jjjj"
+    }
+  ],
   "sGwqUb": [
     {
       "type": 0,
       "value": "Een BSN moet uit 9 cijfers bestaan"
+    }
+  ],
+  "sP3xMn": [
+    {
+      "type": 0,
+      "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
+    }
+  ],
+  "vCObuG": [
+    {
+      "type": 0,
+      "value": "Dag"
+    }
+  ],
+  "yKo62N": [
+    {
+      "type": 0,
+      "value": "Jaar"
     }
   ]
 }

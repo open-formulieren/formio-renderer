@@ -1,5 +1,6 @@
 import type {Decorator} from '@storybook/react';
-import {Formik} from 'formik';
+import {fn} from '@storybook/test';
+import {Form, Formik} from 'formik';
 import {CSSProperties} from 'react';
 
 /**
@@ -30,18 +31,19 @@ export const withFormik: Decorator = (Story, context) => {
   const initialErrors = context.parameters?.formik?.initialErrors || {};
   const initialTouched = context.parameters?.formik?.initialTouched || {};
   const wrapForm = context.parameters?.formik?.wrapForm ?? true;
+  const onSubmit = context.parameters?.formik?.onSubmit || fn();
   return (
     <Formik
       initialValues={initialValues}
       initialErrors={initialErrors}
       initialTouched={initialTouched}
       enableReinitialize
-      onSubmit={(values, formikHelpers) => console.log(values, formikHelpers)}
+      onSubmit={async values => onSubmit(values)}
     >
       {wrapForm ? (
-        <form id="storybook-withFormik-decorator-form" data-testid="storybook-formik-form">
+        <Form id="storybook-withFormik-decorator-form" data-testid="storybook-formik-form">
           <Story />
-        </form>
+        </Form>
       ) : (
         <Story />
       )}
