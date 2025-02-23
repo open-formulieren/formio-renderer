@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
+import dts from 'vite-plugin-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import {dependencies, peerDependencies} from './package.json';
@@ -35,6 +36,7 @@ export default defineConfig({
         ],
       },
     }),
+    dts({tsconfigPath: './tsconfig.prod.json'}),
   ],
   resolve: {
     alias: {
