@@ -63,6 +63,7 @@
     "@types/react": "^18.2.65",
     "@types/webpack": "^5.28.5",
     "@utrecht/components": "1.0.0-alpha.565",
+    "@vitejs/plugin-react": "^4.3.4",
     "babel-loader": "^9.1.3",
     "babel-plugin-formatjs": "^10.5.34",
     "circular-dependency-plugin": "^5.2.2",
@@ -82,7 +83,9 @@
     "ts-patch": "^3.3.0",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "dependencies": {
     "@utrecht/component-library-react": "1.0.0-alpha.353",

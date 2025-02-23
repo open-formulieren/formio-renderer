@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   sourceType: 'unambiguous',
   presets: [
     [
