@@ -40,9 +40,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-react": "^7.26.3",
-    "@babel/preset-typescript": "^7.26.0",
     "@formatjs/cli": "^6.5.1",
     "@open-formulieren/design-tokens": "^0.55.0",
     "@open-formulieren/types": "^0.38.0",
