@@ -2,23 +2,23 @@
   "name": "@open-formulieren/formio-renderer",
   "version": "0.1.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
-  "exports": "./dist/index.js",
   "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build:esm": "tspc -p tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
-    "build": "npm-run-all build:*",
+    "build": "vite build",
     "test": "npm-run-all test:*",
     "test:storybook": "test-storybook",
-    "test:jest": "jest",
+    "test:vitest": "vitest",
     "format": "prettier --write 'src/**/*' '.storybook/**/*'",
     "checkformat": "prettier --check 'src/**/*' '.storybook/**/*'",
     "start": "npm run storybook",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "makemessages": "formatjs extract",
-    "compilemessages": "formatjs compile-folder --ast i18n/messages i18n/compiled",
-    "watch": "tspc -p tsconfig.prod.json --watch"
+    "compilemessages": "formatjs compile-folder --ast i18n/messages i18n/compiled"
   },
   "files": [
     "dist"
@@ -40,32 +40,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-react": "^7.26.3",
-    "@babel/preset-typescript": "^7.26.0",
     "@formatjs/cli": "^6.5.1",
-    "@formatjs/ts-transformer": "^3.13.31",
     "@open-formulieren/design-tokens": "^0.55.0",
     "@open-formulieren/types": "^0.38.0",
-    "@storybook/addon-actions": "^8.5.1",
-    "@storybook/addon-essentials": "^8.5.1",
-    "@storybook/addon-interactions": "^8.5.1",
-    "@storybook/addon-links": "^8.5.1",
-    "@storybook/addon-styling-webpack": "^1.0.1",
-    "@storybook/addon-webpack5-compiler-babel": "^3.0.5",
-    "@storybook/jest": "^0.2.3",
-    "@storybook/react": "^8.5.1",
-    "@storybook/react-webpack5": "^8.5.1",
-    "@storybook/test": "^8.5.1",
-    "@storybook/test-runner": "^0.21.0",
-    "@storybook/testing-library": "^0.2.2",
+    "@storybook/addon-actions": "^8.6.2",
+    "@storybook/addon-essentials": "^8.6.2",
+    "@storybook/addon-interactions": "^8.6.2",
+    "@storybook/addon-links": "^8.6.2",
+    "@storybook/react": "^8.6.2",
+    "@storybook/react-vite": "^8.6.2",
+    "@storybook/test": "^8.6.2",
+    "@storybook/test-runner": "^0.21.3",
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/react": "^18.2.65",
     "@types/webpack": "^5.28.5",
     "@utrecht/components": "1.0.0-alpha.565",
-    "babel-loader": "^9.1.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "ajv": "^8.17.1",
     "babel-plugin-formatjs": "^10.5.34",
-    "circular-dependency-plugin": "^5.2.2",
     "date-fns": "^4.1.0",
     "formiojs": "~4.13.0",
     "microscope-sass": "^2.0.0",
@@ -75,14 +67,15 @@
     "react-dom": "^18.2.0",
     "react-formio": "~4.3.0",
     "react-intl": "^7.1.5",
-    "sass": "^1.83.0",
-    "sass-loader": "^16.0.4",
-    "storybook": "^8.5.1",
+    "sass-embedded": "^1.85.1",
+    "storybook": "^8.6.2",
     "storybook-react-intl": "^3.2.3",
-    "ts-patch": "^3.3.0",
-    "tsc-alias": "^1.8.8",
-    "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0",
+    "vite-plugin-circular-dependency": "^0.5.0",
+    "vite-plugin-dts": "^4.5.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.7"
   },
   "dependencies": {
     "@utrecht/component-library-react": "1.0.0-alpha.353",
@@ -90,20 +83,5 @@
     "formik": "^2.4.5",
     "zod": "^3.24.1",
     "zod-formik-adapter": "^1.3.0"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "modulePaths": [
-      "<rootDir>/src"
-    ],
-    "moduleNameMapper": {
-      "@/(.*)$": "<rootDir>/src/$1",
-      "^.*\\.scss$": "<rootDir>/tests/stylesStub.ts"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!uuid)/"
-    ]
   }
 }

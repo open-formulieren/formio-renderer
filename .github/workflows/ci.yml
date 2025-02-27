@@ -100,7 +100,7 @@ jobs:
 
       - name: Run tests
         run: |
-          npm run test:jest
+          npm run test:vitest
 
   interaction-tests:
     name: Run Storybook tests

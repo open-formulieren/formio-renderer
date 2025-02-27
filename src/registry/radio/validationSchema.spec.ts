@@ -1,5 +1,6 @@
 import type {RadioComponentSchema} from '@open-formulieren/types';
 import {createIntl} from 'react-intl';
+import {describe, expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry/registry';
 
