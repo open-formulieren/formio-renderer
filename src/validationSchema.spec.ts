@@ -1,3 +1,4 @@
+import {expect, test} from 'vitest';
 import {z} from 'zod';
 
 import {KeySchemaPair, composeValidationSchemas} from './validationSchema';
