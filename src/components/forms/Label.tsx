@@ -50,6 +50,8 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   );
 };
 
+LabelContent.displayName = 'LabelContent';
+
 export interface LabelProps {
   id: string;
   children: React.ReactNode;
@@ -64,5 +66,7 @@ const Label: React.FC<LabelProps> = ({id, isRequired = false, isDisabled = false
     </LabelContent>
   </Paragraph>
 );
+
+Label.displayName = 'Label';
 
 export default Label;

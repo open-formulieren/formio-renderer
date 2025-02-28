@@ -104,4 +104,6 @@ const DateField: React.FC<DateFieldProps> = ({
   );
 };
 
+DateField.displayName = 'DateField';
+
 export default DateField;

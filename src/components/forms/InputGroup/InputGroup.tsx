@@ -34,4 +34,6 @@ const InputGroup: React.FC<InputGroupProps> = ({
   </Fieldset>
 );
 
+InputGroup.displayName = 'InputGroup';
+
 export default InputGroup;

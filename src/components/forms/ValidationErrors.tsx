@@ -20,4 +20,6 @@ const ValidationErrors: React.FC<ValidationErrorsProps> = ({error = '', id}) => 
   );
 };
 
+ValidationErrors.displayName = 'ValidationErrors';
+
 export default ValidationErrors;

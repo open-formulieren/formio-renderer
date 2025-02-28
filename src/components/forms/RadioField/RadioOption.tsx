@@ -45,4 +45,6 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   );
 };
 
+RadioOption.displayName = 'RadioOption';
+
 export default RadioOption;

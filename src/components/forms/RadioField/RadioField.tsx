@@ -99,4 +99,6 @@ const RadioField: React.FC<RadioFieldProps> = ({
   );
 };
 
+RadioField.displayName = 'RadioField';
+
 export default RadioField;

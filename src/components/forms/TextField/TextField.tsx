@@ -85,4 +85,6 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   );
 };
 
+TextField.displayName = 'TextField';
+
 export default TextField;

@@ -25,4 +25,6 @@ const HelpText: React.FC<HelpTextProps & React.HTMLAttributes<HTMLDivElement>> =
   );
 };
 
+HelpText.displayName = 'HelpText';
+
 export default HelpText;
