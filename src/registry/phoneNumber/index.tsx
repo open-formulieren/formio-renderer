@@ -28,7 +28,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({
       description={description}
       isRequired={validate?.required}
       placeholder={placeholder}
-      pattern="^[+0-9][- 0-9]+$"
+      pattern="^[+0-9][\- 0-9]+$"
       inputMode="tel"
       autoComplete={autocomplete}
     />
