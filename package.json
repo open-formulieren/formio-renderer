@@ -1,6 +1,6 @@
 {
   "name": "@open-formulieren/formio-renderer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "type": "module",
   "exports": {
@@ -22,7 +22,8 @@
     "compilemessages": "formatjs compile-folder --ast i18n/messages i18n/compiled"
   },
   "files": [
-    "dist"
+    "dist/",
+    "i18n"
   ],
   "repository": {
     "type": "git",
