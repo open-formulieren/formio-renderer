@@ -162,6 +162,13 @@ export const WithValues: Story = {
         key: 'nested.textfield',
         label: 'Text field with value',
       } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'nested.textfield2',
+        label: 'Text field with default value',
+        defaultValue: 'untouched default value',
+      } satisfies TextFieldComponentSchema,
     ],
     values: {
       nested: {
@@ -174,5 +181,8 @@ export const WithValues: Story = {
 
     const textInput = canvas.getByLabelText('Text field with value');
     expect(textInput).toHaveDisplayValue('external value');
+
+    const textInput2 = canvas.getByLabelText('Text field with default value');
+    expect(textInput2).toHaveDisplayValue('untouched default value');
   },
 };

@@ -1,8 +1,8 @@
 import type {FieldsetComponentSchema} from '@open-formulieren/types';
 
-import {extractInitialValues} from '@/initialValues';
 import type {GetInitialValues, GetRegistryEntry} from '@/registry/types';
 import type {JSONValue} from '@/types';
+import {extractInitialValues} from '@/values';
 
 const getInitialValues: GetInitialValues<FieldsetComponentSchema, JSONValue> = (
   {components}: FieldsetComponentSchema,
