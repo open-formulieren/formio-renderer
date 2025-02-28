@@ -1,5 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, useFormikContext} from 'formik';
+import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
 import {useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
@@ -14,6 +14,8 @@ import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
 import RendererSettingsProvider from './RendererSettingsProvider';
 
+export type ErrorObject = {[K: string]: string | string[] | ErrorObject};
+
 /**
  * Props for a complete Formio form definition.
  *
@@ -27,6 +29,7 @@ export interface FormioFormProps {
    */
   components: AnyComponentSchema[];
   values?: JSONObject;
+  errors?: ErrorObject;
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
   children?: React.ReactNode;
@@ -40,6 +43,7 @@ export interface FormioFormProps {
 const FormioForm: React.FC<FormioFormProps> = ({
   components,
   values = {},
+  errors,
   onSubmit,
   children,
   requiredFieldsWithAsterisk,
@@ -59,6 +63,9 @@ const FormioForm: React.FC<FormioFormProps> = ({
     <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
       <Formik<JSONObject>
         initialValues={values}
+        initialErrors={errors as FormikErrors<JSONObject>}
+        // figure out initial touched from the provided errors
+        initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
         validateOnChange={false}
         validateOnBlur
         validationSchema={toFormikValidationSchema(zodSchema)}
