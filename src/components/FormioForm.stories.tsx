@@ -152,3 +152,37 @@ export const NoAsterisksForRequiredFields: Story = {
     requiredFieldsWithAsterisk: false,
   },
 };
+
+export const WithValues: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Text field with value',
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'nested.textfield2',
+        label: 'Text field with default value',
+        defaultValue: 'untouched default value',
+      } satisfies TextFieldComponentSchema,
+    ],
+    values: {
+      nested: {
+        textfield: 'external value',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textInput = canvas.getByLabelText('Text field with value');
+    expect(textInput).toHaveDisplayValue('external value');
+
+    const textInput2 = canvas.getByLabelText('Text field with default value');
+    expect(textInput2).toHaveDisplayValue('untouched default value');
+  },
+};

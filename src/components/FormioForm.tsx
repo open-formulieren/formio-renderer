@@ -1,13 +1,13 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, setIn, useFormikContext} from 'formik';
+import {Form, Formik, useFormikContext} from 'formik';
 import {useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
-import {extractInitialValues} from '@/initialValues';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
+import {deepMergeValues, extractInitialValues} from '@/values';
 import {filterVisibleComponents} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
@@ -26,6 +26,7 @@ export interface FormioFormProps {
    * supported.
    */
   components: AnyComponentSchema[];
+  values?: JSONObject;
   // enforce it to be async, makes Formik call setSubmitting when it resolves
   onSubmit: (values: JSONObject) => Promise<void>;
   children?: React.ReactNode;
@@ -38,28 +39,26 @@ export interface FormioFormProps {
 
 const FormioForm: React.FC<FormioFormProps> = ({
   components,
+  values = {},
   onSubmit,
   children,
   requiredFieldsWithAsterisk,
 }) => {
   const intl = useIntl();
 
-  // assign all the default values from the component definitions
-  const initialValues = Object.entries(extractInitialValues(components, getRegistryEntry)).reduce(
-    (acc: JSONObject, [key, value]) => {
-      acc = setIn(acc, key, value);
-      return acc;
-    },
-    {} satisfies JSONObject
-  );
+  // use the extracted component default values and merge with 'outside' values to use
+  // as initial form state
+  const initialValues = extractInitialValues(components, getRegistryEntry);
+  values = deepMergeValues(initialValues, values);
+
   // build the validation schema from the component definitions
   // TODO: take into account hidden components!
   const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
 
   return (
     <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
-      <Formik
-        initialValues={initialValues}
+      <Formik<JSONObject>
+        initialValues={values}
         validateOnChange={false}
         validateOnBlur
         validationSchema={toFormikValidationSchema(zodSchema)}
