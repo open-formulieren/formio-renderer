@@ -186,3 +186,32 @@ export const WithValues: Story = {
     expect(textInput2).toHaveDisplayValue('untouched default value');
   },
 };
+
+export const WithErrors: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Field with error',
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'nested.textfield2',
+        label: 'Field without error',
+      } satisfies TextFieldComponentSchema,
+    ],
+    errors: {
+      nested: {
+        textfield: 'Nested textfield error',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText('Nested textfield error')).toBeVisible();
+  },
+};
