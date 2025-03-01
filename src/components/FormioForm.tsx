@@ -67,7 +67,7 @@ const FormioForm: React.FC<FormioFormProps> = ({
         // figure out initial touched from the provided errors
         initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
         validateOnChange={false}
-        validateOnBlur
+        validateOnBlur={false}
         validationSchema={toFormikValidationSchema(zodSchema)}
         onSubmit={async values => {
           await onSubmit(values);
