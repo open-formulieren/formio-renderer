@@ -68,7 +68,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   'aria-describedby': ariaDescribedBy,
 }) => {
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
-  const [{value}, {error}, {setTouched, setValue}] = useField<string>(name);
+  const [{value}, {error, touched}, {setTouched, setValue}] = useField<string>(name);
 
   const datePartsFromValue = dateStringToParts(value);
   const [{year, month, day}, setDateParts] = useState<DatePartValues>(datePartsFromValue);
@@ -122,7 +122,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
       label={label}
       isRequired={isRequired}
       isDisabled={isDisabled}
-      isInvalid={!!error}
+      isInvalid={touched && !!error}
       aria-describedby={ariaDescribedBy}
     >
       <DateInputItems
