@@ -21,6 +21,11 @@
 .utrecht-form-field {
   @include bem.modifier('openforms') {
     .utrecht-form-fieldset {
+      &:has(.utrecht-form-fieldset__fieldset > .openforms-input-group) {
+        padding-block-start: 0;
+        padding-block-end: 0;
+      }
+
       @include bem.modifier('invalid') {
         --utrecht-form-fieldset-invalid-border-inline-start-color: var(
           --of-input-group-invalid-border-inline-start-color
