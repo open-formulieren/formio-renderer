@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["./*"],
       "@/sb-decorators": ["../.storybook/decorators.tsx"]
-    }
+    },
+    "skipLibCheck": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
