@@ -28,10 +28,35 @@ export interface FormioFormProps {
    * supported.
    */
   components: AnyComponentSchema[];
+  /**
+   * Initial values for the form. This is merged with and overrides default values
+   * extracted from the component definitions.
+   */
   values?: JSONObject;
+  /**
+   * Initial validation errors to display. Note that these are cleared when the
+   * client side validation runs.
+   */
   errors?: ErrorObject;
-  // enforce it to be async, makes Formik call setSubmitting when it resolves
+
+  /**
+   * Callback when the form validates (client-side) to submit the entered values.
+   *
+   * It receives the entered field values object.
+   *
+   * Must be an async function to make the Formik state handling a bit more ergonomic.
+   */
   onSubmit: (values: JSONObject) => Promise<void>;
+
+  /**
+   * HTML ID of the <form> element - required if you put the submit button outside of
+   * <form> tag.
+   */
+  id?: string;
+
+  /**
+   * Any children passed to the form will be rendered after the form fields.
+   */
   children?: React.ReactNode;
   /**
    * Mark required fields with an asterisk. If asterisks are not used, then a suffix
@@ -45,6 +70,7 @@ const FormioForm: React.FC<FormioFormProps> = ({
   values = {},
   errors,
   onSubmit,
+  id,
   children,
   requiredFieldsWithAsterisk,
 }) => {
@@ -74,18 +100,20 @@ const FormioForm: React.FC<FormioFormProps> = ({
         }}
       >
         {/* TODO: pre-process components to ensure they have an ID? */}
-        <InnerFormioForm components={components}>{children}</InnerFormioForm>
+        <InnerFormioForm id={id} components={components}>
+          {children}
+        </InnerFormioForm>
       </Formik>
     </RendererSettingsProvider>
   );
 };
 
-export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'children'>;
+export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'>;
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
-const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, children}) => {
+const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, id, children}) => {
   const {values} = useFormikContext<JSONObject>();
 
   const componentsToRender: AnyComponentSchema[] = useMemo(() => {
@@ -93,7 +121,7 @@ const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, children})
   }, [components, values]);
 
   return (
-    <Form noValidate>
+    <Form noValidate id={id}>
       <FormFieldContainer>
         {componentsToRender.map((definition, index) => (
           <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />

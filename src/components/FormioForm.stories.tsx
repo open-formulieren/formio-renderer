@@ -1,19 +1,38 @@
 import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
+import {Button} from '@utrecht/component-library-react';
 
 import FormioForm from './FormioForm';
 
 export default {
   title: 'Public API / FormioForm',
   component: FormioForm,
-  args: {
-    onSubmit: fn(),
-    children: (
-      <div style={{marginBlockStart: '20px'}}>
-        <button type="submit">Submit</button>
+  decorators: [
+    // Add a submit button for the form
+    (Story, {args}) => (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          rowGap: '20px',
+        }}
+      >
+        <Story />
+        <Button
+          type="submit"
+          form={args.id}
+          appearance="primary-action-button"
+          style={{alignSelf: 'flex-start'}}
+        >
+          Submit
+        </Button>
       </div>
     ),
+  ],
+  args: {
+    onSubmit: fn(),
+    id: 'formioform',
     requiredFieldsWithAsterisk: true,
   },
   argTypes: {
