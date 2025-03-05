@@ -1,7 +1,7 @@
 import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
-import {Button} from '@utrecht/component-library-react';
+import {PrimaryActionButton} from '@utrecht/component-library-react';
 
 import FormioForm from './FormioForm';
 
@@ -19,14 +19,9 @@ export default {
         }}
       >
         <Story />
-        <Button
-          type="submit"
-          form={args.id}
-          appearance="primary-action-button"
-          style={{alignSelf: 'flex-start'}}
-        >
+        <PrimaryActionButton type="submit" form={args.id} style={{alignSelf: 'flex-start'}}>
           Submit
-        </Button>
+        </PrimaryActionButton>
       </div>
     ),
   ],
