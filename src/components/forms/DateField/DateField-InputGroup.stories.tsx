@@ -1,5 +1,6 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
+import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 
 import {withFormik} from '@/sb-decorators';
@@ -82,7 +83,9 @@ export const InputGroupSubmit: Story = {
     Story => (
       <>
         <Story />
-        <button type="submit">Submit</button>
+        <PrimaryActionButton type="submit" style={{marginBlockStart: '20px'}}>
+          Submit
+        </PrimaryActionButton>
       </>
     ),
   ],
@@ -144,15 +147,16 @@ export const InputGroupReflectsExternalUpdates: Story = {
       return (
         <>
           <Story />
-          <button
+          <SecondaryActionButton
             type="button"
-            onClick={event => {
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
               event.preventDefault();
               setFieldValue(name, '2025-01-01');
             }}
+            style={{marginBlockStart: '20px'}}
           >
             Alter value
-          </button>
+          </SecondaryActionButton>
         </>
       );
     },

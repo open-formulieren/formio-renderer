@@ -42,10 +42,12 @@ const MyComponent: React.FC = () => (
     <FormioForm
       components={FORMIO_FORM.components}
       onSubmit={values => console.log(values)}
+      id="my-formio-form"
       requiredFieldsWithAsterisk
-    >
-      <button type="submit">Submit</button>
-    </FormioForm>
+    />
+    <button type="submit" form="my-formio-form">
+      Submit
+    </button>
   </IntlProvider>
 );
 ```

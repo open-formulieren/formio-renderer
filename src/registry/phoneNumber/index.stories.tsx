@@ -2,7 +2,8 @@ import {PhoneNumberComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 
-import FormioForm, {FormioFormProps} from '@/components/FormioForm';
+import {FormioFormProps} from '@/components/FormioForm';
+import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {PhoneNumberField} from './';
@@ -84,17 +85,7 @@ interface ValidationStoryArgs {
 type ValidationStory = StoryObj<ValidationStoryArgs>;
 
 const BaseValidationStory: ValidationStory = {
-  render: args => (
-    <FormioForm
-      onSubmit={args.onSubmit}
-      components={[args.componentDefinition]}
-      requiredFieldsWithAsterisk
-    >
-      <div style={{marginBlockStart: '20px'}}>
-        <button type="submit">Submit</button>
-      </div>
-    </FormioForm>
-  ),
+  render: renderComponentInForm,
   parameters: {
     formik: {
       disable: true,

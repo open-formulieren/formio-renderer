@@ -3,7 +3,8 @@ import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
-import FormioForm, {FormioFormProps} from '@/components/FormioForm';
+import {FormioFormProps} from '@/components/FormioForm';
+import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {Fieldset} from './';
@@ -56,26 +57,18 @@ interface ValidationStoryArgs {
 type ValidationStory = StoryObj<ValidationStoryArgs>;
 
 const BaseValidationStory: ValidationStory = {
-  render: args => (
-    <FormioForm
-      onSubmit={args.onSubmit}
-      components={[
-        {
-          id: 'fieldset',
-          key: 'fieldset',
-          type: 'fieldset',
-          label: 'My group of fields',
-          hideHeader: false,
-          components: args.nestedComponents,
-        },
-      ]}
-      requiredFieldsWithAsterisk
-    >
-      <div style={{marginBlockStart: '20px'}}>
-        <button type="submit">Submit</button>
-      </div>
-    </FormioForm>
-  ),
+  render: args =>
+    renderComponentInForm({
+      ...args,
+      componentDefinition: {
+        id: 'fieldset',
+        key: 'fieldset',
+        type: 'fieldset',
+        label: 'My group of fields',
+        hideHeader: false,
+        components: args.nestedComponents,
+      },
+    }),
   parameters: {
     formik: {
       disable: true,
