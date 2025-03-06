@@ -1,10 +1,10 @@
 // NOTE: the import order matters here, otherwise paragraph styles overwrite the styles
 // of form-field
-@use '@utrecht/components/dist/paragraph/css/index' as paragraph;
-@use '@utrecht/components/dist/form-field/css/index' as form-field;
-@use '@utrecht/components/dist/form-fieldset/css/index' as form-fieldset;
-@use '@utrecht/components/dist/textbox/css/index' as textbox;
-@use '@utrecht/components/dist/radio-button/css/index' as radio-button;
+@use '@utrecht/components/paragraph' as paragraph;
+@use '@utrecht/components/form-field' as form-field;
+@use '@utrecht/components/form-fieldset' as form-fieldset;
+@use '@utrecht/components/textbox' as textbox;
+@use '@utrecht/components/radio-button' as radio-button;
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
