@@ -44,7 +44,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@formatjs/cli": "^6.5.1",
-    "@open-formulieren/design-tokens": "^0.55.0",
+    "@open-formulieren/design-tokens": "^0.57.0",
     "@open-formulieren/types": "^0.38.0",
     "@storybook/addon-actions": "^8.6.2",
     "@storybook/addon-essentials": "^8.6.2",
@@ -57,7 +57,7 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/react": "^18.2.65",
     "@types/webpack": "^5.28.5",
-    "@utrecht/components": "1.0.0-alpha.565",
+    "@utrecht/components": "^7.4.0",
     "@vitejs/plugin-react": "^4.3.4",
     "ajv": "^8.17.1",
     "babel-plugin-formatjs": "^10.5.34",

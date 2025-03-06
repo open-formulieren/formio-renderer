@@ -1,5 +1,5 @@
-@use '@utrecht/components/dist/form-label/css/index' as form-label;
-@use '@utrecht/components/dist/paragraph/css/index' as paragraph;
+@use '@utrecht/components/form-label' as form-label;
+@use '@utrecht/components/paragraph' as paragraph;
 
 @use '@/scss/bem';
 
