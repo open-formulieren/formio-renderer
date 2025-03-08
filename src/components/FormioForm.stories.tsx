@@ -229,3 +229,48 @@ export const WithErrors: Story = {
     expect(await canvas.findByText('Nested textfield error')).toBeVisible();
   },
 };
+
+// existing errors of untouched fields should not be cleared when another field is
+// touched
+export const InitialErrorsRevalidation: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'component1',
+        label: 'Field 1',
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'component2',
+        label: 'Field 2',
+        validate: {
+          pattern: '[0-9]+',
+        },
+      } satisfies TextFieldComponentSchema,
+    ],
+    errors: {
+      component1: 'External error for field 1',
+      component2: 'External error for field 2',
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial errors', async () => {
+      expect(await canvas.findByText('External error for field 1')).toBeVisible();
+      expect(await canvas.findByText('External error for field 2')).toBeVisible();
+    });
+
+    await step('Edit field 2', async () => {
+      const input = canvas.getByLabelText('Field 2');
+      await userEvent.type(input, 'invalid input');
+      input.blur();
+
+      expect(await canvas.findByText('Invalid')).toBeVisible();
+      expect(canvas.queryByText('External error for field 2')).not.toBeInTheDocument();
+    });
+  },
+};
