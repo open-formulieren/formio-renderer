@@ -1,5 +1,5 @@
 import {FormField, FormLabel, Paragraph, RadioButton} from '@utrecht/component-library-react';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 
 export interface RadioOptionProps {
   name: string;
@@ -20,6 +20,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   errorMessageId,
   isDisabled,
 }) => {
+  const {validateField} = useFormikContext();
   const [props] = useField({name, value, type: 'radio'});
 
   return (
@@ -29,6 +30,10 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         id={`${id}-opt-${index}`}
         aria-describedby={errorMessageId}
         {...props}
+        onBlur={async e => {
+          props.onBlur(e);
+          await validateField(name);
+        }}
         value={value}
       />
       <Paragraph className="utrecht-form-field__label utrecht-form-field__label--radio">
