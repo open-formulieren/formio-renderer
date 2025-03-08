@@ -16,6 +16,7 @@
     "strictBindCallApply": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "noErrorTruncation": true,
     "paths": {
       "@/*": ["./*"],
