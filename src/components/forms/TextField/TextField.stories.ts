@@ -1,7 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
 
-import {withFormik} from '@/sb-decorators';
+import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
 
 import TextField from './TextField';
 
@@ -68,17 +68,17 @@ export const ValidationError: Story = {
   },
 };
 
-// export const NoAsterisks = {
-//   name: 'No asterisk for required',
-//   decorators: [ConfigDecorator],
-//   parameters: {
-//     config: {
-//       requiredFieldsWithAsterisk: false,
-//     },
-//   },
-//   args: {
-//     name: 'test',
-//     label: 'Default required',
-//     isRequired: true,
-//   },
-// };
+export const NoAsterisks = {
+  name: 'No asterisk for required',
+  decorators: [withRenderSettingsProvider],
+  parameters: {
+    renderSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
+  },
+  args: {
+    name: 'test',
+    label: 'Default required',
+    isRequired: true,
+  },
+};

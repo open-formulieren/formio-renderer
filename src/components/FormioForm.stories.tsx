@@ -264,13 +264,17 @@ export const InitialErrorsRevalidation: Story = {
       expect(await canvas.findByText('External error for field 2')).toBeVisible();
     });
 
+    // NOTE - this doesn't work properly if the browser window is not focused. Chrome
+    // and Firefox appear not to dispatch the focus/blur events if another window on your
+    // device has focus.
     await step('Edit field 2', async () => {
       const input = canvas.getByLabelText('Field 2');
       await userEvent.type(input, 'invalid input');
       input.blur();
-
       expect(await canvas.findByText('Invalid')).toBeVisible();
       expect(canvas.queryByText('External error for field 2')).not.toBeInTheDocument();
+      // may not be removed
+      expect(canvas.getByText('External error for field 1')).toBeVisible();
     });
   },
 };

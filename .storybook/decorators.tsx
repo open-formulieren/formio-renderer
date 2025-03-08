@@ -3,6 +3,8 @@ import {fn} from '@storybook/test';
 import {Form, Formik} from 'formik';
 import {CSSProperties} from 'react';
 
+import RendererSettingsProvider from '../src/components/RendererSettingsProvider';
+
 /**
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
  * to wrap some 'page-global' styling.
@@ -50,3 +52,11 @@ export const withFormik: Decorator = (Story, context) => {
     </Formik>
   );
 };
+
+export const withRenderSettingsProvider: Decorator = (Story, {parameters}) => (
+  <RendererSettingsProvider
+    requiredFieldsWithAsterisk={parameters?.renderSettings?.requiredFieldsWithAsterisk ?? true}
+  >
+    <Story />
+  </RendererSettingsProvider>
+);
