@@ -72,11 +72,8 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
         <Textbox
           {...props}
           onBlur={async e => {
-            console.log('onBlur');
             props.onBlur(e);
-            console.log('validating');
             await validateField(name);
-            console.log('validation done');
           }}
           className="utrecht-textbox--openforms"
           id={id}

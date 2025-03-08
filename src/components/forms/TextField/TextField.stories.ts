@@ -1,5 +1,6 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
+import {z} from 'zod';
 
 import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
 
@@ -68,7 +69,7 @@ export const ValidationError: Story = {
   },
 };
 
-export const NoAsterisks = {
+export const NoAsterisks: Story = {
   name: 'No asterisk for required',
   decorators: [withRenderSettingsProvider],
   parameters: {
@@ -80,5 +81,35 @@ export const NoAsterisks = {
     name: 'test',
     label: 'Default required',
     isRequired: true,
+  },
+};
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Validate on blur');
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    await userEvent.type(input, 'foo');
+    expect(input).toHaveFocus();
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    input.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
   },
 };
