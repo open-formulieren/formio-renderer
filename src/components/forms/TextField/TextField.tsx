@@ -1,6 +1,6 @@
 import {FormField, Paragraph, Textbox} from '@utrecht/component-library-react';
 import type {TextboxProps} from '@utrecht/component-library-react/dist/Textbox';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
@@ -56,6 +56,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   placeholder,
   ...extraProps
 }) => {
+  const {validateField} = useFormikContext();
   const [props, {error = '', touched}] = useField({name, type: 'text'});
   const id = useId();
 
@@ -70,6 +71,10 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       <Paragraph>
         <Textbox
           {...props}
+          onBlur={async e => {
+            props.onBlur(e);
+            await validateField(name);
+          }}
           className="utrecht-textbox--openforms"
           id={id}
           disabled={isDisabled}

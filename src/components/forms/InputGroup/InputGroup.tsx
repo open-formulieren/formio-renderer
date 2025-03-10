@@ -24,6 +24,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
     invalid={isInvalid}
     className="utrecht-form-fieldset--openforms"
     aria-describedby={ariaDescribedBy}
+    data-testid="inputgroup-container"
   >
     <FieldsetLegend className="utrecht-form-field__label">
       <LabelContent isDisabled={isDisabled} isRequired={isRequired}>

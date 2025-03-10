@@ -58,6 +58,7 @@ jobs:
 
       - name: Build library
         run: |
+          npm run compilemessages
           npm run build:typecheck
           npm run build
 

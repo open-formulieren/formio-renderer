@@ -1,4 +1,4 @@
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 import {useEffect, useState} from 'react';
 
 import {InputGroup} from '@/components/forms/InputGroup';
@@ -67,6 +67,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   autoComplete,
   'aria-describedby': ariaDescribedBy,
 }) => {
+  const {validateField} = useFormikContext();
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
   const [{value}, {error, touched}, {setTouched, setValue}] = useField<string>(name);
 
@@ -131,7 +132,12 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
         day={day}
         isDisabled={isDisabled}
         onChange={onPartChange}
-        onBlur={() => setTouched(true)}
+        onBlur={async () => {
+          setTouched(true);
+          if (year && month && day) {
+            await validateField(name);
+          }
+        }}
         autoComplete={autoComplete}
       />
     </InputGroup>

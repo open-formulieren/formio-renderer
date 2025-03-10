@@ -2,6 +2,7 @@ import {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
+import {z} from 'zod';
 
 import {withFormik} from '@/sb-decorators';
 
@@ -226,5 +227,48 @@ export const LeavesInvalidInputAlone: Story = {
     expect(onSubmit).toHaveBeenCalledWith({
       test: '55555-13-09',
     });
+  },
+};
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const container = (await canvas.findByTestId('inputgroup-container')).querySelector(
+      'fieldset'
+    )!;
+    expect(container).not.toHaveAttribute('aria-invalid');
+
+    const dayInput = canvas.getByLabelText('Day');
+    await userEvent.type(dayInput, '9');
+    expect(canvas.queryByText('Always invalid')).not.toBeInTheDocument();
+    expect(container).not.toHaveAttribute('aria-invalid');
+
+    const monthInput = canvas.getByLabelText('Month');
+    await userEvent.type(monthInput, '13');
+    expect(canvas.queryByText('Always invalid')).not.toBeInTheDocument();
+    expect(container).not.toHaveAttribute('aria-invalid');
+
+    const yearInput = canvas.getByLabelText('Year');
+    await userEvent.type(yearInput, '55555');
+    expect(canvas.queryByText('Always invalid')).not.toBeInTheDocument();
+    expect(container).not.toHaveAttribute('aria-invalid');
+
+    yearInput.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(container).toHaveAttribute('aria-invalid', 'true');
   },
 };
