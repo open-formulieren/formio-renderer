@@ -1,11 +1,11 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
-import {useMemo} from 'react';
+import {Form, Formik, FormikErrors, setIn, setNestedObjectValues, useFormikContext} from 'formik';
+import {forwardRef, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import {getRegistryEntry} from '@/registry';
-import type {JSONObject} from '@/types';
+import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {filterVisibleComponents} from '@/visibility';
@@ -65,71 +65,139 @@ export interface FormioFormProps {
   requiredFieldsWithAsterisk?: boolean;
 }
 
-const FormioForm: React.FC<FormioFormProps> = ({
-  components,
-  values = {},
-  errors,
-  onSubmit,
-  id,
-  children,
-  requiredFieldsWithAsterisk,
-}) => {
-  const intl = useIntl();
+export interface FormStateRef {
+  updateValues: (values: JSONObject) => void;
+}
 
-  // use the extracted component default values and merge with 'outside' values to use
-  // as initial form state
-  const initialValues = extractInitialValues(components, getRegistryEntry);
-  values = deepMergeValues(initialValues, values);
+const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
+  ({components, values = {}, errors, onSubmit, id, children, requiredFieldsWithAsterisk}, ref) => {
+    const intl = useIntl();
 
-  // build the validation schema from the component definitions
-  // TODO: take into account hidden components!
-  const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+    // use the extracted component default values and merge with 'outside' values to use
+    // as initial form state
+    const initialValues = extractInitialValues(components, getRegistryEntry);
+    values = deepMergeValues(initialValues, values);
 
-  return (
-    <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
-      <Formik<JSONObject>
-        initialValues={values}
-        initialErrors={errors as FormikErrors<JSONObject>}
-        // figure out initial touched from the provided errors
-        initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
-        validateOnChange={false}
-        validateOnBlur={false}
-        validationSchema={toFormikValidationSchema(zodSchema)}
-        onSubmit={async values => {
-          await onSubmit(values);
-        }}
-      >
-        {/* TODO: pre-process components to ensure they have an ID? */}
-        <InnerFormioForm id={id} components={components}>
-          {children}
-        </InnerFormioForm>
-      </Formik>
-    </RendererSettingsProvider>
-  );
-};
+    // build the validation schema from the component definitions
+    // TODO: take into account hidden components!
+    const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+
+    return (
+      <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
+        <Formik<JSONObject>
+          initialValues={values}
+          initialErrors={errors as FormikErrors<JSONObject>}
+          // figure out initial touched from the provided errors
+          initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
+          validateOnChange={false}
+          validateOnBlur={false}
+          validationSchema={toFormikValidationSchema(zodSchema)}
+          onSubmit={async values => {
+            await onSubmit(values);
+          }}
+        >
+          {/* TODO: pre-process components to ensure they have an ID? */}
+          <InnerFormioForm id={id} components={components} ref={ref}>
+            {children}
+          </InnerFormioForm>
+        </Formik>
+      </RendererSettingsProvider>
+    );
+  }
+);
 
 export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'>;
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
-const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, id, children}) => {
-  const {values} = useFormikContext<JSONObject>();
+const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
+  ({components, id, children}, ref) => {
+    const {values, setValues} = useFormikContext<JSONObject>();
 
-  const componentsToRender: AnyComponentSchema[] = useMemo(() => {
-    return filterVisibleComponents(components, values, getRegistryEntry);
-  }, [components, values]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        updateValues: (values: JSONObject): void => {
+          setValues(prev => getFormikValues(prev, values));
+        },
+      }),
+      [setValues]
+    );
 
-  return (
-    <Form noValidate id={id}>
-      <FormFieldContainer>
-        {componentsToRender.map((definition, index) => (
-          <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
-        ))}
-      </FormFieldContainer>
-      {children}
-    </Form>
-  );
+    const componentsToRender: AnyComponentSchema[] = useMemo(() => {
+      return filterVisibleComponents(components, values, getRegistryEntry);
+    }, [components, values]);
+
+    return (
+      <Form noValidate id={id}>
+        <FormFieldContainer>
+          {componentsToRender.map((definition, index) => (
+            <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+          ))}
+        </FormFieldContainer>
+        {children}
+      </Form>
+    );
+  }
+);
+
+/**
+ * Deep merge the updates into the prev values.
+ *
+ * Under the hood, this is passed to Formik's setValues, so we use Formik's `setIn` to avoid
+ * (shallow) copies if state has not been changed/affected while recursively applying updates,
+ * as the values are passed to dependency arrays and their JS identity is relevant.
+ *
+ * `prev` and `updates` can both be arbitrary deeply nested.
+ */
+const getFormikValues = (
+  prev: JSONObject,
+  updates: Record<string, JSONValue | undefined>
+): JSONObject => {
+  return merge(prev, updates);
+};
+
+const merge = (target: JSONObject, source: Record<string, JSONValue | undefined>): JSONObject => {
+  // loop over the keys that are defined, this way we detect explicit `undefined` keys
+  // rather than the ones that are absent or explicitly set.
+  for (const key in source) {
+    console.group('Processing key ', key);
+
+    const value = source[key];
+
+    // if the values is explicitly set to undefined, it means the key must be removed.
+    if (value === undefined) {
+      console.log('Unsetting key.');
+      target = setIn(target, key, undefined);
+      console.log('Updated target:', target);
+      continue;
+    }
+
+    // recurse
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      if (!target[key]) {
+        target = setIn(target, key, {});
+      }
+      const nested = merge(target[key] as JSONObject, value);
+      target = setIn(target, key, nested);
+      console.log('Updated target:', target);
+      continue;
+    }
+
+    if (value && Array.isArray(value)) {
+      // TODO: handle array
+      continue;
+    }
+
+    // otherwise we have a primitive, so just assign it
+    target = setIn(target, key, value);
+    console.log('Updated target:', target);
+
+    console.groupEnd();
+  }
+
+  return target;
 };
 
 export default FormioForm;
