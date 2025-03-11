@@ -16,6 +16,7 @@
     "strictBindCallApply": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "noErrorTruncation": true,
     "paths": {
       "@/*": ["./*"],
@@ -23,6 +24,6 @@
     },
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src/**/*", ".storybook/**/*"],
   "exclude": ["node_modules", "dist"]
 }

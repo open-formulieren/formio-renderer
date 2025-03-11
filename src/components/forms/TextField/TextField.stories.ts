@@ -1,7 +1,8 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
+import {z} from 'zod';
 
-import {withFormik} from '@/sb-decorators';
+import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
 
 import TextField from './TextField';
 
@@ -68,17 +69,47 @@ export const ValidationError: Story = {
   },
 };
 
-// export const NoAsterisks = {
-//   name: 'No asterisk for required',
-//   decorators: [ConfigDecorator],
-//   parameters: {
-//     config: {
-//       requiredFieldsWithAsterisk: false,
-//     },
-//   },
-//   args: {
-//     name: 'test',
-//     label: 'Default required',
-//     isRequired: true,
-//   },
-// };
+export const NoAsterisks: Story = {
+  name: 'No asterisk for required',
+  decorators: [withRenderSettingsProvider],
+  parameters: {
+    renderSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
+  },
+  args: {
+    name: 'test',
+    label: 'Default required',
+    isRequired: true,
+  },
+};
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Validate on blur');
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    await userEvent.type(input, 'foo');
+    expect(input).toHaveFocus();
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    input.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+};

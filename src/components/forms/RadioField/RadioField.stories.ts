@@ -1,7 +1,8 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
+import {z} from 'zod';
 
-import {withFormik} from '@/sb-decorators';
+import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
 
 import RadioField from './RadioField';
 
@@ -74,17 +75,49 @@ export const ValidationError: Story = {
   },
 };
 
-// export const NoAsterisks: Story = {
-//   name: 'No asterisk for required',
-//   decorators: [ConfigDecorator],
-//   parameters: {
-//     config: {
-//       requiredFieldsWithAsterisk: false,
-//     },
-//   },
-//   args: {
-//     name: 'test',
-//     label: 'Default required',
-//     isRequired: true,
-//   },
-// };
+export const NoAsterisks: Story = {
+  name: 'No asterisk for required',
+  decorators: [withRenderSettingsProvider],
+  parameters: {
+    renderSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
+  },
+  args: {
+    name: 'test',
+    label: 'Default required',
+    isRequired: true,
+  },
+};
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole('radiogroup');
+
+    const input = await canvas.findByLabelText('Ziggy');
+    expect(radioGroup).not.toHaveAttribute('aria-invalid');
+
+    await userEvent.click(input);
+    expect(input).toHaveFocus();
+    expect(radioGroup).not.toHaveAttribute('aria-invalid');
+
+    input.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+  },
+};
