@@ -13,7 +13,7 @@ on:
       - opened
       - reopened
       - synchronize
-      # - ready_for_review  relevant for chromatic, at some point
+      - ready_for_review
   workflow_dispatch:
 
 concurrency:
@@ -35,6 +35,7 @@ jobs:
       - name: Build Storybook docs
         run: |
           npm ci
+          npm run compilemessages
           npm run build-storybook --quiet
 
       - name: Upload artifact
@@ -58,6 +59,7 @@ jobs:
 
       - name: Build library
         run: |
+          npm run compilemessages
           npm run build:typecheck
           npm run build
 
@@ -97,7 +99,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         run: |
@@ -117,12 +119,13 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # Reference: https://storybook.js.org/docs/6.5/react/writing-tests/test-runner#run-against-non-deployed-storybooks
       - name: Set up test environment
         run: |
           npx playwright install --with-deps
+          npm run compilemessages
 
       - name: Download storybook artifact
         uses: actions/download-artifact@v4
@@ -164,6 +167,43 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  chromatic:
+    name: Visual regression test with Chromatic
+    runs-on: ubuntu-latest
+    needs:
+      - storybook
+
+    # do not run in forks
+    if: github.event_name == 'push' || ! github.event.pull_request.head.repo.fork
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 👈 Required to retrieve git history
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: ./storybook-static
+
+      - name: Extract artifact
+        run: |
+          tar -xvf artifact.tar
+          rm artifact.tar
+        working-directory: ./storybook-static
+
+      - name: Publish to Chromatic for visual regression tests
+        uses: chromaui/action@latest
+        if: github.event.pull_request.draft == false || github.event.push
+        with:
+          autoAcceptChanges: main
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: ./storybook-static
+          onlyChanged: true
+          externals: 'src/img/**'
 
   publish:
     name: Publish the NPM package
