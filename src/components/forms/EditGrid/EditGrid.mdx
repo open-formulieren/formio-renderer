@@ -1,0 +1,26 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/blocks';
+
+import * as EditGridStories from './EditGrid.stories';
+import * as EditGridItemStories from './EditGridItem.stories';
+
+<Meta of={EditGridStories} />
+
+# Edit grid
+
+An edit grid allows editing arrays of items where each item has the same shape. The `EditGrid`
+component manages adding and removing individual items.
+
+The state is intended to be managed via Formik's
+[FieldArray](https://formik.org/docs/api/fieldarray).
+
+<Canvas of={EditGridStories.Default} />
+
+## Props
+
+**EditGrid**
+
+<ArgTypes of={EditGridStories} />
+
+**EditGridItem**
+
+<ArgTypes of={EditGridItemStories} />
