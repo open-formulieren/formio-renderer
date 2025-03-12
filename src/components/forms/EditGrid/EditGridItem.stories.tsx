@@ -1,11 +1,8 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import {
-  Paragraph,
-  PrimaryActionButton,
-  SecondaryActionButton,
-} from '@utrecht/component-library-react';
+import {fn} from '@storybook/test';
+import {Paragraph} from '@utrecht/component-library-react';
 
-import {EditGridButtonGroup, EditGridItem} from '.';
+import {EditGridItem} from '.';
 
 export default {
   title: 'Internal API / Forms / EditGrid / EditGridItem',
@@ -13,16 +10,15 @@ export default {
   args: {
     children: <Paragraph>Any body content, typically a summary or form fields.</Paragraph>,
     heading: 'A heading for the item',
-    buttons: (
-      <EditGridButtonGroup>
-        <PrimaryActionButton type="button">Primary</PrimaryActionButton>
-        <SecondaryActionButton hint="danger">Danger</SecondaryActionButton>
-      </EditGridButtonGroup>
-    ),
+    canEdit: undefined,
+    saveLabel: undefined,
+    onReplace: fn(),
+    canRemove: undefined,
+    removeLabel: undefined,
+    onRemove: fn(),
   },
   argTypes: {
     children: {control: false},
-    buttons: {control: false},
   },
 } satisfies Meta<typeof EditGridItem>;
 
@@ -33,5 +29,24 @@ export const WithHeading: Story = {};
 export const WithoutHeading: Story = {
   args: {
     heading: undefined,
+  },
+};
+
+export const CanEdit: Story = {
+  args: {
+    canEdit: true,
+  },
+};
+
+export const CanRemove: Story = {
+  args: {
+    canRemove: true,
+  },
+};
+
+export const CanEditAndRemove: Story = {
+  args: {
+    canEdit: true,
+    canRemove: true,
   },
 };

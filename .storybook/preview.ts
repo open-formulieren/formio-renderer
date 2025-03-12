@@ -3,7 +3,6 @@ import '@fortawesome/fontawesome-free/css/regular.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@open-formulieren/design-tokens/dist/index.css';
 import {Preview} from '@storybook/react';
-import '@utrecht/components/dist/button/css/index.css';
 import '@utrecht/components/dist/document/css/index.css';
 
 import {utrechtDocumentDecorator} from './decorators';

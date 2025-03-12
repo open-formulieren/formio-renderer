@@ -15,6 +15,42 @@ The state is intended to be managed via Formik's
 
 <Canvas of={EditGridStories.Default} />
 
+## Usage
+
+The edit grid component roughly follow Formio's `editgrid` type, but we have some additional
+flexibility.
+
+**Controlling extra items**
+
+The prop `emptyItem` controls what will be added to the form state when the "Add another" button is
+clicked. This means that you can actually (depending on form state) add different items each time,
+as long as the shape stays consistent.
+
+Pass `null` to disable adding extra rows/items.
+
+<Canvas of={EditGridStories.WithoutAddButton} />
+
+**Nested item type**
+
+The component is generic, so if you know upfront what the shape of the data is, you can pass that as
+a generic type argument for improved type checking. This can be particularly useful when rendering
+the `EditGrid` low-level component in your own Formik state.
+
+```tsx
+<EditGrid<MyItemData>
+  name="myItems"
+  emptyItem={{thisShape: 'is', typeChecked: true}}
+  items={[
+    {
+      children: <MyItemFormFields prefix="myItems.0" />,
+      heading: 'Item uno',
+      canEdit: true,
+      canRemove: true,
+    },
+  ]}
+/>
+```
+
 ## Props
 
 **EditGrid**
@@ -22,5 +58,7 @@ The state is intended to be managed via Formik's
 <ArgTypes of={EditGridStories} />
 
 **EditGridItem**
+
+This component is rendered automatically by `EditGrid` based on the `items` prop it receives.
 
 <ArgTypes of={EditGridItemStories} />

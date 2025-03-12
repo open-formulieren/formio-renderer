@@ -1,42 +1,44 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import {fn} from '@storybook/test';
-import {Paragraph, PrimaryActionButton} from '@utrecht/component-library-react';
+import {Paragraph} from '@utrecht/component-library-react';
 
-import EditGrid, {EditGridButtonGroup, EditGridItem} from '.';
+import {withFormik} from '@/sb-decorators';
+
+import EditGrid from '.';
 
 export default {
   title: 'Internal API / Forms / EditGrid',
   component: EditGrid,
+  decorators: [withFormik],
   args: {
-    onAddItem: fn(),
-
-    children: (
-      <>
-        <EditGridItem
-          heading="Item 1"
-          buttons={
-            <EditGridButtonGroup>
-              <PrimaryActionButton>A button</PrimaryActionButton>
-            </EditGridButtonGroup>
-          }
-        >
-          <Paragraph>First item</Paragraph>
-        </EditGridItem>
-        <EditGridItem
-          heading="Item 2"
-          buttons={
-            <EditGridButtonGroup>
-              <PrimaryActionButton>A button</PrimaryActionButton>
-            </EditGridButtonGroup>
-          }
-        >
-          <Paragraph>Second item</Paragraph>
-        </EditGridItem>
-      </>
-    ),
+    name: 'items',
+    items: [
+      {
+        heading: 'Item 1',
+        children: <Paragraph>First item</Paragraph>,
+        // TODO: should we just do inline edits, or keep the explicit edit/confirm?
+        canEdit: true,
+        canRemove: false,
+      },
+      {
+        heading: 'Item 2',
+        children: <Paragraph>Second item</Paragraph>,
+        // TODO: should we just do inline edits, or keep the explicit edit/confirm?
+        canEdit: true,
+        canRemove: true,
+      },
+    ],
+    emptyItem: {} as const,
+    addButtonLabel: undefined,
   },
   argTypes: {
-    children: {control: false},
+    items: {control: false},
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        items: [{}, {}],
+      },
+    },
   },
 } satisfies Meta<typeof EditGrid>;
 
@@ -50,8 +52,8 @@ export const WithCustomAddButtonLabel: Story = {
   },
 };
 
-export const WithoutAddbutton: Story = {
+export const WithoutAddButton: Story = {
   args: {
-    onAddItem: undefined,
+    emptyItem: null,
   },
 };
