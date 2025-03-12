@@ -1,6 +1,8 @@
 import {ButtonGroup, PrimaryActionButton} from '@utrecht/component-library-react';
 import {FormattedMessage} from 'react-intl';
 
+import Icon from '@/components/icons';
+
 export interface EditGridProps {
   children: React.ReactNode;
   onAddItem: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -14,8 +16,8 @@ const EditGrid: React.FC<EditGridProps> = ({children, onAddItem, addButtonLabel 
     {onAddItem && (
       <ButtonGroup>
         <PrimaryActionButton type="button" onClick={onAddItem}>
-          {/* FIXME: support FAIcon */}
-          {/* <FAIcon icon="plus" />{' '} */}
+          <Icon icon="add" />
+          &nbsp;
           {addButtonLabel || (
             <FormattedMessage
               description="Edit grid add button, default label text"
