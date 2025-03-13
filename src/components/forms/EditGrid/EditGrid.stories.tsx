@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react';
+import {expect, userEvent, within} from '@storybook/test';
 
 import {TextField} from '@/components/forms';
 import {withFormik} from '@/sb-decorators';
@@ -54,9 +55,44 @@ export const WithIsolation: Story = {
   args: {
     enableIsolation: true,
     getItemHeading: () => 'Isolation mode editing',
-    getItemBody: () => <TextField name="myField" label="My field" />,
+    getItemBody: (values, index) => (
+      <>
+        <TextField name="myField" label={`My field (${index + 1})`} />
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
     canRemoveItem: () => true,
     canEditItem: () => true,
     emptyItem: {myField: ''},
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    const field1 = await canvas.findByLabelText('My field (1)');
+    const field2 = await canvas.findByLabelText('My field (2)');
+
+    await step('Initial data display', () => {
+      expect(field1).toHaveDisplayValue('Item 1');
+      expect(field2).toHaveDisplayValue('Item 2');
+    });
+
+    await step('Edit item 2 without saving', async () => {
+      await userEvent.clear(field2);
+      await userEvent.type(field2, 'Updated second item');
+      expect(field2).toHaveDisplayValue('Updated second item');
+      expect(field1).toHaveDisplayValue('Item 1');
+      expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
+    });
+
+    await step('Save changes to field 2', async () => {
+      const saveButtons = canvas.queryAllByRole('button', {name: 'Save'});
+      await userEvent.click(saveButtons[1]);
+      expect(field2).toHaveDisplayValue('Updated second item');
+      expect(field1).toHaveDisplayValue('Item 1');
+      expect(await canvas.findByText('{"myField":"Updated second item"}')).toBeVisible();
+    });
   },
 };
