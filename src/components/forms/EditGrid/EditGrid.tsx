@@ -66,9 +66,6 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
 }: EditGridProps<T>) {
   const {getFieldProps} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[]>(name);
-
-  console.log(formikItems);
-
   return (
     <FieldArray name={name} validateOnChange={false}>
       {arrayHelpers => (

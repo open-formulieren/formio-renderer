@@ -40,13 +40,7 @@ the `EditGrid` low-level component in your own Formik state.
 <EditGrid<MyItemData>
   name="myItems"
   emptyItem={{thisShape: 'is', typeChecked: true}}
-  items={[
-    {
-      children: <MyItemFormFields prefix="myItems.0" />,
-      heading: 'Item uno',
-      canRemove: true,
-    },
-  ]}
+  {...otherProps}
 />
 ```
 
