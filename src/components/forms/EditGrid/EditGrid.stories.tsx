@@ -66,7 +66,6 @@ export const WithIsolation: Story = {
     ),
     canRemoveItem: () => true,
     canEditItem: () => true,
-    emptyItem: {myField: ''},
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
@@ -94,5 +93,30 @@ export const WithIsolation: Story = {
       expect(field1).toHaveDisplayValue('Item 1');
       expect(await canvas.findByText('{"myField":"Updated second item"}')).toBeVisible();
     });
+  },
+};
+
+export const InlineEditing: Story = {
+  args: {
+    enableIsolation: false,
+    getItemHeading: undefined,
+    getItemBody: (values, index) => (
+      <>
+        <TextField name={`items.${index}.myField`} label={`My field (${index + 1})`} />
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canEditItem: undefined,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const field1 = await canvas.findByLabelText('My field (1)');
+    await userEvent.type(field1, ' updated');
+    expect(await canvas.findByText('{"myField":"Item 1 updated"}')).toBeVisible();
   },
 };
