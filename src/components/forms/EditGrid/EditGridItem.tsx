@@ -10,6 +10,7 @@ import EditGridButtonGroup from './EditGridButtonGroup';
 import {IsolationModeButtons} from './EditGridItemButtons';
 
 interface EditGridItemBaseProps {
+  index: number;
   /**
    * Body of the item, such as the form fields to edit or the read-only preview of the
    * item.
@@ -75,6 +76,7 @@ export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | W
 // TODO: track open/collapsed state and adapt the buttons accordingly
 
 function EditGridItem<T extends JSONObject = JSONObject>({
+  index,
   children,
   heading,
   canRemove,
@@ -105,6 +107,9 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           initialValues={props.data}
           initialErrors={{}}
           initialTouched={false ? setNestedObjectValues(errors, true) : undefined}
+          // when removing items, the order changes, so we must re-render to display the
+          // correct data
+          enableReinitialize
           validateOnChange={false}
           validateOnBlur={false}
           validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}

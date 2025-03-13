@@ -1,6 +1,4 @@
-import type {Decorator, Meta, StoryObj} from '@storybook/react';
-import {Paragraph} from '@utrecht/component-library-react';
-import {useFormikContext} from 'formik';
+import type {Meta, StoryObj} from '@storybook/react';
 
 import {TextField} from '@/components/forms';
 import {withFormik} from '@/sb-decorators';
@@ -11,48 +9,21 @@ interface ItemData {
   myField: string;
 }
 
-interface StoryValues {
-  items: ItemData[];
-}
-
-const withFormikValuesDisplay: Decorator = Story => {
-  const {values} = useFormikContext<StoryValues>();
-  return (
-    <>
-      <Story />
-      <div style={{marginBlockStart: '10px', background: '#ececec', padding: '10px'}}>
-        Formik state (values):
-        <code>
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-        </code>
-      </div>
-    </>
-  );
-};
-
 export default {
   title: 'Internal API / Forms / EditGrid',
   component: EditGrid,
-  decorators: [withFormikValuesDisplay, withFormik],
+  decorators: [withFormik],
   args: {
     name: 'items',
-    items: [
-      {
-        heading: 'Item 1',
-        children: <Paragraph>First item</Paragraph>,
-        canRemove: false,
-      },
-      {
-        heading: 'Item 2',
-        children: <Paragraph>Second item</Paragraph>,
-        canRemove: true,
-      },
-    ],
     emptyItem: {myField: ''},
     addButtonLabel: undefined,
-  },
-  argTypes: {
-    items: {control: false},
+    getItemHeading: (_, index) => `Item ${index + 1}`,
+    getItemBody: values => (
+      <code>
+        <pre>{JSON.stringify(values, null, 2)}</pre>
+      </code>
+    ),
+    canRemoveItem: (_, index) => index % 2 === 1,
   },
   parameters: {
     formik: {
@@ -82,14 +53,10 @@ export const WithoutAddButton: Story = {
 export const WithIsolation: Story = {
   args: {
     enableIsolation: true,
-    items: [
-      {
-        heading: 'Isolation mode editing',
-        children: <TextField name="myField" label="My field" />,
-        canEdit: true,
-        canRemove: true,
-      },
-    ],
+    getItemHeading: () => 'Isolation mode editing',
+    getItemBody: () => <TextField name="myField" label="My field" />,
+    canRemoveItem: () => true,
+    canEditItem: () => true,
     emptyItem: {myField: ''},
   },
 };
