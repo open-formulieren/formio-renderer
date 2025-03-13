@@ -14,11 +14,6 @@ import {IsolationModeButtons} from './EditGridItemButtons';
 interface EditGridItemBaseProps {
   index: number;
   /**
-   * Body of the item, such as the form fields to edit or the read-only preview of the
-   * item.
-   */
-  children: React.ReactNode;
-  /**
    * Heading for the item, will be rendered as a fieldset legend unless no value is
    * provided.
    */
@@ -40,6 +35,11 @@ interface EditGridItemBaseProps {
 
 interface WithoutIsolation {
   enableIsolation?: false;
+  /**
+   * Callback to render the main content of a single item. Gets passed options representing
+   * the current UI state.
+   */
+  getBody: (opts: {expanded: false}) => React.ReactNode;
   data?: never;
   canEdit?: never;
   saveLabel?: never;
@@ -60,6 +60,11 @@ interface WithIsolation<T> {
    */
   data: T;
   /**
+   * Callback to render the main content of a single item. Gets passed options representing
+   * the current UI state.
+   */
+  getBody: (opts: {expanded: boolean}) => React.ReactNode;
+  /**
    * If true, edit control button(s) are rendered.
    */
   canEdit?: boolean;
@@ -79,7 +84,6 @@ export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | W
 
 function EditGridItem<T extends JSONObject = JSONObject>({
   index,
-  children,
   heading,
   canRemove,
   removeLabel,
@@ -128,7 +132,7 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           }}
         >
           <>
-            {children}
+            {props.getBody({expanded})}
 
             {expanded ? (
               <IsolationModeButtons
@@ -165,7 +169,7 @@ function EditGridItem<T extends JSONObject = JSONObject>({
         </Formik>
       ) : (
         <>
-          {children}
+          {props.getBody({expanded: false})}
           {canRemove && (
             <EditGridButtonGroup>
               <PrimaryActionButton hint="danger" onClick={onRemove}>

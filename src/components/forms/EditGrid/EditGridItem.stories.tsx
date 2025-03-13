@@ -18,7 +18,7 @@ export default {
   ],
   args: {
     index: 0,
-    children: <Paragraph>Any body content, typically a summary or form fields.</Paragraph>,
+    getBody: () => <Paragraph>Any body content, typically a summary or form fields.</Paragraph>,
     heading: 'A heading for the item',
     canEdit: undefined,
     saveLabel: undefined,
@@ -26,9 +26,6 @@ export default {
     canRemove: undefined,
     removeLabel: undefined,
     onRemove: fn(),
-  },
-  argTypes: {
-    children: {control: false},
   },
 } satisfies Meta<typeof EditGridItem>;
 
@@ -56,11 +53,14 @@ export const IsolatedMode: Story = {
     },
     canEdit: true,
     canRemove: false,
-    children: <TextField name="topLevelKey" label="Top level key" />,
+    getBody: ({expanded}) =>
+      expanded ? <TextField name="topLevelKey" label="Top level key" /> : 'A preview body',
   },
 
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
 
     const textfield = canvas.getByLabelText('Top level key');
     await userEvent.clear(textfield);
@@ -74,12 +74,7 @@ export const IsolatedMode: Story = {
 
 export const IsolatedModeCanRemove: Story = {
   args: {
-    enableIsolation: true,
-    data: {
-      topLevelKey: 'initial',
-    },
-    canEdit: true,
+    ...IsolatedMode.args,
     canRemove: true,
-    children: <TextField name="topLevelKey" label="Top level key" />,
   },
 };

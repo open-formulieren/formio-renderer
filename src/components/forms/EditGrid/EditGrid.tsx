@@ -19,11 +19,6 @@ interface EditGridBaseProps<T> {
    */
   getItemHeading?: (values: T, index: number) => React.ReactNode;
   /**
-   * Callback to render the main content of a single item. Gets passed the item values and
-   * index in the array of values.
-   */
-  getItemBody: (values: T, index: number) => React.ReactNode;
-  /**
    * Callback to check if a particular item can be removed. This allows decisions on a
    * per-item basis. If not provided, item removal is enabled by default.
    */
@@ -39,9 +34,16 @@ interface EditGridBaseProps<T> {
   addButtonLabel?: string;
 }
 
-interface WithoutIsolation {
+interface WithoutIsolation<T> {
   enableIsolation?: false;
   canEditItem?: never;
+  /**
+   * Callback to render the main content of a single item. Gets passed the item values and
+   * index in the array of values.
+   *
+   * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
+   */
+  getItemBody: (values: T, index: number, opts: {expanded: false}) => React.ReactNode;
 }
 
 interface WithIsolation<T> {
@@ -51,14 +53,20 @@ interface WithIsolation<T> {
    * per-item basis. If not provided, item editing is enabled by default.
    */
   canEditItem?: (values: T, index: number) => boolean;
+  /**
+   * Callback to render the main content of a single item. Gets passed the item values and
+   * index in the array of values.
+   *
+   * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
+   */
+  getItemBody: (values: T, index: number, opts: {expanded: boolean}) => React.ReactNode;
 }
 
-export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation | WithIsolation<T>);
+export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation<T> | WithIsolation<T>);
 
 function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   name,
   getItemHeading,
-  getItemBody,
   canRemoveItem,
   emptyItem = null,
   addButtonLabel = '',
@@ -78,25 +86,23 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   key={index}
                   index={index}
                   heading={getItemHeading?.(values, index)}
+                  getBody={opts => props.getItemBody(values, index, opts)}
                   enableIsolation
                   data={values}
                   canEdit={props.canEditItem?.(values, index) ?? true}
                   onReplace={(newValue: T) => arrayHelpers.replace(index, newValue)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
                   onRemove={() => arrayHelpers.remove(index)}
-                >
-                  {getItemBody(values, index)}
-                </EditGridItem>
+                />
               ) : (
                 <EditGridItem<T>
                   key={index}
                   index={index}
+                  getBody={opts => props.getItemBody(values, index, opts)}
                   heading={getItemHeading?.(values, index)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
                   onRemove={() => arrayHelpers.remove(index)}
-                >
-                  {getItemBody(values, index)}
-                </EditGridItem>
+                />
               )
             )}
           </div>

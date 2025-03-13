@@ -19,9 +19,9 @@ export default {
     emptyItem: {myField: ''},
     addButtonLabel: undefined,
     getItemHeading: (_, index) => `Item ${index + 1}`,
-    getItemBody: values => (
+    getItemBody: (values: ItemData) => (
       <code>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
+        <pre style={{marginBlock: '0'}}>{JSON.stringify(values, null, 2)}</pre>
       </code>
     ),
     canRemoveItem: (_, index) => index % 2 === 1,
@@ -55,9 +55,9 @@ export const WithIsolation: Story = {
   args: {
     enableIsolation: true,
     getItemHeading: () => 'Isolation mode editing',
-    getItemBody: (values, index) => (
+    getItemBody: (values, index, {expanded}) => (
       <>
-        <TextField name="myField" label={`My field (${index + 1})`} />
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
         <span>
           Raw data:
           <code>{JSON.stringify(values)}</code>
@@ -70,10 +70,12 @@ export const WithIsolation: Story = {
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
 
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
     const field1 = await canvas.findByLabelText('My field (1)');
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 2'}));
     const field2 = await canvas.findByLabelText('My field (2)');
 
-    await step('Initial data display', () => {
+    await step('Initial data display', async () => {
       expect(field1).toHaveDisplayValue('Item 1');
       expect(field2).toHaveDisplayValue('Item 2');
     });
