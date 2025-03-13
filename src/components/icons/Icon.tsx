@@ -5,6 +5,8 @@ import clsx from 'clsx';
 // libraries.
 export const FA_MAP = {
   add: 'plus',
+  edit: 'edit',
+  remove: 'trash-can',
 };
 
 // TODO: if/when we support pluggable icon libraries, this probably needs to become
@@ -30,6 +32,7 @@ export interface IconProps {
    * Accessible icon label in case the icon is not hidden to screen readers.
    */
   'aria-label'?: string;
+  'aria-describedby'?: string;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -37,6 +40,7 @@ const Icon: React.FC<IconProps> = ({
   className: extraClassName,
   ['aria-hidden']: ariaHidden = true,
   ['aria-label']: ariaLabel,
+  ['aria-describedby']: ariaDescribedBy,
   icon,
 }) => {
   if (library !== 'font-awesome') {
@@ -45,7 +49,14 @@ const Icon: React.FC<IconProps> = ({
 
   const iconName = FA_MAP[icon] ?? icon;
   const className = clsx('fa', 'fas', 'fa-icon', `fa-${iconName}`, extraClassName);
-  return <i className={className} aria-hidden={ariaHidden} aria-label={ariaLabel || undefined} />;
+  return (
+    <i
+      className={className}
+      aria-hidden={ariaHidden}
+      aria-label={ariaLabel || undefined}
+      aria-describedby={ariaDescribedBy || undefined}
+    />
+  );
 };
 
 export default Icon;

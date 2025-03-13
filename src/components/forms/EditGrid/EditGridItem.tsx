@@ -1,9 +1,11 @@
-import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend, SecondaryActionButton} from '@utrecht/component-library-react';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {Formik, setNestedObjectValues} from 'formik';
-import {FormattedMessage} from 'react-intl';
+import {useId, useState} from 'react';
+import {FormattedMessage, useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import Icon from '@/components/icons';
 import type {JSONObject} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
@@ -84,13 +86,19 @@ function EditGridItem<T extends JSONObject = JSONObject>({
   onRemove,
   ...props
 }: EditGridItemProps<T>) {
+  const intl = useIntl();
+  const [expanded, setExpanded] = useState<boolean>(false);
+  const headingId = useId();
+
   // TODO
   const errors: any = {};
   const zodSchema: any = null;
   return (
     <Fieldset className="openforms-editgrid__item">
       {heading && (
-        <FieldsetLegend className="openforms-editgrid__item-heading">{heading}</FieldsetLegend>
+        <FieldsetLegend className="openforms-editgrid__item-heading" id={headingId}>
+          {heading}
+        </FieldsetLegend>
       )}
 
       {/*
@@ -116,16 +124,43 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           // TODO: trigger submit from primary button - perhaps Formik should wrap the entire thing?
           onSubmit={async values => {
             if (props.canEdit) props.onReplace(values);
+            setExpanded(false);
           }}
         >
           <>
             {children}
-            <IsolationModeButtons
-              saveLabel={props.saveLabel}
-              canRemove={Boolean(canRemove)}
-              onRemove={onRemove}
-              removeLabel={removeLabel}
-            />
+
+            {expanded ? (
+              <IsolationModeButtons
+                saveLabel={props.saveLabel}
+                canRemove={Boolean(canRemove)}
+                onRemove={onRemove}
+                removeLabel={removeLabel}
+              />
+            ) : (
+              <EditGridButtonGroup>
+                <SecondaryActionButton
+                  type="button"
+                  onClick={() => setExpanded(true)}
+                  aria-label={intl.formatMessage(
+                    {
+                      description: 'Accessible edit icon/button label for item inside edit grid',
+                      defaultMessage: 'Edit item {index}',
+                    },
+                    {index: index + 1}
+                  )}
+                  aria-describedby={heading ? headingId : undefined}
+                >
+                  <Icon icon="edit" />
+                </SecondaryActionButton>
+
+                {canRemove && (
+                  <PrimaryActionButton hint="danger" onClick={onRemove}>
+                    <Icon icon="remove" />
+                  </PrimaryActionButton>
+                )}
+              </EditGridButtonGroup>
+            )}
           </>
         </Formik>
       ) : (

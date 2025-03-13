@@ -17,6 +17,7 @@ export default {
     ),
   ],
   args: {
+    index: 0,
     children: <Paragraph>Any body content, typically a summary or form fields.</Paragraph>,
     heading: 'A heading for the item',
     canEdit: undefined,
