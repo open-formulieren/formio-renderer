@@ -82,6 +82,9 @@ function EditGridItem<T extends JSONObject = JSONObject>({
   onRemove,
   ...props
 }: EditGridItemProps<T>) {
+  // TODO
+  const errors: any = {};
+  const zodSchema: any = null;
   return (
     <Fieldset className="openforms-editgrid__item">
       {heading && (

@@ -44,12 +44,20 @@ the `EditGrid` low-level component in your own Formik state.
     {
       children: <MyItemFormFields prefix="myItems.0" />,
       heading: 'Item uno',
-      canEdit: true,
       canRemove: true,
     },
   ]}
 />
 ```
+
+**Isolation mode**
+
+To replicate Formio's editing behaviour, the isolation mode via `enableIsolation` is available. In
+this mode, edits to an item are only updated into the main form state after an explicit save action.
+This save button is _only_ available when `enableIsolation: true`, as it would otherwise be
+confusing.
+
+<Canvas of={EditGridStories.WithIsolation} />
 
 ## Props
 

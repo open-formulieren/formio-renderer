@@ -41,21 +41,8 @@ export const WithoutHeading: Story = {
   },
 };
 
-export const CanEdit: Story = {
-  args: {
-    canEdit: true,
-  },
-};
-
 export const CanRemove: Story = {
   args: {
-    canRemove: true,
-  },
-};
-
-export const CanEditAndRemove: Story = {
-  args: {
-    canEdit: true,
     canRemove: true,
   },
 };
@@ -75,11 +62,23 @@ export const IsolatedMode: Story = {
     const canvas = within(canvasElement);
 
     const textfield = canvas.getByLabelText('Top level key');
-    expect(textfield).toHaveDisplayValue('initial');
     await userEvent.clear(textfield);
     await userEvent.type(textfield, 'updated value');
+    expect(textfield).toHaveDisplayValue('updated value');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
     expect(args.onReplace).toHaveBeenCalledWith({topLevelKey: 'updated value'});
+  },
+};
+
+export const IsolatedModeCanRemove: Story = {
+  args: {
+    enableIsolation: true,
+    data: {
+      topLevelKey: 'initial',
+    },
+    canEdit: true,
+    canRemove: true,
+    children: <TextField name="topLevelKey" label="Top level key" />,
   },
 };
