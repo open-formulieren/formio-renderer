@@ -1,0 +1,66 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/blocks';
+
+import * as EditGridStories from './EditGrid.stories';
+import * as EditGridItemStories from './EditGridItem.stories';
+
+<Meta of={EditGridStories} />
+
+# Edit grid
+
+An edit grid allows editing arrays of items where each item has the same shape. The `EditGrid`
+component manages adding and removing individual items.
+
+The state is intended to be managed via Formik's
+[FieldArray](https://formik.org/docs/api/fieldarray).
+
+<Canvas of={EditGridStories.Default} />
+
+## Usage
+
+The edit grid component roughly follow Formio's `editgrid` type, but we have some additional
+flexibility.
+
+**Controlling extra items**
+
+The prop `emptyItem` controls what will be added to the form state when the "Add another" button is
+clicked. This means that you can actually (depending on form state) add different items each time,
+as long as the shape stays consistent.
+
+Pass `null` to disable adding extra rows/items.
+
+<Canvas of={EditGridStories.WithoutAddButton} />
+
+**Nested item type**
+
+The component is generic, so if you know upfront what the shape of the data is, you can pass that as
+a generic type argument for improved type checking. This can be particularly useful when rendering
+the `EditGrid` low-level component in your own Formik state.
+
+```tsx
+<EditGrid<MyItemData>
+  name="myItems"
+  emptyItem={{thisShape: 'is', typeChecked: true}}
+  {...otherProps}
+/>
+```
+
+**Isolation mode**
+
+To replicate Formio's editing behaviour, the isolation mode via `enableIsolation` is available. In
+this mode, edits to an item are only updated into the main form state after an explicit save action.
+This save button is _only_ available when `enableIsolation: true`, as it would otherwise be
+confusing.
+
+<Canvas of={EditGridStories.WithIsolation} />
+
+## Props
+
+**EditGrid**
+
+<ArgTypes of={EditGridStories} />
+
+**EditGridItem**
+
+This component is rendered automatically by `EditGrid` based on the `items` prop it receives.
+
+<ArgTypes of={EditGridItemStories} />

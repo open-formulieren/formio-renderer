@@ -1,0 +1,23 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/blocks';
+
+import * as IconStories from './Icon.stories';
+
+<Meta of={IconStories} />
+
+# Icons
+
+Icons are essential in user interfaces. At the time of writing, the Formio renderer only supports
+Font Awesome icons, but we organise the code so that future support of other icon libraries is not
+out of the question.
+
+The project that uses the formio renderer and its icons is responsible for properly loading the Font
+Awesome font assets - we only produce markup with the correct accesibility attributes and class
+names to display the icons correctly.
+
+## Example
+
+<Canvas of={IconStories.Add} />
+
+## Props
+
+<ArgTypes />
