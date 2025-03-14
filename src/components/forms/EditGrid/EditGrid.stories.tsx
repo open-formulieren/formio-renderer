@@ -98,6 +98,34 @@ export const WithIsolation: Story = {
   },
 };
 
+export const AddingItemInIsolationMode: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+    const editButtons = canvas.queryAllByRole('button', {name: /Edit item \d/});
+    expect(editButtons).toHaveLength(2); // the third one should not be visible because it must be initially expanded
+
+    const textfield = canvas.getByLabelText('My field (3)');
+    expect(textfield).toHaveDisplayValue('new item');
+  },
+};
+
 export const InlineEditing: Story = {
   args: {
     enableIsolation: false,
