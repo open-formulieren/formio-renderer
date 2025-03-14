@@ -1,5 +1,6 @@
 import {ButtonGroup, PrimaryActionButton} from '@utrecht/component-library-react';
 import {FieldArray, useFormikContext} from 'formik';
+import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import Icon from '@/components/icons';
@@ -74,6 +75,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
 }: EditGridProps<T>) {
   const {getFieldProps} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[]>(name);
+  const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
   return (
     <FieldArray name={name} validateOnChange={false}>
       {arrayHelpers => (
@@ -93,6 +95,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   onReplace={(newValue: T) => arrayHelpers.replace(index, newValue)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
                   onRemove={() => arrayHelpers.remove(index)}
+                  initiallyExpanded={indexToAutoExpand === index}
                 />
               ) : (
                 <EditGridItem<T>
@@ -109,7 +112,13 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
 
           {emptyItem && (
             <ButtonGroup>
-              <PrimaryActionButton type="button" onClick={() => arrayHelpers.push(emptyItem)}>
+              <PrimaryActionButton
+                type="button"
+                onClick={() => {
+                  setIndexToAutoExpand(formikItems.length);
+                  arrayHelpers.push(emptyItem);
+                }}
+              >
                 <Icon icon="add" />
                 &nbsp;
                 {addButtonLabel || (

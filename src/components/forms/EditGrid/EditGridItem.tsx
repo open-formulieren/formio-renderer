@@ -44,6 +44,7 @@ interface WithoutIsolation {
   canEdit?: never;
   saveLabel?: never;
   onReplace?: never;
+  initiallyExpanded?: false;
 }
 
 interface WithIsolation<T> {
@@ -76,6 +77,10 @@ interface WithIsolation<T> {
    * Callback invoked when confirming the item changes.
    */
   onReplace: (newValue: T) => void;
+  /**
+   * Set to `true` for newly added items so that the user can start editing directly.
+   */
+  initiallyExpanded?: boolean;
 }
 
 export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | WithIsolation<T>);
@@ -88,10 +93,11 @@ function EditGridItem<T extends JSONObject = JSONObject>({
   canRemove,
   removeLabel,
   onRemove,
+  initiallyExpanded = false,
   ...props
 }: EditGridItemProps<T>) {
   const intl = useIntl();
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(initiallyExpanded);
   const headingId = useId();
 
   // TODO
