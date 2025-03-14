@@ -165,7 +165,19 @@ function EditGridItem<T extends JSONObject = JSONObject>({
                 </SecondaryActionButton>
 
                 {canRemove && (
-                  <PrimaryActionButton hint="danger" onClick={onRemove}>
+                  <PrimaryActionButton
+                    hint="danger"
+                    onClick={onRemove}
+                    aria-label={intl.formatMessage(
+                      {
+                        description:
+                          'Accessible remove icon/button label for item inside edit grid',
+                        defaultMessage: 'Remove item {index}',
+                      },
+                      {index: index + 1}
+                    )}
+                    aria-describedby={heading ? headingId : undefined}
+                  >
                     <Icon icon="remove" />
                   </PrimaryActionButton>
                 )}
