@@ -100,7 +100,7 @@ Implementing a formio render is ambitious and frankly, a daunting task. To keep 
 and gain experience and information as we go along, we have divided the work up in a number of
 phases to build a feature complete solution.
 
-1. Phase 1 - MVP renderer with a limited set of component types
+1. **DONE** <s>Phase 1 - MVP renderer with a limited set of component types</s>
 
    - Support textfield, email, radio, number and date components (vanilla formio)
    - Support bsn and phone number components (Open Forms custom types)
@@ -109,17 +109,25 @@ phases to build a feature complete solution.
    - Support nested data structures (keys with a <kbd>.</kbd> in them)
    - Uses NL Design System components for styling, supports default Open Forms theme
 
-2. Phase 2 - Replace "Contact details" step form field rendering in `@open-formulieren/sdk` with the
-   `FormioForm` component from this library. This must be a drop-in replacement.
+2. **DONE** <s>Phase 2 - Replace "Contact details" step form field rendering in
+   `@open-formulieren/sdk` with the `FormioForm` component from this library. This must be a drop-in
+   replacement.</s>
 
-3. Phase 3 - Support simple conditionals logic
+3. Phase 3 - MVP edit grid, because repeating groups have many issues because they were added quite
+   late to the components, and they work very differently from other formio components.
+
+   - Implement a pure React base
+   - Replace the Appointments products step with the pure react variant
+   - Implement the Formio component using the pure React base
+
+4. Phase 4 - Support simple conditionals logic
 
    - Support conditionally displaying/hiding components based on submission data that updates as the
      user fills out the form. Must have identical behaviour as the formio.js SDK referenence.
    - Support the `clearOnHide` behaviour. We may have slightly different behaviour here to be
      type-safe and possibly the Open Forms backend will have to be adapted.
 
-4. Phase 4 - Remaining features to support the same feature set as our SDK currently does.
+5. Phase 5 - Remaining features to support the same feature set as our SDK currently does.
 
    - Ensure that logic check results can (partially) update form values (for calculated fields)
    - Ensure that mutations of the formio configuration are honoured (from logic check)
