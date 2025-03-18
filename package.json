@@ -59,6 +59,8 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/react": "^18.2.65",
     "@types/webpack": "^5.28.5",
+    "@utrecht/button-group-css": "^1.4.0",
+    "@utrecht/button-group-react": "^1.0.0",
     "@utrecht/components": "^7.4.0",
     "@vitejs/plugin-react": "^4.3.4",
     "ajv": "^8.17.1",
