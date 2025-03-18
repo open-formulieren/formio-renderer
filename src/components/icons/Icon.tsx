@@ -1,13 +1,5 @@
-import clsx from 'clsx';
-
-// Map 'semantic' icons to their font-awesome icon name. This is a layer of indirection
-// allowing strong typing for the supported icons & future support for alternative icon
-// libraries.
-export const FA_MAP = {
-  add: 'plus',
-  edit: 'edit',
-  remove: 'trash-can',
-};
+import {FontAwesomeSolidIcon} from './FontAwesome';
+import type {RendererIcon} from './types';
 
 // TODO: if/when we support pluggable icon libraries, this probably needs to become
 // generic.
@@ -16,7 +8,7 @@ export interface IconProps {
   /**
    * Icon to display.
    */
-  icon: keyof typeof FA_MAP;
+  icon: RendererIcon;
 
   // These options should probably be shared irrelevant the icon library used.
 
@@ -37,26 +29,28 @@ export interface IconProps {
 
 const Icon: React.FC<IconProps> = ({
   library = 'font-awesome',
-  className: extraClassName,
+  className,
   ['aria-hidden']: ariaHidden = true,
   ['aria-label']: ariaLabel,
   ['aria-describedby']: ariaDescribedBy,
   icon,
 }) => {
-  if (library !== 'font-awesome') {
-    throw new Error(`Unsupported icon library: ${library}.`);
+  switch (library) {
+    case 'font-awesome': {
+      return (
+        <FontAwesomeSolidIcon
+          icon={icon}
+          className={className}
+          aria-hidden={ariaHidden}
+          aria-label={ariaLabel}
+          aria-describedby={ariaDescribedBy}
+        />
+      );
+    }
+    default: {
+      throw new Error(`Unsupported icon library: ${library}.`);
+    }
   }
-
-  const iconName = FA_MAP[icon] ?? icon;
-  const className = clsx('fa', 'fas', 'fa-icon', `fa-${iconName}`, extraClassName);
-  return (
-    <i
-      className={className}
-      aria-hidden={ariaHidden}
-      aria-label={ariaLabel || undefined}
-      aria-describedby={ariaDescribedBy || undefined}
-    />
-  );
 };
 
 export default Icon;

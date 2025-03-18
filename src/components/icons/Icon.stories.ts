@@ -6,8 +6,6 @@ export default {
   title: 'Internal API / Icons',
   component: Icon,
   args: {
-    // @ts-expect-error
-    icon: 'question',
     className: undefined,
     'aria-hidden': true,
     'aria-label': undefined,
@@ -22,9 +20,14 @@ export const Add: Story = {
   },
 };
 
-export const ArbitraryIconValue: Story = {
+export const Edit: Story = {
   args: {
-    // @ts-expect-error
-    icon: 'otter',
+    icon: 'edit',
+  },
+};
+
+export const Remove: Story = {
+  args: {
+    icon: 'remove',
   },
 };
