@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
+    "@fortawesome/fontawesome-free": ">= 6.4.0",
     "date-fns": "^4.0.0",
     "react": "^18.2.0",
     "react-intl": "^6.6.2 || ^7.0.0"
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@formatjs/cli": "^6.5.1",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@open-formulieren/design-tokens": "^0.57.0",
     "@open-formulieren/types": "^0.38.0",
     "@storybook/addon-actions": "^8.6.2",
@@ -57,6 +59,8 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/react": "^18.2.65",
     "@types/webpack": "^5.28.5",
+    "@utrecht/button-group-css": "^1.4.0",
+    "@utrecht/button-group-react": "^1.0.0",
     "@utrecht/components": "^7.4.0",
     "@vitejs/plugin-react": "^4.3.4",
     "ajv": "^8.17.1",

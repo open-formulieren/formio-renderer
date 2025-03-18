@@ -1,0 +1,153 @@
+import {ButtonGroup} from '@utrecht/button-group-react';
+import {PrimaryActionButton} from '@utrecht/component-library-react';
+import {FieldArray, useFormikContext} from 'formik';
+import {useState} from 'react';
+import {FormattedMessage} from 'react-intl';
+
+import Icon from '@/components/icons';
+import type {JSONObject, JSONValue} from '@/types';
+
+import EditGridItem from './EditGridItem';
+
+interface EditGridBaseProps<T> {
+  /**
+   * Name of 'form field' in the Formio form data structure. The rendered edit grid items
+   * are based off the value of this field.
+   */
+  name: string;
+  /**
+   * Callback to return the heading for a single item. Gets passed the item values and
+   * index in the array of values.
+   */
+  getItemHeading?: (values: T, index: number) => React.ReactNode;
+  /**
+   * Callback to check if a particular item can be removed. This allows decisions on a
+   * per-item basis. If not provided, item removal is enabled by default.
+   */
+  canRemoveItem?: (values: T, index: number) => boolean;
+  /**
+   * Custom label for the remove button.
+   */
+  removeItemLabel?: string;
+  /**
+   * Empty instance, will be added when the 'add another' button is clicked. If `null` is
+   * provided, adding items is disabled.
+   */
+  emptyItem?: T | null;
+  /**
+   * Custom label for the 'add another' button.
+   */
+  addButtonLabel?: string;
+}
+
+interface WithoutIsolation<T> {
+  enableIsolation?: false;
+  canEditItem?: never;
+  saveItemLabel?: never;
+  /**
+   * Callback to render the main content of a single item. Gets passed the item values and
+   * index in the array of values.
+   *
+   * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
+   */
+  getItemBody: (values: T, index: number, opts: {expanded: false}) => React.ReactNode;
+}
+
+interface WithIsolation<T> {
+  enableIsolation: true;
+  /**
+   * Callback to check if a particular item can be edited. This allows decisions on a
+   * per-item basis. If not provided, item editing is enabled by default.
+   */
+  canEditItem?: (values: T, index: number) => boolean;
+  /**
+   * Custom label for the save/confirm button.
+   */
+  saveItemLabel?: string;
+  /**
+   * Callback to render the main content of a single item. Gets passed the item values and
+   * index in the array of values.
+   *
+   * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
+   */
+  getItemBody: (values: T, index: number, opts: {expanded: boolean}) => React.ReactNode;
+}
+
+export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation<T> | WithIsolation<T>);
+
+function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
+  name,
+  getItemHeading,
+  canRemoveItem,
+  removeItemLabel = '',
+  emptyItem = null,
+  addButtonLabel = '',
+  ...props
+}: EditGridProps<T>) {
+  const {getFieldProps} = useFormikContext();
+  const {value: formikItems} = getFieldProps<T[]>(name);
+  const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
+  return (
+    <FieldArray name={name} validateOnChange={false}>
+      {arrayHelpers => (
+        <div className="openforms-editgrid">
+          {/* Render each item wrapped in an EditGridItem */}
+          <ol className="openforms-editgrid__container">
+            {formikItems.map((values, index) =>
+              props.enableIsolation ? (
+                <EditGridItem<T>
+                  key={index}
+                  index={index}
+                  heading={getItemHeading?.(values, index)}
+                  getBody={opts => props.getItemBody(values, index, opts)}
+                  enableIsolation
+                  data={values}
+                  canEdit={props.canEditItem?.(values, index) ?? true}
+                  saveLabel={props.saveItemLabel}
+                  onChange={(newValue: T) => arrayHelpers.replace(index, newValue)}
+                  canRemove={canRemoveItem?.(values, index) ?? true}
+                  removeLabel={removeItemLabel}
+                  onRemove={() => arrayHelpers.remove(index)}
+                  initiallyExpanded={indexToAutoExpand === index}
+                />
+              ) : (
+                <EditGridItem<T>
+                  key={index}
+                  index={index}
+                  getBody={opts => props.getItemBody(values, index, opts)}
+                  heading={getItemHeading?.(values, index)}
+                  canRemove={canRemoveItem?.(values, index) ?? true}
+                  removeLabel={removeItemLabel}
+                  onRemove={() => arrayHelpers.remove(index)}
+                />
+              )
+            )}
+          </ol>
+
+          {emptyItem && (
+            <ButtonGroup>
+              <PrimaryActionButton
+                type="button"
+                onClick={() => {
+                  setIndexToAutoExpand(formikItems.length);
+                  arrayHelpers.push(emptyItem);
+                }}
+              >
+                <Icon icon="add" />
+                &nbsp;
+                {addButtonLabel || (
+                  <FormattedMessage
+                    description="Edit grid add button, default label text"
+                    defaultMessage="Add another"
+                  />
+                )}
+              </PrimaryActionButton>
+            </ButtonGroup>
+          )}
+        </div>
+      )}
+    </FieldArray>
+  );
+}
+
+export default EditGrid;
