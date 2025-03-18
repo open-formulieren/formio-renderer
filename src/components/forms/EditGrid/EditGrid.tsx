@@ -26,6 +26,10 @@ interface EditGridBaseProps<T> {
    */
   canRemoveItem?: (values: T, index: number) => boolean;
   /**
+   * Custom label for the remove button.
+   */
+  removeItemLabel?: string;
+  /**
    * Empty instance, will be added when the 'add another' button is clicked. If `null` is
    * provided, adding items is disabled.
    */
@@ -39,6 +43,7 @@ interface EditGridBaseProps<T> {
 interface WithoutIsolation<T> {
   enableIsolation?: false;
   canEditItem?: never;
+  saveItemLabel?: never;
   /**
    * Callback to render the main content of a single item. Gets passed the item values and
    * index in the array of values.
@@ -56,6 +61,10 @@ interface WithIsolation<T> {
    */
   canEditItem?: (values: T, index: number) => boolean;
   /**
+   * Custom label for the save/confirm button.
+   */
+  saveItemLabel?: string;
+  /**
    * Callback to render the main content of a single item. Gets passed the item values and
    * index in the array of values.
    *
@@ -70,6 +79,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   name,
   getItemHeading,
   canRemoveItem,
+  removeItemLabel = '',
   emptyItem = null,
   addButtonLabel = '',
   ...props
@@ -93,8 +103,10 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   enableIsolation
                   data={values}
                   canEdit={props.canEditItem?.(values, index) ?? true}
-                  onReplace={(newValue: T) => arrayHelpers.replace(index, newValue)}
+                  saveLabel={props.saveItemLabel}
+                  onChange={(newValue: T) => arrayHelpers.replace(index, newValue)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
+                  removeLabel={removeItemLabel}
                   onRemove={() => arrayHelpers.remove(index)}
                   initiallyExpanded={indexToAutoExpand === index}
                 />
@@ -105,6 +117,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   getBody={opts => props.getItemBody(values, index, opts)}
                   heading={getItemHeading?.(values, index)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
+                  removeLabel={removeItemLabel}
                   onRemove={() => arrayHelpers.remove(index)}
                 />
               )

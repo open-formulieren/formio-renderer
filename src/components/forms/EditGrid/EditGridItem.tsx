@@ -2,31 +2,31 @@ import {Fieldset, FieldsetLegend, SecondaryActionButton} from '@utrecht/componen
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {Formik, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
-import {FormattedMessage, useIntl} from 'react-intl';
+import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import Icon from '@/components/icons';
 import type {JSONObject} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
-import {IsolationModeButtons} from './EditGridItemButtons';
+import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
 
 interface EditGridItemBaseProps {
   index: number;
   /**
-   * Heading for the item, will be rendered as a fieldset legend unless no value is
+   * Heading for the item, will be rendered as a fieldset legend unless a falsy value is
    * provided.
    */
-  heading?: React.ReactNode;
+  heading: React.ReactNode;
 
   /**
    * If true, remove button(s) are rendered.
    */
-  canRemove?: boolean;
+  canRemove: boolean;
   /**
    * Custom label for the remove button.
    */
-  removeLabel?: string;
+  removeLabel: string;
   /**
    * Callback invoked when deleting the item.
    */
@@ -43,7 +43,7 @@ interface WithoutIsolation {
   data?: never;
   canEdit?: never;
   saveLabel?: never;
-  onReplace?: never;
+  onChange?: never;
   initiallyExpanded?: false;
 }
 
@@ -76,7 +76,7 @@ interface WithIsolation<T> {
   /**
    * Callback invoked when confirming the item changes.
    */
-  onReplace: (newValue: T) => void;
+  onChange: (newValue: T) => void;
   /**
    * Set to `true` for newly added items so that the user can start editing directly.
    */
@@ -84,8 +84,6 @@ interface WithIsolation<T> {
 }
 
 export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | WithIsolation<T>);
-
-// TODO: track open/collapsed state and adapt the buttons accordingly
 
 function EditGridItem<T extends JSONObject = JSONObject>({
   index,
@@ -99,6 +97,14 @@ function EditGridItem<T extends JSONObject = JSONObject>({
   const intl = useIntl();
   const [expanded, setExpanded] = useState<boolean>(initiallyExpanded);
   const headingId = useId();
+
+  const accessibleRemoveButtonLabel = intl.formatMessage(
+    {
+      description: 'Accessible remove icon/button label for item inside edit grid',
+      defaultMessage: 'Remove item {index}',
+    },
+    {index: index + 1}
+  );
 
   // TODO
   const errors: any = {};
@@ -131,9 +137,8 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           validateOnChange={false}
           validateOnBlur={false}
           validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}
-          // TODO: trigger submit from primary button - perhaps Formik should wrap the entire thing?
           onSubmit={async values => {
-            if (props.canEdit) props.onReplace(values);
+            if (props.canEdit) props.onChange(values);
             setExpanded(false);
           }}
         >
@@ -146,6 +151,7 @@ function EditGridItem<T extends JSONObject = JSONObject>({
                 canRemove={Boolean(canRemove)}
                 onRemove={onRemove}
                 removeLabel={removeLabel}
+                aria-describedby={heading ? headingId : undefined}
               />
             ) : (
               <EditGridButtonGroup>
@@ -168,14 +174,7 @@ function EditGridItem<T extends JSONObject = JSONObject>({
                   <PrimaryActionButton
                     hint="danger"
                     onClick={onRemove}
-                    aria-label={intl.formatMessage(
-                      {
-                        description:
-                          'Accessible remove icon/button label for item inside edit grid',
-                        defaultMessage: 'Remove item {index}',
-                      },
-                      {index: index + 1}
-                    )}
+                    aria-label={accessibleRemoveButtonLabel}
                     aria-describedby={heading ? headingId : undefined}
                   >
                     <Icon icon="remove" />
@@ -190,14 +189,11 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           {props.getBody({expanded: false})}
           {canRemove && (
             <EditGridButtonGroup>
-              <PrimaryActionButton hint="danger" onClick={onRemove}>
-                {removeLabel || (
-                  <FormattedMessage
-                    description="Edit grid item default remove button label"
-                    defaultMessage="Remove"
-                  />
-                )}
-              </PrimaryActionButton>
+              <RemoveButton
+                label={removeLabel}
+                onClick={onRemove}
+                aria-describedby={heading ? headingId : undefined}
+              />
             </EditGridButtonGroup>
           )}
         </>

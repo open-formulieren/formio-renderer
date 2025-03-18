@@ -22,7 +22,7 @@ export default {
     heading: 'A heading for the item',
     canEdit: undefined,
     saveLabel: undefined,
-    onReplace: fn(),
+    onChange: fn(),
     canRemove: undefined,
     removeLabel: undefined,
     onRemove: fn(),
@@ -68,7 +68,7 @@ export const IsolatedMode: Story = {
     expect(textfield).toHaveDisplayValue('updated value');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-    expect(args.onReplace).toHaveBeenCalledWith({topLevelKey: 'updated value'});
+    expect(args.onChange).toHaveBeenCalledWith({topLevelKey: 'updated value'});
   },
 };
 

@@ -7,10 +7,16 @@ import EditGridButtonGroup from './EditGridButtonGroup';
 export interface SaveButtonProps {
   label?: React.ReactNode;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // accessibility
+  ['aria-describedby']: string | undefined;
 }
 
-const SaveButton: React.FC<SaveButtonProps> = ({label, onClick}) => (
-  <PrimaryActionButton type="button" onClick={onClick}>
+const SaveButton: React.FC<SaveButtonProps> = ({
+  label,
+  onClick,
+  ['aria-describedby']: ariaDescribedBy,
+}) => (
+  <PrimaryActionButton type="button" onClick={onClick} aria-describedby={ariaDescribedBy}>
     {label || (
       <FormattedMessage
         description="Edit grid item default save button label"
@@ -23,10 +29,16 @@ const SaveButton: React.FC<SaveButtonProps> = ({label, onClick}) => (
 export interface RemoveButtonProps {
   label?: React.ReactNode;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // accessibility
+  ['aria-describedby']: string | undefined;
 }
 
-const RemoveButton: React.FC<RemoveButtonProps> = ({label, onClick}) => (
-  <PrimaryActionButton hint="danger" onClick={onClick}>
+const RemoveButton: React.FC<RemoveButtonProps> = ({
+  label,
+  onClick,
+  ['aria-describedby']: ariaDescribedBy,
+}) => (
+  <PrimaryActionButton hint="danger" onClick={onClick} aria-describedby={ariaDescribedBy}>
     {label || (
       <FormattedMessage
         description="Edit grid item default remove button label"
@@ -43,6 +55,8 @@ export interface IsolationModeButtonsProps {
   canRemove: boolean;
   removeLabel?: React.ReactNode;
   onRemove: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // accessibility
+  ['aria-describedby']: string | undefined;
 }
 
 /**
@@ -61,6 +75,7 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
   canRemove,
   removeLabel,
   onRemove,
+  ['aria-describedby']: ariaDescribedBy,
 }) => {
   const {submitForm} = useFormikContext<unknown>();
   return (
@@ -71,8 +86,11 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
           e.preventDefault();
           await submitForm();
         }}
+        aria-describedby={ariaDescribedBy}
       />
-      {canRemove && <RemoveButton label={removeLabel} onClick={onRemove} />}
+      {canRemove && (
+        <RemoveButton label={removeLabel} onClick={onRemove} aria-describedby={ariaDescribedBy} />
+      )}
     </EditGridButtonGroup>
   );
 };

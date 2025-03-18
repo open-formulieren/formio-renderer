@@ -39,9 +39,18 @@ type Story = StoryObj<typeof EditGrid<ItemData>>;
 
 export const Default: Story = {};
 
-export const WithCustomAddButtonLabel: Story = {
+export const WithCustomButtonLabels: Story = {
   args: {
+    enableIsolation: true,
     addButtonLabel: 'Custom add button label',
+    saveItemLabel: 'Custom save item label',
+    removeItemLabel: 'Custom remove item label',
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 2'}));
   },
 };
 
