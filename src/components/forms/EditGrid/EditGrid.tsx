@@ -92,7 +92,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
       {arrayHelpers => (
         <div className="openforms-editgrid">
           {/* Render each item wrapped in an EditGridItem */}
-          <div>
+          <ol className="openforms-editgrid__container">
             {formikItems.map((values, index) =>
               props.enableIsolation ? (
                 <EditGridItem<T>
@@ -122,7 +122,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 />
               )
             )}
-          </div>
+          </ol>
 
           {emptyItem && (
             <ButtonGroup>

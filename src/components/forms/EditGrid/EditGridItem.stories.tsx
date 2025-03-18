@@ -12,7 +12,9 @@ export default {
   decorators: [
     Story => (
       <div className="openforms-editgrid">
-        <Story />
+        <ol className="openforms-editgrid__container">
+          <Story />
+        </ol>
       </div>
     ),
   ],

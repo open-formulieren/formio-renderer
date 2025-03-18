@@ -110,95 +110,97 @@ function EditGridItem<T extends JSONObject = JSONObject>({
   const errors: any = {};
   const zodSchema: any = null;
   return (
-    <Fieldset className="openforms-editgrid__item">
-      {heading && (
-        <FieldsetLegend className="openforms-editgrid__item-heading" id={headingId}>
-          {heading}
-        </FieldsetLegend>
-      )}
+    <li className="openforms-editgrid__item">
+      <Fieldset>
+        {heading && (
+          <FieldsetLegend className="openforms-editgrid__item-heading" id={headingId}>
+            {heading}
+          </FieldsetLegend>
+        )}
 
-      {/*
+        {/*
         In isolation mode, set up a separate Formik context that requires user interaction
         before it's committed to the parent state. In non-isolation mode, the caller needs
         to provide the form fields with their deeply nested field names so the state is
         updated directly, so then we render as-is.
       */}
 
-      {props.enableIsolation && props.canEdit ? (
-        // We apply the same Formik rendering philosophy as in FormioForm.tsx w/r to initial
-        // values, errors, touched state and the validation behaviour (validate individual fields, on blur)
-        <Formik<T>
-          initialValues={props.data}
-          initialErrors={{}}
-          initialTouched={false ? setNestedObjectValues(errors, true) : undefined}
-          // when removing items, the order changes, so we must re-render to display the
-          // correct data
-          enableReinitialize
-          validateOnChange={false}
-          validateOnBlur={false}
-          validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}
-          onSubmit={async values => {
-            if (props.canEdit) props.onChange(values);
-            setExpanded(false);
-          }}
-        >
-          <>
-            {props.getBody({expanded})}
+        {props.enableIsolation && props.canEdit ? (
+          // We apply the same Formik rendering philosophy as in FormioForm.tsx w/r to initial
+          // values, errors, touched state and the validation behaviour (validate individual fields, on blur)
+          <Formik<T>
+            initialValues={props.data}
+            initialErrors={{}}
+            initialTouched={false ? setNestedObjectValues(errors, true) : undefined}
+            // when removing items, the order changes, so we must re-render to display the
+            // correct data
+            enableReinitialize
+            validateOnChange={false}
+            validateOnBlur={false}
+            validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}
+            onSubmit={async values => {
+              if (props.canEdit) props.onChange(values);
+              setExpanded(false);
+            }}
+          >
+            <>
+              {props.getBody({expanded})}
 
-            {expanded ? (
-              <IsolationModeButtons
-                saveLabel={props.saveLabel}
-                canRemove={Boolean(canRemove)}
-                onRemove={onRemove}
-                removeLabel={removeLabel}
-                aria-describedby={heading ? headingId : undefined}
-              />
-            ) : (
-              <EditGridButtonGroup>
-                <SecondaryActionButton
-                  type="button"
-                  onClick={() => setExpanded(true)}
-                  aria-label={intl.formatMessage(
-                    {
-                      description: 'Accessible edit icon/button label for item inside edit grid',
-                      defaultMessage: 'Edit item {index}',
-                    },
-                    {index: index + 1}
-                  )}
+              {expanded ? (
+                <IsolationModeButtons
+                  saveLabel={props.saveLabel}
+                  canRemove={Boolean(canRemove)}
+                  onRemove={onRemove}
+                  removeLabel={removeLabel}
                   aria-describedby={heading ? headingId : undefined}
-                >
-                  <Icon icon="edit" />
-                </SecondaryActionButton>
-
-                {canRemove && (
-                  <PrimaryActionButton
-                    hint="danger"
-                    onClick={onRemove}
-                    aria-label={accessibleRemoveButtonLabel}
+                />
+              ) : (
+                <EditGridButtonGroup>
+                  <SecondaryActionButton
+                    type="button"
+                    onClick={() => setExpanded(true)}
+                    aria-label={intl.formatMessage(
+                      {
+                        description: 'Accessible edit icon/button label for item inside edit grid',
+                        defaultMessage: 'Edit item {index}',
+                      },
+                      {index: index + 1}
+                    )}
                     aria-describedby={heading ? headingId : undefined}
                   >
-                    <Icon icon="remove" />
-                  </PrimaryActionButton>
-                )}
+                    <Icon icon="edit" />
+                  </SecondaryActionButton>
+
+                  {canRemove && (
+                    <PrimaryActionButton
+                      hint="danger"
+                      onClick={onRemove}
+                      aria-label={accessibleRemoveButtonLabel}
+                      aria-describedby={heading ? headingId : undefined}
+                    >
+                      <Icon icon="remove" />
+                    </PrimaryActionButton>
+                  )}
+                </EditGridButtonGroup>
+              )}
+            </>
+          </Formik>
+        ) : (
+          <>
+            {props.getBody({expanded: false})}
+            {canRemove && (
+              <EditGridButtonGroup>
+                <RemoveButton
+                  label={removeLabel}
+                  onClick={onRemove}
+                  aria-describedby={heading ? headingId : undefined}
+                />
               </EditGridButtonGroup>
             )}
           </>
-        </Formik>
-      ) : (
-        <>
-          {props.getBody({expanded: false})}
-          {canRemove && (
-            <EditGridButtonGroup>
-              <RemoveButton
-                label={removeLabel}
-                onClick={onRemove}
-                aria-describedby={heading ? headingId : undefined}
-              />
-            </EditGridButtonGroup>
-          )}
-        </>
-      )}
-    </Fieldset>
+        )}
+      </Fieldset>
+    </li>
   );
 }
 
