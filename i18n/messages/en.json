@@ -1,8 +1,28 @@
 {
+  "+xOWBM": {
+    "defaultMessage": "Remove",
+    "description": "Edit grid item default remove button label",
+    "originalDefault": "Remove"
+  },
+  "0EdUXi": {
+    "defaultMessage": "Save",
+    "description": "Edit grid item default save button label",
+    "originalDefault": "Save"
+  },
   "3C29X9": {
     "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }",
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
+  },
+  "9SgPC6": {
+    "defaultMessage": "Remove item {index}",
+    "description": "Accessible remove icon/button label for item inside edit grid",
+    "originalDefault": "Remove item {index}"
+  },
+  "At/y3w": {
+    "defaultMessage": "Edit item {index}",
+    "description": "Accessible edit icon/button label for item inside edit grid",
+    "originalDefault": "Edit item {index}"
   },
   "DBTNgI": {
     "defaultMessage": "d",
@@ -18,6 +38,11 @@
     "defaultMessage": "Month",
     "description": "Date input group: month label",
     "originalDefault": "Month"
+  },
+  "cKFCTI": {
+    "defaultMessage": "Add another",
+    "description": "Edit grid add button, default label text",
+    "originalDefault": "Add another"
   },
   "ht1O2Z": {
     "defaultMessage": "Invalid BSN",
