@@ -1,6 +1,6 @@
 {
   "name": "@open-formulieren/formio-renderer",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "type": "module",
   "exports": {
@@ -40,7 +40,8 @@
     "@fortawesome/fontawesome-free": ">= 6.4.0",
     "date-fns": "^4.0.0",
     "react": "^18.2.0",
-    "react-intl": "^6.6.2 || ^7.0.0"
+    "react-intl": "^6.6.2 || ^7.0.0",
+    "@utrecht/button-group-react": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
