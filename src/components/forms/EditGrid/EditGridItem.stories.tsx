@@ -1,6 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 import {Paragraph} from '@utrecht/component-library-react';
+import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
 
@@ -78,5 +79,26 @@ export const IsolatedModeCanRemove: Story = {
   args: {
     ...IsolatedMode.args,
     canRemove: true,
+  },
+};
+
+export const IsolatedModeWithZodSchema: Story = {
+  args: {
+    ...IsolatedMode.args,
+    enableIsolation: true,
+    validationSchema: z.object({
+      topLevelKey: z.string().max(5), // max 5 characters
+    }),
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+    const inputField = await canvas.findByLabelText('Top level key');
+    expect(inputField).toHaveDisplayValue('initial');
+    await userEvent.click(inputField);
+    await userEvent.tab();
+
+    expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
   },
 };

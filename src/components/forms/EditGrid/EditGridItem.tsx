@@ -3,10 +3,11 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {Formik, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
+import type {z} from 'zod';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import Icon from '@/components/icons';
-import type {JSONObject} from '@/types';
+import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
 import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
@@ -45,6 +46,7 @@ interface WithoutIsolation {
   saveLabel?: never;
   onChange?: never;
   initiallyExpanded?: false;
+  validationSchema?: never;
 }
 
 interface WithIsolation<T> {
@@ -81,11 +83,12 @@ interface WithIsolation<T> {
    * Set to `true` for newly added items so that the user can start editing directly.
    */
   initiallyExpanded?: boolean;
+  validationSchema?: z.ZodType<T>;
 }
 
 export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | WithIsolation<T>);
 
-function EditGridItem<T extends JSONObject = JSONObject>({
+function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   index,
   heading,
   canRemove,
@@ -108,7 +111,6 @@ function EditGridItem<T extends JSONObject = JSONObject>({
 
   // TODO
   const errors: any = {};
-  const zodSchema: any = null;
   return (
     <li className="openforms-editgrid__item">
       <Fieldset>
@@ -137,7 +139,9 @@ function EditGridItem<T extends JSONObject = JSONObject>({
             enableReinitialize
             validateOnChange={false}
             validateOnBlur={false}
-            validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}
+            validationSchema={
+              props.validationSchema ? toFormikValidationSchema(props.validationSchema) : undefined
+            }
             onSubmit={async values => {
               if (props.canEdit) props.onChange(values);
               setExpanded(false);
