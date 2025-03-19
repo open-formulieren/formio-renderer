@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
+import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
 import {withFormik} from '@/sb-decorators';
@@ -73,6 +74,10 @@ export const WithIsolation: Story = {
         </span>
       </>
     ),
+    getItemValidationSchema: () => {
+      let fieldSchema = z.string().refine(value => value !== 'Item 1', {message: 'Nooope'});
+      return z.object({myField: fieldSchema});
+    },
     canRemoveItem: () => true,
     canEditItem: () => true,
   },
@@ -87,6 +92,12 @@ export const WithIsolation: Story = {
     await step('Initial data display', async () => {
       expect(field1).toHaveDisplayValue('Item 1');
       expect(field2).toHaveDisplayValue('Item 2');
+    });
+
+    await step('Trigger item 1 validation', async () => {
+      await userEvent.click(field1);
+      await userEvent.tab();
+      expect(await canvas.findByText('Nooope')).toBeVisible();
     });
 
     await step('Edit item 2 without saving', async () => {

@@ -3,6 +3,7 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {FieldArray, useFormikContext} from 'formik';
 import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {z} from 'zod';
 
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
@@ -51,6 +52,7 @@ interface WithoutIsolation<T> {
    * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
    */
   getItemBody: (values: T, index: number, opts: {expanded: false}) => React.ReactNode;
+  getItemValidationSchema?: never;
 }
 
 interface WithIsolation<T> {
@@ -71,6 +73,12 @@ interface WithIsolation<T> {
    * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
    */
   getItemBody: (values: T, index: number, opts: {expanded: boolean}) => React.ReactNode;
+  /**
+   * Callback to obtain a Zod validation schema for client-side validation of the item.
+   * Gets passed the item index in the array of values. Return `undefined` to indicate
+   * no validation schema should be applied.
+   */
+  getItemValidationSchema?: (index: number) => z.ZodType<T>;
 }
 
 export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation<T> | WithIsolation<T>);
@@ -103,6 +111,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   enableIsolation
                   data={values}
                   canEdit={props.canEditItem?.(values, index) ?? true}
+                  validationSchema={props.getItemValidationSchema?.(index)}
                   saveLabel={props.saveItemLabel}
                   onChange={(newValue: T) => arrayHelpers.replace(index, newValue)}
                   canRemove={canRemoveItem?.(values, index) ?? true}
