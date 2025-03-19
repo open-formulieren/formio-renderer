@@ -146,6 +146,58 @@ export const AddingItemInIsolationMode: Story = {
   },
 };
 
+export const ExternalErrorsInIsolationMode: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+  parameters: {
+    formik: {
+      initialErrors: {
+        items: [{myField: 'Validation error 0.'}, {myField: 'Validation error 1.'}],
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    // errors must be displayed, even if that requires expanding the item automatically
+    await step('Errors initially visible', async () => {
+      expect(await canvas.findByText('Validation error 0.')).toBeVisible();
+      expect(await canvas.findByText('Validation error 1.')).toBeVisible();
+    });
+
+    await step('Editing an item and saving it clears the errors', async () => {
+      const textfield1 = canvas.getByLabelText('My field (1)');
+      await userEvent.clear(textfield1);
+      await userEvent.type(textfield1, 'Fixed input');
+      const saveButton1 = canvas.getAllByRole('button', {name: 'Save'})[0];
+      await userEvent.click(saveButton1);
+      expect(textfield1).not.toBeInTheDocument();
+      expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
+      expect(canvas.getByText('Validation error 1.')).toBeVisible();
+    });
+
+    await step('Expanding the item again does no longer displays the error', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+      const textfield1 = canvas.getByLabelText('My field (1)');
+      expect(textfield1).toBeVisible();
+      expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
+      expect(canvas.getByText('Validation error 1.')).toBeVisible();
+    });
+  },
+};
+
 export const InlineEditing: Story = {
   args: {
     enableIsolation: false,

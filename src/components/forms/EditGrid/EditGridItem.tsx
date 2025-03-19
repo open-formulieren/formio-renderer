@@ -1,6 +1,6 @@
 import {Fieldset, FieldsetLegend, SecondaryActionButton} from '@utrecht/component-library-react';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {Formik, setNestedObjectValues} from 'formik';
+import {Formik, FormikErrors, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
@@ -47,6 +47,7 @@ interface WithoutIsolation {
   onChange?: never;
   initiallyExpanded?: false;
   validationSchema?: never;
+  errors?: never;
 }
 
 interface WithIsolation<T> {
@@ -84,6 +85,7 @@ interface WithIsolation<T> {
    */
   initiallyExpanded?: boolean;
   validationSchema?: z.ZodType<T>;
+  errors?: FormikErrors<T>;
 }
 
 export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | WithIsolation<T>);
@@ -109,8 +111,13 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
     {index: index + 1}
   );
 
-  // TODO
-  const errors: any = {};
+  // if there are errors but the state is not expanded, ensure that it is expanded so
+  // that errors are displayed. Updates to the values result in those errors being
+  // cleared via `props.onChange`.
+  if (props.errors && !expanded) {
+    setExpanded(true);
+  }
+
   return (
     <li className="openforms-editgrid__item">
       <Fieldset>
@@ -132,8 +139,8 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           // values, errors, touched state and the validation behaviour (validate individual fields, on blur)
           <Formik<T>
             initialValues={props.data}
-            initialErrors={{}}
-            initialTouched={false ? setNestedObjectValues(errors, true) : undefined}
+            initialErrors={props.errors}
+            initialTouched={props.errors ? setNestedObjectValues(props.errors, true) : undefined}
             // when removing items, the order changes, so we must re-render to display the
             // correct data
             enableReinitialize
