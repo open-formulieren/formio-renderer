@@ -3,8 +3,9 @@ import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formuliere
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import {EditGrid as EditGridField} from '@/components/forms';
-import type {RegistryEntry} from '@/registry/types';
+import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
+import {extractInitialValues} from '@/values';
 
 import ItemPreview from './ItemPreview';
 import getInitialValues from './initialValues';
@@ -40,6 +41,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
 export interface EditGridProps {
   componentDefinition: EditGridComponentSchema;
   renderNested: React.FC<FormioComponentProps>;
+  getRegistryEntry: GetRegistryEntry;
 }
 
 export const EditGrid: React.FC<EditGridProps> = ({
@@ -57,9 +59,11 @@ export const EditGrid: React.FC<EditGridProps> = ({
     removeRow,
   },
   renderNested: FormioComponent,
+  getRegistryEntry,
 }) => {
-  // TODO: get correct emptyItem data from nested components
-  const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : {};
+  const emptyItem: JSONObject | null = disableAddingRemovingRows
+    ? null
+    : extractInitialValues(components, getRegistryEntry);
 
   return (
     <EditGridField<JSONObject>
