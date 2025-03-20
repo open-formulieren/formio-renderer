@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
+import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
 import {withFormik} from '@/sb-decorators';
@@ -73,6 +74,10 @@ export const WithIsolation: Story = {
         </span>
       </>
     ),
+    getItemValidationSchema: () => {
+      let fieldSchema = z.string().refine(value => value !== 'Item 1', {message: 'Nooope'});
+      return z.object({myField: fieldSchema});
+    },
     canRemoveItem: () => true,
     canEditItem: () => true,
   },
@@ -87,6 +92,12 @@ export const WithIsolation: Story = {
     await step('Initial data display', async () => {
       expect(field1).toHaveDisplayValue('Item 1');
       expect(field2).toHaveDisplayValue('Item 2');
+    });
+
+    await step('Trigger item 1 validation', async () => {
+      await userEvent.click(field1);
+      await userEvent.tab();
+      expect(await canvas.findByText('Nooope')).toBeVisible();
     });
 
     await step('Edit item 2 without saving', async () => {
@@ -132,6 +143,58 @@ export const AddingItemInIsolationMode: Story = {
 
     const textfield = canvas.getByLabelText('My field (3)');
     expect(textfield).toHaveDisplayValue('new item');
+  },
+};
+
+export const ExternalErrorsInIsolationMode: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+  parameters: {
+    formik: {
+      initialErrors: {
+        items: [{myField: 'Validation error 0.'}, {myField: 'Validation error 1.'}],
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    // errors must be displayed, even if that requires expanding the item automatically
+    await step('Errors initially visible', async () => {
+      expect(await canvas.findByText('Validation error 0.')).toBeVisible();
+      expect(await canvas.findByText('Validation error 1.')).toBeVisible();
+    });
+
+    await step('Editing an item and saving it clears the errors', async () => {
+      const textfield1 = canvas.getByLabelText('My field (1)');
+      await userEvent.clear(textfield1);
+      await userEvent.type(textfield1, 'Fixed input');
+      const saveButton1 = canvas.getAllByRole('button', {name: 'Save'})[0];
+      await userEvent.click(saveButton1);
+      expect(textfield1).not.toBeInTheDocument();
+      expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
+      expect(canvas.getByText('Validation error 1.')).toBeVisible();
+    });
+
+    await step('Expanding the item again does no longer displays the error', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+      const textfield1 = canvas.getByLabelText('My field (1)');
+      expect(textfield1).toBeVisible();
+      expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
+      expect(canvas.getByText('Validation error 1.')).toBeVisible();
+    });
   },
 };
 

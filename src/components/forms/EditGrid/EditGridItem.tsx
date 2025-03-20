@@ -1,12 +1,13 @@
 import {Fieldset, FieldsetLegend, SecondaryActionButton} from '@utrecht/component-library-react';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {Formik, setNestedObjectValues} from 'formik';
+import {Formik, FormikErrors, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
+import type {z} from 'zod';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import Icon from '@/components/icons';
-import type {JSONObject} from '@/types';
+import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
 import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
@@ -45,6 +46,8 @@ interface WithoutIsolation {
   saveLabel?: never;
   onChange?: never;
   initiallyExpanded?: false;
+  validationSchema?: never;
+  errors?: never;
 }
 
 interface WithIsolation<T> {
@@ -81,11 +84,13 @@ interface WithIsolation<T> {
    * Set to `true` for newly added items so that the user can start editing directly.
    */
   initiallyExpanded?: boolean;
+  validationSchema?: z.ZodType<T>;
+  errors?: FormikErrors<T>;
 }
 
 export type EditGridItemProps<T> = EditGridItemBaseProps & (WithoutIsolation | WithIsolation<T>);
 
-function EditGridItem<T extends JSONObject = JSONObject>({
+function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   index,
   heading,
   canRemove,
@@ -106,9 +111,13 @@ function EditGridItem<T extends JSONObject = JSONObject>({
     {index: index + 1}
   );
 
-  // TODO
-  const errors: any = {};
-  const zodSchema: any = null;
+  // if there are errors but the state is not expanded, ensure that it is expanded so
+  // that errors are displayed. Updates to the values result in those errors being
+  // cleared via `props.onChange`.
+  if (props.errors && !expanded) {
+    setExpanded(true);
+  }
+
   return (
     <li className="openforms-editgrid__item">
       <Fieldset>
@@ -130,14 +139,16 @@ function EditGridItem<T extends JSONObject = JSONObject>({
           // values, errors, touched state and the validation behaviour (validate individual fields, on blur)
           <Formik<T>
             initialValues={props.data}
-            initialErrors={{}}
-            initialTouched={false ? setNestedObjectValues(errors, true) : undefined}
+            initialErrors={props.errors}
+            initialTouched={props.errors ? setNestedObjectValues(props.errors, true) : undefined}
             // when removing items, the order changes, so we must re-render to display the
             // correct data
             enableReinitialize
             validateOnChange={false}
             validateOnBlur={false}
-            validationSchema={false ? toFormikValidationSchema(zodSchema) : undefined}
+            validationSchema={
+              props.validationSchema ? toFormikValidationSchema(props.validationSchema) : undefined
+            }
             onSubmit={async values => {
               if (props.canEdit) props.onChange(values);
               setExpanded(false);
