@@ -17,6 +17,9 @@ export default {
   decorators: [withFormik],
   args: {
     name: 'items',
+    label: 'Items',
+    isRequired: true,
+    description: 'Add as many items as you want!',
     emptyItem: {myField: ''},
     addButtonLabel: undefined,
     getItemHeading: (_, index) => `Item ${index + 1}`,
