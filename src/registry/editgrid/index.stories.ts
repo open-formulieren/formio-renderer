@@ -1,7 +1,9 @@
 import {ContentComponentSchema, FieldsetComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
+import {userEvent, within} from '@storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
+import {getRegistryEntry} from '@/registry';
 import {withFormik} from '@/sb-decorators';
 
 import {EditGrid} from './';
@@ -12,6 +14,11 @@ export default {
   decorators: [withFormik],
   args: {
     renderNested: FormioComponent,
+    getRegistryEntry: getRegistryEntry,
+  },
+  argTypes: {
+    renderNested: {table: {disable: true}},
+    getRegistryEntry: {table: {disable: true}},
   },
 } satisfies Meta<typeof EditGrid>;
 
@@ -55,6 +62,10 @@ export const MinimalConfiguration: Story = {
         ],
       },
     },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
   },
 };
 
