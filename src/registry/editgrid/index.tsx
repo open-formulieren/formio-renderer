@@ -6,12 +6,8 @@ import {EditGrid as EditGridField} from '@/components/forms';
 import type {RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
 
+import ItemPreview from './ItemPreview';
 import getInitialValues from './initialValues';
-
-export interface EditGridProps {
-  componentDefinition: EditGridComponentSchema;
-  renderNested: React.FC<FormioComponentProps>;
-}
 
 export interface ItemBodyProps {
   renderNested: React.FC<FormioComponentProps>;
@@ -26,15 +22,11 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   values,
   expanded,
 }) => {
-  // TODO: incorporate conditional visibility here, which is complicated.
+  // TODO: incorporate conditional visibility here, which is complicated for editgrids.
   const componentsToRender = components;
 
   if (!expanded) {
-    return (
-      <code>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
-      </code>
-    );
+    return <ItemPreview components={componentsToRender} values={values} />;
   }
   return (
     <FormFieldContainer>
@@ -44,6 +36,11 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     </FormFieldContainer>
   );
 };
+
+export interface EditGridProps {
+  componentDefinition: EditGridComponentSchema;
+  renderNested: React.FC<FormioComponentProps>;
+}
 
 export const EditGrid: React.FC<EditGridProps> = ({
   componentDefinition: {
