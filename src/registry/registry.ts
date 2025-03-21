@@ -2,6 +2,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import BSN from './bsn';
 import DateField from './date';
+import EditGrid from './editgrid';
 import Email from './email';
 import Fieldset from './fieldset';
 import PhoneNumber from './phoneNumber';
@@ -25,6 +26,7 @@ const REGISTRY: Registry = {
   radio: RadioField,
   // special types
   bsn: BSN,
+  editgrid: EditGrid,
   // layout
   fieldset: Fieldset,
   // deprecated

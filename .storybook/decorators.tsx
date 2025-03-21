@@ -4,6 +4,8 @@ import {Form, Formik} from 'formik';
 import {CSSProperties} from 'react';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import {getRegistryEntry} from '@/registry';
+
 import RendererSettingsProvider from '../src/components/RendererSettingsProvider';
 
 /**
@@ -41,6 +43,7 @@ export const withFormik: Decorator = (Story, context) => {
       initialValues={initialValues}
       initialErrors={initialErrors}
       initialTouched={initialTouched}
+      initialStatus={{getRegistryEntry}}
       enableReinitialize
       onSubmit={async values => onSubmit(values)}
       validateOnBlur={false}
