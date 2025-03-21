@@ -32,6 +32,7 @@ const FormioComponent: React.FC<FormioComponentProps> = ({componentDefinition}) 
     <TypeSpecificComponent
       componentDefinition={componentDefinition}
       renderNested={FormioComponent}
+      getRegistryEntry={getRegistryEntry}
     />
   );
 };

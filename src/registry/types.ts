@@ -23,7 +23,17 @@ export interface RenderComponentProps<S extends AnyComponentSchema = AnyComponen
   /**
    * The generic render component for nested components, if applicable.
    */
-  renderNested?: React.FC<FormioComponentProps>;
+  renderNested: React.FC<FormioComponentProps>;
+  /**
+   * The registry entrypoint to look up the component-type specific configuration for
+   * a given component.
+   *
+   * This must be passed dynamically as a prop to avoid circular imports, as the registry
+   * depends on low-level React components/primitives, while the high-level components
+   * use the registry API, which creates an inherent circular dependency when dealing
+   * with tree visitors.
+   */
+  getRegistryEntry: GetRegistryEntry;
 }
 
 export type GetInitialValues<S, V = JSONValue> = (
