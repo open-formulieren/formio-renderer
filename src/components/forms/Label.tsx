@@ -53,7 +53,8 @@ export const LabelContent: React.FC<LabelContentProps> = ({
 LabelContent.displayName = 'LabelContent';
 
 export interface LabelProps {
-  id: string;
+  // id prop is only optional when the label cannot be associated with a single form element
+  id?: string;
   children: React.ReactNode;
   isDisabled?: boolean;
   isRequired?: boolean;

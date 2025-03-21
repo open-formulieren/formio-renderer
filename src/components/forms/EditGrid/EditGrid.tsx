@@ -1,10 +1,13 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 import type {z} from 'zod';
 
+import HelpText from '@/components/forms/HelpText';
+import Label from '@/components/forms/Label';
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
 
@@ -16,6 +19,20 @@ interface EditGridBaseProps<T> {
    * are based off the value of this field.
    */
   name: string;
+  /**
+   * The (accessible) label for the field - anything that can be rendered.
+   */
+  label: React.ReactNode;
+  /**
+   * Required fields get additional markup/styling to indicate this validation requirement.
+   */
+  isRequired?: boolean;
+  /**
+   * Additional description displayed close to the field - use this to document any
+   * validation requirements that are crucial to successfully submit the form. More
+   * information that is contextual/background typically belongs in a tooltip.
+   */
+  description?: React.ReactNode;
   /**
    * Callback to return the heading for a single item. Gets passed the item values and
    * index in the array of values.
@@ -85,6 +102,9 @@ export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation<T> | Wit
 
 function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   name,
+  label,
+  isRequired,
+  description,
   getItemHeading,
   canRemoveItem,
   removeItemLabel = '',
@@ -96,75 +116,79 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const {value: formikItems} = getFieldProps<T[]>(name);
   const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
   return (
-    <FieldArray name={name} validateOnChange={false}>
-      {arrayHelpers => (
-        <div className="openforms-editgrid">
-          {/* Render each item wrapped in an EditGridItem */}
-          <ol className="openforms-editgrid__container">
-            {formikItems.map((values, index) =>
-              props.enableIsolation ? (
-                <EditGridItem<T>
-                  key={index}
-                  index={index}
-                  heading={getItemHeading?.(values, index)}
-                  getBody={opts => props.getItemBody(values, index, opts)}
-                  enableIsolation
-                  data={values}
-                  canEdit={props.canEditItem?.(values, index) ?? true}
-                  validationSchema={props.getItemValidationSchema?.(index)}
-                  errors={getIn(errors, `${name}.${index}`)}
-                  saveLabel={props.saveItemLabel}
-                  onChange={(newValue: T) => {
-                    arrayHelpers.replace(index, newValue);
-                    // clear any (initial) errors for this item - since this callback
-                    // is invoked, it implies that the schema validation passed. Any
-                    // external (backend) errors will require re-validation of the whole
-                    // form by the backend, so we can safely clear those backend errors.
-                    const {setError} = getFieldHelpers(`${name}.${index}`);
-                    setError(undefined);
-                  }}
-                  canRemove={canRemoveItem?.(values, index) ?? true}
-                  removeLabel={removeItemLabel}
-                  onRemove={() => arrayHelpers.remove(index)}
-                  initiallyExpanded={indexToAutoExpand === index}
-                />
-              ) : (
-                <EditGridItem<T>
-                  key={index}
-                  index={index}
-                  getBody={opts => props.getItemBody(values, index, opts)}
-                  heading={getItemHeading?.(values, index)}
-                  canRemove={canRemoveItem?.(values, index) ?? true}
-                  removeLabel={removeItemLabel}
-                  onRemove={() => arrayHelpers.remove(index)}
-                />
-              )
-            )}
-          </ol>
-
-          {emptyItem && (
-            <ButtonGroup>
-              <PrimaryActionButton
-                type="button"
-                onClick={() => {
-                  setIndexToAutoExpand(formikItems.length);
-                  arrayHelpers.push(emptyItem);
-                }}
-              >
-                <Icon icon="add" />
-                &nbsp;
-                {addButtonLabel || (
-                  <FormattedMessage
-                    description="Edit grid add button, default label text"
-                    defaultMessage="Add another"
+    <FormField type="editgrid" className="utrecht-form-field--openforms">
+      {label && <Label isRequired={isRequired}>{label}</Label>}
+      <FieldArray name={name} validateOnChange={false}>
+        {arrayHelpers => (
+          <div className="openforms-editgrid">
+            {/* Render each item wrapped in an EditGridItem */}
+            <ol className="openforms-editgrid__container">
+              {formikItems.map((values, index) =>
+                props.enableIsolation ? (
+                  <EditGridItem<T>
+                    key={index}
+                    index={index}
+                    heading={getItemHeading?.(values, index)}
+                    getBody={opts => props.getItemBody(values, index, opts)}
+                    enableIsolation
+                    data={values}
+                    canEdit={props.canEditItem?.(values, index) ?? true}
+                    validationSchema={props.getItemValidationSchema?.(index)}
+                    errors={getIn(errors, `${name}.${index}`)}
+                    saveLabel={props.saveItemLabel}
+                    onChange={(newValue: T) => {
+                      arrayHelpers.replace(index, newValue);
+                      // clear any (initial) errors for this item - since this callback
+                      // is invoked, it implies that the schema validation passed. Any
+                      // external (backend) errors will require re-validation of the whole
+                      // form by the backend, so we can safely clear those backend errors.
+                      const {setError} = getFieldHelpers(`${name}.${index}`);
+                      setError(undefined);
+                    }}
+                    canRemove={canRemoveItem?.(values, index) ?? true}
+                    removeLabel={removeItemLabel}
+                    onRemove={() => arrayHelpers.remove(index)}
+                    initiallyExpanded={indexToAutoExpand === index}
                   />
-                )}
-              </PrimaryActionButton>
-            </ButtonGroup>
-          )}
-        </div>
-      )}
-    </FieldArray>
+                ) : (
+                  <EditGridItem<T>
+                    key={index}
+                    index={index}
+                    getBody={opts => props.getItemBody(values, index, opts)}
+                    heading={getItemHeading?.(values, index)}
+                    canRemove={canRemoveItem?.(values, index) ?? true}
+                    removeLabel={removeItemLabel}
+                    onRemove={() => arrayHelpers.remove(index)}
+                  />
+                )
+              )}
+            </ol>
+
+            {emptyItem && (
+              <ButtonGroup>
+                <PrimaryActionButton
+                  type="button"
+                  onClick={() => {
+                    setIndexToAutoExpand(formikItems.length);
+                    arrayHelpers.push(emptyItem);
+                  }}
+                >
+                  <Icon icon="add" />
+                  &nbsp;
+                  {addButtonLabel || (
+                    <FormattedMessage
+                      description="Edit grid add button, default label text"
+                      defaultMessage="Add another"
+                    />
+                  )}
+                </PrimaryActionButton>
+              </ButtonGroup>
+            )}
+          </div>
+        )}
+      </FieldArray>
+      <HelpText>{description}</HelpText>
+    </FormField>
   );
 }
 
