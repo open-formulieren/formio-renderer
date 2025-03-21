@@ -12,6 +12,7 @@ import getInitialValues from './initialValues';
 
 export interface ItemBodyProps {
   renderNested: React.FC<FormioComponentProps>;
+  getRegistryEntry: GetRegistryEntry;
   components: AnyComponentSchema[];
   values: JSONObject;
   expanded: boolean;
@@ -19,6 +20,7 @@ export interface ItemBodyProps {
 
 const ItemBody: React.FC<ItemBodyProps> = ({
   renderNested: FormioComponent,
+  getRegistryEntry,
   components,
   values,
   expanded,
@@ -27,7 +29,13 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   const componentsToRender = components;
 
   if (!expanded) {
-    return <ItemPreview components={componentsToRender} values={values} />;
+    return (
+      <ItemPreview
+        components={componentsToRender}
+        values={values}
+        getRegistryEntry={getRegistryEntry}
+      />
+    );
   }
   return (
     <FormFieldContainer>
@@ -76,6 +84,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
       getItemBody={(values, _, {expanded}) => (
         <ItemBody
           renderNested={FormioComponent}
+          getRegistryEntry={getRegistryEntry}
           components={components}
           values={values}
           expanded={expanded}

@@ -3,6 +3,7 @@ import type {RadioComponentSchema} from '@open-formulieren/types';
 import RadioField from '@/components/forms/RadioField';
 import type {RegistryEntry} from '@/registry/types';
 
+import ValueDisplay from './ValueDisplay';
 import getInitialValues from './initialValues';
 import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
@@ -28,6 +29,7 @@ export const FormioRadioField: React.FC<FormioRadioFieldProps> = ({componentDefi
 
 const RadioComponent: RegistryEntry<RadioComponentSchema> = {
   formField: FormioRadioField,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };

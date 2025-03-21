@@ -6,6 +6,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {FormioRadioField} from './';
+import ValueDisplay from './ValueDisplay';
 import type {ManualRadioValuesSchema} from './types';
 
 export default {
@@ -130,5 +131,41 @@ export const ValidateOptionalNull: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalledOnce();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: ManualRadioValuesSchema;
+  value: string;
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValueDisplayStory: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  name: 'Value Display',
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio',
+      defaultValue: null,
+      ...extensionBoilerplate,
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+    } satisfies ManualRadioValuesSchema,
+    value: 'option1',
   },
 };

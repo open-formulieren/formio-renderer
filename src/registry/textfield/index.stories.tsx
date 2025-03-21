@@ -7,6 +7,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {FormioTextField as TextField} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / basic / textfield',
@@ -170,5 +171,49 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: TextFieldComponentSchema;
+  value: string | string[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: false,
+    } satisfies TextFieldComponentSchema,
+    value: 'Single value',
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: true,
+    } satisfies TextFieldComponentSchema,
+    value: ['First', 'Second'],
   },
 };

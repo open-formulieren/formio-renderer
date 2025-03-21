@@ -7,6 +7,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {FormioDate} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / custom / date',
@@ -109,5 +110,63 @@ export const ValidateValidDate: ValidationStory = {
     expect(monthInput).toHaveDisplayValue('13');
     expect(dayInput).toHaveDisplayValue('8');
     expect(yearInput).toHaveDisplayValue('2000');
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: DateComponentSchema;
+  value: string | string[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'A date field',
+      multiple: false,
+    } satisfies DateComponentSchema,
+    value: '1980-01-01',
+  },
+};
+
+export const SingleEmptyValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'A date field',
+      multiple: false,
+    } satisfies DateComponentSchema,
+    value: '',
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'A date field',
+      multiple: true,
+    } satisfies DateComponentSchema,
+    value: ['1980-01-01', '', '2025-03-21'],
   },
 };

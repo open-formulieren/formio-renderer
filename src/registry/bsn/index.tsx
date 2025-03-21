@@ -3,6 +3,7 @@ import type {BsnComponentSchema} from '@open-formulieren/types';
 import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
+import ValueDisplay from './ValueDisplay';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -29,6 +30,7 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({
 
 const EmailComponent: RegistryEntry<BsnComponentSchema> = {
   formField: FormioBSN,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };

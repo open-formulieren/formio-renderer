@@ -42,6 +42,11 @@ export type GetInitialValues<S, V = JSONValue> = (
   getRegistryEntry: GetRegistryEntry
 ) => Record<string, V>;
 
+export interface ValueDisplayProps<S, V extends JSONValue | unknown = unknown> {
+  componentDefinition: S;
+  value: V;
+}
+
 export type GetValidationSchema<S> = (
   componentDefinition: S,
   // intl object to localize error messages
@@ -59,7 +64,7 @@ export type ExcludeHiddenComponents<S> = (
 
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
-      formField: React.FC<RenderComponentProps<S>>;
+      formField: React.ComponentType<RenderComponentProps<S>>;
       /**
        * Derive the default/initial values from the compnent, optionally recursing.
        *
@@ -69,6 +74,13 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * default values.
        */
       getInitialValues?: GetInitialValues<S>;
+      /**
+       * Derive the summary/read-only of a field for the given component definition.
+       *
+       * The raw form field value is displayed in a useful way for summaries, taking the
+       * intrinstic data type of the component into account.
+       */
+      valueDisplay?: React.ComponentType<ValueDisplayProps<S>>;
       /**
        * Build the validation schema from the component definition.
        */
