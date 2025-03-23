@@ -1,6 +1,6 @@
 import {ContentComponentSchema, FieldsetComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
-import {userEvent, within} from '@storybook/test';
+import {expect, userEvent, within} from '@storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
 import {getRegistryEntry} from '@/registry';
@@ -66,6 +66,46 @@ export const MinimalConfiguration: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+  },
+};
+
+export const WithValidationSchema: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'text',
+          label: 'Numbers only, required',
+          validate: {
+            required: true,
+            pattern: '\\d+',
+          },
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [{text: ''}],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+    const input = await canvas.findByLabelText('Numbers only, required');
+    await userEvent.type(input, 'abc');
+    await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+    expect(await canvas.findByText('Invalid')).toBeVisible();
   },
 };
 

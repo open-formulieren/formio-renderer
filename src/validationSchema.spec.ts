@@ -17,7 +17,9 @@ test('Construct schema from one dotted-key-schema pair', () => {
   const schema = composeValidationSchemas([pair]);
 
   expect(schema.shape.foo).toBeInstanceOf(z.ZodObject);
-  expect(schema.shape.foo.shape.bar).toBeInstanceOf(z.ZodString);
+
+  const foo: any = schema.shape.foo;
+  expect(foo.shape.bar).toBeInstanceOf(z.ZodString);
 });
 
 test('Complex schema composition from multiple key-schema pairs', () => {
@@ -32,7 +34,7 @@ test('Complex schema composition from multiple key-schema pairs', () => {
   expect(schema).toBeInstanceOf(z.ZodObject);
   expect(Object.keys(schema.shape)).toEqual(['foo']);
 
-  const fooSchema = schema.shape.foo;
+  const fooSchema: any = schema.shape.foo;
   expect(fooSchema).toBeInstanceOf(z.ZodObject);
   expect(Object.keys(fooSchema.shape)).toEqual(['bar', 'yeet']);
 

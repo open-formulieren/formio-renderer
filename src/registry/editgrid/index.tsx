@@ -1,10 +1,12 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
+import {useIntl} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import {EditGrid as EditGridField} from '@/components/forms';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
+import {buildValidationSchema} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
 
 import ItemPreview from './ItemPreview';
@@ -69,9 +71,15 @@ export const EditGrid: React.FC<EditGridProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
 }) => {
+  const intl = useIntl();
+
   const emptyItem: JSONObject | null = disableAddingRemovingRows
     ? null
     : extractInitialValues(components, getRegistryEntry);
+
+  // build the validation schema from the nested component definitions
+  // TODO: take into account hidden components!
+  const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
 
   return (
     <EditGridField<JSONObject>
@@ -93,6 +101,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
       emptyItem={emptyItem}
       addButtonLabel={addAnother}
       canEditItem={() => true}
+      getItemValidationSchema={() => zodSchema}
       saveItemLabel={saveRow}
       canRemoveItem={() => !disableAddingRemovingRows}
       removeItemLabel={removeRow}
