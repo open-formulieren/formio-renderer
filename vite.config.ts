@@ -65,4 +65,8 @@ export default defineConfig({
       external: packageRegexes,
     },
   },
+  test: {
+    environment: 'jsdom',
+    setupFiles: './vitest.setup.ts',
+  },
 });
