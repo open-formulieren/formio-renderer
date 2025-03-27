@@ -7,6 +7,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {FormioEmail} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / basic / email',
@@ -171,5 +172,51 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: EmailComponentSchema;
+  value: string | string[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      key: 'my.email',
+      label: 'An email',
+      validateOn: 'blur',
+      multiple: false,
+    } satisfies EmailComponentSchema,
+    value: 'openforms@example.com',
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      key: 'my.email',
+      label: 'An email',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies EmailComponentSchema,
+    value: ['openforms1@example.com', 'openforms2@example.com'],
   },
 };

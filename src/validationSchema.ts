@@ -22,7 +22,7 @@ export type SchemaRecord = Record<string, z.ZodFirstPartySchemaTypes>;
  * assigned. Finally, this tree is converted into a zod.object schema tree ready to use
  * as validator.
  */
-export const composeValidationSchemas = (pairs: KeySchemaPair[]): z.ZodObject<any> => {
+export const composeValidationSchemas = (pairs: KeySchemaPair[]): z.ZodObject<z.ZodRawShape> => {
   // first, create a tree for all the nested keys that we can process to turn
   // into a recursive z.object for the matching schema.
   let completeTree: SchemaTree = {};
@@ -30,7 +30,7 @@ export const composeValidationSchemas = (pairs: KeySchemaPair[]): z.ZodObject<an
     completeTree = setIn(completeTree, key, nestedSchema);
   }
 
-  const createZodObject = (tree: SchemaTree): z.ZodObject<any> =>
+  const createZodObject = (tree: SchemaTree): z.ZodObject<z.ZodRawShape> =>
     z.object(
       Object.entries(tree).reduce((acc: SchemaRecord, [key, value]) => {
         acc[key] = value instanceof z.ZodSchema ? value : createZodObject(value);
@@ -48,7 +48,7 @@ export const buildValidationSchema = (
   components: AnyComponentSchema[],
   intl: IntlShape,
   getRegistryEntry: GetRegistryEntry
-): z.ZodFirstPartySchemaTypes => {
+): z.ZodObject<z.ZodRawShape> => {
   // visit all components and ask them to produce their validation schema. Merge all that
   // into a single object and finally compose the deep zod validation schema.
 

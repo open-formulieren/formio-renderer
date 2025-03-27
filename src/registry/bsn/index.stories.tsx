@@ -7,6 +7,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {FormioBSN as BSN} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / custom / bsn',
@@ -106,5 +107,53 @@ export const ValidateBSN: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Invalid BSN')).toBeVisible();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: BsnComponentSchema;
+  value: string | string[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: false,
+    } satisfies BsnComponentSchema,
+    value: 'Single value',
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies BsnComponentSchema,
+    value: ['First', 'Second'],
   },
 };

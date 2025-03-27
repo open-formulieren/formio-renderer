@@ -3,6 +3,7 @@ import type {PhoneNumberComponentSchema} from '@open-formulieren/types';
 import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
+import ValueDisplay from './ValueDisplay';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -37,6 +38,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({
 
 const PhoneNumberComponent: RegistryEntry<PhoneNumberComponentSchema> = {
   formField: PhoneNumberField,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };

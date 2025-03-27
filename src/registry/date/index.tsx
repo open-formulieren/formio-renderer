@@ -3,6 +3,7 @@ import type {DateComponentSchema} from '@open-formulieren/types';
 import {DateField} from '@/components/forms';
 import type {RegistryEntry} from '@/registry/types';
 
+import ValueDisplay from './ValueDisplay';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -26,6 +27,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({
 
 const DateComponent: RegistryEntry<DateComponentSchema> = {
   formField: FormioDate,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };

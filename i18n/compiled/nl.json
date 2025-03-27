@@ -1,4 +1,16 @@
 {
+  "+xOWBM": [
+    {
+      "type": 0,
+      "value": "Verwijderen"
+    }
+  ],
+  "0EdUXi": [
+    {
+      "type": 0,
+      "value": "Opslaan"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -27,6 +39,26 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "9SgPC6": [
+    {
+      "type": 0,
+      "value": "Verwijder item "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
+  "At/y3w": [
+    {
+      "type": 0,
+      "value": "Bewerk item "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -43,6 +75,12 @@
     {
       "type": 0,
       "value": "Maand"
+    }
+  ],
+  "cKFCTI": [
+    {
+      "type": 0,
+      "value": "Nog één toevoegen"
     }
   ],
   "ht1O2Z": [

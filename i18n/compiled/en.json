@@ -1,4 +1,16 @@
 {
+  "+xOWBM": [
+    {
+      "type": 0,
+      "value": "Remove"
+    }
+  ],
+  "0EdUXi": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -27,6 +39,26 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "9SgPC6": [
+    {
+      "type": 0,
+      "value": "Remove item "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
+  "At/y3w": [
+    {
+      "type": 0,
+      "value": "Edit item "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -43,6 +75,12 @@
     {
       "type": 0,
       "value": "Month"
+    }
+  ],
+  "cKFCTI": [
+    {
+      "type": 0,
+      "value": "Add another"
     }
   ],
   "ht1O2Z": [

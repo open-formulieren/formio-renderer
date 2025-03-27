@@ -7,6 +7,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import {PhoneNumberField} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / basic / phoneNumber',
@@ -147,5 +148,51 @@ export const ValidatePattern: ValidationStory = {
         'Invalid phone number - a phone number may only contain digits, the + or - sign or spaces'
       )
     ).toBeVisible();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: PhoneNumberComponentSchema;
+  value: string | string[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'my.phoneNumber',
+      label: 'A phone number',
+      multiple: false,
+      inputMask: null,
+    } satisfies PhoneNumberComponentSchema,
+    value: '06 123 456 78',
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'my.phoneNumber',
+      label: 'A phone number',
+      multiple: true,
+      inputMask: null,
+    } satisfies PhoneNumberComponentSchema,
+    value: ['06 123 456 78', '+3120 123 456'],
   },
 };
