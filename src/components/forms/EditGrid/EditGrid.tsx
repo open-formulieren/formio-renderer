@@ -174,7 +174,6 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                   }}
                 >
                   <Icon icon="add" />
-                  &nbsp;
                   {addButtonLabel || (
                     <FormattedMessage
                       description="Edit grid add button, default label text"
