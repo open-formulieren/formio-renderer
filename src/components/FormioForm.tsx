@@ -1,5 +1,13 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, FormikErrors, setIn, setNestedObjectValues, useFormikContext} from 'formik';
+import {
+  Form,
+  Formik,
+  FormikErrors,
+  getIn,
+  setIn,
+  setNestedObjectValues,
+  useFormikContext,
+} from 'formik';
 import {forwardRef, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
@@ -162,39 +170,42 @@ const merge = (target: JSONObject, source: Record<string, JSONValue | undefined>
   // loop over the keys that are defined, this way we detect explicit `undefined` keys
   // rather than the ones that are absent or explicitly set.
   for (const key in source) {
-    console.group('Processing key ', key);
-
     const value = source[key];
 
     // if the values is explicitly set to undefined, it means the key must be removed.
     if (value === undefined) {
-      console.log('Unsetting key.');
       target = setIn(target, key, undefined);
-      console.log('Updated target:', target);
       continue;
     }
 
     // recurse
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      if (!target[key]) {
-        target = setIn(target, key, {});
+      let targetValue: JSONObject | undefined = getIn(target, key);
+      if (targetValue === undefined) {
+        targetValue = {};
+        target = setIn(target, key, targetValue);
       }
-      const nested = merge(target[key] as JSONObject, value);
+      const nested = merge(targetValue, value);
       target = setIn(target, key, nested);
-      console.log('Updated target:', target);
       continue;
     }
 
     if (value && Array.isArray(value)) {
-      // TODO: handle array
+      // Arrays are used in:
+      // * editgrid components
+      // * file upload components
+      // * components that have `multiple: true`
+      //
+      // Because JSON doesn't have the `undefined` concept to potentially remove array
+      // items, we treat an array value as a "replace" action and don't recurse for
+      // partial updates. If partial updates are required, you should emit
+      // `parent.$index.nested` keys in the `source` object.
+      target = setIn(target, key, value);
       continue;
     }
 
     // otherwise we have a primitive, so just assign it
     target = setIn(target, key, value);
-    console.log('Updated target:', target);
-
-    console.groupEnd();
   }
 
   return target;

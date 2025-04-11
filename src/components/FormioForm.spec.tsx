@@ -4,7 +4,7 @@ import {createRef, forwardRef} from 'react';
 import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
 
-import FormioForm, {FormStateRef, type FormioFormProps} from './FormioForm';
+import FormioForm, {type FormStateRef, type FormioFormProps} from './FormioForm';
 
 type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit'>;
 
@@ -44,7 +44,7 @@ describe('Updating form values', () => {
     expect(input).toHaveDisplayValue('');
 
     // now mutate the form values and check that the state updates accordingly
-    ref.current?.updateValues({foo: 'bar'});
+    ref.current!.updateValues({foo: 'bar'});
     await waitFor(() => {
       expect(input).toHaveDisplayValue('bar');
     });
@@ -88,7 +88,7 @@ describe('Updating form values', () => {
     expect(barInput).toBeVisible();
     expect(barInput).toHaveDisplayValue('Bar');
 
-    ref.current?.updateValues({foo: 'updated'});
+    ref.current!.updateValues({foo: 'updated'});
     await waitFor(() => {
       expect(fooInput).toHaveDisplayValue('updated');
       expect(barInput).toHaveDisplayValue('Bar');
@@ -128,7 +128,7 @@ describe('Updating form values', () => {
       />
     );
 
-    ref.current?.updateValues({parent: {nested2: 'updated'}});
+    ref.current!.updateValues({parent: {nested2: 'updated'}});
 
     await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
     expect(onSubmit).toHaveBeenCalledWith({
@@ -165,7 +165,7 @@ describe('Updating form values', () => {
       />
     );
 
-    ref.current?.updateValues({parent: {nested1: 'changed', nested2: 'changed2'}});
+    ref.current!.updateValues({parent: {nested1: 'changed', nested2: 'changed2'}});
 
     await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
     expect(onSubmit).toHaveBeenCalledWith({
@@ -173,6 +173,142 @@ describe('Updating form values', () => {
         nested1: 'changed',
         nested2: 'changed2',
       },
+    });
+  });
+
+  test('Can replace editgrid as a whole', async () => {
+    const onSubmit = vi.fn();
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'comp2',
+                type: 'textfield',
+                key: 'name',
+                label: 'Name',
+              },
+            ],
+            defaultValue: [{name: 'Initial'}],
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+    // sanity check the initial state
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Initial'}]});
+
+    ref.current!.updateValues({editgrid: [{name: 'Updated'}, {name: 'New'}]});
+
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Updated'}, {name: 'New'}]});
+  });
+
+  test('Can replace individual editgrid items', async () => {
+    const onSubmit = vi.fn();
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'comp2',
+                type: 'textfield',
+                key: 'name',
+                label: 'Name',
+              },
+              {
+                id: 'comp3',
+                type: 'textfield',
+                key: 'other',
+                label: 'Other',
+              },
+            ],
+            defaultValue: [
+              {name: 'Initial', other: 'Other 1'},
+              {name: 'Initial 2', other: 'Other 2'},
+            ],
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+
+    ref.current!.updateValues({'editgrid.0': {name: 'Updated'}});
+
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({
+      editgrid: [
+        {name: 'Updated', other: 'Other 1'},
+        {name: 'Initial 2', other: 'Other 2'},
+      ],
+    });
+  });
+
+  test('Can deep partial update editgrid items', async () => {
+    const onSubmit = vi.fn();
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'comp2',
+                type: 'textfield',
+                key: 'name',
+                label: 'Name',
+              },
+              {
+                id: 'comp3',
+                type: 'textfield',
+                key: 'other',
+                label: 'Other',
+              },
+            ],
+            defaultValue: [
+              {name: 'Initial', other: 'Other 1'},
+              {name: 'Initial 2', other: 'Other 2'},
+            ],
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+
+    ref.current!.updateValues({'editgrid.0.name': 'Updated'});
+
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({
+      editgrid: [
+        {name: 'Updated', other: 'Other 1'},
+        {name: 'Initial 2', other: 'Other 2'},
+      ],
     });
   });
 });
