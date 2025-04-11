@@ -290,7 +290,7 @@ export const SetValuesFromParentComponent: Story = {
           type="button"
           onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
             event.preventDefault();
-            formRef?.current?.updateValues({nested: {component1: 'Updated value'}});
+            formRef?.current!.updateValues({nested: {component1: 'Updated value'}});
           }}
         >
           Update component1 value
@@ -346,5 +346,43 @@ export const SetValuesFromParentComponent: Story = {
         });
       });
     });
+  },
+};
+
+export const SetErrorsFromParentComponent: Story = {
+  render: args => {
+    const formRef = useRef<FormStateRef>(null);
+    return (
+      <>
+        <FormioForm {...args} ref={formRef} />
+        <PrimaryActionButton
+          type="button"
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            formRef?.current!.updateErrors({
+              nested: {component1: 'An outside validation error!'},
+            });
+          }}
+        >
+          Set error
+        </PrimaryActionButton>
+      </>
+    );
+  },
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.component1',
+        label: 'Field 1',
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Set error'}));
+    expect(await canvas.findByText('An outside validation error!')).toBeVisible();
   },
 };

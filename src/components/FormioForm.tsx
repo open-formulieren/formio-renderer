@@ -1,13 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {
-  Form,
-  Formik,
-  FormikErrors,
-  getIn,
-  setIn,
-  setNestedObjectValues,
-  useFormikContext,
-} from 'formik';
+import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
 import {forwardRef, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
@@ -21,8 +13,9 @@ import {filterVisibleComponents} from '@/visibility';
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
 import RendererSettingsProvider from './RendererSettingsProvider';
+import {type NestedObject, merge} from './utils';
 
-export type ErrorObject = {[K: string]: string | string[] | ErrorObject};
+export type Errors = NestedObject<string | string[]>;
 
 /**
  * Props for a complete Formio form definition.
@@ -45,7 +38,7 @@ export interface FormioFormProps {
    * Initial validation errors to display. Note that these are cleared when the
    * client side validation runs.
    */
-  errors?: ErrorObject;
+  errors?: Errors;
 
   /**
    * Callback when the form validates (client-side) to submit the entered values.
@@ -73,8 +66,12 @@ export interface FormioFormProps {
   requiredFieldsWithAsterisk?: boolean;
 }
 
+export type UpdateValues = {[K: string]: JSONValue | undefined};
+export type UpdateErrors = NestedObject<string | string[] | undefined>;
+
 export interface FormStateRef {
-  updateValues: (values: JSONObject) => void;
+  updateValues: (values: UpdateValues) => void;
+  updateErrors: (errors: UpdateErrors) => void;
 }
 
 const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
@@ -121,16 +118,26 @@ export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | '
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
   ({components, id, children}, ref) => {
-    const {values, setValues} = useFormikContext<JSONObject>();
+    const {values, setValues, errors, setErrors, setTouched} = useFormikContext<JSONObject>();
 
     useImperativeHandle(
       ref,
       () => ({
-        updateValues: (values: JSONObject): void => {
+        updateValues: (values: UpdateValues): void => {
           setValues(prev => getFormikValues(prev, values));
         },
+        updateErrors: (updates: UpdateErrors): void => {
+          // FormikErrors<JSONObject> narrows down to {[k: string]: string | undefined},
+          // which is wrong and misses the recursion entirely. So, we cast instead :(
+          const newErrors = getFormikErrors(
+            errors as FormikErrors<unknown>,
+            updates
+          ) as FormikErrors<unknown>;
+          setErrors(newErrors);
+          setTouched(setNestedObjectValues(newErrors, true));
+        },
       }),
-      [setValues]
+      [setValues, errors, setErrors]
     );
 
     const componentsToRender: AnyComponentSchema[] = useMemo(() => {
@@ -159,56 +166,12 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
  *
  * `prev` and `updates` can both be arbitrary deeply nested.
  */
-const getFormikValues = (
-  prev: JSONObject,
-  updates: Record<string, JSONValue | undefined>
-): JSONObject => {
-  return merge(prev, updates);
+const getFormikValues = (prev: JSONObject, updates: UpdateValues): JSONObject => {
+  return merge<JSONValue>(prev, updates);
 };
 
-const merge = (target: JSONObject, source: Record<string, JSONValue | undefined>): JSONObject => {
-  // loop over the keys that are defined, this way we detect explicit `undefined` keys
-  // rather than the ones that are absent or explicitly set.
-  for (const key in source) {
-    const value = source[key];
-
-    // if the values is explicitly set to undefined, it means the key must be removed.
-    if (value === undefined) {
-      target = setIn(target, key, undefined);
-      continue;
-    }
-
-    // recurse
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      let targetValue: JSONObject | undefined = getIn(target, key);
-      if (targetValue === undefined) {
-        targetValue = {};
-        target = setIn(target, key, targetValue);
-      }
-      const nested = merge(targetValue, value);
-      target = setIn(target, key, nested);
-      continue;
-    }
-
-    if (value && Array.isArray(value)) {
-      // Arrays are used in:
-      // * editgrid components
-      // * file upload components
-      // * components that have `multiple: true`
-      //
-      // Because JSON doesn't have the `undefined` concept to potentially remove array
-      // items, we treat an array value as a "replace" action and don't recurse for
-      // partial updates. If partial updates are required, you should emit
-      // `parent.$index.nested` keys in the `source` object.
-      target = setIn(target, key, value);
-      continue;
-    }
-
-    // otherwise we have a primitive, so just assign it
-    target = setIn(target, key, value);
-  }
-
-  return target;
+const getFormikErrors = (prev: Errors, updates: UpdateErrors): Errors => {
+  return merge<string | string[]>(prev, updates);
 };
 
 export default FormioForm;

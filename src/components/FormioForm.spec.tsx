@@ -301,7 +301,7 @@ describe('Updating form values', () => {
       />
     );
 
-    ref.current!.updateValues({'editgrid.0.name': 'Updated'});
+    ref.current!.updateValues({'editgrid.0.name': 'Updated', bar: undefined});
 
     await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
     expect(onSubmit).toHaveBeenCalledWith({
