@@ -41,6 +41,17 @@ export const Default: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    name: 'test',
+    label: 'test',
+    description: 'This is a custom description',
+    isDisabled: false,
+    isRequired: true,
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   parameters: {

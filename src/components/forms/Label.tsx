@@ -58,13 +58,25 @@ export interface LabelProps {
   children: React.ReactNode;
   isDisabled?: boolean;
   isRequired?: boolean;
+  tooltip?: React.ReactNode;
 }
 
-const Label: React.FC<LabelProps> = ({id, isRequired = false, isDisabled = false, children}) => (
-  <div className="utrecht-form-field__label">
+const Label: React.FC<LabelProps> = ({
+  id,
+  isRequired = false,
+  isDisabled = false,
+  tooltip,
+  children,
+}) => (
+  <div
+    className={clsx('utrecht-form-field__label', {
+      'utrecht-form-field__label--openforms-tooltip': !!tooltip,
+    })}
+  >
     <LabelContent id={id} isRequired={isRequired} isDisabled={isDisabled}>
       {children}
     </LabelContent>
+    {tooltip}
   </div>
 );
 

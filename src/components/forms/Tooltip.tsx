@@ -84,7 +84,7 @@ const Tooltip: React.FC<TooltipProps> = ({children, id}) => {
         <Icon icon="tooltip" className="openforms-tooltip-icon" />
       </UtrechtIcon>
       {/* The DOM node must always be rendered to support screen readers - handle visibility with CSS */}
-      <div
+      <span
         className={clsx('openforms-tooltip', `openforms-tooltip--${placement}`, {
           'openforms-tooltip--visible': isOpen,
         })}
@@ -93,9 +93,9 @@ const Tooltip: React.FC<TooltipProps> = ({children, id}) => {
         ref={refs.setFloating}
         {...getFloatingProps()}
       >
-        <div className="openforms-tooltip__arrow" />
-        <div className="openforms-tooltip__content">{children}</div>
-      </div>
+        <span className="openforms-tooltip__arrow" />
+        <span className="openforms-tooltip__content">{children}</span>
+      </span>
     </>
   );
 };

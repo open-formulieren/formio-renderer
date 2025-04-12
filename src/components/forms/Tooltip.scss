@@ -101,3 +101,14 @@
     padding-inline-start: var(--of-tooltip-padding-inline-start);
   }
 }
+
+// Extensions to allow tooltips inside utrecht-form-field__label
+.utrecht-form-field {
+  @include bem.element('label') {
+    @include bem.modifier('openforms-tooltip') {
+      display: flex;
+      align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
+      column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
+    }
+  }
+}
