@@ -1,0 +1,103 @@
+@use '@utrecht/components/icon';
+
+@use '@/scss/bem';
+
+.openforms-tooltip-icon {
+  color: var(--of-tooltip-icon-color, inherit);
+}
+
+.openforms-tooltip {
+  z-index: 1;
+  display: none;
+
+  &,
+  & * {
+    box-sizing: border-box;
+  }
+
+  @include bem.modifier('visible') {
+    display: flex;
+    align-items: center;
+  }
+
+  // handle the tooltip placement
+  @include bem.modifier('right') {
+    .openforms-tooltip__content {
+      transform: translateX(var(--of-tooltip-offset));
+    }
+
+    .openforms-tooltip__arrow {
+      left: calc(var(--of-tooltip-arrow-width) * -1);
+      transform: translateX(var(--of-tooltip-offset));
+
+      &:before {
+        border-left-width: 0;
+        border-right-width: var(--of-tooltip-arrow-width);
+        border-right-color: var(--of-tooltip-arrow-color);
+        right: 0;
+      }
+    }
+  }
+
+  @include bem.modifier('left') {
+    .openforms-tooltip__content {
+      transform: translateX(calc(var(--of-tooltip-offset) * -1));
+    }
+
+    .openforms-tooltip__arrow {
+      right: calc(var(--of-tooltip-arrow-width) * -1);
+      transform: translateX(calc(var(--of-tooltip-offset) * -1));
+
+      &:before {
+        border-right-width: 0;
+        border-left-width: var(--of-tooltip-arrow-width);
+        border-left-color: var(--of-tooltip-arrow-color);
+        left: 0;
+      }
+    }
+  }
+
+  @include bem.element('arrow') {
+    --_of-tooltip-arrow-block-size: var(
+      --of-tooltip-arrow-block-size,
+      var(--of-tooltip-arrow-height)
+    );
+    --_of-tooltip-arrow-inline-size: var(
+      --of-tooltip-arrow-inline-size,
+      var(--of-tooltip-arrow-width)
+    );
+
+    position: absolute;
+    z-index: 2;
+    block-size: var(--_of-tooltip-arrow-block-size);
+    inline-size: var(--_of-tooltip-arrow-inline-size);
+
+    &:before {
+      position: absolute;
+      content: '';
+      border-color: transparent;
+      border-style: solid;
+      border-block-end-width: calc(var(--_of-tooltip-arrow-block-size) * 0.5);
+      border-block-start-width: calc(var(--_of-tooltip-arrow-block-size) * 0.5);
+    }
+  }
+
+  @include bem.element('content') {
+    background-color: var(
+      --of-tooltip-background-color,
+      var(--utrecht-document-background-color, #dfdfdf)
+    );
+    border-style: var(--of-tooltip-border-style, solid);
+    border-width: var(--of-tooltip-border-width);
+    border-color: var(--of-tooltip-border-color, black);
+    border-radius: var(--of-tooltip-border-radius, 0);
+    box-shadow: var(--of-tooltip-box-shadow, unset);
+    color: var(--of-tooltip-color, inherit);
+    font-family: var(--of-tooltip-font-family, var(--utrecht-document-font-family));
+    font-size: var(--of-tooltip-font-size);
+    padding-block-end: var(--of-tooltip-padding-block-end);
+    padding-block-start: var(--of-tooltip-padding-block-start);
+    padding-inline-end: var(--of-tooltip-padding-inline-end);
+    padding-inline-start: var(--of-tooltip-padding-inline-start);
+  }
+}

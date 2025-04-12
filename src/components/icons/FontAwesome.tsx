@@ -9,6 +9,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   add: 'plus',
   edit: 'edit',
   remove: 'trash-can',
+  tooltip: 'question-circle',
 };
 
 interface FontAwesomeSolidIconProps {
