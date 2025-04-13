@@ -42,6 +42,12 @@ type Story = StoryObj<StoryArgs>;
 
 export const Default: Story = {};
 
+export const WithTooltip: Story = {
+  args: {
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const Disabled: Story = {
   args: {
     isDisabled: true,
