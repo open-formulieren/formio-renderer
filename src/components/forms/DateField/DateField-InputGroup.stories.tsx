@@ -37,6 +37,7 @@ export const InputGroup: Story = {
     name: 'test',
     label: 'Test date field',
     description: 'This is a custom description',
+    tooltip: 'A short tooltip.',
     isDisabled: false,
     isRequired: true,
   },

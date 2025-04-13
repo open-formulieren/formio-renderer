@@ -34,6 +34,11 @@ export interface DateInputGroupProps {
    */
   label: React.ReactNode;
   /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
+  /**
    * Required fields get additional markup/styling to indicate this validation requirement.
    */
   isRequired?: boolean;
@@ -62,6 +67,7 @@ export interface DateInputGroupProps {
 const DateInputGroup: React.FC<DateInputGroupProps> = ({
   name,
   label,
+  tooltip,
   isRequired,
   isDisabled,
   autoComplete,
@@ -121,6 +127,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   return (
     <InputGroup
       label={label}
+      tooltip={tooltip}
       isRequired={isRequired}
       isDisabled={isDisabled}
       isInvalid={touched && !!error}
