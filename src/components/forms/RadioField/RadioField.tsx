@@ -1,9 +1,11 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
+import clsx from 'clsx';
 import {LabelContent} from 'components/forms/Label';
 import {useField} from 'formik';
 import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
+import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import './RadioField.scss';
@@ -41,6 +43,11 @@ export interface RadioFieldProps {
    */
   description?: React.ReactNode;
   /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
+  /**
    * Array of possible choices for the field. Only one can be selected.
    */
   options: RadioOption[];
@@ -58,6 +65,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   description = '',
   isDisabled = false,
   options = [],
+  tooltip,
 }) => {
   const [, {error = '', touched}] = useField({name, type: 'radio'});
   const id = useId();
@@ -65,6 +73,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
+  const tooltipId = tooltip ? `${id}-tooltip` : undefined;
 
   return (
     <Fieldset
@@ -74,10 +83,13 @@ const RadioField: React.FC<RadioFieldProps> = ({
       role="radiogroup"
       aria-describedby={description ? descriptionid : undefined}
     >
-      <FieldsetLegend>
+      <FieldsetLegend
+        className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
+      >
         <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
           {label}
         </LabelContent>
+        {tooltip && <Tooltip id={tooltipId}>{tooltip}</Tooltip>}
       </FieldsetLegend>
 
       {options.map(({value, label: optionLabel}, index) => (
@@ -88,7 +100,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
           label={optionLabel}
           id={id}
           index={index}
-          errorMessageId={errorMessageId}
+          aria-describedby={[tooltipId, errorMessageId].filter(Boolean).join(' ')}
           isDisabled={isDisabled}
         />
       ))}

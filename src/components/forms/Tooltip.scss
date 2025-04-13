@@ -103,12 +103,24 @@
 }
 
 // Extensions to allow tooltips inside utrecht-form-field__label
+@mixin label-with-tooltip {
+  display: flex;
+  align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
+  column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
+}
+
 .utrecht-form-field {
   @include bem.element('label') {
     @include bem.modifier('openforms-tooltip') {
-      display: flex;
-      align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
-      column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
+      @include label-with-tooltip;
+    }
+  }
+}
+
+.utrecht-form-fieldset {
+  @include bem.element('legend') {
+    @include bem.modifier('openforms-tooltip') {
+      @include label-with-tooltip;
     }
   }
 }

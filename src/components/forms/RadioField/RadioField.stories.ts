@@ -49,6 +49,13 @@ export const Default: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    isRequired: true,
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   args: {
