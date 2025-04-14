@@ -1,6 +1,8 @@
 @use '@utrecht/components/paragraph';
+@use '@utrecht/components/form-fieldset';
 
 @use '@/scss/bem';
+@use '@/scss/form-field-override';
 
 .openforms-input-group {
   display: flex;

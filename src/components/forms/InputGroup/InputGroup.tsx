@@ -26,7 +26,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
     aria-describedby={ariaDescribedBy}
     data-testid="inputgroup-container"
   >
-    <FieldsetLegend className="utrecht-form-field__label">
+    <FieldsetLegend>
       <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
         {label}
       </LabelContent>

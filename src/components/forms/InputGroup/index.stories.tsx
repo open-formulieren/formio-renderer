@@ -1,6 +1,8 @@
 import {Meta, StoryObj} from '@storybook/react';
 import {FormLabel, Textbox} from '@utrecht/component-library-react';
 
+import '@/components/forms/TextField/TextField.scss';
+
 import {InputGroup, InputGroupItem} from '.';
 import {InputGroupProps} from './InputGroup';
 

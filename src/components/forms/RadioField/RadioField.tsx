@@ -74,7 +74,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
       role="radiogroup"
       aria-describedby={description ? descriptionid : undefined}
     >
-      <FieldsetLegend className="utrecht-form-field__label">
+      <FieldsetLegend>
         <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
           {label}
         </LabelContent>
