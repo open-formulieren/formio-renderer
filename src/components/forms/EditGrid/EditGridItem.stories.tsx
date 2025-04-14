@@ -1,6 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 import {Paragraph} from '@utrecht/component-library-react';
+import '@utrecht/components/paragraph';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';

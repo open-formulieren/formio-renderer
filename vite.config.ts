@@ -43,6 +43,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@/components': resolve(__dirname, 'src/components'),
       '@/scss': resolve(__dirname, 'src/scss'),
     },
   },

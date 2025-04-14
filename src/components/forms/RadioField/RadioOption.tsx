@@ -1,4 +1,4 @@
-import {FormField, FormLabel, Paragraph, RadioButton} from '@utrecht/component-library-react';
+import {FormField, FormLabel, RadioButton} from '@utrecht/component-library-react';
 import {useField, useFormikContext} from 'formik';
 
 export interface RadioOptionProps {
@@ -36,7 +36,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         }}
         value={value}
       />
-      <Paragraph className="utrecht-form-field__label utrecht-form-field__label--radio">
+      <div className="utrecht-form-field__label utrecht-form-field__label--radio">
         <FormLabel
           htmlFor={`${id}-opt-${index}`}
           disabled={isDisabled}
@@ -45,7 +45,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         >
           {label}
         </FormLabel>
-      </Paragraph>
+      </div>
     </FormField>
   );
 };

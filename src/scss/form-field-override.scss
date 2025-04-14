@@ -15,6 +15,16 @@
   padding-block-end: var(--utrecht-form-field-invalid-padding-inline-start);
 }
 
+// Extensions on NL DS components
+.utrecht-form-fieldset {
+  @include bem.element('legend') {
+    &:has(.utrecht-form-label--openforms) {
+      margin-block-end: var(--utrecht-form-field-label-margin-block-end);
+      margin-block-start: 0;
+    }
+  }
+}
+
 // Overrides of the utrecht form field styles for our own theme
 .openforms-theme {
   .utrecht-form-field {
