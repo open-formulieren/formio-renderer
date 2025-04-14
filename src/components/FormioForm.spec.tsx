@@ -1,4 +1,4 @@
-import {render, screen, waitFor} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {createRef, forwardRef} from 'react';
 import {IntlProvider} from 'react-intl';
@@ -309,6 +309,95 @@ describe('Updating form values', () => {
         {name: 'Updated', other: 'Other 1'},
         {name: 'Initial 2', other: 'Other 2'},
       ],
+    });
+  });
+});
+
+describe('Updating form errors', () => {
+  test('Display flat and deep nested errors', async () => {
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'textfield',
+            key: 'foo',
+            label: 'Foo',
+            defaultValue: '',
+          },
+          {
+            id: 'comp2',
+            type: 'textfield',
+            key: 'bar.baz',
+            label: 'Baz',
+            defaultValue: '',
+          },
+        ]}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    ref.current!.updateErrors({
+      foo: 'Visible foo error',
+      bar: {
+        baz: 'Visible bar.baz error',
+      },
+    });
+
+    expect(await screen.findByText('Visible foo error')).toBeVisible();
+    expect(await screen.findByText('Visible bar.baz error')).toBeVisible();
+  });
+
+  test('Display dotted key errors', async () => {
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp2',
+            type: 'textfield',
+            key: 'bar.baz',
+            label: 'Baz',
+            defaultValue: '',
+          },
+        ]}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    ref.current!.updateErrors({'bar.baz': 'Visible bar.baz error'});
+
+    expect(await screen.findByText('Visible bar.baz error')).toBeVisible();
+  });
+
+  test('Ignore invalid key errors', async () => {
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp2',
+            type: 'textfield',
+            key: 'bar.baz',
+            label: 'Baz',
+            defaultValue: '',
+          },
+        ]}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    await act(() => {
+      ref.current!.updateErrors({missingKey: 'Error not displayed anywhere'});
+    });
+
+    await waitFor(() => {
+      const error = screen.queryByText('Error not displayed anywhere');
+      expect(error).not.toBeInTheDocument();
     });
   });
 });
