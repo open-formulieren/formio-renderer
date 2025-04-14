@@ -1,4 +1,4 @@
-import {FormLabel, Paragraph} from '@utrecht/component-library-react';
+import {FormLabel} from '@utrecht/component-library-react';
 import clsx from 'clsx';
 import {FormattedMessage} from 'react-intl';
 
@@ -61,11 +61,11 @@ export interface LabelProps {
 }
 
 const Label: React.FC<LabelProps> = ({id, isRequired = false, isDisabled = false, children}) => (
-  <Paragraph className="utrecht-form-field__label">
+  <div className="utrecht-form-field__label">
     <LabelContent id={id} isRequired={isRequired} isDisabled={isDisabled}>
       {children}
     </LabelContent>
-  </Paragraph>
+  </div>
 );
 
 Label.displayName = 'Label';

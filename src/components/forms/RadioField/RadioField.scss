@@ -1,6 +1,3 @@
-// NOTE: the import order matters here, otherwise paragraph styles overwrite the styles
-// of form-field
-@use '@utrecht/components/paragraph' as paragraph;
 @use '@utrecht/components/form-field' as form-field;
 @use '@utrecht/components/form-fieldset' as form-fieldset;
 @use '@utrecht/components/textbox' as textbox;
