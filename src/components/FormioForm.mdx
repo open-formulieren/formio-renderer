@@ -102,6 +102,39 @@ const updates4 = {
 
 Results in only the `name` key of the second item being updated.
 
+## Programmatically setting form errors
+
+Setting form errors has the same mechanism as setting form values above. For example:
+
+```tsx
+import {useRef} from 'react';
+
+import FormioForm from '@/open-formulieren/formio-renderer';
+import type {FormStateRef} from '@/open-formulieren/formio-renderer/components/FormioForm';
+
+const FormStep: React.FC = () => {
+  const form = useRef<FormStateRef>();
+
+  return (
+    <>
+      <FormioForm
+        ref={form}
+        components={[{id: 'textfield', type: 'textfield', key: 'textfield', label: 'Text field'}]}
+        onSubmit={console.log}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          form.ref.updateErrors({textfield: 'A backend validation error!'});
+        }}
+      >
+        Set errors
+      </button>
+    </>
+  );
+};
+```
+
 ## Props
 
 <ArgTypes />
