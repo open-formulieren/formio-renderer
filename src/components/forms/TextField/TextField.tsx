@@ -64,7 +64,10 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
-  const [props, {error = '', touched}] = useField({name, type: 'text'});
+  const [{value, ...props}, {error = '', touched}] = useField<string | undefined>({
+    name,
+    type: 'text',
+  });
   const id = useId();
 
   const invalid = touched && !!error;
@@ -82,6 +85,9 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       </Label>
       <Paragraph>
         <Textbox
+          // ensure unsetting values doesn't ping-pong us between controlled/uncontrolled
+          // components
+          value={value ?? ''}
           {...props}
           onBlur={async e => {
             props.onBlur(e);

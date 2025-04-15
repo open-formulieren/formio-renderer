@@ -13,7 +13,12 @@ import {filterVisibleComponents} from '@/visibility';
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
 import RendererSettingsProvider from './RendererSettingsProvider';
-import {type NestedObject, merge} from './utils';
+import {
+  type JSONObjectWithUndefined,
+  type JSONValuePlusUndefined,
+  type NestedObject,
+  merge,
+} from './utils';
 
 export type Errors = NestedObject<string | string[]>;
 
@@ -66,7 +71,7 @@ export interface FormioFormProps {
   requiredFieldsWithAsterisk?: boolean;
 }
 
-export type UpdateValues = {[K: string]: JSONValue | undefined};
+export type UpdateValues = JSONObjectWithUndefined;
 export type UpdateErrors = NestedObject<string | string[] | undefined>;
 
 export interface FormStateRef {
@@ -167,7 +172,9 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
  * `prev` and `updates` can both be arbitrary deeply nested.
  */
 const getFormikValues = (prev: JSONObject, updates: UpdateValues): JSONObject => {
-  return merge<JSONValue>(prev, updates);
+  // the merge function strips out the undefined values by removing the keys from the
+  // object.
+  return merge<JSONValuePlusUndefined, JSONValue>(prev, updates);
 };
 
 const getFormikErrors = (prev: Errors, updates: UpdateErrors): Errors => {

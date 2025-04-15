@@ -176,6 +176,52 @@ describe('Updating form values', () => {
     });
   });
 
+  test('Supports removing field values via undefined', async () => {
+    const onSubmit = vi.fn();
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'textfield',
+            key: 'parent.nested',
+            label: 'Foo',
+            defaultValue: 'foo',
+          },
+          {
+            id: 'comp2',
+            type: 'textfield',
+            key: 'foo',
+            label: 'Bar',
+            defaultValue: 'bar',
+          },
+          {
+            id: 'comp3',
+            type: 'textfield',
+            key: 'cleared',
+            label: 'To be cleared',
+            defaultValue: 'not empty',
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+
+    ref.current!.updateValues({
+      parent: {nested: undefined},
+      foo: undefined,
+      cleared: '',
+    });
+
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(screen.getByLabelText('Foo')).toHaveDisplayValue('');
+    expect(screen.getByLabelText('Bar')).toHaveDisplayValue('');
+    // matches Formio's clearOnHide behaviour (!)
+    expect(onSubmit).toHaveBeenCalledWith({parent: {}, cleared: ''});
+  });
+
   test('Can replace editgrid as a whole', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();

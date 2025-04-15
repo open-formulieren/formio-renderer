@@ -1,6 +1,20 @@
 import {getIn, setIn} from 'formik';
 
-import type {JSONValue} from '@/types';
+import type {JSONPrimitive} from '@/types';
+
+/**
+ * @private
+ */
+export type JSONValuePlusUndefined =
+  | JSONPrimitive
+  | undefined
+  | JSONValuePlusUndefined[]
+  | JSONObjectWithUndefined;
+
+/**
+ * @private
+ */
+export type JSONObjectWithUndefined = {[K: string]: JSONValuePlusUndefined};
 
 /**
  * @private
@@ -20,10 +34,10 @@ export type MaybeNestedObject<Leaf> = Leaf | NestedObject<Leaf>;
  *
  * @private
  */
-export function merge<Leaf extends JSONValue>(
+export function merge<Leaf extends JSONValuePlusUndefined, RLeaf = Leaf>(
   target: NestedObject<Leaf>,
   source: NestedObject<Leaf | undefined>
-): NestedObject<Leaf> {
+): NestedObject<RLeaf> {
   // loop over the keys that are defined, this way we detect explicit `undefined` keys
   // rather than the ones that are absent or explicitly set.
   for (const key in source) {
@@ -66,5 +80,6 @@ export function merge<Leaf extends JSONValue>(
     target = setIn(target, key, value);
   }
 
-  return target;
+  // type cast because TSC runs into infinite recursion if we use generics for this...
+  return target as any as NestedObject<RLeaf>;
 }
