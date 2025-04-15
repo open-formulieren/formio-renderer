@@ -82,6 +82,26 @@ export const ValidationError: Story = {
   },
 };
 
+export const WithValidationErrorAndTooltip: Story = {
+  ...ValidationError,
+  args: {
+    ...ValidationError.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fieldset = canvas.getByRole('radiogroup', {name: /^Radio/});
+    expect(fieldset).toHaveAccessibleDescription('Description above the errors');
+
+    const inputs = canvas.getAllByRole('radio');
+    for (const input of inputs) {
+      expect(input).toHaveAccessibleDescription('invalid');
+    }
+  },
+};
+
 export const NoAsterisks: Story = {
   name: 'No asterisk for required',
   decorators: [withRenderSettingsProvider],

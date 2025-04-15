@@ -1,4 +1,5 @@
 import {Meta, StoryObj} from '@storybook/react';
+import {expect, within} from '@storybook/test';
 import {FormLabel, Textbox} from '@utrecht/component-library-react';
 
 import '@/components/forms/TextField/TextField.scss';
@@ -57,5 +58,20 @@ export const Disabled: Story = {
 export const Invalid: Story = {
   args: {
     isInvalid: true,
+  },
+};
+
+export const WithValidationErrorAndTooltip: Story = {
+  ...Invalid,
+  args: {
+    ...Invalid.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fieldset = canvas.getByRole('group', {name: /^Input group/});
+    expect(fieldset).toHaveAccessibleDescription('');
   },
 };

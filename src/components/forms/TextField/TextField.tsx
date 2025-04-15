@@ -69,7 +69,6 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-  const tooltipId = tooltip ? `${id}-tooltip` : undefined;
 
   return (
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
@@ -77,7 +76,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
         id={id}
         isRequired={isRequired}
         isDisabled={isDisabled}
-        tooltip={tooltip ? <Tooltip id={tooltipId}>{tooltip}</Tooltip> : undefined}
+        tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
       </Label>
@@ -92,7 +91,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           id={id}
           disabled={isDisabled}
           invalid={invalid}
-          aria-describedby={[tooltipId, errorMessageId].filter(Boolean).join(' ')}
+          aria-describedby={errorMessageId}
           placeholder={placeholder}
           {...extraProps}
         />

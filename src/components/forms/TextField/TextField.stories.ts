@@ -80,6 +80,23 @@ export const ValidationError: Story = {
   },
 };
 
+export const WithValidationErrorAndTooltip: Story = {
+  ...ValidationError,
+  args: {
+    ...ValidationError.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const input = canvas.getByLabelText(args.label as string);
+    // the tooltip gets announced by itself and we do not expect it to be in the input
+    // description too, as otherwise screenreaders encounter it twice.
+    expect(input).toHaveAccessibleDescription('invalid');
+  },
+};
+
 export const NoAsterisks: Story = {
   name: 'No asterisk for required',
   decorators: [withRenderSettingsProvider],

@@ -73,7 +73,6 @@ const RadioField: React.FC<RadioFieldProps> = ({
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
-  const tooltipId = tooltip ? `${id}-tooltip` : undefined;
 
   return (
     <Fieldset
@@ -89,7 +88,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
         <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
           {label}
         </LabelContent>
-        {tooltip && <Tooltip id={tooltipId}>{tooltip}</Tooltip>}
+        {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </FieldsetLegend>
 
       {options.map(({value, label: optionLabel}, index) => (
@@ -100,7 +99,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
           label={optionLabel}
           id={id}
           index={index}
-          aria-describedby={[tooltipId, errorMessageId].filter(Boolean).join(' ')}
+          aria-describedby={errorMessageId}
           isDisabled={isDisabled}
         />
       ))}

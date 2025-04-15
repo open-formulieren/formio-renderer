@@ -30,10 +30,9 @@ import './Tooltip.scss';
 
 export interface TooltipProps {
   children: React.ReactNode;
-  id?: string; // recommended to pass and relate with aria-describedby
 }
 
-const Tooltip: React.FC<TooltipProps> = ({children, id}) => {
+const Tooltip: React.FC<TooltipProps> = ({children}) => {
   const [isOpen, setIsOpen] = useState(false);
   const intl = useIntl();
 
@@ -88,7 +87,6 @@ const Tooltip: React.FC<TooltipProps> = ({children, id}) => {
         className={clsx('openforms-tooltip', `openforms-tooltip--${placement}`, {
           'openforms-tooltip--visible': isOpen,
         })}
-        id={id}
         style={floatingStyles}
         ref={refs.setFloating}
         {...getFloatingProps()}

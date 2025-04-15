@@ -1,6 +1,5 @@
 import {Fieldset, FieldsetLegend, Paragraph} from '@utrecht/component-library-react';
 import clsx from 'clsx';
-import {useId} from 'react';
 
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -27,29 +26,25 @@ const InputGroup: React.FC<InputGroupProps> = ({
   isDisabled = false,
   isInvalid = false,
   'aria-describedby': ariaDescribedBy,
-}) => {
-  const id = useId();
-  const tooltipId = tooltip ? `${id}-tooltip` : undefined;
-  return (
-    <Fieldset
-      disabled={isDisabled}
-      invalid={isInvalid}
-      className="utrecht-form-fieldset--openforms"
-      aria-describedby={[ariaDescribedBy, tooltipId].filter(Boolean).join(' ')}
-      data-testid="inputgroup-container"
+}) => (
+  <Fieldset
+    disabled={isDisabled}
+    invalid={isInvalid}
+    className="utrecht-form-fieldset--openforms"
+    aria-describedby={ariaDescribedBy}
+    data-testid="inputgroup-container"
+  >
+    <FieldsetLegend
+      className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
     >
-      <FieldsetLegend
-        className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
-      >
-        <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
-          {label}
-        </LabelContent>
-        {tooltip && <Tooltip id={tooltipId}>{tooltip}</Tooltip>}
-      </FieldsetLegend>
-      <Paragraph className="openforms-input-group">{children}</Paragraph>
-    </Fieldset>
-  );
-};
+      <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
+        {label}
+      </LabelContent>
+      {tooltip && <Tooltip>{tooltip}</Tooltip>}
+    </FieldsetLegend>
+    <Paragraph className="openforms-input-group">{children}</Paragraph>
+  </Fieldset>
+);
 
 InputGroup.displayName = 'InputGroup';
 
