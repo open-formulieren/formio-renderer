@@ -8,6 +8,7 @@ import type {z} from 'zod';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
+import Tooltip from '@/components/forms/Tooltip';
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
 
@@ -33,6 +34,11 @@ interface EditGridBaseProps<T> {
    * information that is contextual/background typically belongs in a tooltip.
    */
   description?: React.ReactNode;
+  /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
   /**
    * Callback to return the heading for a single item. Gets passed the item values and
    * index in the array of values.
@@ -105,6 +111,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   label,
   isRequired,
   description,
+  tooltip,
   getItemHeading,
   canRemoveItem,
   removeItemLabel = '',
@@ -117,7 +124,11 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
   return (
     <FormField type="editgrid" className="utrecht-form-field--openforms">
-      {label && <Label isRequired={isRequired}>{label}</Label>}
+      {label && (
+        <Label isRequired={isRequired} tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}>
+          {label}
+        </Label>
+      )}
       <FieldArray name={name} validateOnChange={false}>
         {arrayHelpers => (
           <div className="openforms-editgrid">

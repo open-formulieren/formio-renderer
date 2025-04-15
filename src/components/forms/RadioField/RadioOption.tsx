@@ -7,7 +7,7 @@ export interface RadioOptionProps {
   label: React.ReactNode;
   id: string;
   index: number;
-  errorMessageId?: string;
+  ['aria-describedby']?: string;
   isDisabled?: boolean;
 }
 
@@ -17,7 +17,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   label,
   id,
   index,
-  errorMessageId,
+  ['aria-describedby']: ariaDescribedBy,
   isDisabled,
 }) => {
   const {validateField} = useFormikContext();
@@ -28,7 +28,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
       <RadioButton
         className="utrecht-form-field__input"
         id={`${id}-opt-${index}`}
-        aria-describedby={errorMessageId}
+        aria-describedby={ariaDescribedBy}
         {...props}
         onBlur={async e => {
           props.onBlur(e);

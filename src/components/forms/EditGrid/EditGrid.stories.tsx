@@ -43,6 +43,12 @@ type Story = StoryObj<typeof EditGrid<ItemData>>;
 
 export const Default: Story = {};
 
+export const WithTooltip: Story = {
+  args: {
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const WithCustomButtonLabels: Story = {
   args: {
     enableIsolation: true,

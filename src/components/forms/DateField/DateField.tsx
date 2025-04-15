@@ -40,6 +40,11 @@ export interface DateFieldProps {
    */
   description?: React.ReactNode;
   /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
+  /**
    * How to autocomplete the field from the browser.
    */
   autoComplete?: string;
@@ -64,6 +69,7 @@ const DateField: React.FC<DateFieldProps> = ({
   isRequired,
   isDisabled,
   description,
+  tooltip,
   autoComplete,
   widget,
 }) => {
@@ -81,6 +87,7 @@ const DateField: React.FC<DateFieldProps> = ({
         <DateInputGroup
           name={name}
           label={label}
+          tooltip={tooltip}
           isRequired={isRequired}
           isDisabled={isDisabled}
           autoComplete={autoComplete}

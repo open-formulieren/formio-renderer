@@ -41,6 +41,17 @@ export const Default: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    name: 'test',
+    label: 'test',
+    description: 'This is a custom description',
+    isDisabled: false,
+    isRequired: true,
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   parameters: {
@@ -66,6 +77,23 @@ export const ValidationError: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('invalid')).toBeVisible();
+  },
+};
+
+export const WithValidationErrorAndTooltip: Story = {
+  ...ValidationError,
+  args: {
+    ...ValidationError.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const input = canvas.getByLabelText(args.label as string);
+    // the tooltip gets announced by itself and we do not expect it to be in the input
+    // description too, as otherwise screenreaders encounter it twice.
+    expect(input).toHaveAccessibleDescription('invalid');
   },
 };
 

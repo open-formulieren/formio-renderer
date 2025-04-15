@@ -5,6 +5,7 @@ import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
+import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import './TextField.scss';
@@ -36,6 +37,11 @@ export interface TextFieldProps {
    */
   description?: React.ReactNode;
   /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
+  /**
    * Placeholder when no (default) value is available.
    */
   placeholder?: string;
@@ -54,6 +60,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   description = '',
   isDisabled = false,
   placeholder,
+  tooltip,
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
@@ -65,7 +72,12 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
 
   return (
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
-      <Label id={id} isRequired={isRequired} isDisabled={isDisabled}>
+      <Label
+        id={id}
+        isRequired={isRequired}
+        isDisabled={isDisabled}
+        tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
+      >
         {label}
       </Label>
       <Paragraph>

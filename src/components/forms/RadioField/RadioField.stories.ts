@@ -49,6 +49,13 @@ export const Default: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    isRequired: true,
+    tooltip: 'Example short tooltip.',
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   args: {
@@ -72,6 +79,26 @@ export const ValidationError: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('invalid')).toBeVisible();
+  },
+};
+
+export const WithValidationErrorAndTooltip: Story = {
+  ...ValidationError,
+  args: {
+    ...ValidationError.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fieldset = canvas.getByRole('radiogroup', {name: /^Radio/});
+    expect(fieldset).toHaveAccessibleDescription('Description above the errors');
+
+    const inputs = canvas.getAllByRole('radio');
+    for (const input of inputs) {
+      expect(input).toHaveAccessibleDescription('invalid');
+    }
   },
 };
 

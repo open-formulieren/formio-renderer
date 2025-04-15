@@ -37,11 +37,16 @@ export const InputGroup: Story = {
     name: 'test',
     label: 'Test date field',
     description: 'This is a custom description',
+    tooltip: 'A short tooltip.',
     isDisabled: false,
     isRequired: true,
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
+
+    const fieldset = canvas.getByRole('group', {name: /^Test date field/});
+    expect(fieldset).toHaveAccessibleDescription('');
+
     const inputs = canvas.getAllByRole<HTMLInputElement>('textbox');
     expect(inputs).toHaveLength(3);
     await expect(canvas.getByText('Test date field')).toBeVisible();
@@ -138,6 +143,9 @@ export const InputGroupWithInitialValue: Story = {
     expect(canvas.getByLabelText('Year')).toHaveDisplayValue('2024');
 
     expect(canvas.getByText('A validation error')).toBeVisible();
+
+    const fieldset = canvas.getByRole('group', {name: 'Test date field'});
+    expect(fieldset).toHaveAccessibleDescription('A validation error');
   },
 };
 
@@ -247,9 +255,8 @@ export const ValidateOnBlur: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const container = (await canvas.findByTestId('inputgroup-container')).querySelector(
-      'fieldset'
-    )!;
+
+    const container = canvas.getByRole('group', {name: 'Validate on blur'});
     expect(container).not.toHaveAttribute('aria-invalid');
 
     const dayInput = canvas.getByLabelText('Day');

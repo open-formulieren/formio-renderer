@@ -38,13 +38,15 @@
   "homepage": "https://github.com/open-formulieren/formio-renderer#readme",
   "peerDependencies": {
     "@fortawesome/fontawesome-free": ">= 6.4.0",
+    "@utrecht/button-group-react": "^1.0.0",
     "date-fns": "^4.0.0",
+    "floating-ui/react": ">= 0.27.5",
     "react": "^18.2.0",
-    "react-intl": "^6.6.2 || ^7.0.0",
-    "@utrecht/button-group-react": "^1.0.0"
+    "react-intl": "^6.6.2 || ^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@floating-ui/react": "^0.27.7",
     "@formatjs/cli": "^6.5.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@open-formulieren/design-tokens": "^0.59.0",
