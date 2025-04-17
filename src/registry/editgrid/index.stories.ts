@@ -69,6 +69,35 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      tooltip: 'Surprise!',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [{my: {textfield: ''}}],
+      },
+    },
+  },
+};
+
 export const WithValidationSchema: Story = {
   args: {
     componentDefinition: {

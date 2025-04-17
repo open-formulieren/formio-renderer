@@ -60,6 +60,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
     components,
     label,
     hideLabel,
+    tooltip,
     description,
     validate,
     disableAddingRemovingRows,
@@ -85,6 +86,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
     <EditGridField<JSONObject>
       name={key}
       label={hideLabel ? null : label}
+      tooltip={tooltip}
       isRequired={validate?.required}
       description={description}
       enableIsolation
