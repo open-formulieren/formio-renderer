@@ -37,6 +37,28 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      tooltip: 'Surprise!',
+      description: 'A description',
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: '',
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: DateComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
