@@ -1,11 +1,11 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
-import {useMemo} from 'react';
+import {forwardRef, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import {getRegistryEntry} from '@/registry';
-import type {JSONObject} from '@/types';
+import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {filterVisibleComponents} from '@/visibility';
@@ -13,8 +13,14 @@ import {filterVisibleComponents} from '@/visibility';
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
 import RendererSettingsProvider from './RendererSettingsProvider';
+import {
+  type JSONObjectWithUndefined,
+  type JSONValuePlusUndefined,
+  type NestedObject,
+  merge,
+} from './utils';
 
-export type ErrorObject = {[K: string]: string | string[] | ErrorObject};
+export type Errors = NestedObject<string | string[]>;
 
 /**
  * Props for a complete Formio form definition.
@@ -37,7 +43,7 @@ export interface FormioFormProps {
    * Initial validation errors to display. Note that these are cleared when the
    * client side validation runs.
    */
-  errors?: ErrorObject;
+  errors?: Errors;
 
   /**
    * Callback when the form validates (client-side) to submit the entered values.
@@ -65,71 +71,114 @@ export interface FormioFormProps {
   requiredFieldsWithAsterisk?: boolean;
 }
 
-const FormioForm: React.FC<FormioFormProps> = ({
-  components,
-  values = {},
-  errors,
-  onSubmit,
-  id,
-  children,
-  requiredFieldsWithAsterisk,
-}) => {
-  const intl = useIntl();
+export type UpdateValues = JSONObjectWithUndefined;
+export type UpdateErrors = NestedObject<string | string[] | undefined>;
 
-  // use the extracted component default values and merge with 'outside' values to use
-  // as initial form state
-  const initialValues = extractInitialValues(components, getRegistryEntry);
-  values = deepMergeValues(initialValues, values);
+export interface FormStateRef {
+  updateValues: (values: UpdateValues) => void;
+  updateErrors: (errors: UpdateErrors) => void;
+}
 
-  // build the validation schema from the component definitions
-  // TODO: take into account hidden components!
-  const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
+  ({components, values = {}, errors, onSubmit, id, children, requiredFieldsWithAsterisk}, ref) => {
+    const intl = useIntl();
 
-  return (
-    <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
-      <Formik<JSONObject>
-        initialValues={values}
-        initialErrors={errors as FormikErrors<JSONObject>}
-        // figure out initial touched from the provided errors
-        initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
-        validateOnChange={false}
-        validateOnBlur={false}
-        validationSchema={toFormikValidationSchema(zodSchema)}
-        onSubmit={async values => {
-          await onSubmit(values);
-        }}
-      >
-        {/* TODO: pre-process components to ensure they have an ID? */}
-        <InnerFormioForm id={id} components={components}>
-          {children}
-        </InnerFormioForm>
-      </Formik>
-    </RendererSettingsProvider>
-  );
-};
+    // use the extracted component default values and merge with 'outside' values to use
+    // as initial form state
+    const initialValues = extractInitialValues(components, getRegistryEntry);
+    values = deepMergeValues(initialValues, values);
+
+    // build the validation schema from the component definitions
+    // TODO: take into account hidden components!
+    const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+
+    return (
+      <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
+        <Formik<JSONObject>
+          initialValues={values}
+          initialErrors={errors as FormikErrors<JSONObject>}
+          // figure out initial touched from the provided errors
+          initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
+          validateOnChange={false}
+          validateOnBlur={false}
+          validationSchema={toFormikValidationSchema(zodSchema)}
+          onSubmit={async values => {
+            await onSubmit(values);
+          }}
+        >
+          {/* TODO: pre-process components to ensure they have an ID? */}
+          <InnerFormioForm id={id} components={components} ref={ref}>
+            {children}
+          </InnerFormioForm>
+        </Formik>
+      </RendererSettingsProvider>
+    );
+  }
+);
 
 export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'>;
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
-const InnerFormioForm: React.FC<InnerFormioFormProps> = ({components, id, children}) => {
-  const {values} = useFormikContext<JSONObject>();
+const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
+  ({components, id, children}, ref) => {
+    const {values, setValues, errors, setErrors, setTouched} = useFormikContext<JSONObject>();
 
-  const componentsToRender: AnyComponentSchema[] = useMemo(() => {
-    return filterVisibleComponents(components, values, getRegistryEntry);
-  }, [components, values]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        updateValues: (values: UpdateValues): void => {
+          setValues(prev => getFormikValues(prev, values));
+        },
+        updateErrors: (updates: UpdateErrors): void => {
+          // FormikErrors<JSONObject> narrows down to {[k: string]: string | undefined},
+          // which is wrong and misses the recursion entirely. So, we cast instead :(
+          const newErrors = getFormikErrors(
+            errors as FormikErrors<unknown>,
+            updates
+          ) as FormikErrors<unknown>;
+          setErrors(newErrors);
+          setTouched(setNestedObjectValues(newErrors, true));
+        },
+      }),
+      [setValues, errors, setErrors]
+    );
 
-  return (
-    <Form noValidate id={id}>
-      <FormFieldContainer>
-        {componentsToRender.map((definition, index) => (
-          <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
-        ))}
-      </FormFieldContainer>
-      {children}
-    </Form>
-  );
+    const componentsToRender: AnyComponentSchema[] = useMemo(() => {
+      return filterVisibleComponents(components, values, getRegistryEntry);
+    }, [components, values]);
+
+    return (
+      <Form noValidate id={id}>
+        <FormFieldContainer>
+          {componentsToRender.map((definition, index) => (
+            <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+          ))}
+        </FormFieldContainer>
+        {children}
+      </Form>
+    );
+  }
+);
+
+/**
+ * Deep merge the updates into the prev values.
+ *
+ * Under the hood, this is passed to Formik's setValues, so we use Formik's `setIn` to avoid
+ * (shallow) copies if state has not been changed/affected while recursively applying updates,
+ * as the values are passed to dependency arrays and their JS identity is relevant.
+ *
+ * `prev` and `updates` can both be arbitrary deeply nested.
+ */
+const getFormikValues = (prev: JSONObject, updates: UpdateValues): JSONObject => {
+  // the merge function strips out the undefined values by removing the keys from the
+  // object.
+  return merge<JSONValuePlusUndefined, JSONValue>(prev, updates);
+};
+
+const getFormikErrors = (prev: Errors, updates: UpdateErrors): Errors => {
+  return merge<string | string[]>(prev, updates);
 };
 
 export default FormioForm;

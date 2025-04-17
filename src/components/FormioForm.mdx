@@ -17,6 +17,124 @@ The `onSubmit` callback receives the entered form values when the HTML form is s
 
 <Canvas of={FormioFormStories.Example} />
 
+## Programmatically updating form values
+
+The `FormioForm` component supports programmatically setting form values - typically to process
+(backend) logic evaluation results. This is available via an imperative `ref`, for example:
+
+```tsx
+import {useRef} from 'react';
+
+import FormioForm from '@/open-formulieren/formio-renderer';
+import type {FormStateRef} from '@/open-formulieren/formio-renderer/components/FormioForm';
+
+const FormStep: React.FC = () => {
+  const form = useRef<FormStateRef>();
+
+  return (
+    <>
+      <FormioForm
+        ref={form}
+        components={[{id: 'textfield', type: 'textfield', key: 'textfield', label: 'Text field'}]}
+        onSubmit={console.log}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          form.ref.updateValues({textfield: ''});
+        }}
+      >
+        Reset
+      </button>
+    </>
+  );
+};
+```
+
+`updateValues` takes an object with updates to apply to the form state. These objects can contain
+only the updates, i.e. they can be partial form values. Deeply nested objects are applied
+accordingly. Some examples clarify the behaviour:
+
+```ts
+const updates1 = {
+  foo: {
+    bar: 'baz',
+  },
+};
+const updates2 = {
+  'foo.bar': 'baz',
+};
+```
+
+will both set the form component with key `foo.bar` to the value `baz`.
+
+Using `undefined` will _remove_ the key/value:
+
+```ts
+const updates3 = {
+  'foo.bar': undefined,
+};
+```
+
+will remove the key `bar` from the form values and would leave `{foo: {}}` (if `bar` is the only key
+present).
+
+Arrays are assigned as-is - there is no deep merge logic:
+
+```ts
+const updates4 = {
+  foo: {
+    bar: [{name: 'first'}, {name: 'second'}],
+  },
+};
+```
+
+will assign the array `[{name: 'first'}, {name: 'second'}]` to the (editgrid) component with key
+`foo.bar`.
+
+For partial updates, use string keys containing the index:
+
+```ts
+const updates4 = {
+  'foo.bar.1.name': 'updated',
+};
+```
+
+Results in only the `name` key of the second item being updated.
+
+## Programmatically setting form errors
+
+Setting form errors has the same mechanism as setting form values above. For example:
+
+```tsx
+import {useRef} from 'react';
+
+import FormioForm from '@/open-formulieren/formio-renderer';
+import type {FormStateRef} from '@/open-formulieren/formio-renderer/components/FormioForm';
+
+const FormStep: React.FC = () => {
+  const form = useRef<FormStateRef>();
+
+  return (
+    <>
+      <FormioForm
+        ref={form}
+        components={[{id: 'textfield', type: 'textfield', key: 'textfield', label: 'Text field'}]}
+        onSubmit={console.log}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          form.ref.updateErrors({textfield: 'A backend validation error!'});
+        }}
+      >
+        Set errors
+      </button>
+    </>
+  );
+};
+```
+
 ## Props
 
 <ArgTypes />

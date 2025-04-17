@@ -1,9 +1,10 @@
 import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, userEvent, within} from '@storybook/test';
+import {expect, fn, userEvent, waitFor, within} from '@storybook/test';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
+import {useRef} from 'react';
 
-import FormioForm from './FormioForm';
+import FormioForm, {FormStateRef} from './FormioForm';
 
 export default {
   title: 'Public API / FormioForm',
@@ -276,5 +277,112 @@ export const InitialErrorsRevalidation: Story = {
       // may not be removed
       expect(canvas.getByText('External error for field 1')).toBeVisible();
     });
+  },
+};
+
+export const SetValuesFromParentComponent: Story = {
+  render: args => {
+    const formRef = useRef<FormStateRef>(null);
+    return (
+      <>
+        <FormioForm {...args} ref={formRef} />
+        <PrimaryActionButton
+          type="button"
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            formRef?.current!.updateValues({nested: {component1: 'Updated value'}});
+          }}
+        >
+          Update component1 value
+        </PrimaryActionButton>
+      </>
+    );
+  },
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.component1',
+        label: 'Field 1',
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'nested.component2',
+        label: 'Field 2',
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+  play: async ({canvasElement, args, step}) => {
+    const canvas = within(canvasElement);
+
+    const input1 = canvas.getByLabelText('Field 1');
+    const input2 = canvas.getByLabelText('Field 2');
+
+    await step('Enter values through user interaction', async () => {
+      await userEvent.type(input1, 'Original component1 value');
+      expect(input1).toHaveDisplayValue('Original component1 value');
+      await userEvent.type(input2, 'Original component2 value');
+      expect(input2).toHaveDisplayValue('Original component2 value');
+    });
+
+    await step('Update values programmatically', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Update component1 value'}));
+      await waitFor(() => {
+        expect(input1).toHaveDisplayValue('Updated value');
+      });
+      expect(input2).toHaveDisplayValue('Original component2 value');
+    });
+
+    await step('Submit values', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      await waitFor(() => {
+        expect(args.onSubmit).toHaveBeenCalledWith({
+          nested: {
+            component1: 'Updated value',
+            component2: 'Original component2 value',
+          },
+        });
+      });
+    });
+  },
+};
+
+export const SetErrorsFromParentComponent: Story = {
+  render: args => {
+    const formRef = useRef<FormStateRef>(null);
+    return (
+      <>
+        <FormioForm {...args} ref={formRef} />
+        <PrimaryActionButton
+          type="button"
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            formRef?.current!.updateErrors({
+              nested: {component1: 'An outside validation error!'},
+            });
+          }}
+        >
+          Set error
+        </PrimaryActionButton>
+      </>
+    );
+  },
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.component1',
+        label: 'Field 1',
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Set error'}));
+    expect(await canvas.findByText('An outside validation error!')).toBeVisible();
   },
 };
