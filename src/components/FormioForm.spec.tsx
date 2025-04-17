@@ -6,7 +6,7 @@ import {describe, expect, test, vi} from 'vitest';
 
 import FormioForm, {type FormStateRef, type FormioFormProps} from './FormioForm';
 
-type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit'>;
+type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit' | 'values'>;
 
 const Form = forwardRef<FormStateRef, FormProps>((props, ref) => {
   return (
@@ -258,6 +258,45 @@ describe('Updating form values', () => {
 
     await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
     expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Updated'}, {name: 'New'}]});
+  });
+
+  test('Update whole editgrid value to remove an item', async () => {
+    const onSubmit = vi.fn();
+    const ref = createRef<FormStateRef>();
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp1',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'comp2',
+                type: 'textfield',
+                key: 'name',
+                label: 'Name',
+              },
+            ],
+          },
+        ]}
+        values={{editgrid: [{name: 'First'}, {name: 'Second'}]}}
+        onSubmit={onSubmit}
+      />
+    );
+    // sanity check the initial state
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'First'}, {name: 'Second'}]});
+
+    // remove the first item
+    ref.current!.updateValues({editgrid: [{name: 'Second'}]});
+
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Second'}]});
   });
 
   test('Can replace individual editgrid items', async () => {
