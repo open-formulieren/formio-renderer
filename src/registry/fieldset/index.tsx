@@ -3,6 +3,7 @@ import clsx from 'clsx';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
+import Tooltip from '@/components/forms/Tooltip';
 import type {RegistryEntry} from '@/registry/types';
 
 import './Fieldset.scss';
@@ -16,13 +17,21 @@ export interface FieldsetProps {
 }
 
 export const Fieldset: React.FC<FieldsetProps> = ({
-  // TODO: display tooltip, if specified
-  componentDefinition: {components, hideHeader = false, label},
+  componentDefinition: {components, hideHeader = false, label, tooltip},
   renderNested: FormioComponent,
 }) => {
   return (
     <fieldset className={clsx('openforms-fieldset', {'openforms-fieldset--no-header': hideHeader})}>
-      {!hideHeader && label && <legend className="openforms-fieldset__legend">{label}</legend>}
+      {!hideHeader && label && (
+        <legend
+          className={clsx('openforms-fieldset__legend', {
+            'openforms-fieldset__legend--tooltip': !!tooltip,
+          })}
+        >
+          {label}
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </legend>
+      )}
       <FormFieldContainer>
         {components.map(nestedDefinition => (
           <FormioComponent key={nestedDefinition.id} componentDefinition={nestedDefinition} />
