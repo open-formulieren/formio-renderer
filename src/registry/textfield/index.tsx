@@ -12,12 +12,13 @@ export interface FormioTextFieldProps {
 }
 
 export const FormioTextField: React.FC<FormioTextFieldProps> = ({
-  componentDefinition: {key, label, description, placeholder, validate},
+  componentDefinition: {key, label, description, tooltip, placeholder, validate},
 }) => {
   return (
     <TextField
       name={key}
       label={label}
+      tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
       placeholder={placeholder}

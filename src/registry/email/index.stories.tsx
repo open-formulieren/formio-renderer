@@ -22,10 +22,9 @@ export const MinimalConfiguration: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
-      // TODO: implement!
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -44,11 +43,30 @@ export const WithPlaceholder: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'email',
       label: 'Your email',
-      // TODO: implement!
-      validateOn: 'blur',
       placeholder: 'geralt@kaer.moh.en',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        email: '',
+      },
+    },
+  },
+};
+
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'email',
+      label: 'Your email',
+      tooltip: 'Surprise!',
     },
   },
   parameters: {
@@ -65,10 +83,9 @@ export const WithAutoComplete: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'email',
       label: 'Your email',
-      // TODO: implement!
-      validateOn: 'blur',
       autocomplete: 'email',
     },
   },
@@ -104,10 +121,9 @@ export const ValidateEmailFormat: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
-      // TODO: implement or just ignore it?
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -128,10 +144,9 @@ export const ValidateEmailRequired: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
-      // TODO: implement or just ignore it?
-      validateOn: 'blur',
       validate: {
         required: true,
       },
@@ -155,10 +170,9 @@ export const PassesAllValidations: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
+      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
-      // TODO: implement or just ignore it?
-      validateOn: 'blur',
       validate: {
         required: true,
       },

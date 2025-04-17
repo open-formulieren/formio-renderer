@@ -58,6 +58,26 @@ export const WithPlaceholder: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'phoneNumber',
+      label: 'A simple phone number',
+      tooltip: 'Surprise!',
+      inputMask: null,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        phoneNumber: '',
+      },
+    },
+  },
+};
+
 export const WithAutocomplete: Story = {
   args: {
     componentDefinition: {

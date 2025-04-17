@@ -12,7 +12,7 @@ export interface FormioEmailProps {
 }
 
 export const FormioEmail: React.FC<FormioEmailProps> = ({
-  componentDefinition: {key, label, description, placeholder, validate, autocomplete},
+  componentDefinition: {key, label, description, tooltip, placeholder, validate, autocomplete},
 }) => {
   return (
     <TextField
@@ -20,6 +20,7 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({
       type="email"
       label={label}
       description={description}
+      tooltip={tooltip}
       isRequired={validate?.required}
       placeholder={placeholder}
       autoComplete={autocomplete}

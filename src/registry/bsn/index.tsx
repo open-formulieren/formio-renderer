@@ -12,13 +12,14 @@ export interface FormioBSNProps {
 }
 
 export const FormioBSN: React.FC<FormioBSNProps> = ({
-  componentDefinition: {key, label, description, validate},
+  componentDefinition: {key, label, tooltip, description, validate},
 }) => {
   return (
     <TextField
       name={key}
       type="text"
       label={label}
+      tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
       pattern="[0-9]{9}"
