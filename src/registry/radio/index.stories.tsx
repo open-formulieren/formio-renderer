@@ -56,6 +56,40 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio choice',
+      tooltip: 'Surprise!',
+      description: 'A description',
+      values: [
+        {
+          value: 'terra',
+          label: 'Terra',
+        },
+        {
+          value: 'ziggy',
+          label: 'Ziggy',
+        },
+      ],
+      defaultValue: null,
+      ...extensionBoilerplate,
+    } satisfies ManualRadioValuesSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          radio: null,
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: ManualRadioValuesSchema;
   onSubmit: FormioFormProps['onSubmit'];
