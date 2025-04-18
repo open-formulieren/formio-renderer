@@ -49,6 +49,36 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'fieldset',
+      key: 'fieldset',
+      label: 'Fieldset label',
+      tooltip: 'Surprise!',
+      hideHeader: false,
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: '',
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   nestedComponents: AnyComponentSchema[];
   onSubmit: FormioFormProps['onSubmit'];

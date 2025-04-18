@@ -56,6 +56,27 @@ export const WithPlaceholder: Story = {
   },
 };
 
+export const WithTooltip: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A simple textfield',
+      tooltip: 'Surprise!',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: '',
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextFieldComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

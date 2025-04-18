@@ -24,5 +24,19 @@
     font-weight: 400;
     letter-spacing: normal;
     line-height: 1.333;
+
+    @include bem.modifier('tooltip') {
+      // See src/components/forms/Tooltip.scss - over time this custom component will be
+      // replaced with the utrecht-fieldset component.
+      display: flex;
+      align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
+      column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
+
+      // prevent the tooltip from taking the same color as the legend itself, but
+      // allow overrides via --of-tooltip-color
+      .openforms-tooltip {
+        color: var(--utrecht-document-color, var(--utrecht-form-label-color));
+      }
+    }
   }
 }

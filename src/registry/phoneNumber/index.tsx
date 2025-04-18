@@ -20,13 +20,14 @@ export interface PhoneNumberFieldProps {
  * validators.
  */
 export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({
-  componentDefinition: {key, label, description, placeholder, validate, autocomplete},
+  componentDefinition: {key, label, description, tooltip, placeholder, validate, autocomplete},
 }) => {
   return (
     <TextField
       name={key}
       label={label}
       description={description}
+      tooltip={tooltip}
       isRequired={validate?.required}
       placeholder={placeholder}
       pattern="^[+0-9][\- 0-9]+$"

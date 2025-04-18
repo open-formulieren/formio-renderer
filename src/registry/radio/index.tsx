@@ -14,12 +14,13 @@ export interface FormioRadioFieldProps {
 
 export const FormioRadioField: React.FC<FormioRadioFieldProps> = ({componentDefinition}) => {
   assertManualValues(componentDefinition);
-  const {key, label, description, validate = {}, values} = componentDefinition;
+  const {key, label, tooltip, description, validate = {}, values} = componentDefinition;
   const {required = false} = validate;
   return (
     <RadioField
       name={key}
       label={label}
+      tooltip={tooltip}
       description={description}
       isRequired={required}
       options={values}

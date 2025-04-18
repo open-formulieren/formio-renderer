@@ -12,12 +12,13 @@ export interface FormioDateProps {
 }
 
 export const FormioDate: React.FC<FormioDateProps> = ({
-  componentDefinition: {key, label, description, validate},
+  componentDefinition: {key, label, tooltip, description, validate},
 }) => {
   return (
     <DateField
       name={key}
       label={label}
+      tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
       widget="inputGroup"
