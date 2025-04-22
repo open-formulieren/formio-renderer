@@ -29,24 +29,20 @@ export const Columns: React.FC<ColumnsProps> = ({
             [`openforms-columns__column--span-mobile-${sizeMobile}`]: sizeMobile,
           })}
         >
-          Col {index + 1}
+          {components.map(nestedDefinition => (
+            <FormioComponent key={nestedDefinition.id} componentDefinition={nestedDefinition} />
+          ))}
         </FormFieldContainer>
       ))}
-
-      {/*<FormFieldContainer>
-        {components.map(nestedDefinition => (
-          <FormioComponent key={nestedDefinition.id} componentDefinition={nestedDefinition} />
-        ))}
-      </FormFieldContainer>*/}
     </div>
   );
 };
 
-const FieldsetComponent: RegistryEntry<ColumnsComponentSchema> = {
+const ColumnsComponent: RegistryEntry<ColumnsComponentSchema> = {
   formField: Columns,
   // getInitialValues,
   // getValidationSchema,
   // excludeHiddenComponents,
 };
 
-export default FieldsetComponent;
+export default ColumnsComponent;
