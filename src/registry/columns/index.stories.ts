@@ -1,4 +1,5 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
+import {INITIAL_VIEWPORTS} from '@storybook/addon-viewport';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from '@storybook/test';
 
@@ -63,5 +64,12 @@ export const MinimalConfiguration: Story = {
         },
       },
     },
+  },
+};
+
+export const MobileMinimalConfiguration: Story = {
+  ...MinimalConfiguration,
+  globals: {
+    viewport: {value: 'mobile1', isRotated: false},
   },
 };
