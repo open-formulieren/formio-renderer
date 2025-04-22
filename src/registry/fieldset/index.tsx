@@ -22,7 +22,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
 }) => {
   return (
     <fieldset className={clsx('openforms-fieldset', {'openforms-fieldset--no-header': hideHeader})}>
-      {!hideHeader && label && (
+      {!hideHeader && (
         <legend
           className={clsx('openforms-fieldset__legend', {
             'openforms-fieldset__legend--tooltip': !!tooltip,
