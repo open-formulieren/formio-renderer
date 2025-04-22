@@ -105,6 +105,26 @@ const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
           },
         ],
       },
+      {
+        type: 'columns',
+        id: 'columns',
+        key: 'columns',
+        columns: [
+          {
+            size: 12,
+            sizeMobile: 4,
+            components: [
+              {
+                type: 'textfield',
+                id: 'hiddenTextFieldInColumns',
+                key: 'hiddenTextFieldInColumns',
+                label: 'Hidden textfield in columns',
+                hidden: true,
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 
@@ -112,6 +132,7 @@ const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
     const canvas = within(canvasElement);
 
     expect(canvas.queryByLabelText('Hidden textfield')).not.toBeInTheDocument();
+    expect(canvas.queryByLabelText('Hidden textfield in columns')).not.toBeInTheDocument();
   },
 });
 

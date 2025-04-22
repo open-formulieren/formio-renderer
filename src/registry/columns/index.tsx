@@ -8,8 +8,7 @@ import type {RegistryEntry} from '@/registry/types';
 import './Columns.scss';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
-
-// import excludeHiddenComponents from './visibility';
+import excludeHiddenComponents from './visibility';
 
 export interface ColumnsProps {
   componentDefinition: ColumnsComponentSchema;
@@ -42,7 +41,7 @@ const ColumnsComponent: RegistryEntry<ColumnsComponentSchema> = {
   formField: Columns,
   getInitialValues,
   getValidationSchema,
-  // excludeHiddenComponents,
+  excludeHiddenComponents,
 };
 
 export default ColumnsComponent;
