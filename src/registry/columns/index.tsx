@@ -6,9 +6,9 @@ import type {FormioComponentProps} from '@/components/FormioComponent';
 import type {RegistryEntry} from '@/registry/types';
 
 import './Columns.scss';
+import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
 
-// import getInitialValues from './initialValues';
-// import getValidationSchema from './validationSchema';
 // import excludeHiddenComponents from './visibility';
 
 export interface ColumnsProps {
@@ -40,8 +40,8 @@ export const Columns: React.FC<ColumnsProps> = ({
 
 const ColumnsComponent: RegistryEntry<ColumnsComponentSchema> = {
   formField: Columns,
-  // getInitialValues,
-  // getValidationSchema,
+  getInitialValues,
+  getValidationSchema,
   // excludeHiddenComponents,
 };
 
