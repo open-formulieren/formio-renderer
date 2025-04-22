@@ -1,0 +1,10 @@
+// use microscope-sass library for the time being, but extract the responsive lib at some point.
+@forward 'microscope-sass/lib/responsive' with (
+  $breakpoint-mobile-s: 320px !default,
+  $breakpoint-mobile-m: 375px !default,
+  $breakpoint-mobile-l: 425px !default,
+  $breakpoint-tablet: 768px !default,
+  $breakpoint-laptop: 992px !default,
+  $breakpoint-desktop: 1200px !default,
+  $responsive-default-media: all !default
+);
