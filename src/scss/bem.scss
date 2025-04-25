@@ -1,2 +1,11 @@
 // use microscope-sass library for the time being, but extract the bem lib at some point.
 @forward 'microscope-sass/lib/bem';
+
+@use 'sass:list';
+@use 'sass:selector';
+
+@function get-element($base, $element) {
+  // capture the block, even if there is a modifier on the block
+  $block: list.nth(selector.simple-selectors($base), 1);
+  @return '#{$block}__#{$element}';
+}

@@ -16,6 +16,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  features: {viewportStoryGlobals: true},
   docs: {},
   typescript: {
     reactDocgen: 'react-docgen-typescript',
