@@ -1,0 +1,76 @@
+@use '@/scss/bem';
+@use '@utrecht/components/link';
+@use 'microscope-sass/lib/typography';
+
+$formio-content-variants: ('error', 'warning', 'success', 'info');
+
+@mixin formio-content-variant($variant) {
+  border-inline-start-color: var(
+    --of-formio-content-#{$variant}-border-inline-start-color,
+    var(--of-color-#{$variant})
+  );
+  border-inline-start-style: var(--of-formio-content-#{$variant}-border-inline-start-style, solid);
+  border-inline-start-width: var(--of-formio-content-#{$variant}-border-inline-start-width, 4px);
+  padding-inline-start: var(--of-formio-content-#{$variant}-padding-inline-start, 16px);
+}
+
+/**
+ * Extensions of the utrecht-link component with OF-specific styles.
+ */
+.utrecht-link {
+  @include bem.modifier('openforms') {
+    font-family: var(
+      --of-utrecht-link-font-family,
+      var(--of-typography-sans-serif-font-family, var(--utrecht-document-font-family))
+    );
+    margin: 0;
+  }
+
+  // swap the hover/no-hover text decoration rules compared to the non-modified variant
+  @include bem.modifier('openforms-hover') {
+    text-decoration: var(--utrecht-link-hover-text-decoration);
+
+    &:hover {
+      text-decoration: var(--utrecht-link-text-decoration);
+    }
+  }
+
+  @include bem.modifier('openforms-inherit') {
+    color: inherit;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.openforms-formio-content {
+  @include typography.wysiwyg;
+  @include typography.body;
+  @include typography.body--big;
+
+  overflow-wrap: break-word;
+  hyphens: auto;
+  overflow: auto;
+
+  inline-size: var(--of-formio-content-inline-size, 100%);
+  max-inline-size: var(
+    --of-formio-content-max-inline-size,
+    var(--utrecht-form-field-max-inline-size)
+  );
+
+  @each $variant in $formio-content-variants {
+    @include bem.modifier($variant) {
+      @include formio-content-variant($variant);
+    }
+  }
+
+  /**
+ * Apply the standard link styles (without modifiers) to the anchor tags.
+
+ * For WYSIWYG-like content where classnames cannot be controlled.
+ */
+  a {
+    @extend .utrecht-link, .utrecht-link--openforms;
+  }
+}
