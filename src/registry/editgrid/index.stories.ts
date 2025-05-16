@@ -330,3 +330,93 @@ export const WithLayoutComponents: Story = {
     },
   },
 };
+
+export const NestedWithSimpleConditionals: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'parent',
+      label: 'Repeating group with nested repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Parent',
+      components: [
+        {
+          id: 'component3',
+          type: 'textfield',
+          key: 'textField1',
+          label: 'Textfield 1',
+          conditional: {
+            show: false,
+            when: 'root',
+            eq: 'hide nested 1',
+          },
+        },
+        {
+          id: 'component2',
+          type: 'editgrid',
+          key: 'child',
+          label: 'Nested repeating group',
+          disableAddingRemovingRows: false,
+          groupLabel: 'Child',
+          components: [
+            {
+              id: 'component4',
+              type: 'textfield',
+              key: 'textField2',
+              label: 'Nested 1',
+              conditional: {
+                show: false,
+                when: 'root',
+                eq: 'hide nested 1',
+              },
+            },
+            {
+              id: 'component5',
+              type: 'textfield',
+              key: 'textField3',
+              label: 'Nested 2',
+              conditional: {
+                show: true,
+                when: 'parent.child.textField2',
+                eq: 'zzz',
+              },
+            },
+          ],
+          conditional: {
+            show: false,
+            when: 'parent.textField1',
+            eq: 'Parent 1',
+          },
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        parent: [
+          {
+            textField1: 'Parent 1',
+            child: [
+              {textField2: 'aaa', textField3: 'bbb'},
+              {textField2: 'ccc', textField3: 'ddd'},
+            ],
+          },
+          {textField1: 'Parent 2', child: [{textField2: 'eee', textField3: 'fff'}]},
+        ],
+        root: 'hide nested 1',
+      },
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText('Parent 2')).toBeVisible();
+
+    expect(canvas.queryByText('Textfield 1')).not.toBeInTheDocument();
+    expect(canvas.queryByText('Nested 1')).not.toBeInTheDocument();
+    expect(canvas.queryByText('Nested 2')).not.toBeInTheDocument();
+  },
+};
