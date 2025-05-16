@@ -1,4 +1,5 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
+import {setIn, useFormikContext} from 'formik';
 import {useIntl} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -8,6 +9,7 @@ import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
+import {filterVisibleComponents} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
 import getInitialValues from './initialValues';
@@ -16,7 +18,8 @@ export interface ItemBodyProps {
   renderNested: React.FC<FormioComponentProps>;
   getRegistryEntry: GetRegistryEntry;
   components: AnyComponentSchema[];
-  values: JSONObject;
+  parentKey: string;
+  parentValues: JSONObject;
   expanded: boolean;
 }
 
@@ -24,17 +27,20 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
   components,
-  values,
+  parentKey,
+  parentValues,
   expanded,
 }) => {
-  // TODO: incorporate conditional visibility here, which is complicated for editgrids.
-  const componentsToRender = components;
-
+  const {values: itemValues} = useFormikContext<JSONObject>();
+  // assign the local item values to the editgrid scope - key is the key of the
+  // editgrid itself.
+  const scopedValues = setIn(parentValues, parentKey, itemValues);
+  const componentsToRender = filterVisibleComponents(components, scopedValues, getRegistryEntry);
   if (!expanded) {
     return (
       <ItemPreview
         components={componentsToRender}
-        values={values}
+        values={itemValues}
         getRegistryEntry={getRegistryEntry}
       />
     );
@@ -73,6 +79,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
   getRegistryEntry,
 }) => {
   const intl = useIntl();
+  const {values: parentValues} = useFormikContext<JSONObject>();
 
   const emptyItem: JSONObject | null = disableAddingRemovingRows
     ? null
@@ -91,12 +98,13 @@ export const EditGrid: React.FC<EditGridProps> = ({
       description={description}
       enableIsolation
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
-      getItemBody={(values, _, {expanded}) => (
+      getItemBody={(_, __, {expanded}) => (
         <ItemBody
           renderNested={FormioComponent}
           getRegistryEntry={getRegistryEntry}
           components={components}
-          values={values}
+          parentKey={key}
+          parentValues={parentValues}
           expanded={expanded}
         />
       )}
