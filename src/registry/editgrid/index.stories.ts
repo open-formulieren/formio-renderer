@@ -1,4 +1,8 @@
-import {ContentComponentSchema, FieldsetComponentSchema} from '@open-formulieren/types';
+import {
+  ColumnsComponentSchema,
+  ContentComponentSchema,
+  FieldsetComponentSchema,
+} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
 
@@ -319,13 +323,50 @@ export const WithLayoutComponents: Story = {
           label: 'I should not be visible',
           html: '<p>I may not be shown in the values display.</p>',
         } satisfies ContentComponentSchema,
+        {
+          id: 'columns',
+          type: 'columns',
+          key: 'columns',
+          columns: [
+            {
+              size: 6,
+              sizeMobile: 4,
+              components: [
+                {
+                  id: 'columnsNestedTextfield1',
+                  type: 'textfield',
+                  key: 'columnsNestedTextfield1',
+                  label: 'Nested textfield 1',
+                },
+              ],
+            },
+            {
+              size: 6,
+              sizeMobile: 4,
+              components: [
+                {
+                  id: 'columnsNestedTextfield2',
+                  type: 'textfield',
+                  key: 'columnsNestedTextfield2',
+                  label: 'Nested textfield 2',
+                },
+              ],
+            },
+          ],
+        } satisfies ColumnsComponentSchema,
       ],
     },
   },
   parameters: {
     formik: {
       initialValues: {
-        editgrid: [{nestedTextfield: 'nested value'}],
+        editgrid: [
+          {
+            nestedTextfield: 'nested value',
+            columnsNestedTextfield1: 'column 1 value',
+            columnsNestedTextfield2: 'column 2 value',
+          },
+        ],
       },
     },
   },
