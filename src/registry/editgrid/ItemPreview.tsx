@@ -100,7 +100,23 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
       );
     }
     case 'columns': {
-      return 'columns is TODO';
+      const nestedComponents = component.columns.reduce(
+        (acc, column) => [...acc, ...column.components],
+        [] satisfies AnyComponentSchema[]
+      );
+      return (
+        <>
+          {nestedComponents.map(nestedComponent => (
+            <ComponentDataListItem
+              key={nestedComponent.key}
+              component={nestedComponent}
+              keyPrefix={keyPrefix}
+              values={values}
+              getRegistryEntry={getRegistryEntry}
+            />
+          ))}
+        </>
+      );
     }
     case 'editgrid': {
       const items: JSONObject[] = getIn(values, `${keyPrefix}.${component.key}`) || [];
