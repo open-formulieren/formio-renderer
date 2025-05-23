@@ -1,0 +1,280 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/blocks';
+
+import * as EditGridStories from './index.stories';
+
+<Meta of={EditGridStories} name="Documentation" />
+
+# Developer documentation
+
+Formio editgrids are quite different from the usual Formio components and require some special
+attention and implementation details. This documentation describes those peculiarities so that
+future developers understand what is going on.
+
+## Quick recap
+
+The link between a formio component and the submission data is the `key` property:
+
+```json
+{
+  "type": "textfield",
+  "key": "parent.child"
+}
+```
+
+results in a submission data shape of:
+
+```ts
+interface SubmissionData {
+  parent: {
+    child: string;
+  };
+}
+```
+
+i.e. the `.` is used to denote nodes in a "json path" describing where values get assigned. The
+component type directly maps to the data type of the value.
+
+## Editgrid data types
+
+Edit grids are a form of data/composite components - they hold submission data themselves and the
+values come from the component definitions inside. Fieldsets and columns are similar in the sense
+that they require child components to be defined, but they are layout components and don't
+contribute to the submission themselves at all, unlike editgrids.
+
+For example, an editgrid definition:
+
+```json
+{
+  "type": "editgrid",
+  "key": "items",
+  "components": [
+    {
+      "type": "textfield",
+      "key": "parent.child"
+    }
+  ]
+}
+```
+
+maps to the following submission data shape:
+
+```ts
+interface SubmissionData {
+  items: Array<{
+    parent: {
+      child: string;
+    };
+  }>;
+}
+```
+
+Note that:
+
+- the `key` of the editgrid itself is present in the submission data, and it acts as a container
+- the value type of the editgrid itself is array/list rather than an object. Each item in the edit
+  grid is an item in this list.
+- the usual semantics about periods in key names of the child components apply.
+
+The components definition inside the editgrid definition acts as a blueprint for each item added to
+the editgrid itself.
+
+## Simple conditionals
+
+Formio supports simple conditionals (and complex ones too, but we don't expose those) which allow
+you to define at the component level when it should be visible or hidden. You do this by pointing to
+a reference component, the desired state and the trigger value to apply the desired state.
+
+For example, an item inside the editgrid can be conditionally visible based on the value of a
+component outside of it:
+
+```json
+[
+  {
+    "type": "textfield",
+    "key": "parent.nested"
+  },
+  "type": "editgrid",
+  "key": "items",
+  "components": [
+    {
+      "type": "textfield",
+      "key": "editgridText",
+      "conditional": {
+        "show": false,
+        "when": "parent.nested",
+        "eq": "hide editgrid text"
+      }
+    }
+  ]
+]
+```
+
+- when the outer text field has a value different from `hide editgrid text`, the textfield inside
+  each editgrid item will be visible
+- when the outer text field has a value equal to `hide editgrid text`, the textfield inside each
+  editgrid item will be hidden
+
+The above example is already non-trivial - it illustrates that an item inside the edit grid can have
+behaviour dependent on components in the whole form definition (referring to items in the root in
+this case). We will now describe more complex cases that are supported/implemented.
+
+### Simple conditionals "local" to the edit grid item
+
+Instead of (or at the same time as) referring to other form components, you can also make the simple
+conditional logic dependent on any of the sibling components inside each edit grid item. Each item
+acts like it's an isolated subform with its own local scope. This makes it possible to reach
+different (visual) states for different items inside the same edit grid component. Consider the
+following definition:
+
+```json
+[
+  {
+    "type": "textfield",
+    "key": "parent.nested"
+  },
+  {
+    "type": "editgrid",
+    "key": "items",
+    "components": [
+      {
+        "type": "textfield",
+        "key": "reference"
+      },
+      {
+        "type": "textfield",
+        "key": "conditionallyVisible",
+        "conditional": {
+          "show": false,
+          "when": "items.reference",
+          "eq": "hide other"
+        }
+      }
+    ]
+  }
+]
+```
+
+- the editgrid itself will always be visible
+- the reference textfield in each item is always visible
+- the second textfield in each item is only visible when the reference _in the same item_ has a
+  value different from `hide other`
+
+This means that you may have two or more items in an edit grid where each item shows a different
+subset of fields. You can of course combine this with the earlier case and refer to components
+outside of the edit grid.
+
+**Why does this work?**
+
+It may have caught your eye already, but the reference in the conditional doesn't simply point to
+the key `reference` - instead, it points to `items.reference` - making up a fully qualified "access
+path" from the root of the form definition to the individual item. This path doesn't make any sense
+outside of an edit grid item, where you would have to use indexed access because of the array type
+of the value: `items.3.reference`.
+
+In the scope of each edit grid item, the actual value of the editgrid component is shadowed by the
+values of the item itself, as if there are no other items at all. The type of the value changes from
+array to object. _Inside_ the edit grid item, the submission data type is:
+
+```ts
+interface SubmissionData {
+  parent: {
+    nested: string;
+  };
+  items: {
+    parent: {
+      child: string;
+    };
+  };
+}
+```
+
+_and_ this is merged together with the root/parent values of the submission data.
+
+### Nested editgrids
+
+Formio form definitions are just JSON-trees where each node is a component definition. As such, it
+is _technically_ possible to nest editgrids inside of other editgrids, without any depth limits.
+
+The following definition:
+
+```json
+{
+  "type": "editgrid",
+  "key": "outer",
+  "components": [
+    {
+      "type": "textfield",
+      "key": "child"
+    },
+    {
+      "type": "editgrid",
+      "key": "inner",
+      "components": [
+        {
+          "type": "textfield",
+          "key": "grandchild"
+        },
+        {
+          "type": "textfield",
+          "key": "parent.child"
+        }
+      ]
+    }
+  ]
+}
+```
+
+maps to the submission data shape:
+
+```ts
+interface SubmissionData {
+  outer: Array<{
+    child: string;
+    inner: Array<{
+      grandchild: string;
+      parent: {
+        child: string;
+      };
+    }>;
+  }>;
+}
+```
+
+The same simple conditional semantics apply here, like above - you need to take into account the
+path from the root of the definition by prefixing all the parent keys:
+
+- to have conditionals relative between grandchildren, use `outer.inner.grandchild` as reference
+- to have conditionals between children, use `outer.child` as reference
+
+You can mix and match this to address the root, children and grandchildren from each node.
+
+**Why does this work?**
+
+Each edit grid item has its own Formik context, so as far as an item is concerned, nothing around or
+above it exists. When you click the "Save" button for an item, a submit event is fired and that
+triggers an update in the parent component values.
+
+Nested edit grids result in nested Formik contexts, each resulting in its own "values" scope. When
+processing the simple conditionals, we look at the parent values scope for each item before setting
+up the scope for the item itself, and merge them together with the fully qualified item paths (e.g.
+`outer.inner.parent.child`). Each level of nesting results in an assignment to the corresponding
+level in the submission data structure.
+
+We track this submission data state itself in a React context so that we _do_ know for each item
+whether there exist things "above it", and that gives each item access to the parent scopes all the
+way up to the root.
+
+An XML structure can represent this a bit more visually pleasing:
+
+```xml
+<rootScope key="">
+  <outerScope key="outer">
+    <itemScope key="inner">
+      <itemField 1 />
+      <itemField 2 />
+      <itemField ... />
+      <itemField n />
+    </itemScope>
+  </outerScope>
+</rootScope>
+```

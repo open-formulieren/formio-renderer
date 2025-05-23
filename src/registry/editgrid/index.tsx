@@ -1,4 +1,6 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
+import {setIn, useFormikContext} from 'formik';
+import {createContext, useContext} from 'react';
 import {useIntl} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -8,15 +10,29 @@ import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
+import {filterVisibleComponents} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
 import getInitialValues from './initialValues';
+
+// set up a context to track the parent values when dealing with nested edit grids
+interface ParentValuesContextType {
+  keyPrefix: string; // component keys from root to leaf, to track position in nested edit grids
+  values: JSONObject;
+}
+
+const ParentValuesContext = createContext<ParentValuesContextType>({
+  keyPrefix: '',
+  values: {},
+});
+ParentValuesContext.displayName = 'ParentValuesContext';
 
 export interface ItemBodyProps {
   renderNested: React.FC<FormioComponentProps>;
   getRegistryEntry: GetRegistryEntry;
   components: AnyComponentSchema[];
-  values: JSONObject;
+  parentKey: string;
+  parentValues: JSONObject;
   expanded: boolean;
 }
 
@@ -24,27 +40,33 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
   components,
-  values,
+  parentKey,
+  parentValues,
   expanded,
 }) => {
-  // TODO: incorporate conditional visibility here, which is complicated for editgrids.
-  const componentsToRender = components;
-
+  const {values: itemValues} = useFormikContext<JSONObject>();
+  // assign the local item values to the editgrid scope - key is the key of the
+  // editgrid itself.
+  const scopedValues = setIn(parentValues, parentKey, itemValues);
+  const componentsToRender = filterVisibleComponents(components, scopedValues, getRegistryEntry);
   if (!expanded) {
     return (
       <ItemPreview
         components={componentsToRender}
-        values={values}
+        keyPrefix={parentKey}
+        values={scopedValues}
         getRegistryEntry={getRegistryEntry}
       />
     );
   }
   return (
-    <FormFieldContainer>
-      {componentsToRender.map((definition, index) => (
-        <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
-      ))}
-    </FormFieldContainer>
+    <ParentValuesContext.Provider value={{keyPrefix: parentKey, values: parentValues}}>
+      <FormFieldContainer>
+        {componentsToRender.map((definition, index) => (
+          <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
+        ))}
+      </FormFieldContainer>
+    </ParentValuesContext.Provider>
   );
 };
 
@@ -73,6 +95,11 @@ export const EditGrid: React.FC<EditGridProps> = ({
   getRegistryEntry,
 }) => {
   const intl = useIntl();
+  const {values: parentValues} = useFormikContext<JSONObject>();
+
+  const {keyPrefix, values: grandParentValues} = useContext(ParentValuesContext);
+  // ensure we keep setting a deeper scope when dealing with nesting
+  const parentScope = keyPrefix ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
   const emptyItem: JSONObject | null = disableAddingRemovingRows
     ? null
@@ -91,12 +118,13 @@ export const EditGrid: React.FC<EditGridProps> = ({
       description={description}
       enableIsolation
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
-      getItemBody={(values, _, {expanded}) => (
+      getItemBody={(_, __, {expanded}) => (
         <ItemBody
           renderNested={FormioComponent}
           getRegistryEntry={getRegistryEntry}
           components={components}
-          values={values}
+          parentKey={keyPrefix ? `${keyPrefix}.${key}` : key}
+          parentValues={parentScope}
           expanded={expanded}
         />
       )}

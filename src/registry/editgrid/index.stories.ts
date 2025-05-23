@@ -330,3 +330,158 @@ export const WithLayoutComponents: Story = {
     },
   },
 };
+
+export const WithSimpleConditional: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Edit grid',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Item',
+      components: [
+        {
+          id: 'textfield',
+          type: 'textfield',
+          key: 'textfield',
+          label: 'Must not display',
+          conditional: {
+            show: false,
+            when: 'root',
+            eq: 'hide',
+          },
+        },
+        {
+          id: 'textfield2',
+          type: 'textfield',
+          key: 'textfield2',
+          label: 'Must display',
+          conditional: {
+            show: true,
+            when: 'root',
+            eq: 'hide',
+          },
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [{textfield: 'A value', textfield2: 'Another value'}],
+        root: 'hide',
+      },
+    },
+  },
+};
+
+export const NestedWithSimpleConditionals: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'parent',
+      label: 'Repeating group with nested repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Parent',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'textField1',
+          label: 'Textfield 1',
+          conditional: {
+            show: false,
+            when: 'root',
+            eq: 'hide nested 1',
+          },
+        },
+        {
+          id: 'component3',
+          type: 'editgrid',
+          key: 'child',
+          label: 'Nested repeating group',
+          disableAddingRemovingRows: false,
+          groupLabel: 'Child',
+          conditional: {
+            show: false,
+            when: 'parent.textField1',
+            eq: 'Parent 1',
+          },
+          components: [
+            {
+              id: 'component4',
+              type: 'textfield',
+              key: 'textField2',
+              label: 'Nested 1',
+              conditional: {
+                show: false,
+                when: 'root',
+                eq: 'hide nested 1',
+              },
+            },
+            {
+              id: 'component5',
+              type: 'textfield',
+              key: 'textField3',
+              label: 'Nested 2',
+              conditional: {
+                show: true,
+                when: 'parent.child.textField2',
+                eq: 'ggg',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        parent: [
+          {
+            textField1: 'Parent 1',
+            child: [
+              {textField2: 'aaa', textField3: 'bbb'},
+              {textField2: 'ccc', textField3: 'ddd'},
+            ],
+          },
+          {
+            textField1: 'Parent 2',
+            child: [
+              {textField2: 'eee', textField3: 'fff'},
+              {textField2: 'ggg', textField3: 'hhh'},
+            ],
+          },
+        ],
+        root: 'hide nested 1',
+      },
+    },
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText('Parent 2')).toBeVisible();
+
+    expect(canvas.queryByText('Textfield 1')).not.toBeInTheDocument();
+    expect(canvas.queryByText('Nested 1')).not.toBeInTheDocument();
+    expect(canvas.queryAllByText('Nested 2')).toHaveLength(1);
+
+    await step('Edit mode parent 2', async () => {
+      const editButton = canvas.getByRole('button', {name: 'Edit item 2'});
+      await userEvent.click(editButton);
+
+      for (const btn of canvas.getAllByRole('button', {name: 'Edit item 1'})) {
+        await userEvent.click(btn);
+      }
+      const editButton2 = canvas.getByRole('button', {name: 'Edit item 2'});
+      await userEvent.click(editButton2);
+
+      expect(canvas.queryByText('Nested 1')).not.toBeInTheDocument();
+      expect(canvas.queryAllByText('Nested 2')).toHaveLength(1);
+    });
+  },
+};

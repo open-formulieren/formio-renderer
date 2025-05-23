@@ -7,15 +7,17 @@ import {
   OrderedList,
   OrderedListItem,
 } from '@utrecht/component-library-react';
-import {getIn} from 'formik';
+import {getIn, setIn} from 'formik';
 
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
+import {filterVisibleComponents} from '@/visibility';
 
 import './ItemPreview.scss';
 
 export interface ItemPreviewProps {
   components: AnyComponentSchema[];
+  keyPrefix: string;
   values: JSONObject;
   getRegistryEntry: GetRegistryEntry;
 }
@@ -27,13 +29,20 @@ export interface ItemPreviewProps {
  * For the particularities of the `DataList` usage, see
  * https://nl-design-system.github.io/utrecht/storybook/?path=/docs/react_react-data-list--docs
  */
-const ItemPreview: React.FC<ItemPreviewProps> = ({components, values, getRegistryEntry}) => {
+const ItemPreview: React.FC<ItemPreviewProps> = ({
+  components,
+  keyPrefix,
+  values,
+  getRegistryEntry,
+}) => {
+  const componentsToRender = filterVisibleComponents(components, values, getRegistryEntry);
   return (
     <DataList appearance="rows">
-      {components.map(component => (
+      {componentsToRender.map(component => (
         <ComponentDataListItem
           key={component.key}
           component={component}
+          keyPrefix={keyPrefix}
           values={values}
           getRegistryEntry={getRegistryEntry}
         />
@@ -44,6 +53,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({components, values, getRegistr
 
 interface ComponentDataListItemProps {
   component: AnyComponentSchema;
+  keyPrefix: string;
   values: JSONObject;
   getRegistryEntry: GetRegistryEntry;
 }
@@ -60,6 +70,7 @@ interface ComponentDataListItemProps {
  */
 const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
   component,
+  keyPrefix,
   values,
   getRegistryEntry,
 }) => {
@@ -80,6 +91,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
             <ComponentDataListItem
               key={nestedComponent.key}
               component={nestedComponent}
+              keyPrefix={keyPrefix}
               values={values}
               getRegistryEntry={getRegistryEntry}
             />
@@ -91,7 +103,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
       return 'columns is TODO';
     }
     case 'editgrid': {
-      const items: JSONObject[] = getIn(values, component.key) || [];
+      const items: JSONObject[] = getIn(values, `${keyPrefix}.${component.key}`) || [];
       return (
         <DataListItem>
           <DataListKey>{component.label}</DataListKey>
@@ -101,7 +113,9 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
                 <OrderedListItem key={index}>
                   <ItemPreview
                     components={component.components}
-                    values={item}
+                    keyPrefix={`${keyPrefix}.${component.key}`}
+                    // scope the values again so that conditional logic can work
+                    values={setIn(values, `${keyPrefix}.${component.key}`, item)}
                     getRegistryEntry={getRegistryEntry}
                   />
                 </OrderedListItem>
@@ -118,11 +132,12 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
   // if no ValueDisplay is configured, render nothing.
   if (!ValueDisplay) return null;
 
+  const componentValue = getIn(values, `${keyPrefix}.${component.key}`);
   return (
     <DataListItem>
       <DataListKey>{component.label}</DataListKey>
       <DataListValue notranslate>
-        <ValueDisplay componentDefinition={component} value={getIn(values, component.key)} />
+        <ValueDisplay componentDefinition={component} value={componentValue} />
       </DataListValue>
     </DataListItem>
   );
