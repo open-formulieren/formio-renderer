@@ -33,7 +33,7 @@ export const MinimalConfiguration: Story = {
       label: 'Selecboxes choices',
       values: [
         {
-          value: 'referenceLists',
+          value: 'reference.Lists',
           label: 'Reference lists',
         },
         {
@@ -50,7 +50,7 @@ export const MinimalConfiguration: Story = {
       initialValues: {
         my: {
           selectboxes: {
-            referenceLists: false,
+            'reference.Lists': false,
             formVariable: true,
           },
         },

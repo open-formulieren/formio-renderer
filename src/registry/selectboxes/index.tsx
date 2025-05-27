@@ -42,7 +42,6 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
   const descriptionid = `${id}-description`;
 
   // TODO: support option descriptions
-  // TODO: validation errors for the component rather than the checkbox itself
   // TODO: validate the component when no checkbox inside is blurred
 
   return (
@@ -59,7 +58,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
       </FieldsetLegend>
 
       {options.map(({value, label: optionLabel}) => (
-        <Checkbox key={value} name={`${key}.${value}`} label={optionLabel} />
+        <Checkbox key={value} name={`${key}.['${value}']`} label={optionLabel} />
       ))}
 
       <HelpText id={descriptionid}>{description}</HelpText>
