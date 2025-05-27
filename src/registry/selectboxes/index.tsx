@@ -32,7 +32,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
   // derive the component touched state from the individual checkboxes that make up the
   // component
   const touched = options.some(({value}) => {
-    const nestedFieldName = `${key}.${value}`;
+    const nestedFieldName = `${key}.['${value}']`;
     const {touched} = getFieldMeta<boolean>(nestedFieldName);
     return touched;
   });

@@ -143,6 +143,42 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+/**
+ * Ensure that the string values for options are not interpreted as dotted paths.
+ */
+export const SillyOptionValues: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'selectboxes',
+      type: 'selectboxes',
+      key: 'selectboxes',
+      label: 'Silly values',
+      values: [
+        {value: 'opti.on', label: 'Option 1'},
+        {value: 'opt[io]', label: 'Option 2'},
+      ],
+      defaultValue: {},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByLabelText('Option 1'));
+    await userEvent.click(canvas.getByLabelText('Option 2'));
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      selectboxes: {
+        'opti.on': true,
+        'opt[io]': true,
+      },
+    });
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: ManualSelectboxesValuesSchema;
   value: Record<string, boolean>;
