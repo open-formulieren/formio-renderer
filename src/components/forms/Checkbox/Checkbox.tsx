@@ -1,6 +1,6 @@
-import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
+import {FormField, Checkbox as UtrechtCheckbox} from '@utrecht/component-library-react';
 import clsx from 'clsx';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
@@ -8,15 +8,9 @@ import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
-import './RadioField.scss';
-import RadioOption from './RadioOption';
+import './Checkbox.scss';
 
-export interface RadioOption {
-  value: string;
-  label: React.ReactNode;
-}
-
-export interface RadioFieldProps {
+export interface CheckboxProps {
   /**
    * The name of the form field/input, used to set/track the field value in the form state.
    */
@@ -47,69 +41,56 @@ export interface RadioFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
-  /**
-   * Array of possible choices for the field. Only one can be selected.
-   */
-  options: RadioOption[];
 }
 
-/**
- * A radio field with a set of options.
- *
- * @reference https://nl-design-system.github.io/utrecht/storybook-react/?path=/docs/react-component-form-field-radio-group--docs
- */
-const RadioField: React.FC<RadioFieldProps> = ({
+const Checkbox: React.FC<CheckboxProps> = ({
   name,
   label = '',
   isRequired = false,
   description = '',
   isDisabled = false,
-  options = [],
   tooltip,
 }) => {
-  const [, {error = '', touched}] = useField({name, type: 'radio'});
+  const {validateField} = useFormikContext();
+  const [{value, ...props}, {error = '', touched}] = useField<boolean | undefined>({
+    name,
+    type: 'checkbox',
+  });
   const id = useId();
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-  const descriptionid = `${id}-description`;
 
   return (
-    <Fieldset
-      className="utrecht-form-fieldset--openforms"
-      disabled={isDisabled}
-      invalid={invalid}
-      role="radiogroup"
-      aria-describedby={description ? descriptionid : undefined}
-    >
-      <FieldsetLegend
-        className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
+    <FormField type="checkbox" invalid={invalid} className="utrecht-form-field--openforms">
+      <UtrechtCheckbox
+        id={id}
+        className="utrecht-form-field__input utrecht-custom-checkbox utrecht-custom-checkbox--html-input utrecht-custom-checkbox--openforms"
+        appearance="custom"
+        invalid={invalid}
+        aria-describedby={errorMessageId}
+        {...props}
+        onBlur={async e => {
+          props.onBlur(e);
+          await validateField(name);
+        }}
+      />
+      <div
+        className={clsx('utrecht-form-field__label', 'utrecht-form-field__label--checkbox', {
+          'utrecht-form-field__label--openforms-tooltip': !!tooltip,
+        })}
       >
-        <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
+        <LabelContent type="checkbox" id={id} isDisabled={isDisabled} isRequired={isRequired}>
           {label}
         </LabelContent>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </FieldsetLegend>
-
-      {options.map(({value, label: optionLabel}, index) => (
-        <RadioOption
-          key={value}
-          name={name}
-          value={value}
-          label={optionLabel}
-          id={id}
-          index={index}
-          aria-describedby={errorMessageId}
-          isDisabled={isDisabled}
-        />
-      ))}
-
-      <HelpText id={descriptionid}>{description}</HelpText>
+      </div>
+      <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
-    </Fieldset>
+    </FormField>
   );
 };
 
-RadioField.displayName = 'RadioField';
+Checkbox.displayName = 'Checkbox';
 
-export default RadioField;
+export default Checkbox;

@@ -1,5 +1,6 @@
 // Input field types
 export {default as TextField} from './TextField';
+export {default as Checkbox} from './Checkbox';
 export {default as RadioField} from './RadioField';
 export {default as DateField} from './DateField';
 
