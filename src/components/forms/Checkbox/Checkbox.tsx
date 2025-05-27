@@ -1,4 +1,8 @@
-import {FormField, Checkbox as UtrechtCheckbox} from '@utrecht/component-library-react';
+import {
+  FormField,
+  FormFieldDescription,
+  Checkbox as UtrechtCheckbox,
+} from '@utrecht/component-library-react';
 import clsx from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
@@ -37,6 +41,11 @@ export interface CheckboxProps {
    */
   description?: React.ReactNode;
   /**
+   * Whether to treat the description as help text for a standalone field or blend the
+   * description in more with the label.
+   */
+  descriptionAsHelpText?: boolean;
+  /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
    */
@@ -48,6 +57,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   label = '',
   isRequired = false,
   description = '',
+  descriptionAsHelpText = true,
   isDisabled = false,
   tooltip,
 }) => {
@@ -60,7 +70,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
+  const descriptionId = description && !descriptionAsHelpText ? `${id}-description` : undefined;
 
+  const ariaDescribedBy = [errorMessageId, descriptionId].filter(Boolean).join(' ');
   return (
     <FormField type="checkbox" invalid={invalid} className="utrecht-form-field--openforms">
       <UtrechtCheckbox
@@ -68,7 +80,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         className="utrecht-form-field__input utrecht-custom-checkbox utrecht-custom-checkbox--html-input utrecht-custom-checkbox--openforms"
         appearance="custom"
         invalid={invalid}
-        aria-describedby={errorMessageId}
+        aria-describedby={ariaDescribedBy || undefined}
         {...props}
         onBlur={async e => {
           props.onBlur(e);
@@ -85,7 +97,17 @@ const Checkbox: React.FC<CheckboxProps> = ({
         </LabelContent>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </div>
-      <HelpText>{description}</HelpText>
+
+      {descriptionAsHelpText ? (
+        <HelpText>{description}</HelpText>
+      ) : (
+        description && (
+          <FormFieldDescription id={descriptionId} className="utrecht-form-field__description">
+            {description}
+          </FormFieldDescription>
+        )
+      )}
+
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );

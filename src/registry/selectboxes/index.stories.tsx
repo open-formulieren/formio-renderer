@@ -96,6 +96,31 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithOptionDescriptions: Story = {
+  ...MinimalConfiguration,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'Selecboxes choices',
+      values: [
+        {
+          value: 'reference.Lists',
+          label: 'Reference lists',
+          description: 'An unexpected option description appears!',
+        },
+        {
+          value: 'formVariable',
+          label: 'Form variable',
+        },
+      ],
+      defaultValue: {referenceLists: false, formVariable: false},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: ManualSelectboxesValuesSchema;
   onSubmit: FormioFormProps['onSubmit'];
