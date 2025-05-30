@@ -1,10 +1,10 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import clsx from 'clsx';
-import {LabelContent} from 'components/forms/Label';
 import {useField} from 'formik';
 import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
+import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
