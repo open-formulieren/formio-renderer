@@ -13,6 +13,6 @@ export function assertManualValues(
   componentDefinition: SelectboxesComponentSchema
 ): asserts componentDefinition is ManualSelectboxesValuesSchema {
   if (!('values' in componentDefinition)) {
-    throw new TypeError('Radio component has no (resolved) values!');
+    throw new TypeError('Selectboxes component has no (resolved) values!');
   }
 }

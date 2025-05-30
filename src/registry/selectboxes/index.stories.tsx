@@ -228,7 +228,7 @@ export const ValueDisplayStory: ValueDisplayStory = {
       id: 'component1',
       type: 'selectboxes',
       key: 'my.selectboxes',
-      label: 'A radio',
+      label: 'Selectboxes',
       defaultValue: {},
       ...extensionBoilerplate,
       values: [
