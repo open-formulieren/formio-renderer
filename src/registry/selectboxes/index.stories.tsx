@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, userEvent, within} from '@storybook/test';
+import {expect, fn, userEvent, waitForElementToBeRemoved, within} from '@storybook/test';
 
 import {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
@@ -165,6 +165,62 @@ export const ValidateRequired: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const ValidateMinRequiredOnBlur: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: false, option3: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+        {value: 'option3', label: 'Option 3'},
+      ],
+      validate: {
+        required: false,
+        minSelectedCount: 2,
+      },
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+
+  play: async ({canvasElement, args, step}) => {
+    const canvas = within(canvasElement);
+
+    const selectboxesLabel = canvas.getByText('A selectboxes field');
+    expect(selectboxesLabel).toBeVisible();
+
+    await step('valid state', async () => {
+      await userEvent.click(canvas.getByLabelText('Option 2'));
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(args.onSubmit).toHaveBeenCalledOnce();
+    });
+
+    const errorMessage = 'You must select at least 2 items.';
+    await step('validate on blur', async () => {
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      expect(canvas.queryByText(errorMessage)).not.toBeInTheDocument();
+      const submitButton = canvas.getByRole('button', {name: 'Submit'});
+      submitButton.focus();
+      expect(await canvas.findByText(errorMessage)).toBeVisible();
+    });
+
+    await step('validate on non-checkbox click', async () => {
+      const error = canvas.getByText(errorMessage);
+      expect(error).toBeVisible();
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      // clicking the fieldset itself blurs the checkboxes and retriggers validation
+      waitForElementToBeRemoved(error);
+      await userEvent.click(canvas.getByRole('group'));
+    });
   },
 };
 
