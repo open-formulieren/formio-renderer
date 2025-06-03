@@ -25,17 +25,41 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
   const {key, label, tooltip, description, validate = {}, values: options} = componentDefinition;
   const {required = false} = validate;
 
-  const {getFieldMeta, validateField} = useFormikContext();
+  const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
   const [, {error = ''}] = useField(key);
   const id = useId();
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null);
+  const lastValidatedValueRef = useRef<Record<string, boolean> | null>(null);
+
+  // derive the component touched state from the individual checkboxes that make up the
+  // component
+  const touched = options.some(({value}) => {
+    const nestedFieldName = `${key}.['${value}']`;
+    const {touched} = getFieldMeta<boolean>(nestedFieldName);
+    return touched;
+  });
 
   // track the focus state of the fieldset and its children - when it loses focus, trigger
   // validation
   useEffect(() => {
     const container = fieldsetRef.current;
     if (!container) return;
+
+    const {value} = getFieldProps(key);
+
+    // Run validation only if the value has changed since the last validate call.
+    const maybeRunValidation = () => {
+      const hasChanged = value !== lastValidatedValueRef.current;
+      if (!hasChanged) return;
+      // moving on to other components without even touching this field should not
+      // trigger validation - other components only activate `onBlur` too, which implies
+      // 'touched'
+      if (!touched) return;
+
+      validateField(key);
+      lastValidatedValueRef.current = value;
+    };
 
     const handleClick = (event: MouseEvent) => {
       const clickedElement = event.target;
@@ -47,7 +71,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
         return;
       // any other element (anywhere) being clicked triggers validation, as focus loss
       // is implied
-      validateField(key);
+      maybeRunValidation();
     };
 
     /**
@@ -60,7 +84,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
     const handleFocusIn = (event: FocusEvent) => {
       const focusedElement = event.target;
       if (container.contains(focusedElement as Node)) return;
-      validateField(key);
+      maybeRunValidation();
     };
 
     // we subscribe to global events because we need to know whether the focus shifted
@@ -72,15 +96,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
       document.removeEventListener('click', handleClick);
       document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [fieldsetRef, validateField, key]);
-
-  // derive the component touched state from the individual checkboxes that make up the
-  // component
-  const touched = options.some(({value}) => {
-    const nestedFieldName = `${key}.['${value}']`;
-    const {touched} = getFieldMeta<boolean>(nestedFieldName);
-    return touched;
-  });
+  }, [fieldsetRef, lastValidatedValueRef, getFieldProps, validateField, key, touched]);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
