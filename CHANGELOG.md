@@ -1,5 +1,9 @@
 # Changes
 
+## 0.6.1 (2025-06-03)
+
+Fixed a packaging bug which caused the type declarations to be omitted.
+
 ## 0.6.0 (2025-06-03)
 
 Feature release.
