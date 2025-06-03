@@ -4,49 +4,49 @@ import {z} from 'zod';
 
 import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
 
-import TextField from './TextField';
+import Checkbox from './Checkbox';
 
 export default {
-  title: 'Internal API / Forms / TextField',
-  component: TextField,
+  title: 'Internal API / Forms / Checkbox',
+  component: Checkbox,
   decorators: [withFormik],
+  args: {
+    name: 'test',
+    label: 'Checkbox',
+    description: 'This is a custom description',
+    isDisabled: false,
+    isRequired: false,
+  },
   parameters: {
     formik: {
       initialValues: {
-        test: '',
+        test: true,
       },
     },
   },
-} satisfies Meta<typeof TextField>;
+} satisfies Meta<typeof Checkbox>;
 
-type Story = StoryObj<typeof TextField>;
+type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
-  args: {
-    name: 'test',
-    label: 'test',
-    description: 'This is a custom description',
-    isDisabled: false,
-    isRequired: true,
-  },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByRole('textbox')).toBeVisible();
-    expect(canvas.getByText('test')).toBeVisible();
+    const radio = canvas.getByRole('checkbox');
+    expect(radio).toBeVisible();
+    expect(radio).toBeChecked();
+    expect(canvas.getByText('Checkbox')).toBeVisible();
     expect(canvas.getByText('This is a custom description')).toBeVisible();
+
     // Check if clicking on the label focuses the input
-    const label = canvas.getByText('test');
+    const label = canvas.getByText('Checkbox');
     await userEvent.click(label);
-    expect(canvas.getByRole('textbox')).toHaveFocus();
+    expect(canvas.getByRole('checkbox')).toHaveFocus();
+    expect(radio).not.toBeChecked();
   },
 };
 
 export const WithTooltip: Story = {
   args: {
-    name: 'test',
-    label: 'test',
-    description: 'This is a custom description',
-    isDisabled: false,
     isRequired: true,
     tooltip: 'Example short tooltip.',
   },
@@ -54,25 +54,23 @@ export const WithTooltip: Story = {
 
 export const ValidationError: Story = {
   name: 'Validation error',
+  args: {
+    name: 'checkbox',
+    label: 'Checkbox',
+    description: 'Description above the errors',
+  },
   parameters: {
     formik: {
       initialValues: {
-        textinput: 'some text',
+        checkbox: 'some text',
       },
       initialErrors: {
-        textinput: 'invalid',
+        checkbox: 'invalid',
       },
       initialTouched: {
-        textinput: true,
+        checkbox: true,
       },
     },
-  },
-  args: {
-    name: 'textinput',
-    label: 'Text field',
-    description: 'Description above the errors',
-    isDisabled: false,
-    isRequired: true,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -87,12 +85,10 @@ export const WithValidationErrorAndTooltip: Story = {
     tooltip: 'Tooltip content.',
   },
 
-  play: async ({canvasElement, args}) => {
+  play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByLabelText(args.label as string);
-    // the tooltip gets announced by itself and we do not expect it to be in the input
-    // description too, as otherwise screenreaders encounter it twice.
+    const input = canvas.getByRole('checkbox');
     expect(input).toHaveAccessibleDescription('invalid');
   },
 };
@@ -120,7 +116,7 @@ export const ValidateOnBlur: Story = {
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: '',
+        validateOnBlur: false,
       },
       zodSchema: z.object({
         validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
@@ -129,15 +125,24 @@ export const ValidateOnBlur: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const input = await canvas.findByLabelText('Validate on blur');
-    expect(input).not.toHaveAttribute('aria-invalid');
+    const checkbox = await canvas.findByLabelText('Validate on blur');
+    expect(checkbox).not.toHaveAttribute('aria-invalid');
 
-    await userEvent.type(input, 'foo');
-    expect(input).toHaveFocus();
-    expect(input).not.toHaveAttribute('aria-invalid');
+    // check it
+    await userEvent.click(checkbox);
+    expect(checkbox).toHaveFocus();
+    expect(checkbox).not.toHaveAttribute('aria-invalid');
+    expect(checkbox).toBeChecked();
 
-    input.blur();
+    // uncheck it again
+    await userEvent.click(checkbox);
+    expect(checkbox).toHaveFocus();
+    expect(checkbox).not.toHaveAttribute('aria-invalid');
+    expect(checkbox).not.toBeChecked();
+
+    checkbox.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
-    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+    expect(checkbox).not.toBeChecked();
   },
 };

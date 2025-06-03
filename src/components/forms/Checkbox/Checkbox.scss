@@ -1,0 +1,107 @@
+@use '@utrecht/components/form-field';
+@use '@utrecht/components/custom-checkbox';
+
+@use '@/scss/bem';
+@use '@/scss/form-field-override';
+
+// TODO - likely we can play around with the design tokens and scope the CSS to our
+// own theme to modify the appearance and bring it closer to vanilla NL DS, but that
+// will cause some breaking changes so we have to be careful about it. Right now, the
+// CSS here is just a port of the SDK CSS.
+
+// Design tokens: see src/components/checkbox-field.tokens.json
+
+// Extensions on NL DS components
+.utrecht-form-field {
+  @include bem.modifier('openforms') {
+    &.utrecht-form-field--checkbox {
+      --_of-utrecht-form-field-checkbox-background-color: var(
+        --of-utrecht-form-field-checkbox-background-color,
+        var(--of-checkbox-bg)
+      );
+      --_of-checkbox-label-shift: calc(
+        var(--of-utrecht-form-label-checkbox-padding-block-start) + var(--utrecht-checkbox-size)
+      );
+
+      grid-template-columns: var(--utrecht-checkbox-size) minmax(0, 100fr);
+
+      & + & {
+        margin-block-start: var(--of-utrecht-form-field-checkbox-margin-block-start);
+      }
+
+      .utrecht-custom-checkbox,
+      .utrecht-checkbox--custom {
+        margin-block-start: var(--of-utrecht-form-label-checkbox-padding-block-start);
+        margin-inline-start: var(--of-utrecht-form-label-checkbox-padding-inline-start);
+
+        &:focus ~ .utrecht-form-field__label--checkbox {
+          outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
+        }
+      }
+
+      .utrecht-form-field__label {
+        --utrecht-form-field-label-margin-block-end: var(
+          --of-utrecht-form-field-checkbox-label-margin-block-end
+        );
+
+        background-color: var(--_of-utrecht-form-field-checkbox-background-color);
+        padding-inline-start: var(--_of-checkbox-label-shift);
+        margin-inline-start: calc(var(--_of-checkbox-label-shift) * -1);
+      }
+
+      .utrecht-form-label--checkbox {
+        padding-block-end: var(--of-utrecht-form-label-checkbox-padding-block-end);
+        padding-block-start: var(--of-utrecht-form-label-checkbox-padding-block-start);
+        padding-inline-end: var(--of-utrecht-form-label-checkbox-padding-inline-end);
+        padding-inline-start: var(--of-utrecht-form-label-checkbox-padding-inline-start);
+      }
+    }
+  }
+}
+
+.openforms-theme {
+  .utrecht-custom-checkbox--openforms:not(:checked) {
+    background-color: var(--utrecht-checkbox-background-color);
+  }
+
+  .utrecht-form-field {
+    @include bem.modifier('checkbox') {
+      &:not(:has(.utrecht-form-field-description--openforms-helptext)) {
+        // always focus the entire bar with the grey background, instead of the just the
+        // label
+        &:focus-within {
+          outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
+        }
+
+        .utrecht-form-field__label.utrecht-form-field__label--checkbox {
+          outline: none !important;
+        }
+      }
+
+      // description as help text
+      .utrecht-form-field-description.utrecht-form-field-description--openforms-helptext,
+      .utrecht-form-field-description.utrecht-form-field-description--invalid {
+        grid-column-start: input;
+        grid-column-end: description;
+      }
+
+      // description for the option itself
+      .utrecht-form-field-description:not(
+          .utrecht-form-field-description--openforms-helptext,
+          .utrecht-form-field-description--invalid
+        ) {
+        background: var(--_of-utrecht-form-field-checkbox-background-color);
+        grid-column-start: input;
+        grid-column-end: description;
+        margin: 0;
+        padding-block-end: var(--of-utrecht-form-label-checkbox-padding-block-end);
+        padding-inline-end: var(--of-utrecht-form-label-checkbox-padding-inline-end);
+        padding-inline-start: calc(
+          var(--_of-checkbox-label-shift) +
+            var(--of-utrecht-form-label-checkbox-padding-block-start) + 2 *
+            var(--utrecht-checkbox-border-width)
+        );
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import BSN from './bsn';
+import Checkbox from './checkbox';
 import Columns from './columns';
 import DateField from './date';
 import EditGrid from './editgrid';
@@ -8,6 +9,7 @@ import Email from './email';
 import Fieldset from './fieldset';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
+import Selectboxes from './selectboxes';
 import TextField from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
@@ -24,6 +26,8 @@ const REGISTRY: Registry = {
   email: Email,
   date: DateField,
   phoneNumber: PhoneNumber,
+  checkbox: Checkbox,
+  selectboxes: Selectboxes,
   radio: RadioField,
   // special types
   bsn: BSN,
