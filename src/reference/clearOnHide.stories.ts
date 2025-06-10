@@ -169,7 +169,7 @@ const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference}
 
     const visibleField = canvas.getByLabelText('Textfield visible');
     await userEvent.clear(visibleField);
-    await userEvent.type(visibleField, 'hide fieldset', {delay: 10});
+    await userEvent.type(visibleField, 'hide fieldset', {delay: 50});
 
     await waitFor(() => {
       expect(canvas.queryByLabelText('Nested textfield')).not.toBeInTheDocument();
@@ -184,3 +184,128 @@ const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference}
 });
 
 export {ParentComponentHidden, ParentComponentHiddenReference};
+
+const {custom: ClearOnHideDefault, reference: ClearOnHideDefaultReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'textfieldVisible',
+        key: 'textfieldVisible',
+        label: 'Textfield visible',
+      },
+      {
+        type: 'textfield',
+        id: 'textfieldHidden',
+        key: 'textfieldHidden',
+        label: 'Textfield hidden',
+        conditional: {
+          show: false,
+          when: 'textfieldVisible',
+          eq: 'hide',
+        },
+      },
+    ],
+    submissionData: {
+      textfieldVisible: '',
+      textfieldHidden: 'clear me',
+    },
+    onSubmit: fn(),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const visibleField = await canvas.findByLabelText('Textfield visible');
+    expect(visibleField).toBeVisible();
+
+    await userEvent.clear(visibleField);
+    await userEvent.type(visibleField, 'hide', {delay: 50});
+
+    await waitFor(() => {
+      expect(canvas.queryByLabelText('Textfield hidden')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      textfieldVisible: 'hide',
+    });
+  },
+});
+
+export {ClearOnHideDefault, ClearOnHideDefaultReference};
+
+const {custom: Editgrid, reference: EditgridReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'editgrid',
+        id: 'editgrid',
+        key: 'editgrid',
+        label: 'Edit grid',
+        disableAddingRemovingRows: true,
+        groupLabel: 'Item',
+        components: [
+          {
+            type: 'textfield',
+            id: 'trigger',
+            key: 'trigger',
+            label: 'Trigger',
+          },
+          {
+            type: 'fieldset',
+            id: 'fieldset',
+            key: 'fieldset',
+            label: 'Fieldset',
+            hideHeader: false,
+            components: [
+              {
+                type: 'textfield',
+                id: 'follower',
+                key: 'follower',
+                label: 'Follower',
+                clearOnHide: true,
+              },
+            ],
+            conditional: {
+              show: false,
+              when: 'editgrid.trigger',
+              eq: 'hide',
+            },
+          },
+        ],
+      },
+    ],
+    submissionData: {
+      editgrid: [
+        {
+          trigger: 'show',
+          follower: 'keep me',
+        },
+        {
+          trigger: 'trigger',
+          follower: 'clear me',
+        },
+      ],
+    },
+    onSubmit: fn(),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const buttons = await canvas.findAllByRole('button');
+    const secondItemButton = buttons[1];
+    await userEvent.click(secondItemButton);
+
+    const triggerTextfield = await canvas.findByLabelText('Trigger');
+    await userEvent.clear(triggerTextfield);
+    await userEvent.type(triggerTextfield, 'hide', {delay: 50});
+    await userEvent.click(await canvas.findByRole('button', {name: 'Save'}));
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      editgrid: [{trigger: 'show', follower: 'keep me'}, {trigger: 'hide'}],
+    });
+  },
+});
+
+export {Editgrid, EditgridReference};
