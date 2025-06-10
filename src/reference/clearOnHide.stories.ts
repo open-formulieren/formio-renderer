@@ -114,3 +114,73 @@ const {custom: ClearInitiallyVisible, reference: ClearInitiallyVisibleReference}
 });
 
 export {ClearInitiallyVisible, ClearInitiallyVisibleReference};
+
+const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'textfieldVisible',
+        key: 'textfieldVisible',
+        label: 'Textfield visible',
+        hidden: false,
+      },
+      {
+        type: 'fieldset',
+        id: 'fieldset',
+        key: 'fieldset',
+        label: 'Fieldset',
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            id: 'nestedTextfield',
+            key: 'nestedTextfield',
+            label: 'Nested textfield',
+            clearOnHide: true,
+          },
+          {
+            type: 'textfield',
+            id: 'nestedTextfield2',
+            key: 'nestedTextfield2',
+            label: 'Second textfield in fieldset',
+            clearOnHide: false,
+          },
+        ],
+        conditional: {
+          show: false,
+          when: 'textfieldVisible',
+          eq: 'hide fieldset',
+        },
+      },
+    ],
+    submissionData: {
+      textfieldVisible: 'keep me',
+      nestedTextfield: 'clear me',
+      nestedTextfield2: 'keep me',
+    },
+    onSubmit: fn(),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const fieldToHide = await canvas.findByLabelText('Nested textfield');
+    expect(fieldToHide).toBeVisible();
+
+    const visibleField = canvas.getByLabelText('Textfield visible');
+    await userEvent.clear(visibleField);
+    await userEvent.type(visibleField, 'hide fieldset', {delay: 10});
+
+    await waitFor(() => {
+      expect(canvas.queryByLabelText('Nested textfield')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      textfieldVisible: 'hide fieldset',
+      nestedTextfield2: 'keep me',
+    });
+  },
+});
+
+export {ParentComponentHidden, ParentComponentHiddenReference};
