@@ -48,7 +48,11 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   // assign the local item values to the editgrid scope - key is the key of the
   // editgrid itself.
   const scopedValues = setIn(parentValues, parentKey, itemValues);
-  const componentsToRender = filterVisibleComponents(components, scopedValues, getRegistryEntry);
+  const {visibleComponents: componentsToRender} = filterVisibleComponents(
+    components,
+    scopedValues,
+    getRegistryEntry
+  );
   if (!expanded) {
     return (
       <ItemPreview

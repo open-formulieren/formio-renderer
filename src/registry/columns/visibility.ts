@@ -9,8 +9,12 @@ const excludeHiddenComponents: ExcludeHiddenComponents<ColumnsComponentSchema> =
   getRegistryEntry
 ) => {
   const updatedColumns = componentDefinition.columns.map(column => {
-    const visible = filterVisibleComponents(column.components, values, getRegistryEntry);
-    return {...column, components: visible};
+    const {visibleComponents} = filterVisibleComponents(
+      column.components,
+      values,
+      getRegistryEntry
+    );
+    return {...column, components: visibleComponents};
   });
   return {...componentDefinition, columns: updatedColumns};
 };

@@ -9,8 +9,8 @@ const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> 
   getRegistryEntry
 ) => {
   const {components: nestedComponents} = componentDefinition;
-  const visible = filterVisibleComponents(nestedComponents, values, getRegistryEntry);
-  return {...componentDefinition, components: visible};
+  const {visibleComponents} = filterVisibleComponents(nestedComponents, values, getRegistryEntry);
+  return {...componentDefinition, components: visibleComponents};
 };
 
 export default excludeHiddenComponents;

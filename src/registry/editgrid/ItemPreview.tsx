@@ -35,7 +35,11 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   values,
   getRegistryEntry,
 }) => {
-  const componentsToRender = filterVisibleComponents(components, values, getRegistryEntry);
+  const {visibleComponents: componentsToRender} = filterVisibleComponents(
+    components,
+    values,
+    getRegistryEntry
+  );
   return (
     <DataList appearance="rows">
       {componentsToRender.map(component => (
