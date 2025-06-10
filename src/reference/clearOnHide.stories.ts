@@ -309,3 +309,84 @@ const {custom: Editgrid, reference: EditgridReference} = storyFactory({
 });
 
 export {Editgrid, EditgridReference};
+
+const {custom: DependentFields, reference: DependentFieldsReference} = storyFactory({
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'field1',
+        key: 'field1',
+        label: 'Field 1',
+        clearOnHide: true,
+      },
+      {
+        type: 'textfield',
+        id: 'field2',
+        key: 'field2',
+        label: 'Field 2',
+        // the clear on hide does *not* kick in because the trigger is after this
+        // component
+        clearOnHide: true,
+        conditional: {
+          show: true,
+          when: 'field3',
+          eq: 'visible',
+        },
+      },
+      {
+        type: 'textfield',
+        id: 'field3',
+        key: 'field3',
+        label: 'Field 3',
+        clearOnHide: true,
+        conditional: {
+          show: false,
+          when: 'field1',
+          eq: 'hidden',
+        },
+      },
+      {
+        type: 'textfield',
+        id: 'field4',
+        key: 'field4',
+        label: 'Field 4',
+        clearOnHide: true,
+        conditional: {
+          show: true,
+          when: 'field3',
+          eq: 'visible',
+        },
+      },
+    ],
+    submissionData: {
+      field1: '',
+      field2: 'visible',
+      field3: 'visible',
+      field4: 'visible',
+    },
+    onSubmit: fn(),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const field1 = await canvas.findByLabelText('Field 1');
+    expect(field1).toBeVisible();
+    const field2 = await canvas.findByLabelText('Field 2');
+    expect(field2).toBeVisible();
+    const field3 = await canvas.findByLabelText('Field 3');
+    expect(field3).toBeVisible();
+    const field4 = await canvas.findByLabelText('Field 4');
+    expect(field4).toBeVisible();
+
+    await userEvent.type(field1, 'hidden', {delay: 100});
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      field1: 'hidden',
+      field2: 'visible',
+    });
+  },
+});
+
+export {DependentFields, DependentFieldsReference};
