@@ -60,7 +60,17 @@ export type ExcludeHiddenComponents<S> = (
   values: JSONObject,
   // dependency injection to avoid circular imports
   getRegistryEntry: GetRegistryEntry
-) => S;
+) => {
+  /**
+   * The updated component definition, with hidden components removed.
+   */
+  componentDefinition: S;
+  /**
+   * Updated form values after applying `clearOnHide` behaviour. If nothing changes,
+   * the object keeps the same identity, and this applies for nested properties.
+   */
+  values: JSONObject;
+};
 
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {

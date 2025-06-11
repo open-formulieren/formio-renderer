@@ -46,11 +46,10 @@ export const filterVisibleComponents = (
       const excludeHiddenComponents =
         getRegistryEntry(componentDefinition)?.excludeHiddenComponents;
       if (excludeHiddenComponents) {
-        componentDefinition = excludeHiddenComponents(
-          componentDefinition,
-          values,
-          getRegistryEntry
-        );
+        const {componentDefinition: newComponentDefinition, values: updatedValues} =
+          excludeHiddenComponents(componentDefinition, values, getRegistryEntry);
+        componentDefinition = newComponentDefinition;
+        values = updatedValues;
       }
       acc.push(componentDefinition);
     }
@@ -63,7 +62,7 @@ export const filterVisibleComponents = (
   };
 };
 
-const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
+export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
   if ('clearOnHide' in componentDefinition) {
     return componentDefinition.clearOnHide ?? true;
   }

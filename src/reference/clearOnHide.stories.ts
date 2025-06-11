@@ -185,6 +185,69 @@ const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference}
 
 export {ParentComponentHidden, ParentComponentHiddenReference};
 
+const {custom: HiddenComponentInLayout, reference: HiddenComponentInLayoutReference} = storyFactory(
+  {
+    args: {
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfieldVisible',
+          key: 'textfieldVisible',
+          label: 'Textfield visible',
+          hidden: false,
+        },
+        {
+          type: 'fieldset',
+          id: 'fieldset',
+          key: 'fieldset',
+          label: 'Fieldset',
+          hideHeader: false,
+          components: [
+            {
+              type: 'textfield',
+              id: 'nestedTextfield',
+              key: 'nestedTextfield',
+              label: 'Nested textfield',
+              clearOnHide: true,
+              conditional: {
+                show: false,
+                when: 'textfieldVisible',
+                eq: 'hide nested',
+              },
+            },
+          ],
+        },
+      ],
+      submissionData: {
+        textfieldVisible: 'keep me',
+        nestedTextfield: 'clear me',
+      },
+      onSubmit: fn(),
+    },
+    play: async ({canvasElement, args}) => {
+      const canvas = within(canvasElement);
+
+      const fieldToHide = await canvas.findByLabelText('Nested textfield');
+      expect(fieldToHide).toBeVisible();
+
+      const visibleField = canvas.getByLabelText('Textfield visible');
+      await userEvent.clear(visibleField);
+      await userEvent.type(visibleField, 'hide nested', {delay: 50});
+
+      await waitFor(() => {
+        expect(canvas.queryByLabelText('Nested textfield')).not.toBeInTheDocument();
+      });
+
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        textfieldVisible: 'hide nested',
+      });
+    },
+  }
+);
+
+export {HiddenComponentInLayout, HiddenComponentInLayoutReference};
+
 const {custom: ClearOnHideDefault, reference: ClearOnHideDefaultReference} = storyFactory({
   args: {
     components: [
