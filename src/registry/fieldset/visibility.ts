@@ -7,6 +7,7 @@ import {filterVisibleComponents} from '@/visibility';
 const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> = (
   componentDefinition,
   values,
+  parentHidden,
   getRegistryEntry
 ) => {
   const {components: nestedComponents} = componentDefinition;

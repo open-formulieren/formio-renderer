@@ -7,6 +7,7 @@ import {filterVisibleComponents} from '@/visibility';
 const excludeHiddenComponents: ExcludeHiddenComponents<ColumnsComponentSchema> = (
   componentDefinition,
   values,
+  parentHidden,
   getRegistryEntry
 ) => {
   const updatedColumns = componentDefinition.columns.map(column => {
