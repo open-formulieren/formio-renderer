@@ -421,12 +421,24 @@ const {custom: DependentFields, reference: DependentFieldsReference} = storyFact
           eq: 'visible',
         },
       },
+      {
+        type: 'textfield',
+        id: 'field5',
+        key: 'field5',
+        label: 'Field 5',
+        conditional: {
+          show: true,
+          when: 'field2',
+          eq: '',
+        },
+      },
     ],
     submissionData: {
       field1: '',
       field2: 'visible',
       field3: 'visible',
       field4: 'visible',
+      field5: '',
     },
     onSubmit: fn(),
   },
@@ -442,12 +454,12 @@ const {custom: DependentFields, reference: DependentFieldsReference} = storyFact
     const field4 = await canvas.findByLabelText('Field 4');
     expect(field4).toBeVisible();
 
-    await userEvent.type(field1, 'hidden', {delay: 100});
+    await userEvent.type(field1, 'hidden', {delay: 200});
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalledWith({
       field1: 'hidden',
-      field2: 'visible',
+      field5: '',
     });
   },
 });
