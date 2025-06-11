@@ -1,8 +1,14 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
+import {setIn} from 'formik';
 
 import {isHidden} from '@/formio';
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
+
+interface VisibleComponentsResult {
+  visibleComponents: AnyComponentSchema[];
+  values: JSONObject;
+}
 
 /**
  * Filter the given components down to the ones that are visible given the current
@@ -15,27 +21,51 @@ export const filterVisibleComponents = (
   components: AnyComponentSchema[],
   values: JSONObject,
   getRegistryEntry: GetRegistryEntry
-): AnyComponentSchema[] => {
+): VisibleComponentsResult => {
   const visibleComponents = components.reduce((acc: AnyComponentSchema[], componentDefinition) => {
     const hidden = isHidden(componentDefinition, values);
-    if (hidden) {
-      // TODO: ensure that clearOnHide behaviour is invoked here & for nested components!
-      console.debug(`Component ${componentDefinition.key} is not visible`);
-    } else {
-      // if it's not hidden, there *may* be children that are hidden. We recurse if
-      // there's a handler in the registry!
-      const excludeHiddenComponents =
-        getRegistryEntry(componentDefinition)?.excludeHiddenComponents;
-      if (excludeHiddenComponents) {
-        componentDefinition = excludeHiddenComponents(
-          componentDefinition,
-          values,
-          getRegistryEntry
-        );
-      }
+    const clearOnHide = getClearOnHide(componentDefinition);
+
+    if (hidden && clearOnHide) {
+      console.info(`Component ${componentDefinition.key} is not visible, clearing its value.`);
+      // use Formik's setIn because it keeps the `values` references stable if no
+      // changes are being made.
+      // Note that the reference behaviour in formio.js SDK is to remove the key
+      // entirely from the submission data, not set the matching (component type
+      // specific) 'empty' value.
+      // Finally - we update/mutate values inside this loop, so that the updated
+      // values are used immediately for the next component.
+      values = setIn(values, componentDefinition.key, undefined);
+    }
+
+    // Always process the component children if a hook is configured - the `clearOnHide`
+    // may be enabled on children and needs to be applied when the parent is hidden,
+    // as that implies the child is hidden.
+    const excludeHiddenComponents = getRegistryEntry(componentDefinition)?.excludeHiddenComponents;
+    if (excludeHiddenComponents) {
+      const {componentDefinition: newComponentDefinition, values: updatedValues} =
+        excludeHiddenComponents(componentDefinition, values, hidden, getRegistryEntry);
+      componentDefinition = newComponentDefinition;
+      values = updatedValues;
+    }
+
+    // Only add the component to the accumulator if it's visible. This must be the last
+    // step after all processing of its children has been done.
+    if (!hidden) {
       acc.push(componentDefinition);
     }
     return acc;
   }, []);
-  return visibleComponents;
+
+  return {
+    visibleComponents,
+    values,
+  };
+};
+
+export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
+  if ('clearOnHide' in componentDefinition) {
+    return componentDefinition.clearOnHide ?? true;
+  }
+  return true;
 };
