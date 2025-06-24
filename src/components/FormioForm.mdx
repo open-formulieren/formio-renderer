@@ -68,17 +68,6 @@ const updates2 = {
 
 will both set the form component with key `foo.bar` to the value `baz`.
 
-Using `undefined` will _remove_ the key/value:
-
-```ts
-const updates3 = {
-  'foo.bar': undefined,
-};
-```
-
-will remove the key `bar` from the form values and would leave `{foo: {}}` (if `bar` is the only key
-present).
-
 Arrays are assigned as-is - there is no deep merge logic:
 
 ```ts
@@ -101,6 +90,12 @@ const updates4 = {
 ```
 
 Results in only the `name` key of the second item being updated.
+
+The behaviour of using `undefined` may appear odd - it will first remove the key from the submission
+data entirely, but the key will be added back via the visibility/data reconcilation loop. Any
+component that is visible will _always_ have a matching key present in the submission data. Note
+that the Open Forms backend doesn't provide a way to pass `undefined` as key values anyway and we
+consider the "submission data removal" as something that has no added value.
 
 ## Programmatically setting form errors
 
