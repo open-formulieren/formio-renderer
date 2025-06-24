@@ -1,6 +1,6 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
 import {setIn, useFormikContext} from 'formik';
-import {createContext, useContext} from 'react';
+import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -44,16 +44,42 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   parentValues,
   expanded,
 }) => {
-  const {values: itemValues} = useFormikContext<JSONObject>();
-  // assign the local item values to the editgrid scope - key is the key of the
-  // editgrid itself.
-  const scopedValues = setIn(parentValues, parentKey, itemValues);
-  const {visibleComponents: componentsToRender} = filterVisibleComponents(
-    components,
-    scopedValues,
-    getRegistryEntry
-  );
+  const {values: itemValues, setValues} = useFormikContext<JSONObject>();
+
+  const {visibleComponents: componentsToRender, updatedItemValues} = useMemo(() => {
+    console.group('filterVisibleComponents');
+    console.log('components', components);
+    console.log('parentValues', parentValues);
+    const {visibleComponents, values: updatedItemValues} = filterVisibleComponents(
+      components,
+      itemValues,
+      {}, // TODO - proper initialvalues
+      getRegistryEntry,
+      false,
+      setIn(parentValues, parentKey, itemValues)
+    );
+    console.log('visibleComponents', visibleComponents);
+    console.log('updatedItemValues', updatedItemValues);
+    console.groupEnd();
+    return {visibleComponents, updatedItemValues};
+  }, [components, parentValues, parentKey, itemValues]);
+
+  // handle the side-effects from the visibility checks that apply clearOnHide to the
+  // values. We can't call setValues directly, since updating state during render like
+  // this is not allowed, so we need a synchronization step.
+  useEffect(() => {
+    // update the formik values with the calculated values with side-effects applied
+    // until this converges/resolves. We rely on the object identity here to detect
+    // (deep) differences!
+    if (updatedItemValues !== itemValues) {
+      setValues(updatedItemValues);
+    }
+  }, [setValues, itemValues, updatedItemValues]);
+
   if (!expanded) {
+    // assign the local item values to the editgrid scope - `parentKey` is the key of the
+    // editgrid itself.
+    const scopedValues = setIn(parentValues, parentKey, itemValues);
     return (
       <ItemPreview
         components={componentsToRender}
@@ -63,6 +89,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
       />
     );
   }
+
   return (
     <ParentValuesContext.Provider value={{keyPrefix: parentKey, values: parentValues}}>
       <FormFieldContainer>

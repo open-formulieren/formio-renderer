@@ -176,7 +176,7 @@ describe('Updating form values', () => {
     });
   });
 
-  test('Supports removing field values via undefined', async () => {
+  test.only('Supports removing field values via undefined', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
     render(

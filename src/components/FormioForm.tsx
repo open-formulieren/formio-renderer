@@ -1,6 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
-import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -123,9 +123,8 @@ export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | '
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
   ({components, id, children}, ref) => {
-    const {values, setValues, errors, setErrors, setTouched} = useFormikContext<JSONObject>();
-
-    const visibilityCheckRef = useRef<JSONObject>(values);
+    const {values, setValues, errors, setErrors, setTouched, initialValues} =
+      useFormikContext<JSONObject>();
 
     useImperativeHandle(
       ref,
@@ -147,41 +146,33 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       [setValues, errors, setErrors]
     );
 
-    const {visibleComponents: componentsToRender, values: updatedValues} = useMemo(() => {
-      // this logic exists to mimick Formio's single-pass behaviour. It applies the
-      // visibility changes from the updated values, but not the second pass
-      // `clearOnHide`.
-      // TODO: the value update/ignore for clearOnHide needs to be passed down,
-      // otherwise visibility decisions can be made based on the wrong values state.
-      const lastValuesSet = visibilityCheckRef.current;
-      const ignoreValuesUpdates = lastValuesSet === values;
+    // Compute the visible components and associated updated values (via clearOnHide)
+    // every time either the form configuration (components) is modified or when the form
+    // values change. Note that the form values also change as a reaction to processed
+    // values via clearOnHide, and this implies multiple (render) passes to converge.
+    // XXX: this means that component definitions may not have reference cycles in their
+    // conditional logic to prevent infinite render loops!
+    const {visibleComponents: componentsToRender, updatedValues} = useMemo(() => {
       const {visibleComponents, values: updatedValues} = filterVisibleComponents(
         components,
         values,
+        initialValues,
         getRegistryEntry
       );
-
-      const newValues = ignoreValuesUpdates ? values : updatedValues;
-
-      // if the visibility check will not result in an update to the Formik values,
-      // update the ref here so that the effect hook doesn't unnecessarily set the
-      // values again
-      if (newValues === values) {
-        visibilityCheckRef.current = values;
-      }
-
-      return {visibleComponents, values: newValues};
-    }, [visibilityCheckRef, components, values]);
+      return {visibleComponents, updatedValues};
+    }, [components, initialValues, values]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
     // values. We can't call setValues directly, since updating state during render like
     // this is not allowed, so we need a synchronization step.
     useEffect(() => {
-      if (visibilityCheckRef.current !== updatedValues) {
+      // update the formik values with the calculated values with side-effects applied
+      // until this converges/resolves. We rely on the object identity here to detect
+      // (deep) differences!
+      if (updatedValues !== values) {
         setValues(updatedValues);
-        visibilityCheckRef.current = updatedValues;
       }
-    }, [setValues, visibilityCheckRef, updatedValues]);
+    }, [setValues, values, updatedValues]);
 
     return (
       <Form noValidate id={id}>

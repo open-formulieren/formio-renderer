@@ -58,6 +58,7 @@ export type GetValidationSchema<S> = (
 export type ExcludeHiddenComponents<S> = (
   componentDefinition: S,
   values: JSONObject,
+  initialValues: JSONObject,
   parentHidden: boolean,
   // dependency injection to avoid circular imports
   getRegistryEntry: GetRegistryEntry

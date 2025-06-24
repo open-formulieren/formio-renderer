@@ -30,7 +30,10 @@ enabled for the involved components, unless specified otherwise.
 ### Component is statically hidden
 
 - A component that has an existing value from the submission data and has `hidden: true` will
-  contain that value in the submission data.
+  contain that value in the submission data. This behaviour cannot be observed in the
+  [interactive builder](https://formio.github.io/formio.js/app/builder.html) because Formio seems to
+  reset the form when clicking the submit button. It may also be updated in the latest version of
+  Formio since the description now says the value will be cleared when the component is hidden.
 - A component that has no existing value from the submission data, has a default value set and has
   `hidden: true` will not have this key in the submission data at all.
 
@@ -50,8 +53,8 @@ The submission data only contains the key `component2` with the trigger value.
 
 Given:
 
-- `component1` with default value 'initial', hidden when `component2` is equal to `''`
-- `component2` with default value `initial`, hidden when `comonent1` is equal to `hide`
+- `component1` with default value `initial`, hidden when `component2` is equal to `''`
+- `component2` with default value `initial`, hidden when `component1` is equal to `hide`
 
 Intuitively, we expect:
 
@@ -75,7 +78,7 @@ hidden because of a value of the textfield, the nested component's value is clea
 ## Open Forms (SDK/backend) behaviour
 
 - `clearOnHide` is applied for all hidden components, irrespective whether that's statically or
-  dynamically
+  dynamically. This _appears_ to match the semantic behaviour of the newest Formio versions.
 - backend logic rules can alter `hidden: true|false`, which makes it dynamic in the backend, but
   static from Formio's perspective
 - variables (component keys) are not removed, instead their value is reset to the "empty value" for
@@ -88,3 +91,5 @@ Risks for our own implementation:
 - infinite render loops when updating the form values and deriving the new state from that ->
   especially when components have cycles. We can't detect which component triggered the change in
   form values.
+- Formio reference behaviour varies with different Formio versions, but it seems that the latest
+  version (at least semantically) mostly matches our backend behaviour.

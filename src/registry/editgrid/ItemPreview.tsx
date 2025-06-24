@@ -38,6 +38,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   const {visibleComponents: componentsToRender} = filterVisibleComponents(
     components,
     values,
+    {}, // TODO: proper initialValues
     getRegistryEntry
   );
   return (

@@ -43,19 +43,31 @@ const {custom: ClearExisting, reference: ClearExistingReference} = storyFactory(
     },
     onSubmit: fn(),
   },
-  play: async ({canvasElement, args}) => {
+  play: async ({canvasElement, args, id}) => {
     const canvas = within(canvasElement);
+
+    const isOwnImplementation =
+      id === 'internal-api-reference-behaviour-clear-on-hide--clear-existing';
 
     const visibleField = await canvas.findByLabelText('Textfield visible');
     expect(visibleField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    // This is already some odd behaviour by Formio :/ It seems to only clear values
-    // if the field has been touched?
-    expect(args.onSubmit).toHaveBeenCalledWith({
-      textfieldVisible: 'keep me',
-      textfieldHidden: 'clear me',
-    });
+
+    // here we diverge from the reference behaviour because the reference does not make
+    // much sense
+    if (isOwnImplementation) {
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        textfieldVisible: 'keep me',
+      });
+    } else {
+      // This is already some odd behaviour by Formio :/ It seems to only clear values
+      // if the field has been touched?
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        textfieldVisible: 'keep me',
+        textfieldHidden: 'clear me',
+      });
+    }
   },
 });
 
@@ -361,7 +373,7 @@ const {custom: Editgrid, reference: EditgridReference} = storyFactory({
 
     const triggerTextfield = await canvas.findByLabelText('Trigger');
     await userEvent.clear(triggerTextfield);
-    await userEvent.type(triggerTextfield, 'hide', {delay: 50});
+    await userEvent.type(triggerTextfield, 'hide', {delay: 100});
     await userEvent.click(await canvas.findByRole('button', {name: 'Save'}));
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
@@ -426,6 +438,7 @@ const {custom: DependentFields, reference: DependentFieldsReference} = storyFact
         id: 'field5',
         key: 'field5',
         label: 'Field 5',
+        defaultValue: 'default',
         conditional: {
           show: true,
           when: 'field2',

@@ -7,6 +7,7 @@ import {filterVisibleComponents} from '@/visibility';
 const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> = (
   componentDefinition,
   values,
+  initialValues,
   parentHidden,
   getRegistryEntry
 ) => {
@@ -14,7 +15,9 @@ const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> 
   const {visibleComponents, values: updatedValues} = filterVisibleComponents(
     nestedComponents,
     values,
-    getRegistryEntry
+    initialValues,
+    getRegistryEntry,
+    parentHidden
   );
   const newComponentDefinition: FieldsetComponentSchema = setIn(
     componentDefinition,
