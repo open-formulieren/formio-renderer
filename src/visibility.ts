@@ -1,15 +1,125 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
 
-import {isHidden} from '@/formio';
-import type {GetRegistryEntry} from '@/registry/types';
+import {getClearOnHide, isHidden} from '@/formio';
+import type {VisibilityContext} from '@/registry/types';
 import type {JSONObject} from '@/types';
-import {extractInitialValues} from '@/values';
 
-interface VisibleComponentsResult {
+/**
+ * The return value of `processVisibility`.
+ */
+interface ProcessVisibilityResult {
+  /**
+   * The subset of provided components that are visible with the currently provided
+   * `values`.
+   *
+   * There are no guarantees about object identity - not for the array itself nor the
+   * components inside.
+   */
   visibleComponents: AnyComponentSchema[];
-  values: JSONObject;
+  /**
+   * Updated `values` because of `clearOnHide` side-effects, or side-effects because
+   * the component became visible (again). Unmodified values are guaranteed to have a
+   * stable identity, for both the top-level and nested objects.
+   */
+  updatedValues: JSONObject;
 }
+
+/**
+ * Given an array of components (like a form definition) and (current) component values,
+ * evaluate the visibility of each component and its children. The return value is an
+ * array of visible components and values updated by visibility/hidden side-effects.
+ *
+ * Only the visible components are returned so that the rendering logic can be kept
+ * simple. The `updatedValues` are the result of applying side effects like
+ * `clearOnHide` on each component (including nested components!).
+ *
+ * Layout components must implement the `applyVisibility` callback to ensure all child
+ * components can apply their side-effects. You can call `processVisibility` inside
+ * `applyVisibility` to recursively process the entire component tree.
+ */
+export const processVisibility = (
+  /**
+   * Form definition/subtree of components to test for visibility.
+   */
+  components: AnyComponentSchema[],
+  /**
+   * Current submission values for the _whole_ submission. The values are input as scope
+   * for conditional visibility logic, extended with `context.extraEvaluationScope` if
+   * provided.
+   */
+  values: JSONObject,
+  /**
+   * Form definition/subtree context, used to pass callbacks to avoid circular
+   * dependencies but also more fine-grained context set by one or more parent
+   * components.
+   */
+  context: VisibilityContext & {
+    /**
+     * Additional values for the visibility evaluation, which are deliberately kept
+     * out of `values` because of their synthetic nature. See the `editgrid` component
+     * for the usage, where the current item scope is injected without being an actual
+     * real submission value in that particular shape.
+     */
+    extraEvaluationScope?: JSONObject;
+  }
+): ProcessVisibilityResult => {
+  const visibleComponents: AnyComponentSchema[] = [];
+  const {parentHidden, initialValues, getRegistryEntry, extraEvaluationScope} = context;
+
+  // `updatedValues` may potentially be updated/mutated after each component is
+  // processed. If there are no side-effects applied, then it will keep the same
+  // identity because we use Formik's `setIn` under the hood.
+  let updatedValues = values;
+
+  // Process the component tree depth-first. We loop over the components in order of
+  // definition, which matches top-to-bottom UI-wise. Within each component, we first
+  // try to process its children (through `applyVisibility`) before moving on to the
+  // next node -> this makes it depth first.
+  for (let componentDefinition of components) {
+    const {key} = componentDefinition;
+    // check if the component is hidden, either because the parent is hidden or the
+    // component itself is.
+    const hidden =
+      parentHidden || isHidden(componentDefinition, updatedValues, extraEvaluationScope);
+    const clearOnHide = getClearOnHide(componentDefinition);
+
+    // apply the hidden/visibility state. `updatedValues` is updated directly inside the
+    // loop so that the next iteration uses the side-effects as soon as possible.
+    if (hidden) {
+      // only clear the value if actually requested
+      if (clearOnHide) updatedValues = clearValue(updatedValues, key);
+    } else {
+      // the component is visible - it may have been hidden and cleared before, so make
+      // sure that we have a value for it. `initialValues` contains either the
+      // user-submitted submission data, or is populated with the default/empty value
+      // of the component/component type, see `FormioForm.tsx`.
+      const hasValue = getIn(updatedValues, key) !== undefined;
+      if (!hasValue) {
+        updatedValues = setIn(updatedValues, key, getIn(initialValues, key));
+      }
+    }
+
+    // now the component itself was processed, recurse into its children, if configured
+    // to do so.
+    const applyVisibility = getRegistryEntry(componentDefinition)?.applyVisibility;
+    if (applyVisibility) {
+      const result = applyVisibility(componentDefinition, updatedValues, {
+        ...context,
+        parentHidden: hidden,
+      });
+      componentDefinition = result.updatedDefinition;
+      updatedValues = result.updatedValues;
+    }
+
+    // finally, add the component if it's visible - this must be the last step so that
+    // `applyVisibility` has a chance to dynamically update the component definition in
+    // case some children are conditionally visible.
+    if (!hidden) visibleComponents.push(componentDefinition);
+  }
+
+  return {visibleComponents, updatedValues};
+};
 
 /**
  * Clear the value of the specified `key`.
@@ -20,88 +130,6 @@ interface VisibleComponentsResult {
  * entirely from the submission data, not set the matching (component type
  * specific) 'empty' value. We achieve this by 'setting' the value to undefined.
  */
-export const clearValue = (values: JSONObject, key: string): JSONObject => {
+const clearValue = (values: JSONObject, key: string): JSONObject => {
   return setIn(values, key, undefined);
-};
-
-/**
- * Filter the given components down to the ones that are visible given the current
- * form values.
- *
- * This returns a copy of the components tree provided with hidden components omitted,
- * taken into account layout components that may have nested hidden components.
- */
-export const filterVisibleComponents = (
-  components: AnyComponentSchema[],
-  values: JSONObject,
-  initialValues: JSONObject,
-  getRegistryEntry: GetRegistryEntry,
-  parentHidden: boolean = false,
-  extraEvaluationScope?: JSONObject
-): VisibleComponentsResult => {
-  const visibleComponents = components.reduce((acc: AnyComponentSchema[], componentDefinition) => {
-    const {key} = componentDefinition;
-    const hidden = parentHidden || isHidden(componentDefinition, values, extraEvaluationScope);
-    const clearOnHide = getClearOnHide(componentDefinition);
-
-    if (hidden && clearOnHide) {
-      // Update/mutate values inside this loop, so that the updated values are used
-      // immediately for the next component. If nothing changes (there was no value set),
-      // then the values identity remains the same (compare by reference works!) because of
-      // the `setIn` usage.
-      values = clearValue(values, key);
-    } else if (!hidden) {
-      const hasValue = getIn(values, key) !== undefined;
-      // if the component is visible but no value is present in the formik state (e.g. because
-      // of an earlier clearOnHide action), grab it from the initial submission data if present,
-      // otherwise use the default value
-      if (!hasValue) {
-        let valueToSet = getIn(initialValues, key);
-        const _initialValues = extractInitialValues([componentDefinition], getRegistryEntry);
-        // fall back to the component default
-        if (valueToSet === undefined) {
-          valueToSet = getIn(_initialValues, key);
-        }
-        values = setIn(values, key, valueToSet);
-      }
-    }
-
-    // Always process the component children if a hook is configured - the `clearOnHide`
-    // may be enabled on children and needs to be applied when the parent is hidden,
-    // as that implies the child is hidden.
-    const applyVisibility = getRegistryEntry(componentDefinition)?.applyVisibility;
-    if (applyVisibility) {
-      const context = {
-        parentHidden: hidden,
-        initialValues,
-        getRegistryEntry,
-      };
-      const {updatedDefinition, updatedValues} = applyVisibility(
-        componentDefinition,
-        values,
-        context
-      );
-      componentDefinition = updatedDefinition;
-      values = updatedValues;
-    }
-
-    // Only add the component to the accumulator if it's visible. This must be the last
-    // step after all processing of its children has been done.
-    if (!hidden) {
-      acc.push(componentDefinition);
-    }
-    return acc;
-  }, []);
-
-  return {
-    visibleComponents,
-    values,
-  };
-};
-
-export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
-  if ('clearOnHide' in componentDefinition) {
-    return componentDefinition.clearOnHide ?? true;
-  }
-  return true;
 };

@@ -11,7 +11,7 @@ import {getIn, setIn} from 'formik';
 
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import './ItemPreview.scss';
 
@@ -35,15 +35,15 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   values,
   getRegistryEntry,
 }) => {
-  const {visibleComponents: componentsToRender} = filterVisibleComponents(
-    components,
-    values,
-    {}, // TODO: proper initialValues
-    getRegistryEntry
-  );
+  // TODO: process value changes here!
+  const {visibleComponents} = processVisibility(components, values, {
+    parentHidden: false,
+    initialValues: {}, // actual value is not relevant, because this is simply a preview
+    getRegistryEntry,
+  });
   return (
     <DataList appearance="rows">
-      {componentsToRender.map(component => (
+      {visibleComponents.map(component => (
         <ComponentDataListItem
           key={component.key}
           component={component}

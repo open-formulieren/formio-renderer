@@ -10,7 +10,7 @@ import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
 import getInitialValues from './initialValues';
@@ -44,29 +44,25 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   parentValues,
   expanded,
 }) => {
-  const {values: itemValues, setValues} = useFormikContext<JSONObject>();
+  const {values: itemValues, setValues, initialValues} = useFormikContext<JSONObject>();
 
   const {visibleComponents: componentsToRender, updatedItemValues} = useMemo(() => {
-    console.group('filterVisibleComponents');
-    console.log('components', components);
-    console.log('parentValues', parentValues);
-    const {visibleComponents, values: updatedItemValues} = filterVisibleComponents(
+    const {visibleComponents, updatedValues: updatedItemValues} = processVisibility(
       components,
       itemValues,
-      {}, // TODO - proper initialvalues
-      getRegistryEntry,
-      false,
-      setIn(parentValues, parentKey, itemValues)
+      {
+        parentHidden: false,
+        initialValues,
+        getRegistryEntry,
+        extraEvaluationScope: setIn(parentValues, parentKey, itemValues),
+      }
     );
-    console.log('visibleComponents', visibleComponents);
-    console.log('updatedItemValues', updatedItemValues);
-    console.groupEnd();
     return {visibleComponents, updatedItemValues};
   }, [components, parentValues, parentKey, itemValues]);
 
   // handle the side-effects from the visibility checks that apply clearOnHide to the
   // values. We can't call setValues directly, since updating state during render like
-  // this is not allowed, so we need a synchronization step.
+  // this is not allowed -> we need a synchronization step.
   useEffect(() => {
     // update the formik values with the calculated values with side-effects applied
     // until this converges/resolves. We rely on the object identity here to detect

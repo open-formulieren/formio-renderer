@@ -2,22 +2,18 @@ import type {Column, ColumnsComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 
 import type {ApplyVisibility} from '@/registry/types';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 const applyVisibility: ApplyVisibility<ColumnsComponentSchema> = (
   componentDefinition,
   values,
   context
 ) => {
-  const {parentHidden, initialValues, getRegistryEntry} = context;
-
   const updatedColumns: Column[] = componentDefinition.columns.map(column => {
-    const {visibleComponents, values: updatedValues} = filterVisibleComponents(
+    const {visibleComponents, updatedValues} = processVisibility(
       column.components,
       values,
-      initialValues,
-      getRegistryEntry,
-      parentHidden
+      context
     );
     // make sure to update this for the next iteration so that it sees the up-to-date
     // side-effects of clearOnHide

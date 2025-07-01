@@ -67,3 +67,17 @@ export const isHidden = (
   // we must invert in the return value
   return conditionSatisfied ? !show : show;
 };
+
+/**
+ * Extract the desired `clearOnHide` behaviour.
+ *
+ * @note Formio's default value is `true`, meaning that values of hidden components
+ * get cleared unless specified otherwise. So even if we get `undefined` or `null`,
+ * the component should be cleared on hide.
+ */
+export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
+  if ('clearOnHide' in componentDefinition) {
+    return componentDefinition.clearOnHide !== false;
+  }
+  return true;
+};

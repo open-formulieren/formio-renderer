@@ -74,6 +74,28 @@ export type ExcludeHiddenComponents<S> = (
   values: JSONObject;
 };
 
+export interface VisibilityContext {
+  /**
+   * Indicator whether the parent of the provided `componentDefinition` is visible or
+   * not, if there is a parent. Child components are implicitly hidden as soon as any
+   * parent is hidden.
+   */
+  parentHidden: boolean;
+  /**
+   * Initial component values from when the form/submission was initialized. When a
+   * component becomes visible again after having been hidden, its value is taken from
+   * the initial values or otherwise the defualt/empty value of the component is used.
+   *
+   * It is a stable identity and initialized only once.
+   */
+  initialValues: JSONObject;
+  /**
+   * Hook to look up a component in the registry, passed as context to avoid circular
+   * imports/dependencies. It is a stable identity and initialized only once.
+   */
+  getRegistryEntry: GetRegistryEntry;
+}
+
 /**
  * Callback to process the visibility state of a component, required for container/layout
  * component types that must propagate the side-effects/visibility into their child
@@ -99,27 +121,7 @@ export type ApplyVisibility<S> = (
   /**
    * Additional context/utilities relevant to evaluate a component (sub) tree.
    */
-  context: {
-    /**
-     * Indicator whether the parent of the provided `componentDefinition` is visible or
-     * not, if there is a parent. Child components are implicitly hidden as soon as any
-     * parent is hidden.
-     */
-    parentHidden: boolean;
-    /**
-     * Initial component values from when the form/submission was initialized. When a
-     * component becomes visible again after having been hidden, its value is taken from
-     * the initial values or otherwise the defualt/empty value of the component is used.
-     *
-     * It is a stable identity and initialized only once.
-     */
-    initialValues: JSONObject;
-    /**
-     * Hook to look up a component in the registry, passed as context to avoid circular
-     * imports/dependencies. It is a stable identity and initialized only once.
-     */
-    getRegistryEntry: GetRegistryEntry;
-  }
+  context: VisibilityContext
 ) => {
   /**
    * The updated component definition, with hidden components removed.

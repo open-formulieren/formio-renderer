@@ -8,7 +8,7 @@ import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
@@ -153,12 +153,11 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
     // XXX: this means that component definitions may not have reference cycles in their
     // conditional logic to prevent infinite render loops!
     const {visibleComponents: componentsToRender, updatedValues} = useMemo(() => {
-      const {visibleComponents, values: updatedValues} = filterVisibleComponents(
-        components,
-        values,
+      const {visibleComponents, updatedValues} = processVisibility(components, values, {
+        parentHidden: false,
         initialValues,
-        getRegistryEntry
-      );
+        getRegistryEntry,
+      });
       return {visibleComponents, updatedValues};
     }, [components, initialValues, values]);
 
