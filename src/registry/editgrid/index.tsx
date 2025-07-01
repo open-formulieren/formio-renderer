@@ -1,5 +1,5 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
-import {setIn, useFormikContext} from 'formik';
+import {replace, setIn, useFormikContext} from 'formik';
 import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 
@@ -33,6 +33,8 @@ export interface ItemBodyProps {
   components: AnyComponentSchema[];
   parentKey: string;
   parentValues: JSONObject;
+  initialValues: JSONObject;
+  onItemValuesUpdated: (itemValues: JSONObject) => void;
   expanded: boolean;
 }
 
@@ -42,11 +44,13 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   components,
   parentKey,
   parentValues,
+  initialValues,
+  onItemValuesUpdated,
   expanded,
 }) => {
-  const {values: itemValues, setValues, initialValues} = useFormikContext<JSONObject>();
+  const {values: itemValues} = useFormikContext<JSONObject>();
 
-  const {visibleComponents: componentsToRender, updatedItemValues} = useMemo(() => {
+  const {visibleComponents, updatedItemValues} = useMemo(() => {
     const {visibleComponents, updatedValues: updatedItemValues} = processVisibility(
       components,
       itemValues,
@@ -58,27 +62,29 @@ const ItemBody: React.FC<ItemBodyProps> = ({
       }
     );
     return {visibleComponents, updatedItemValues};
-  }, [components, parentValues, parentKey, itemValues]);
+  }, [components, parentValues, initialValues, parentKey, itemValues]);
 
   // handle the side-effects from the visibility checks that apply clearOnHide to the
-  // values. We can't call setValues directly, since updating state during render like
-  // this is not allowed -> we need a synchronization step.
+  // values. We must call the parent update handler to make sure the outer Formik state
+  // gets updated, otherwise the proper values are not submitted in the outer Formik
+  // element when rendering in preview mode. This in turns leads to the necessary item
+  // value state updates.
   useEffect(() => {
     // update the formik values with the calculated values with side-effects applied
     // until this converges/resolves. We rely on the object identity here to detect
     // (deep) differences!
     if (updatedItemValues !== itemValues) {
-      setValues(updatedItemValues);
+      onItemValuesUpdated(updatedItemValues);
     }
-  }, [setValues, itemValues, updatedItemValues]);
+  }, [onItemValuesUpdated, itemValues, updatedItemValues]);
 
   if (!expanded) {
     // assign the local item values to the editgrid scope - `parentKey` is the key of the
     // editgrid itself.
-    const scopedValues = setIn(parentValues, parentKey, itemValues);
+    const scopedValues = setIn(parentValues, parentKey, updatedItemValues);
     return (
       <ItemPreview
-        components={componentsToRender}
+        components={visibleComponents}
         keyPrefix={parentKey}
         values={scopedValues}
         getRegistryEntry={getRegistryEntry}
@@ -89,7 +95,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   return (
     <ParentValuesContext.Provider value={{keyPrefix: parentKey, values: parentValues}}>
       <FormFieldContainer>
-        {componentsToRender.map((definition, index) => (
+        {visibleComponents.map((definition, index) => (
           <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
         ))}
       </FormFieldContainer>
@@ -122,15 +128,15 @@ export const EditGrid: React.FC<EditGridProps> = ({
   getRegistryEntry,
 }) => {
   const intl = useIntl();
-  const {values: parentValues} = useFormikContext<JSONObject>();
+  const {values: parentValues, setFieldValue, getFieldProps} = useFormikContext<JSONObject>();
+  const {value} = getFieldProps<JSONObject[]>(key);
 
   const {keyPrefix, values: grandParentValues} = useContext(ParentValuesContext);
   // ensure we keep setting a deeper scope when dealing with nesting
   const parentScope = keyPrefix ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
-  const emptyItem: JSONObject | null = disableAddingRemovingRows
-    ? null
-    : extractInitialValues(components, getRegistryEntry);
+  const initialValues = extractInitialValues(components, getRegistryEntry);
+  const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
 
   // build the validation schema from the nested component definitions
   // TODO: take into account hidden components!
@@ -145,13 +151,18 @@ export const EditGrid: React.FC<EditGridProps> = ({
       description={description}
       enableIsolation
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
-      getItemBody={(_, __, {expanded}) => (
+      getItemBody={(_, index: number, {expanded}) => (
         <ItemBody
           renderNested={FormioComponent}
           getRegistryEntry={getRegistryEntry}
           components={components}
           parentKey={keyPrefix ? `${keyPrefix}.${key}` : key}
           parentValues={parentScope}
+          initialValues={initialValues}
+          onItemValuesUpdated={newItemValues => {
+            const updatedFieldValue = replace(value, index, newItemValues);
+            setFieldValue(key, updatedFieldValue);
+          }}
           expanded={expanded}
         />
       )}

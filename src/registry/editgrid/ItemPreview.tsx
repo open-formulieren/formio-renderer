@@ -36,11 +36,18 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   getRegistryEntry,
 }) => {
   // TODO: process value changes here!
-  const {visibleComponents} = processVisibility(components, values, {
+  // XXX: testcase: clearOnHide on component/fieldset inside edit grid in preview mode
+  // This is still necessary because in preview mode there may be other complex components
+  // like nested editgrids, fieldsets, columns... that can still produce side-effects to
+  // the values.
+  // TODO: properly separate item values + additional evaluation scope for the necessary
+  // late binding, otherwise `updatedValues` is tainted.
+  const {visibleComponents /*, updatedValues*/} = processVisibility(components, values, {
     parentHidden: false,
     initialValues: {}, // actual value is not relevant, because this is simply a preview
     getRegistryEntry,
   });
+
   return (
     <DataList appearance="rows">
       {visibleComponents.map(component => (
