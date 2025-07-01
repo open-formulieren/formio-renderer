@@ -1,17 +1,17 @@
-import type {ColumnsComponentSchema} from '@open-formulieren/types';
+import type {Column, ColumnsComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 
-import type {ExcludeHiddenComponents} from '@/registry/types';
+import type {ApplyVisibility} from '@/registry/types';
 import {filterVisibleComponents} from '@/visibility';
 
-const excludeHiddenComponents: ExcludeHiddenComponents<ColumnsComponentSchema> = (
+const applyVisibility: ApplyVisibility<ColumnsComponentSchema> = (
   componentDefinition,
   values,
-  initialValues,
-  parentHidden,
-  getRegistryEntry
+  context
 ) => {
-  const updatedColumns = componentDefinition.columns.map(column => {
+  const {parentHidden, initialValues, getRegistryEntry} = context;
+
+  const updatedColumns: Column[] = componentDefinition.columns.map(column => {
     const {visibleComponents, values: updatedValues} = filterVisibleComponents(
       column.components,
       values,
@@ -22,18 +22,16 @@ const excludeHiddenComponents: ExcludeHiddenComponents<ColumnsComponentSchema> =
     // make sure to update this for the next iteration so that it sees the up-to-date
     // side-effects of clearOnHide
     values = updatedValues;
-    return {...column, components: visibleComponents};
+    return setIn(column, 'components', visibleComponents);
   });
 
-  const newComponentDefinition: ColumnsComponentSchema = setIn(
+  const updatedDefinition: ColumnsComponentSchema = setIn(
     componentDefinition,
     'columns',
     updatedColumns
   );
-  return {
-    componentDefinition: newComponentDefinition,
-    values: values,
-  };
+
+  return {updatedDefinition, updatedValues: values};
 };
 
-export default excludeHiddenComponents;
+export default applyVisibility;

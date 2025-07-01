@@ -1,16 +1,15 @@
 import type {FieldsetComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 
-import type {ExcludeHiddenComponents} from '@/registry/types';
+import type {ApplyVisibility} from '@/registry/types';
 import {filterVisibleComponents} from '@/visibility';
 
-const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> = (
+const applyVisibility: ApplyVisibility<FieldsetComponentSchema> = (
   componentDefinition,
   values,
-  initialValues,
-  parentHidden,
-  getRegistryEntry
+  context
 ) => {
+  const {parentHidden, initialValues, getRegistryEntry} = context;
   const {components: nestedComponents} = componentDefinition;
   const {visibleComponents, values: updatedValues} = filterVisibleComponents(
     nestedComponents,
@@ -19,15 +18,12 @@ const excludeHiddenComponents: ExcludeHiddenComponents<FieldsetComponentSchema> 
     getRegistryEntry,
     parentHidden
   );
-  const newComponentDefinition: FieldsetComponentSchema = setIn(
+  const updatedDefinition: FieldsetComponentSchema = setIn(
     componentDefinition,
     'components',
     visibleComponents
   );
-  return {
-    componentDefinition: newComponentDefinition,
-    values: updatedValues,
-  };
+  return {updatedDefinition, updatedValues};
 };
 
-export default excludeHiddenComponents;
+export default applyVisibility;

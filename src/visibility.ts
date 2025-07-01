@@ -69,17 +69,19 @@ export const filterVisibleComponents = (
     // Always process the component children if a hook is configured - the `clearOnHide`
     // may be enabled on children and needs to be applied when the parent is hidden,
     // as that implies the child is hidden.
-    const excludeHiddenComponents = getRegistryEntry(componentDefinition)?.excludeHiddenComponents;
-    if (excludeHiddenComponents) {
-      const {componentDefinition: newComponentDefinition, values: updatedValues} =
-        excludeHiddenComponents(
-          componentDefinition,
-          values,
-          initialValues,
-          hidden,
-          getRegistryEntry
-        );
-      componentDefinition = newComponentDefinition;
+    const applyVisibility = getRegistryEntry(componentDefinition)?.applyVisibility;
+    if (applyVisibility) {
+      const context = {
+        parentHidden: hidden,
+        initialValues,
+        getRegistryEntry,
+      };
+      const {updatedDefinition, updatedValues} = applyVisibility(
+        componentDefinition,
+        values,
+        context
+      );
+      componentDefinition = updatedDefinition;
       values = updatedValues;
     }
 
