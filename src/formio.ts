@@ -27,7 +27,11 @@ export const getConditional = (component: AnyComponentSchema): Conditional | nul
 /**
  * Determine if a component is visible or hidden, depending on the *current* values.
  */
-export const isHidden = (component: AnyComponentSchema, values: JSONObject): boolean => {
+export const isHidden = (
+  component: AnyComponentSchema,
+  values: JSONObject,
+  extraEvaluationScope?: JSONObject
+): boolean => {
   // dynamic hidden/visible configuration
   const conditional = getConditional(component);
 
@@ -45,10 +49,35 @@ export const isHidden = (component: AnyComponentSchema, values: JSONObject): boo
 
   // TODO: how does the scoping of the 'when' expression work for nesting and repeating
   // groups? -> check backend code and formio reference.
-  const compareValue = getIn(values, when);
+  // TODO: ensure comparison/check works for Array values (e.g. textfield with multiple: true)
+  // TODO: ensure comparison/check works for selectboxes with their weird data format!
+
+  // NOTE: Formio defaults to an empty string if the value is null-ish (null | undefined),
+  // which makes things work when the value has been cleared by an earlier pass. It's a bit
+  // shaky - in particular for `number` components I'd prefer sticking to `null` and making
+  // strict comparisons like that, but let's explore that when we've actually shipped this
+  // renderer.
+  if (extraEvaluationScope) {
+    values = {...values, ...extraEvaluationScope};
+  }
+  const compareValue = getIn(values, when) ?? '';
   const conditionSatisfied = eq === compareValue;
 
   // note that we return whether the component is hidden, not whether it is shown, so
   // we must invert in the return value
   return conditionSatisfied ? !show : show;
+};
+
+/**
+ * Extract the desired `clearOnHide` behaviour.
+ *
+ * @note Formio's default value is `true`, meaning that values of hidden components
+ * get cleared unless specified otherwise. So even if we get `undefined` or `null`,
+ * the component should be cleared on hide.
+ */
+export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean => {
+  if ('clearOnHide' in componentDefinition) {
+    return componentDefinition.clearOnHide !== false;
+  }
+  return true;
 };

@@ -1,6 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
-import {forwardRef, useImperativeHandle, useMemo} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -8,7 +8,7 @@ import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormioComponent from './FormioComponent';
@@ -123,7 +123,8 @@ export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | '
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
   ({components, id, children}, ref) => {
-    const {values, setValues, errors, setErrors, setTouched} = useFormikContext<JSONObject>();
+    const {values, setValues, errors, setErrors, setTouched, initialValues} =
+      useFormikContext<JSONObject>();
 
     useImperativeHandle(
       ref,
@@ -145,9 +146,32 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       [setValues, errors, setErrors]
     );
 
-    const componentsToRender: AnyComponentSchema[] = useMemo(() => {
-      return filterVisibleComponents(components, values, getRegistryEntry);
-    }, [components, values]);
+    // Compute the visible components and associated updated values (via clearOnHide)
+    // every time either the form configuration (components) is modified or when the form
+    // values change. Note that the form values also change as a reaction to processed
+    // values via clearOnHide, and this implies multiple (render) passes to converge.
+    // XXX: this means that component definitions may not have reference cycles in their
+    // conditional logic to prevent infinite render loops!
+    const {visibleComponents: componentsToRender, updatedValues} = useMemo(() => {
+      const {visibleComponents, updatedValues} = processVisibility(components, values, {
+        parentHidden: false,
+        initialValues,
+        getRegistryEntry,
+      });
+      return {visibleComponents, updatedValues};
+    }, [components, initialValues, values]);
+
+    // handle the side-effects from the visibility checks that apply clearOnHide to the
+    // values. We can't call setValues directly, since updating state during render like
+    // this is not allowed, so we need a synchronization step.
+    useEffect(() => {
+      // update the formik values with the calculated values with side-effects applied
+      // until this converges/resolves. We rely on the object identity here to detect
+      // (deep) differences!
+      if (updatedValues !== values) {
+        setValues(updatedValues);
+      }
+    }, [setValues, values, updatedValues]);
 
     return (
       <Form noValidate id={id}>

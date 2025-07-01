@@ -11,7 +11,7 @@ import {getIn, setIn} from 'formik';
 
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import './ItemPreview.scss';
 
@@ -35,10 +35,22 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   values,
   getRegistryEntry,
 }) => {
-  const componentsToRender = filterVisibleComponents(components, values, getRegistryEntry);
+  // TODO: process value changes here!
+  // XXX: testcase: clearOnHide on component/fieldset inside edit grid in preview mode
+  // This is still necessary because in preview mode there may be other complex components
+  // like nested editgrids, fieldsets, columns... that can still produce side-effects to
+  // the values.
+  // TODO: properly separate item values + additional evaluation scope for the necessary
+  // late binding, otherwise `updatedValues` is tainted.
+  const {visibleComponents /*, updatedValues*/} = processVisibility(components, values, {
+    parentHidden: false,
+    initialValues: {}, // actual value is not relevant, because this is simply a preview
+    getRegistryEntry,
+  });
+
   return (
     <DataList appearance="rows">
-      {componentsToRender.map(component => (
+      {visibleComponents.map(component => (
         <ComponentDataListItem
           key={component.key}
           component={component}
