@@ -1,0 +1,62 @@
+@use '@/scss/bem';
+@use '@utrecht/components/link';
+@use '@utrecht/components/article';
+@use '@utrecht/components/html-content';
+
+$formio-content-variants: ('error', 'warning', 'success', 'info');
+
+@mixin formio-content-variant($variant) {
+  border-inline-start-color: var(
+    --of-formio-content-#{$variant}-border-inline-start-color,
+    var(--of-color-#{$variant})
+  );
+  border-inline-start-style: var(--of-formio-content-#{$variant}-border-inline-start-style, solid);
+  border-inline-start-width: var(--of-formio-content-#{$variant}-border-inline-start-width, 4px);
+  padding-inline-start: var(--of-formio-content-#{$variant}-padding-inline-start, 16px);
+}
+
+/**
+ * Extensions of the utrecht-link component with OF-specific styles.
+ */
+.utrecht-link {
+  @include bem.modifier('openforms-inherit') {
+    color: inherit;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.openforms-formio-content {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  overflow: auto;
+
+  inline-size: var(--of-formio-content-inline-size, 100%);
+  max-inline-size: var(
+    --of-formio-content-max-inline-size,
+    var(--utrecht-form-field-max-inline-size)
+  );
+
+  @for $i from 1 through 6 {
+    h#{$i}:not(:last-child) {
+      margin-block-end: 0.5rem;
+    }
+  }
+
+  @each $variant in $formio-content-variants {
+    @include bem.modifier($variant) {
+      @include formio-content-variant($variant);
+    }
+  }
+
+  /**
+ * Apply the standard link styles (without modifiers) to the anchor tags.
+
+ * For WYSIWYG-like content where classnames cannot be controlled.
+ */
+  a {
+    @extend .utrecht-link;
+  }
+}
