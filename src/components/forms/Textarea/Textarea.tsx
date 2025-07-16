@@ -1,7 +1,8 @@
 import {FormField, Paragraph, Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
 import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-library-react/dist/Textarea';
+import clsx from 'clsx';
 import {useField, useFormikContext} from 'formik';
-import {useId} from 'react';
+import {useId, useLayoutEffect, useRef} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -45,6 +46,10 @@ export interface TextareaProps {
    * Placeholder when no (default) value is available.
    */
   placeholder?: string;
+  /**
+   * Automatic expanding and shrinking of fields to fit their content.
+   */
+  autoExpand?: boolean;
 }
 
 const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
@@ -53,22 +58,38 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   isRequired = false,
   description = '',
   isDisabled = false,
+  autoExpand = false,
   placeholder,
   tooltip,
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
-  const [{value, ...props}, {error = '', touched}] = useField<string | undefined>({
-    name,
-    type: 'text',
-  });
+  const [{value, ...props}, {error = '', touched}] = useField<string | undefined>(name);
   const id = useId();
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
 
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea || !autoExpand) {
+      return;
+    }
+
+    const {borderBlockStart, borderBlockEnd} = getComputedStyle(textarea);
+    // Reset textarea, so we can accurately calculate the scrollHeight
+    textarea.style.blockSize = 'auto';
+
+    // `scrollHeight` does account for the padding, but not the border, so we have to add
+    // that manually
+    const newHeight =
+      textarea.scrollHeight + parseFloat(borderBlockStart) + parseFloat(borderBlockEnd);
+    textarea.style.blockSize = `${newHeight}px`;
+  }, [autoExpand, value, textareaRef]);
+
   return (
-    <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
+    <FormField type="textarea" invalid={invalid} className="utrecht-form-field--openforms">
       <Label
         id={id}
         isRequired={isRequired}
@@ -79,6 +100,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
       </Label>
       <Paragraph>
         <UtrechtTextarea
+          ref={textareaRef}
           // ensure unsetting values doesn't ping-pong us between controlled/uncontrolled
           // components
           value={value ?? ''}
@@ -87,7 +109,9 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
             props.onBlur(e);
             await validateField(name);
           }}
-          className="utrecht-textarea--openforms"
+          className={clsx('utrecht-textarea--openforms', {
+            'utrecht-textarea--openforms-no-resize': autoExpand,
+          })}
           id={id}
           disabled={isDisabled}
           invalid={invalid}

@@ -141,3 +141,49 @@ export const ValidateOnBlur: Story = {
     expect(input).toHaveAttribute('aria-invalid', 'true');
   },
 };
+
+export const AutoExpand: Story = {
+  args: {
+    name: 'AutoExpand',
+    label: 'Auto expand',
+    autoExpand: true,
+    rows: 3,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        AutoExpand: '',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Auto expand');
+
+    const initialHeight = parseFloat(getComputedStyle(input).height);
+
+    await userEvent.type(input, 'foo');
+    expect(input).toHaveFocus();
+    input.blur();
+
+    // Expect that the textarea is the same height as before.
+    // The textarea should not get smaller than the minimum height requirement of `rows`.
+    expect(parseFloat(getComputedStyle(input).height)).toBe(initialHeight);
+
+    // Add multiple lines of text
+    await userEvent.type(input, '\n' + 'bar\n' + 'foobar\n' + 'barfooz');
+    expect(input).toHaveFocus();
+    input.blur();
+
+    // Expect that the textarea grew to fit all content
+    expect(parseFloat(getComputedStyle(input).height)).toBeGreaterThan(initialHeight);
+
+    await userEvent.clear(input);
+    await userEvent.type(input, 'foo');
+    expect(input).toHaveFocus();
+    input.blur();
+
+    // Expect that the textarea shrank back to its initial height
+    expect(parseFloat(getComputedStyle(input).height)).toBe(initialHeight);
+  },
+};
