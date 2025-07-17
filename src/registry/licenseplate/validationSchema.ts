@@ -1,0 +1,31 @@
+import type {LicensePlateComponentSchema} from '@open-formulieren/types';
+import {defineMessage} from 'react-intl';
+import {z} from 'zod';
+
+import type {GetValidationSchema} from '@/registry/types';
+
+const LICENSE_PLATE_PATTERN: LicensePlateComponentSchema['validate']['pattern'] =
+  '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$';
+const LICENSE_PLATE_REGEX = new RegExp(LICENSE_PLATE_PATTERN);
+
+const LICENSE_PLATE_INVALID_MESSAGE = defineMessage({
+  description: 'Validation error for license plate.',
+  defaultMessage: 'Invalid Dutch license plate',
+});
+
+const getValidationSchema: GetValidationSchema<LicensePlateComponentSchema> = (
+  componentDefinition,
+  intl
+) => {
+  const {key, validate} = componentDefinition;
+  const required = validate?.required;
+
+  let schema: z.ZodFirstPartySchemaTypes = z
+    .string()
+    .regex(LICENSE_PLATE_REGEX, {message: intl.formatMessage(LICENSE_PLATE_INVALID_MESSAGE)});
+  if (!required) schema = schema.or(z.literal('')).optional();
+
+  return {[key]: schema};
+};
+
+export default getValidationSchema;

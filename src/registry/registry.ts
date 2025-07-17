@@ -9,6 +9,7 @@ import EditGrid from './editgrid';
 import Email from './email';
 import Fieldset from './fieldset';
 import IBAN from './iban';
+import LicensePlate from './licenseplate';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
@@ -33,6 +34,7 @@ const REGISTRY: Registry = {
   radio: RadioField,
   // special types
   iban: IBAN,
+  licenseplate: LicensePlate,
   bsn: BSN,
   editgrid: EditGrid,
   // layout
