@@ -29,11 +29,11 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({
   );
 };
 
-const EmailComponent: RegistryEntry<BsnComponentSchema> = {
+const BSNComponent: RegistryEntry<BsnComponentSchema> = {
   formField: FormioBSN,
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };
 
-export default EmailComponent;
+export default BSNComponent;
