@@ -10,6 +10,7 @@ import Fieldset from './fieldset';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
+import SoftRequiredErrors from './softRequiredErrors';
 import TextField from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
@@ -32,6 +33,7 @@ const REGISTRY: Registry = {
   // special types
   bsn: BSN,
   editgrid: EditGrid,
+  softRequiredErrors: SoftRequiredErrors,
   // layout
   fieldset: Fieldset,
   columns: Columns,
