@@ -1,0 +1,59 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as NumberFieldStories from './NumberField.stories';
+
+<Meta of={NumberFieldStories} />
+
+# Number inputs
+
+Numeric inputs are essential for some types of data, but using the correct inputs is rather hard due
+to a couple of reasons:
+
+- some data looks numeric, but actually isn't
+- associated validations (minimum and maximum values)
+- accessibility concerns (especially when silently truncating or ignoring data)
+- localisation - different locales use different decimal separators
+
+The implementation of our `NumberField` component attempts to address these, and has taken certain
+sources into account when doing so
+
+- [GOV.UK](https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/)
+
+Our numeric input allows entering arbitrary numbers - decimals, negative, large, small... They take
+the current locale into account and present formatted numbers. E.g. in the NL locale, the `.`
+decimal separator will be converted to a comma, while thousand groups are automatically formatted
+with a period.
+
+Only numerical keyboard entries are allowed.
+
+The developer/form designers are responsible for defining validation rules for the values to express
+minimum/maximum values.
+
+<Canvas of={NumberFieldStories.Default} />
+
+## Props
+
+<ArgTypes of={NumberFieldStories} />
+
+## Locale
+
+<Canvas of={NumberFieldStories.LocalisedWithDecimals} />
+
+## Validation errors
+
+<Canvas of={NumberFieldStories.ValidationError} />
+
+## No asterisks
+
+The backend can be configured to treat fields as required by default and instead mark optional
+fields explicitly.
+
+<Canvas of={NumberFieldStories.NoAsterisks} />
+
+## Additional notes
+
+Do not use the `NumberField` for inputs such as SSN, credit card, phone numbers - instead use a
+`TextField`, possibly with `inputmode="numeric"` and `pattern=[0-9]+` props.
+
+This kind of data is actually just text inputs/strings that happen to consist only of digits. As a
+rule of thumb, if leading zeroes are significant, you should use a `TextField` instead.
