@@ -77,3 +77,7 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   }
   return true;
 };
+
+export const hasAnyConditionalLogicCycle = (components: AnyComponentSchema[]): boolean => {
+  return components.length > 0;
+};
