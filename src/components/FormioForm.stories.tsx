@@ -2,7 +2,7 @@ import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulier
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, waitFor, within} from '@storybook/test';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {useRef} from 'react';
+import React, {useRef} from 'react';
 
 import FormioForm, {FormStateRef} from './FormioForm';
 
@@ -384,5 +384,68 @@ export const SetErrorsFromParentComponent: Story = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Set error'}));
     expect(await canvas.findByText('An outside validation error!')).toBeVisible();
+  },
+};
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, {hasError: boolean}> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {hasError: false};
+  }
+
+  static getDerivedStateFromError() {
+    // Update state so the next render will show the fallback UI.
+    return {hasError: true};
+  }
+
+  render() {
+    return this.state.hasError ? 'Intentional error boundary.' : this.props.children;
+  }
+}
+
+export const ThrowsWhenCyclesDetected: Story = {
+  decorators: [
+    Story => (
+      <ErrorBoundary>
+        <Story />
+      </ErrorBoundary>
+    ),
+  ],
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'component1',
+        label: 'Field 1',
+        conditional: {
+          show: false,
+          when: 'component2',
+          eq: 'throw',
+        },
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'textfield',
+        key: 'component2',
+        label: 'Field 2',
+        conditional: {
+          show: false,
+          when: 'component1',
+          eq: 'throw',
+        },
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.queryByText('Field 1')).not.toBeInTheDocument();
+    expect(canvas.queryByText('Field 2')).not.toBeInTheDocument();
+    expect(await canvas.findByText('Intentional error boundary.')).toBeVisible();
   },
 };

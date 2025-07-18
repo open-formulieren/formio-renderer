@@ -4,6 +4,7 @@ import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import {hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
@@ -79,9 +80,34 @@ export interface FormStateRef {
   updateErrors: (errors: UpdateErrors) => void;
 }
 
+/**
+ * Main component to render a Formio form definition.
+ *
+ * The form configration (list of components) is processed and default values are
+ * extracted, which are merged with any provided existing submission values. The
+ * requested form fields are rendered so the user can interact with them.
+ *
+ * You can pass a `ref` to get an imperative handle to set values and (validation)
+ * errors from your parent component.
+ *
+ * @throws {Error} Throws an error when conditional logic cycles have been detected.
+ * It's recommended to validate these in your downstream project and set up an error
+ * boundary around the `FormioForm` component.
+ */
 const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
   ({components, values = {}, errors, onSubmit, id, children, requiredFieldsWithAsterisk}, ref) => {
     const intl = useIntl();
+
+    const isConditionalLogicInvalid = useMemo(
+      () => hasAnyConditionalLogicCycle(components),
+      [components]
+    );
+    if (isConditionalLogicInvalid) {
+      throw new Error(
+        'Detected a conditional logic cycle in the provided components! This ' +
+          'can lead to infinite rendering loops and must not happen.'
+      );
+    }
 
     // use the extracted component default values and merge with 'outside' values to use
     // as initial form state
