@@ -78,6 +78,54 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   return true;
 };
 
+function* iterDependencies(components: AnyComponentSchema[]): Generator<[string, string]> {
+  // build a map of dependencies
+  for (const component of components) {
+    const conditional = getConditional(component);
+    if (conditional !== null) {
+      yield [component.key, conditional.when];
+    }
+
+    switch (component.type) {
+      case 'fieldset': {
+        yield* iterDependencies(component.components);
+        break;
+      }
+      case 'columns': {
+        for (const column of component.columns) {
+          yield* iterDependencies(column.components);
+        }
+        break;
+      }
+
+      case 'editgrid': {
+        // TODO: we need to 'modify' the components here to take their scope into
+        // account -> this means making the full keys of items/components explicit.
+        // I don't think you can have cycles that span over scopes (outer scope -> item
+        // scope), but you can definitely have cycles within an item scope.
+        throw new Error('not implemented');
+      }
+    }
+  }
+}
+
 export const hasAnyConditionalLogicCycle = (components: AnyComponentSchema[]): boolean => {
-  return components.length > 0;
+  // simple mapping of dependent -> dependency
+  const dependencies: Map<string, string> = new Map();
+  // build a map of dependencies
+  for (const [dependent, dependency] of iterDependencies(components)) {
+    dependencies.set(dependent, dependency);
+  }
+
+  // check if we have any cycles by testing if any of the dependents has a cycle
+  return [...dependencies.entries()].some(([dependent, dependency]) => {
+    let transitiveDependency: string | undefined = dependency;
+    // look up what it depends on, and then look up if that depends on something until
+    // our dependencies are exhausted or we encounter ourselves
+    while (transitiveDependency) {
+      transitiveDependency = dependencies.get(transitiveDependency);
+      if (transitiveDependency === dependent) return true;
+    }
+    return false;
+  });
 };
