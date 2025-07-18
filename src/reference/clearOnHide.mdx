@@ -1,0 +1,95 @@
+import {ArgTypes, Canvas, Controls, Meta} from '@storybook/blocks';
+
+import * as ClearOnHideStories from './clearOnHide.stories';
+
+<Meta of={ClearOnHideStories} />
+
+# Clear on Hide behaviour
+
+The component option `clearOnHide` (default: `true`) controls what happens with the value of a form
+field/component when it becomes hidden.
+
+When enabled, the entire value associated with the `component.key` is _removed_ from the submission
+data (this is different from assigning the 'empty' value).
+
+Under the hood, when derived logic applies on this removed key, Formio will operate on the implied
+empty value: for a `textfield` this will be the empty string `''`, even though the key is **not**
+present in the submission/form data/values.
+
+## Formio (reference) behaviour
+
+Formio makes a distinction between components that are _dynamically_ and _statically_ hidden.
+
+- A component is statically hidden when `hidden: true` is set (and `conditional` is not set).
+- A component is dynamically hidden when the `conditional` configuration results in hiding the
+  component. This is usually the result of user input.
+
+Below, a number of cases are described that illustrate the behaviour. Assume that `clearOnHide` is
+enabled for the involved components, unless specified otherwise.
+
+### Component is statically hidden
+
+- A component that has an existing value from the submission data and has `hidden: true` will
+  contain that value in the submission data. This behaviour cannot be observed in the
+  [interactive builder](https://formio.github.io/formio.js/app/builder.html) because Formio seems to
+  reset the form when clicking the submit button. It may also be updated in the latest version of
+  Formio since the description now says the value will be cleared when the component is hidden.
+- A component that has no existing value from the submission data, has a default value set and has
+  `hidden: true` will not have this key in the submission data at all.
+
+### Component depends on value of sibling after itself
+
+Given:
+
+- `component1` and `component2`, in this order
+- `component1` is hidden if `component2` has a particular value
+
+Initially, both components are displayed. Then, entering the trigger value in `component2` will hide
+`component1` and clear it.
+
+The submission data only contains the key `component2` with the trigger value.
+
+### Circular dependencies
+
+Given:
+
+- `component1` with default value `initial`, hidden when `component2` is equal to `''`
+- `component2` with default value `initial`, hidden when `component1` is equal to `hide`
+
+Intuitively, we expect:
+
+1. Change component 1 value to `hide`
+2. `component2` gets hidden and the value clears (removed from submission data)
+3. `component1` gets hidden and the value clears (removed from submission data)
+
+What actually happens is:
+
+1. Change component 1 value to `hide`
+2. `component2` gets hidden and the value clears (removed from submission data)
+3. `component1` gets hidden - **the value does not clear**
+
+There are no console errors visible.
+
+### Nested components
+
+Given a textfield and a fieldset with any other component inside. When the fieldset is dynamically
+hidden because of a value of the textfield, the nested component's value is cleared.
+
+## Open Forms (SDK/backend) behaviour
+
+- `clearOnHide` is applied for all hidden components, irrespective whether that's statically or
+  dynamically. This _appears_ to match the semantic behaviour of the newest Formio versions.
+- backend logic rules can alter `hidden: true|false`, which makes it dynamic in the backend, but
+  static from Formio's perspective
+- variables (component keys) are not removed, instead their value is reset to the "empty value" for
+  that component type
+
+## Risks
+
+Risks for our own implementation:
+
+- infinite render loops when updating the form values and deriving the new state from that ->
+  especially when components have cycles. We can't detect which component triggered the change in
+  form values.
+- Formio reference behaviour varies with different Formio versions, but it seems that the latest
+  version (at least semantically) mostly matches our backend behaviour.
