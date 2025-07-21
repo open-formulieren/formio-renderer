@@ -66,7 +66,7 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
   ? {
       formField: React.ComponentType<RenderComponentProps<S>>;
       /**
-       * Derive the default/initial values from the compnent, optionally recursing.
+       * Derive the default/initial values from the component, optionally recursing.
        *
        * The callback must return an object with component key strings as keys and the
        * initial value as value for that key. Multiple keys may be returned, since a
@@ -78,7 +78,7 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * Derive the summary/read-only of a field for the given component definition.
        *
        * The raw form field value is displayed in a useful way for summaries, taking the
-       * intrinstic data type of the component into account.
+       * intrinsic data type of the component into account.
        */
       valueDisplay?: React.ComponentType<ValueDisplayProps<S>>;
       /**

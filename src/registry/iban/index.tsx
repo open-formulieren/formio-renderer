@@ -1,4 +1,4 @@
-import type {BsnComponentSchema} from '@open-formulieren/types';
+import type {IbanComponentSchema} from '@open-formulieren/types';
 
 import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
@@ -7,11 +7,11 @@ import ValueDisplay from './ValueDisplay';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
-export interface FormioBSNProps {
-  componentDefinition: BsnComponentSchema;
+export interface FormioIBANProps {
+  componentDefinition: IbanComponentSchema;
 }
 
-export const FormioBSN: React.FC<FormioBSNProps> = ({
+export const FormioIBAN: React.FC<FormioIBANProps> = ({
   componentDefinition: {key, label, tooltip, description, validate},
 }) => {
   return (
@@ -22,18 +22,17 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({
       tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
-      pattern="[0-9]{9}"
-      inputMode="numeric"
-      placeholder="XXXXXXXXX"
+      inputMode="text"
+      placeholder=""
     />
   );
 };
 
-const BSNComponent: RegistryEntry<BsnComponentSchema> = {
-  formField: FormioBSN,
+const IBANComponent: RegistryEntry<IbanComponentSchema> = {
+  formField: FormioIBAN,
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
 };
 
-export default BSNComponent;
+export default IBANComponent;
