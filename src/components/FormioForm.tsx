@@ -11,8 +11,8 @@ import {deepMergeValues, extractInitialValues} from '@/values';
 import {filterVisibleComponents} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
+import FormSettingsProvider from './FormSettingsProvider';
 import FormioComponent from './FormioComponent';
-import RendererSettingsProvider from './RendererSettingsProvider';
 import {
   type JSONObjectWithUndefined,
   type JSONValuePlusUndefined,
@@ -93,7 +93,10 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
 
     return (
-      <RendererSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
+      <FormSettingsProvider
+        requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
+        components={components}
+      >
         <Formik<JSONObject>
           initialValues={values}
           initialErrors={errors as FormikErrors<JSONObject>}
@@ -111,7 +114,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
             {children}
           </InnerFormioForm>
         </Formik>
-      </RendererSettingsProvider>
+      </FormSettingsProvider>
     );
   }
 );

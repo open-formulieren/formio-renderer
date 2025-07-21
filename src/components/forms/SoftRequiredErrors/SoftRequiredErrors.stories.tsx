@@ -1,0 +1,135 @@
+import type {Meta, StoryObj} from '@storybook/react';
+import {expect, fn, userEvent, waitFor, within} from '@storybook/test';
+import '@utrecht/components/paragraph';
+
+import {renderMultipleComponentsInForm} from '@/registry/storybook-helpers';
+import {withFormik} from '@/sb-decorators';
+
+import SoftRequiredErrors from './SoftRequiredErrors';
+
+export default {
+  title: 'Internal API / Forms / SoftRequiredErrors',
+  component: SoftRequiredErrors,
+  decorators: [withFormik],
+  render: renderMultipleComponentsInForm,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+  args: {
+    onSubmit: fn(),
+    componentDefinitions: [
+      {
+        type: 'textfield',
+        key: 'textfield',
+        label: 'Soft required text',
+        // @ts-ignore
+        openForms: {softRequired: true},
+      },
+      {
+        id: 'gello',
+        type: 'softRequiredErrors',
+        key: 'softRequiredErrors',
+        label: 'softRequiredErrors',
+        html: `
+        <p>Not all required fields are filled out. That can get expensive!</p>
+
+        {{ missingFields }}
+
+        <p>Are you sure you want to continue?</p>
+          `,
+      },
+    ],
+  },
+} satisfies Meta<typeof renderMultipleComponentsInForm>;
+
+type Story = StoryObj<typeof renderMultipleComponentsInForm>;
+
+export const Default: Story = {
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
+
+    await step('Initial state', async () => {
+      expect(await canvas.findByText(ERROR_TEXT)).toBeVisible();
+      const list = await canvas.findByRole('list', {name: 'Empty fields'});
+      const listItems = within(list).getAllByRole('listitem');
+      expect(listItems).toHaveLength(1);
+    });
+
+    await step('Fill out field and remove error', async () => {
+      const input = canvas.getByLabelText('Soft required text');
+      await userEvent.type(input, 'Not empty');
+      await waitFor(() => {
+        expect(canvas.queryByText(ERROR_TEXT)).toBeNull();
+      });
+    });
+
+    // Added value of this step: the chromatic snapshot should capture the missing fields
+    await step('Return error when field becomes empty again', async () => {
+      const input = canvas.getByLabelText('Soft required text');
+      await userEvent.clear(input);
+      input.blur();
+
+      expect(await canvas.findByText(ERROR_TEXT)).toBeVisible();
+      const list = await canvas.findByRole('list', {name: 'Empty fields'});
+      const listItems = within(list).getAllByRole('listitem');
+      expect(listItems).toHaveLength(1);
+    });
+  },
+};
+
+export const WithEditGridAndNestedComponent: Story = {
+  name: 'With editgrid and nested component',
+  args: {
+    componentDefinitions: [
+      {
+        type: 'editgrid',
+        key: 'editgrid',
+        label: "Auto's",
+        groupLabel: 'Auto',
+        hidden: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'textfield',
+            label: 'Soft required text',
+            // @ts-ignore
+            openForms: {softRequired: true},
+          },
+        ],
+      },
+      {
+        id: 'gello',
+        type: 'softRequiredErrors',
+        key: 'softRequiredErrors',
+        label: 'softRequiredErrors',
+        html: `
+        <p>Not all required fields are filled out. That can get expensive!</p>
+
+        {{ missingFields }}
+
+        <p>Are you sure you want to continue?</p>
+          `,
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText("Auto's")).toBeVisible();
+
+    const addButton = await canvas.findByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const saveButton = await canvas.findByRole('button', {name: 'Submit'});
+    await userEvent.click(saveButton);
+
+    await canvas.findByText('Not all required fields are filled out. That can get expensive!');
+    const list = await canvas.findByRole('list', {name: 'Empty fields'});
+    const listItem = within(list).getByRole('listitem');
+    expect(listItem.textContent).toEqual('Soft required text');
+  },
+};
