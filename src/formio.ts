@@ -99,11 +99,14 @@ function* iterDependencies(components: AnyComponentSchema[]): Generator<[string,
       }
 
       case 'editgrid': {
-        // TODO: we need to 'modify' the components here to take their scope into
-        // account -> this means making the full keys of items/components explicit.
-        // I don't think you can have cycles that span over scopes (outer scope -> item
-        // scope), but you can definitely have cycles within an item scope.
-        throw new Error('not implemented');
+        // edit grid items run in their own scope with access to the outer scope, but
+        // the outer scope doens't have access to the items, so we only need to check
+        // for cycles *within* the edit grid item definition.
+        // TODO: what if you can express a conditional on the edit grid component itself?
+        const nestedDependencies = iterDependencies(component.components);
+        for (const [nestedKey, nestedDependency] of nestedDependencies) {
+          yield [`${component.key}.${nestedKey}`, nestedDependency];
+        }
       }
     }
   }
