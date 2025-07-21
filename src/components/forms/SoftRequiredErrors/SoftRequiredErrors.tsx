@@ -1,11 +1,12 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
 import {getIn, useFormikContext} from 'formik';
 import {useId, useMemo} from 'react';
 
-import SoftRequiredErrorsMessage from '@/components/forms/SoftRequiredErrors/SoftRequiredErrorsMessage';
 import {useFormSettings} from '@/hooks';
 
-import "./SoftRequiredErrors.scss";
+import './SoftRequiredErrors.scss';
+import SoftRequiredErrorsMessage from './SoftRequiredErrorsMessage';
+import {getSoftRequiredComponentsRecursive, resolveEditgridChildrenPath} from './utils';
+import type {SoftRequiredComponent} from './utils';
 
 export interface SoftRequiredErrorsProps {
   /**
@@ -24,49 +25,27 @@ const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({html}) => {
   const {components} = useFormSettings();
   const id = useId();
 
-  const getSoftRequiredComponentsRecursive = (
-    components: AnyComponentSchema[]
-  ): AnyComponentSchema[] => {
-    const componentsToReturn: AnyComponentSchema[] = [];
-    if (!components.length) {
-      return componentsToReturn;
-    }
-
-    components.forEach(component => {
-      if (getIn(component, `openForms.softRequired`, false)) {
-        componentsToReturn.push(component);
-      }
-
-      // Go recursive
-      switch (component.type) {
-        case 'fieldset':
-          componentsToReturn.push(...getSoftRequiredComponentsRecursive(component.components));
-          return;
-        case 'editgrid':
-          componentsToReturn.push(...getSoftRequiredComponentsRecursive(component.components));
-          return;
-        case 'columns':
-          component.columns.forEach(column => {
-            componentsToReturn.push(...getSoftRequiredComponentsRecursive(column.components));
-          });
-      }
-    });
-
-    return componentsToReturn;
-  };
-
-  // Get all soft required components. Only update when components change
-  // Recursive get and flatten?
-  const softRequiredComponents = useMemo(() => {
-    // @TODO limit to visible components
+  const softRequiredComponents = useMemo((): SoftRequiredComponent[] => {
+    // @TODO limit search to visible components
     // (requires logic from `feature/59-clear-on-hide` branch)
+
     return getSoftRequiredComponentsRecursive(components || []);
   }, [components]);
 
-  // When to trigger? Use without useMemo and trigger each re-render?
-  const missingFields = useMemo((): AnyComponentSchema[] => {
-    // @TODO do some proper "is empty" check, including: [], 0, {}, etc.
-    return softRequiredComponents.filter(component => getIn(values, component.key) === '');
+  const missingFields = useMemo((): SoftRequiredComponent[] => {
+    const resolvedComponents = resolveEditgridChildrenPath(
+      softRequiredComponents,
+      values as object
+    );
+
+    return resolvedComponents.filter(component => {
+      // Components that are not inside an editgrid
+      const componentValue = getIn(values, component.pathToComponent);
+
+      // @TODO The `!== undefined` check is probably only needed because we don't limit
+      // to only visible components.
+      return !componentValue && componentValue !== undefined;
+    });
   }, [softRequiredComponents, values]);
 
   if (!missingFields.length) {

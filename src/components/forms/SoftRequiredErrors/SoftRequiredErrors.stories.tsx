@@ -80,3 +80,56 @@ export const Default: Story = {
     });
   },
 };
+
+export const WithEditGridAndNestedComponent: Story = {
+  name: 'With editgrid and nested component',
+  args: {
+    componentDefinitions: [
+      {
+        type: 'editgrid',
+        key: 'editgrid',
+        label: "Auto's",
+        groupLabel: 'Auto',
+        hidden: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'textfield',
+            label: 'Soft required text',
+            // @ts-ignore
+            openForms: {softRequired: true},
+          },
+        ],
+      },
+      {
+        id: 'gello',
+        type: 'softRequiredErrors',
+        key: 'softRequiredErrors',
+        label: 'softRequiredErrors',
+        html: `
+        <p>Not all required fields are filled out. That can get expensive!</p>
+
+        {{ missingFields }}
+
+        <p>Are you sure you want to continue?</p>
+          `,
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText("Auto's")).toBeVisible();
+
+    const addButton = await canvas.findByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const saveButton = await canvas.findByRole('button', {name: 'Submit'});
+    await userEvent.click(saveButton);
+
+    await canvas.findByText('Not all required fields are filled out. That can get expensive!');
+    const list = await canvas.findByRole('list', {name: 'Empty fields'});
+    const listItem = within(list).getByRole('listitem');
+    expect(listItem.textContent).toEqual('Soft required text');
+  },
+};

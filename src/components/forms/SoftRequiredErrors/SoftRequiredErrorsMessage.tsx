@@ -1,11 +1,12 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
 import parse, {DOMNode} from 'html-react-parser';
 import {FormattedMessage} from 'react-intl';
+
+import type {SoftRequiredComponent} from './utils';
 
 interface SoftRequiredErrorsMessageProps {
   id: string;
   html: string;
-  missingFields: AnyComponentSchema[];
+  missingFields: SoftRequiredComponent[];
 }
 
 const SoftRequiredErrorsMessage: React.FC<SoftRequiredErrorsMessageProps> = ({
@@ -35,8 +36,8 @@ const SoftRequiredErrorsMessage: React.FC<SoftRequiredErrorsMessageProps> = ({
               aria-labelledby={`${id}-missing-fields-header`}
             >
               {missingFields.map(missingField => (
-                <li className="utrecht-unordered-list__item">
-                  {'label' in missingField ? missingField.label : 'This field is anonymous'}
+                <li key={missingField.pathToComponent} className="utrecht-unordered-list__item">
+                  {missingField.label}
                 </li>
               ))}
             </ul>
