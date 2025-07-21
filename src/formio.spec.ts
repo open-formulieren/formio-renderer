@@ -2,11 +2,12 @@ import type {
   AnyComponentSchema,
   BsnComponentSchema,
   ColumnsComponentSchema,
+  EditGridComponentSchema,
   EmailComponentSchema,
   FieldsetComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
-import {expect, test} from 'vitest';
+import {describe, expect, test} from 'vitest';
 
 import {hasAnyConditionalLogicCycle} from './formio';
 
@@ -222,4 +223,92 @@ test('hasAnyConditionalLogicCycle detects cycles in column components', () => {
   const result = hasAnyConditionalLogicCycle([columns]);
 
   expect(result).toBe(true);
+});
+
+describe('editgrid cycle detection', () => {
+  test('does not report cycle with identical keys in different scopes', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'textfield',
+        id: 'textfield',
+        key: 'textfield',
+        label: 'Textfield',
+      },
+      {
+        type: 'textfield',
+        id: 'textfield2',
+        key: 'textfield2',
+        label: 'Textfield2',
+        conditional: {
+          show: true,
+          when: 'textfield',
+          eq: 'show',
+        },
+      },
+      {
+        type: 'editgrid',
+        id: 'editgrid',
+        key: 'editgrid',
+        label: 'Edit grid',
+        disableAddingRemovingRows: false,
+        groupLabel: 'Item',
+        components: [
+          {
+            type: 'textfield',
+            id: 'textfield',
+            key: 'textfield',
+            label: 'Textfield',
+            conditional: {
+              show: true,
+              when: 'textfield2',
+              eq: 'show',
+            },
+          },
+        ],
+      },
+    ];
+
+    const result = hasAnyConditionalLogicCycle(components);
+
+    expect(result).toBe(false);
+  });
+
+  test('detects cycles between grid item with prefixed key', () => {
+    const component: EditGridComponentSchema = {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: 'Edit grid',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Item',
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+          conditional: {
+            show: true,
+            when: 'editgrid.textfield2',
+            eq: 'show',
+          },
+        },
+        {
+          type: 'textfield',
+          id: 'textfield2',
+          key: 'textfield2',
+          label: 'Textfield 2',
+          conditional: {
+            show: true,
+            when: 'editgrid.textfield',
+            eq: 'show',
+          },
+        },
+      ],
+    };
+
+    const result = hasAnyConditionalLogicCycle([component]);
+
+    expect(result).toBe(true);
+  });
 });
