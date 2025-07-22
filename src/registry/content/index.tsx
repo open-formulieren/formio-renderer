@@ -1,4 +1,4 @@
-import {ContentComponentSchema} from '@open-formulieren/types';
+import type {ContentComponentSchema} from '@open-formulieren/types';
 import {HTMLContent} from '@utrecht/component-library-react';
 import clsx from 'clsx';
 import DOMPurify from 'dompurify';
@@ -19,10 +19,9 @@ export const FormioContent: React.FC<FormioContentProps> = ({
   componentDefinition: {html, customClass},
 }) => {
   const sanitizedContent = DOMPurify.sanitize(html);
-  const className = clsx(
-    'openforms-formio-content',
-    customClass && `openforms-formio-content--${customClass}`
-  );
+  const className = clsx('openforms-formio-content', {
+    [`openforms-formio-content--${customClass}`]: !!customClass,
+  });
 
   return <HTMLContent className={className} dangerouslySetInnerHTML={{__html: sanitizedContent}} />;
 };

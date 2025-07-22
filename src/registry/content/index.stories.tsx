@@ -4,7 +4,7 @@ import type {Meta, StoryObj} from '@storybook/react';
 import {FormioContent as Content} from './';
 
 export default {
-  title: 'Component registry / basic / content',
+  title: 'Component registry / layout / content',
   component: Content,
   args: {
     componentDefinition: {

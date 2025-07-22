@@ -36,9 +36,8 @@ const REGISTRY: Registry = {
   bsn: BSN,
   editgrid: EditGrid,
   // layout
-  fieldset: Fieldset,
-  columns: Columns,
-  // simple content
   content: Content,
+  columns: Columns,
+  fieldset: Fieldset,
   // deprecated
 };
