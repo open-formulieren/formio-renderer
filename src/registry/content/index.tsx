@@ -1,6 +1,5 @@
 import {ContentComponentSchema} from '@open-formulieren/types';
 import {HTMLContent} from '@utrecht/component-library-react';
-import '@utrecht/html-content-css';
 import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 
