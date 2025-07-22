@@ -1,0 +1,77 @@
+@use '@/scss/bem';
+@use '@utrecht/components/html-content';
+
+$formio-content-variants: ('error', 'warning', 'success', 'info');
+
+@mixin formio-content-variant($variant) {
+  border-inline-start-color: var(
+    --of-formio-content-#{$variant}-border-inline-start-color,
+    var(--of-color-#{$variant})
+  );
+  border-inline-start-style: var(--of-formio-content-#{$variant}-border-inline-start-style, solid);
+  border-inline-start-width: var(--of-formio-content-#{$variant}-border-inline-start-width, 4px);
+  padding-inline-start: var(--of-formio-content-#{$variant}-padding-inline-start, 16px);
+}
+
+// custom additional styles not covered by the utrecht html component, to make it play
+// nice as a 'content' component
+.openforms-formio-content {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  overflow: auto;
+
+  inline-size: var(--of-formio-content-inline-size, 100%);
+  max-inline-size: var(
+    --of-formio-content-max-inline-size,
+    var(--utrecht-form-field-max-inline-size)
+  );
+
+  @each $variant in $formio-content-variants {
+    @include bem.modifier($variant) {
+      @include formio-content-variant($variant);
+    }
+  }
+}
+
+// Extensions of the content markup, scoped to our own theme.
+// TODO: check impact of this on external/other themes like The Hague!
+.openforms-theme {
+  .utrecht-html {
+    --utrecht-heading-1-margin-block-end: 0.5rem;
+    --utrecht-heading-2-margin-block-end: 0.5rem;
+    --utrecht-heading-3-margin-block-end: 0.5rem;
+    --utrecht-heading-3-margin-block-start: 0;
+    --utrecht-heading-4-margin-block-end: 0.5rem;
+    --utrecht-heading-5-margin-block-end: 0.5rem;
+    --utrecht-heading-6-margin-block-end: 0.5rem;
+    --utrecht-paragraph-line-height: 1.5;
+    --utrecht-paragraph-margin-block-end: 20px;
+
+    p:last-child {
+      margin-block-end: 0;
+    }
+  }
+}
+
+// Fixes for utrecht-html-content component - copied over from .utrecht-link. The base
+// text-decoration styles are missing, so the :hover overrides don't work.
+// FIXME: contribute upstream
+.utrecht-html a:any-link {
+  text-decoration-color: var(
+    --_utrecht-link-state-text-decoration-color,
+    var(--utrecht-link-text-decoration-color, currentColor)
+  );
+  text-decoration-line: var(
+    --_utrecht-link-state-text-decoration,
+    var(--utrecht-link-text-decoration, underline)
+  );
+  text-decoration-skip-ink: all;
+  text-decoration-thickness: max(
+    var(
+      --_utrecht-link-state-text-decoration-thickness,
+      var(--utrecht-link-text-decoration-thickness)
+    ),
+    1px
+  );
+  text-underline-offset: var(--utrecht-link-text-underline-offset);
+}

@@ -3,6 +3,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import BSN from './bsn';
 import Checkbox from './checkbox';
 import Columns from './columns';
+import Content from './content';
 import DateField from './date';
 import EditGrid from './editgrid';
 import Email from './email';
@@ -35,7 +36,8 @@ const REGISTRY: Registry = {
   bsn: BSN,
   editgrid: EditGrid,
   // layout
-  fieldset: Fieldset,
+  content: Content,
   columns: Columns,
+  fieldset: Fieldset,
   // deprecated
 };
