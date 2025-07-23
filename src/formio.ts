@@ -77,3 +77,58 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   }
   return true;
 };
+
+function* iterDependencies(components: AnyComponentSchema[]): Generator<[string, string]> {
+  // build a map of dependencies
+  for (const component of components) {
+    const conditional = getConditional(component);
+    if (conditional !== null) {
+      yield [component.key, conditional.when];
+    }
+
+    switch (component.type) {
+      case 'fieldset': {
+        yield* iterDependencies(component.components);
+        break;
+      }
+      case 'columns': {
+        for (const column of component.columns) {
+          yield* iterDependencies(column.components);
+        }
+        break;
+      }
+
+      case 'editgrid': {
+        // edit grid items run in their own scope with access to the outer scope, but
+        // the outer scope doens't have access to the items, so we only need to check
+        // for cycles *within* the edit grid item definition.
+        // TODO: what if you can express a conditional on the edit grid component itself?
+        const nestedDependencies = iterDependencies(component.components);
+        for (const [nestedKey, nestedDependency] of nestedDependencies) {
+          yield [`${component.key}.${nestedKey}`, nestedDependency];
+        }
+      }
+    }
+  }
+}
+
+export const hasAnyConditionalLogicCycle = (components: AnyComponentSchema[]): boolean => {
+  // simple mapping of dependent -> dependency
+  const dependencies: Map<string, string> = new Map();
+  // build a map of dependencies
+  for (const [dependent, dependency] of iterDependencies(components)) {
+    dependencies.set(dependent, dependency);
+  }
+
+  // check if we have any cycles by testing if any of the dependents has a cycle
+  return [...dependencies.entries()].some(([dependent, dependency]) => {
+    let transitiveDependency: string | undefined = dependency;
+    // look up what it depends on, and then look up if that depends on something until
+    // our dependencies are exhausted or we encounter ourselves
+    while (transitiveDependency) {
+      transitiveDependency = dependencies.get(transitiveDependency);
+      if (transitiveDependency === dependent) return true;
+    }
+    return false;
+  });
+};
