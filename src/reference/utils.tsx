@@ -1,13 +1,24 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
-import {Meta, StoryObj} from '@storybook/react';
+import {Decorator, Meta, StoryObj} from '@storybook/react';
 import {fn} from '@storybook/test';
+import {PrimaryActionButton} from '@utrecht/component-library-react';
 // @ts-expect-error
 import {Form as ReactFormioForm} from 'react-formio';
 
 import FormioForm from '@/components/FormioForm';
+import {JSONObject} from '@/types';
+
+export const hideSpinner: Decorator = Story => (
+  <>
+    <style>{`.fa-spin { display: none;}`}</style>
+    <Story />
+  </>
+);
 
 export interface ReferenceStoryArgs {
   components: AnyComponentSchema[];
+  submissionData?: JSONObject;
+  onSubmit?: (values: JSONObject) => void;
 }
 
 export type ReferenceMeta = Meta<ReferenceStoryArgs> & {
@@ -19,16 +30,43 @@ export type Story = StoryObj<ReferenceStoryArgs>;
 // usage: await sleep(3000);
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const renderCustom = (args: ReferenceStoryArgs) => (
-  <FormioForm onSubmit={fn()} {...args} requiredFieldsWithAsterisk />
-);
+const renderCustom = (args: ReferenceStoryArgs) => {
+  const {onSubmit = fn(), submissionData = undefined, ...props} = args;
+  return (
+    <FormioForm
+      values={submissionData}
+      onSubmit={async v => onSubmit(v)}
+      {...props}
+      requiredFieldsWithAsterisk
+    >
+      <PrimaryActionButton type="submit" style={{alignSelf: 'flex-start', marginTop: '20px'}}>
+        Submit
+      </PrimaryActionButton>
+    </FormioForm>
+  );
+};
 
 const renderReference = (args: ReferenceStoryArgs) => (
   <>
     <ReactFormioForm
-      form={{display: 'form', components: args.components}}
-      submission={{data: {}}}
+      form={{
+        display: 'form',
+        components: [
+          ...args.components,
+          {
+            type: 'button',
+            key: 'submit',
+            label: 'Submit',
+            input: true,
+          },
+        ],
+      }}
+      submission={{data: args.submissionData ?? {}}}
       options={{noAlerts: true}}
+      onSubmit={(event: {data: JSONObject}) => {
+        const {submit, ...values} = event.data;
+        args.onSubmit?.(values);
+      }}
     />
     <div
       style={{

@@ -9,7 +9,7 @@ import type {RegistryEntry} from '@/registry/types';
 import './Fieldset.scss';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
-import excludeHiddenComponents from './visibility';
+import applyVisibility from './visibility';
 
 export interface FieldsetProps {
   componentDefinition: FieldsetComponentSchema;
@@ -45,7 +45,7 @@ const FieldsetComponent: RegistryEntry<FieldsetComponentSchema> = {
   formField: Fieldset,
   getInitialValues,
   getValidationSchema,
-  excludeHiddenComponents,
+  applyVisibility,
 };
 
 export default FieldsetComponent;

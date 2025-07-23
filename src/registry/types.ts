@@ -55,12 +55,83 @@ export type GetValidationSchema<S> = (
   getRegistryEntry: GetRegistryEntry
 ) => Record<string, z.ZodFirstPartySchemaTypes>;
 
-export type ExcludeHiddenComponents<S> = (
+export interface VisibilityContext {
+  /**
+   * Indicator whether the parent of the provided `componentDefinition` is visible or
+   * not, if there is a parent. Child components are implicitly hidden as soon as any
+   * parent is hidden.
+   */
+  parentHidden: boolean;
+  /**
+   * Initial component values from when the form/submission was initialized. When a
+   * component becomes visible again after having been hidden, its value is taken from
+   * the initial values or otherwise the defualt/empty value of the component is used.
+   *
+   * It is a stable identity and initialized only once.
+   */
+  initialValues: JSONObject;
+  /**
+   * Hook to look up a component in the registry, passed as context to avoid circular
+   * imports/dependencies. It is a stable identity and initialized only once.
+   */
+  getRegistryEntry: GetRegistryEntry;
+  /**
+   * Callback allowing the call site to provide the evaluation scope for the
+   * visibility check. If unspecified, the `values` from the previous loop iteration
+   * are used.
+   */
+  getEvaluationScope?: (currentValues: JSONObject) => JSONObject;
+}
+
+/**
+ * Callback to process the visibility state of a component, required for container/layout
+ * component types that must propagate the side-effects/visibility into their child
+ * components.
+ *
+ * This callback is invoked recursively for the whole component tree.
+ */
+export type ApplyVisibility<S> = (
+  /**
+   * The component definition being processed. Use it as a base to produce the
+   * `updatedDefinition` in the return value.
+   */
   componentDefinition: S,
+  /**
+   * The current form field/component values, used to evaluate conditional visibility
+   * logic.
+   *
+   * @note every (nested) component being processed may mutate the values and the
+   * mutations are immediately used in the next loop/component iteration. The final
+   * result after all mutations are applied is returend as `updatedValues`.
+   */
   values: JSONObject,
-  // dependency injection to avoid circular imports
-  getRegistryEntry: GetRegistryEntry
-) => S;
+  /**
+   * Additional context/utilities relevant to evaluate a component (sub) tree.
+   */
+  context: VisibilityContext
+) => {
+  /**
+   * The updated component definition, with hidden components removed.
+   *
+   * The exact shape depends on the component type being processed. If the component
+   * or its child components are all visible, the `updatedDefinition` may be the same
+   * as in the input definition, but there are no guarantees about object identities.
+   */
+  updatedDefinition: S;
+  /**
+   * Updated form values after applying `clearOnHide` behaviour. If nothing changes,
+   * the object keeps the same identity, and this applies for nested properties. Values
+   * may be cleared (removed) for (nested) components that are hidden, but values may
+   * also be (re-)added because of a component *becoming* visible.
+   *
+   * `updatedValues` is intended to be fed back into the Formik `values` state so that
+   * the component definitions and values resolve/converge.
+   *
+   * @note for resolution to be guaranteed, there must not be any cycles between
+   * component definitions that would create infinite loops.
+   */
+  updatedValues: JSONObject;
+};
 
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
@@ -86,9 +157,9 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        */
       getValidationSchema?: GetValidationSchema<S>;
       /**
-       * Filter out hidden (nested) components so they don't get displayed.
+       * Apply visibility state and/or side-effects.
        */
-      excludeHiddenComponents?: ExcludeHiddenComponents<S>;
+      applyVisibility?: ApplyVisibility<S>;
     }
   : never;
 

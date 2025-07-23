@@ -11,7 +11,7 @@ import {getIn, setIn} from 'formik';
 
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
-import {filterVisibleComponents} from '@/visibility';
+import {processVisibility} from '@/visibility';
 
 import './ItemPreview.scss';
 
@@ -35,10 +35,17 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   values,
   getRegistryEntry,
 }) => {
-  const componentsToRender = filterVisibleComponents(components, values, getRegistryEntry);
+  // The `ItemBody` component takes care of (recursively) processing the value changes
+  // from clearOnHide side-effects. In the preview, we only need to worry about whether
+  // a component is visible or not.
+  const {visibleComponents} = processVisibility(components, values, {
+    parentHidden: false,
+    initialValues: {}, // actual value is not relevant here, it's handled in `ItemBody`
+    getRegistryEntry,
+  });
   return (
     <DataList appearance="rows">
-      {componentsToRender.map(component => (
+      {visibleComponents.map(component => (
         <ComponentDataListItem
           key={component.key}
           component={component}

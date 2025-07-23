@@ -432,6 +432,7 @@ export const NestedWithSimpleConditionals: Story = {
           type: 'textfield',
           key: 'textField1',
           label: 'Textfield 1',
+          clearOnHide: false,
           conditional: {
             show: false,
             when: 'root',
@@ -445,6 +446,7 @@ export const NestedWithSimpleConditionals: Story = {
           label: 'Nested repeating group',
           disableAddingRemovingRows: false,
           groupLabel: 'Child',
+          clearOnHide: false,
           conditional: {
             show: false,
             when: 'parent.textField1',
@@ -456,6 +458,7 @@ export const NestedWithSimpleConditionals: Story = {
               type: 'textfield',
               key: 'textField2',
               label: 'Nested 1',
+              clearOnHide: false,
               conditional: {
                 show: false,
                 when: 'root',
@@ -467,6 +470,7 @@ export const NestedWithSimpleConditionals: Story = {
               type: 'textfield',
               key: 'textField3',
               label: 'Nested 2',
+              clearOnHide: false,
               conditional: {
                 show: true,
                 when: 'parent.child.textField2',
