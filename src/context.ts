@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface RendererSettings {
+export interface FormSettings {
   /**
    * Mark required fields with an asterisk. If asterisks are not used, then a suffix
    * is added to the label of optional fields to specify the field is not required.
@@ -8,10 +8,10 @@ export interface RendererSettings {
   requiredFieldsWithAsterisk?: boolean;
 }
 
-const RendererSettingsContext = React.createContext<RendererSettings>({
+const FormSettingsContext = React.createContext<FormSettings>({
   requiredFieldsWithAsterisk: true, // backwards compatible default
 });
 
-RendererSettingsContext.displayName = 'RendererSettingsContext';
+FormSettingsContext.displayName = 'FormSettingsContext';
 
-export {RendererSettingsContext};
+export {FormSettingsContext};
