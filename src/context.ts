@@ -1,3 +1,4 @@
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import React from 'react';
 
 export interface FormSettings {
@@ -6,10 +7,15 @@ export interface FormSettings {
    * is added to the label of optional fields to specify the field is not required.
    */
   requiredFieldsWithAsterisk?: boolean;
+  /**
+   * All the components that are used in the form.
+   */
+  components: AnyComponentSchema[];
 }
 
 const FormSettingsContext = React.createContext<FormSettings>({
   requiredFieldsWithAsterisk: true, // backwards compatible default
+  components: [],
 });
 
 FormSettingsContext.displayName = 'FormSettingsContext';

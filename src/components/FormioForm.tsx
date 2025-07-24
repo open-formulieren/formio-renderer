@@ -119,7 +119,10 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
 
     return (
-      <FormSettingsProvider requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}>
+      <FormSettingsProvider
+        requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
+        components={components}
+      >
         <Formik<JSONObject>
           initialValues={values}
           initialErrors={errors as FormikErrors<JSONObject>}

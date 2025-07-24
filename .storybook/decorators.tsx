@@ -58,9 +58,10 @@ export const withFormik: Decorator = (Story, context) => {
   );
 };
 
-export const withRenderSettingsProvider: Decorator = (Story, {parameters}) => (
+export const withFormSettingsProvider: Decorator = (Story, {parameters}) => (
   <FormSettingsProvider
-    requiredFieldsWithAsterisk={parameters?.renderSettings?.requiredFieldsWithAsterisk ?? true}
+    requiredFieldsWithAsterisk={parameters?.formSettings?.requiredFieldsWithAsterisk ?? true}
+    components={parameters?.formSettings?.components ?? []}
   >
     <Story />
   </FormSettingsProvider>

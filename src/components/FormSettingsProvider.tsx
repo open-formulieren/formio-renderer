@@ -1,3 +1,5 @@
+import type {AnyComponentSchema} from '@open-formulieren/types';
+
 import {FormSettingsContext} from '@/context';
 
 export interface FormSettingsProviderProps {
@@ -6,14 +8,16 @@ export interface FormSettingsProviderProps {
    * is added to the label of optional fields to specify the field is not required.
    */
   requiredFieldsWithAsterisk?: boolean;
+  components: AnyComponentSchema[];
   children?: React.ReactNode;
 }
 
 const FormSettingsProvider: React.FC<FormSettingsProviderProps> = ({
   requiredFieldsWithAsterisk,
+  components,
   children,
 }) => (
-  <FormSettingsContext.Provider value={{requiredFieldsWithAsterisk}}>
+  <FormSettingsContext.Provider value={{requiredFieldsWithAsterisk, components}}>
     {children}
   </FormSettingsContext.Provider>
 );
