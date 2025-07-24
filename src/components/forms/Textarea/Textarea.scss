@@ -8,9 +8,9 @@
 .utrecht-textarea {
   @include bem.modifier('openforms') {
     font-weight: var(--of-input-font-weight, normal);
+  }
 
-    &-no-resize {
-      resize: none;
-    }
+  @include bem.modifier('openforms-no-resize') {
+    resize: none;
   }
 }

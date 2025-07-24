@@ -3,6 +3,7 @@ import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-lib
 import clsx from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId, useLayoutEffect, useRef} from 'react';
+import {FormattedMessage} from 'react-intl';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -50,6 +51,14 @@ export interface TextareaProps {
    * Automatic expanding and shrinking of fields to fit their content.
    */
   autoExpand?: boolean;
+  /**
+   * Displays a countdown of the remaining amount of characters.
+   */
+  showCharCount?: boolean;
+  /**
+   * Needed for `showCharCount` to calculate the remaining amount of characters.
+   */
+  maxLength?: number;
 }
 
 const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
@@ -61,6 +70,8 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   autoExpand = false,
   placeholder,
   tooltip,
+  maxLength,
+  showCharCount = false,
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
@@ -70,6 +81,12 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
+  const displayCharacterCount = showCharCount && value !== undefined;
+  const characterCountId = displayCharacterCount ? `${id}-character-count` : undefined;
+
+  const textareaDescribedBy = [];
+  if (errorMessageId) textareaDescribedBy.push(errorMessageId);
+  if (characterCountId) textareaDescribedBy.push(characterCountId);
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
@@ -115,11 +132,34 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
           id={id}
           disabled={isDisabled}
           invalid={invalid}
-          aria-describedby={errorMessageId}
+          aria-describedby={textareaDescribedBy.length ? textareaDescribedBy.join(' ') : undefined}
           placeholder={placeholder}
           {...extraProps}
         />
       </Paragraph>
+      {displayCharacterCount && (
+        <span id={characterCountId}>
+          {maxLength !== undefined ? (
+            <FormattedMessage
+              description="Textarea character remaining count"
+              defaultMessage="{remainingCharCount, plural,
+                            one {1 character remaining}
+                            other {{remainingCharCount} characters remaining}
+                          }"
+              values={{remainingCharCount: maxLength - value.length}}
+            />
+          ) : (
+            <FormattedMessage
+              description="Textarea character count"
+              defaultMessage="{charCount, plural,
+                            one {1 character}
+                            other {{charCount} characters}
+                          }"
+              values={{charCount: value.length}}
+            />
+          )}
+        </span>
+      )}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>

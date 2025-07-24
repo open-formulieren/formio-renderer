@@ -187,3 +187,97 @@ export const AutoExpand: Story = {
     expect(parseFloat(getComputedStyle(input).height)).toBe(initialHeight);
   },
 };
+
+export const showCharCountWithoutLimit: Story = {
+  name: 'Show character count without a character limit',
+  args: {
+    name: 'ShowCharCount',
+    label: 'Show char count',
+    showCharCount: true,
+    maxLength: undefined,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        ShowCharCount: '',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Show char count');
+
+    await userEvent.type(input, 'I am an example text.');
+
+    // Expect the 'X characters' text to be shown, with the right amount of used
+    // characters.
+    const charactersUsedMessage = await canvas.findByText('21 characters');
+    expect(charactersUsedMessage).toBeVisible();
+
+    // Expect that the character count is also accessible by screen-readers.
+    expect(input).toHaveAccessibleDescription('21 characters');
+  },
+};
+
+export const showCharCountWithLimit: Story = {
+  name: 'Show character count with a character limit',
+  args: {
+    name: 'ShowCharCount',
+    label: 'Show char count',
+    showCharCount: true,
+    maxLength: 50,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        ShowCharCount: '',
+      },
+      zodSchema: z.object({
+        ShowCharCount: z.string().max(50),
+      }),
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Show char count');
+
+    // The character limit should not be set to the html component.
+    // Conform the current setup, we limit the amount of characters via custom validation
+    expect(input).not.toHaveAttribute('maxlength', '50');
+
+    await step('Character count is shown after typing content', async () => {
+      await userEvent.type(input, 'I am an example text.');
+
+      // Expect the 'characters remaining' text to be shown, with the right amount of
+      // remaining characters.
+      expect(await canvas.findByText('29 characters remaining')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('29 characters remaining');
+    });
+
+    await step('Character count for 1 character remaining', async () => {
+      // Show the correct message when 1 character left.
+      await userEvent.type(input, " I'm standing on the edge...");
+
+      expect(await canvas.findByText('1 character remaining')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('1 character remaining');
+    });
+
+    await step('Character count for 0 characters remaining', async () => {
+      await userEvent.type(input, ' ');
+
+      expect(await canvas.findByText('0 characters remaining')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('0 characters remaining');
+    });
+
+    await step('Character count beyond characters limit', async () => {
+      await userEvent.type(input, 'And I can go beyond it!');
+
+      expect(await canvas.findByText('-23 characters remaining')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('-23 characters remaining');
+
+      // Trigger the zog validation
+      await userEvent.tab();
+      expect(await canvas.findByText('String must contain at most 50 character(s)')).toBeVisible();
+    });
+  },
+};
