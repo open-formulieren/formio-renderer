@@ -2,7 +2,7 @@ import {FormLabel} from '@utrecht/component-library-react';
 import clsx from 'clsx';
 import {FormattedMessage} from 'react-intl';
 
-import {useRendererSettings} from '@/hooks';
+import {useFormSettings} from '@/hooks';
 
 import './Label.scss';
 
@@ -21,7 +21,7 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   type,
   children,
 }) => {
-  const {requiredFieldsWithAsterisk} = useRendererSettings();
+  const {requiredFieldsWithAsterisk} = useFormSettings();
 
   const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk;
 

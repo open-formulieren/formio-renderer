@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 import {CSSProperties} from 'react';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
-import RendererSettingsProvider from '../src/components/RendererSettingsProvider';
+import FormSettingsProvider from '@/components/FormSettingsProvider';
 
 /**
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
@@ -58,10 +58,11 @@ export const withFormik: Decorator = (Story, context) => {
   );
 };
 
-export const withRenderSettingsProvider: Decorator = (Story, {parameters}) => (
-  <RendererSettingsProvider
-    requiredFieldsWithAsterisk={parameters?.renderSettings?.requiredFieldsWithAsterisk ?? true}
+export const withFormSettingsProvider: Decorator = (Story, {parameters}) => (
+  <FormSettingsProvider
+    requiredFieldsWithAsterisk={parameters?.formSettings?.requiredFieldsWithAsterisk ?? true}
+    components={parameters?.formSettings?.components ?? []}
   >
     <Story />
-  </RendererSettingsProvider>
+  </FormSettingsProvider>
 );

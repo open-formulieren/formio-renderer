@@ -1,5 +1,5 @@
 import {useContext} from 'react';
 
-import {RendererSettingsContext} from './context';
+import {FormSettingsContext} from './context';
 
-export const useRendererSettings = () => useContext(RendererSettingsContext);
+export const useFormSettings = () => useContext(FormSettingsContext);

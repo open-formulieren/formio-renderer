@@ -2,7 +2,7 @@ import {Meta, StoryObj} from '@storybook/react';
 import {expect, userEvent, within} from '@storybook/test';
 import {z} from 'zod';
 
-import {withFormik, withRenderSettingsProvider} from '@/sb-decorators';
+import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import TextField from './TextField';
 
@@ -99,9 +99,9 @@ export const WithValidationErrorAndTooltip: Story = {
 
 export const NoAsterisks: Story = {
   name: 'No asterisk for required',
-  decorators: [withRenderSettingsProvider],
+  decorators: [withFormSettingsProvider],
   parameters: {
-    renderSettings: {
+    formSettings: {
       requiredFieldsWithAsterisk: false,
     },
   },
