@@ -17,6 +17,36 @@
       "value": "Opslaan"
     }
   ],
+  "1TAtDi": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "1 character remaining"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
+              "type": 0,
+              "value": " characters remaining"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "remainingCharCount"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -205,6 +235,36 @@
     {
       "type": 0,
       "value": "jjjj"
+    }
+  ],
+  "qTqAIS": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "1 character"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
+              "type": 0,
+              "value": " characters"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "charCount"
     }
   ],
   "sGwqUb": [
