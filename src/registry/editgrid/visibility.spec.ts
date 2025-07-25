@@ -81,6 +81,7 @@ test('Hiding nested component clears its data', () => {
     parentHidden: false,
     initialValues: initialValues,
     getRegistryEntry,
+    componentsMap: {},
   });
 
   expect(updatedValues).toEqual({
@@ -150,6 +151,7 @@ test('Nested components gets default value when it becomes visible', () => {
     parentHidden: false,
     initialValues: initialValues,
     getRegistryEntry,
+    componentsMap: {},
   });
 
   expect(updatedValues).toEqual({
