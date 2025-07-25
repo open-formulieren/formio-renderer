@@ -9,7 +9,6 @@ import {getIn} from 'formik';
 
 import {JSONObject} from './types';
 
-
 export const getConditional = (
   component: AnyComponentSchema
 ): Required<OFConditionalOptions> | null => {

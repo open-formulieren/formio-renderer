@@ -1,3 +1,9 @@
+import type {
+  CheckboxComponentSchema,
+  ContentComponentSchema,
+  SelectboxesComponentSchema,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 
 import {ReferenceMeta, storyFactory} from './utils';
@@ -85,6 +91,120 @@ const {custom: ConditionallyHidden, reference: ConditionallyHiddenReference} = s
 });
 
 export {ConditionallyHidden, ConditionallyHiddenReference};
+
+const {
+  custom: ConditionallyHiddenWithOddComponents,
+  reference: ConditionallyHiddenWithOddComponentsReference,
+} = storyFactory({
+  args: {
+    components: [
+      // selectboxes has an odd data shape
+      {
+        type: 'selectboxes',
+        id: 'selectboxes',
+        key: 'selectboxes',
+        label: 'Select boxes',
+        openForms: {translations: {}, dataSrc: 'manual'},
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        defaultValue: {a: false, b: false},
+      } satisfies SelectboxesComponentSchema,
+      {
+        type: 'content',
+        id: 'content1',
+        key: 'content1',
+        html: '<p>B is unchecked</p>',
+        conditional: {
+          show: false,
+          when: 'selectboxes',
+          eq: 'b',
+        },
+      } satisfies ContentComponentSchema,
+      // a component with multiple has an array type value instead of its intrinsic type
+      {
+        type: 'textfield',
+        key: 'textMultiple',
+        id: 'textMultiple',
+        label: 'Textfield multiple',
+        multiple: true,
+      } satisfies TextFieldComponentSchema,
+      {
+        type: 'content',
+        id: 'content2',
+        key: 'content2',
+        html: `<p>'item 1' not in textfield values</p>`,
+        conditional: {
+          show: false,
+          when: 'textMultiple',
+          eq: 'item 1',
+        },
+      } satisfies ContentComponentSchema,
+      // checkbox, which uses booleans
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: 'Check to hide content',
+        defaultValue: false,
+      } satisfies CheckboxComponentSchema,
+      {
+        type: 'content',
+        id: 'content3',
+        key: 'content3',
+        html: `<p>Checkbox unchecked</p>`,
+        conditional: {
+          show: false,
+          when: 'checkbox',
+          eq: true,
+        },
+      } satisfies ContentComponentSchema,
+      // TODO: number/currency component type, but those aren't implemented yet
+    ],
+    submissionData: {
+      selectboxes: {a: false, b: true},
+      textMultiple: ['item 1', 'item 2'],
+      checkbox: true,
+    },
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('selectboxes', async () => {
+      const bCheckbox = await canvas.findByLabelText('B');
+      expect(bCheckbox).toBeChecked();
+      expect(canvas.queryByText('B is unchecked')).not.toBeInTheDocument();
+
+      // change value and check that the conditional kicks in
+      await userEvent.click(bCheckbox);
+      expect(bCheckbox).not.toBeChecked();
+      expect(await canvas.findByText('B is unchecked')).toBeVisible();
+    });
+
+    await step('textfield multiple=true', async () => {
+      // Formio has multiple elements with the same ID, so we can't reliably look up
+      // the textboxes
+      // TODO - implement multiple display in the renderer :-) it now looks silly in our
+      // own components
+      expect(canvas.queryByText(`'item 1' not in textfield values`)).not.toBeInTheDocument();
+    });
+
+    await step('checkbox', async () => {
+      const checkbox = await canvas.findByLabelText('Check to hide content');
+      expect(checkbox).toBeChecked();
+      expect(canvas.queryByText('Checkbox unchecked')).not.toBeInTheDocument();
+
+      // change value and check that the conditional kicks in
+      await userEvent.click(checkbox);
+      expect(checkbox).not.toBeChecked();
+      expect(await canvas.findByText('Checkbox unchecked')).toBeVisible();
+    });
+  },
+});
+
+export {ConditionallyHiddenWithOddComponents, ConditionallyHiddenWithOddComponentsReference};
 
 const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
   args: {
