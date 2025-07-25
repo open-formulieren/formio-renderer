@@ -63,7 +63,7 @@ export const processVisibility = (
   context: VisibilityContext
 ): ProcessVisibilityResult => {
   const visibleComponents: AnyComponentSchema[] = [];
-  const {parentHidden, initialValues, getRegistryEntry} = context;
+  const {parentHidden, initialValues, getRegistryEntry, componentsMap} = context;
 
   // `updatedValues` may potentially be updated/mutated after each component is
   // processed. If there are no side-effects applied, then it will keep the same
@@ -79,7 +79,9 @@ export const processVisibility = (
     // check if the component is hidden, either because the parent is hidden or the
     // component itself is.
     const evaluationScope = context.getEvaluationScope?.(updatedValues) ?? updatedValues;
-    const hidden = parentHidden || isHidden(componentDefinition, evaluationScope);
+    const hidden =
+      parentHidden ||
+      isHidden(componentDefinition, evaluationScope, getRegistryEntry, componentsMap);
     const clearOnHide = getClearOnHide(componentDefinition);
 
     // apply the hidden/visibility state. `updatedValues` is updated directly inside the

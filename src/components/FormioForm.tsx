@@ -4,7 +4,7 @@ import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
-import {hasAnyConditionalLogicCycle} from '@/formio';
+import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
@@ -175,6 +175,8 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       [setValues, errors, setErrors]
     );
 
+    const componentsMap = useMemo(() => getComponentsMap(components), [components]);
+
     // Compute the visible components and associated updated values (via clearOnHide)
     // every time either the form configuration (components) is modified or when the form
     // values change. Note that the form values also change as a reaction to processed
@@ -186,6 +188,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         parentHidden: false,
         initialValues,
         getRegistryEntry,
+        componentsMap,
       });
       return {visibleComponents, updatedValues};
     }, [components, initialValues, values]);

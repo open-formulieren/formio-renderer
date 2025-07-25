@@ -7,7 +7,9 @@
 import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
 import {getIn} from 'formik';
 
-import {JSONObject} from './types';
+import type {GetRegistryEntry, TestConditional} from '@/registry/types';
+
+import type {JSONObject, JSONValue} from './types';
 
 export const getConditional = (
   component: AnyComponentSchema
@@ -23,6 +25,42 @@ export const getConditional = (
 };
 
 /**
+ * Evaluate the condition expressed in component.conditional.
+ *
+ * Note that this is a more strict version of what Formio.js itself imlements. They
+ * essentially just take `String(compareValue) === String(valueToTest)` and have
+ * specialized edge cases for arrays (with an `.includes` check) and objects - which
+ * are _assumed_ to come from selectboxes.
+ */
+const defaultTestConditional: TestConditional<AnyComponentSchema | undefined> = (
+  /**
+   * The component definition referenced by `conditional.when`. Could be undefined for
+   * broken configurations.
+   */
+  referenceComponent: AnyComponentSchema | undefined,
+  /**
+   * The reference value specified in `conditional.eq`.
+   */
+  compareValue: Required<OFConditionalOptions>['eq'],
+  /**
+   * The current value of the referenced component to compare against.
+   */
+  valueToTest: JSONValue
+): boolean => {
+  if (referenceComponent === undefined) return valueToTest === compareValue;
+
+  // check for simple containment in a multiple: true component
+  if ('multiple' in referenceComponent && referenceComponent.multiple) {
+    // should not happen
+    if (!Array.isArray(valueToTest)) return false;
+    return valueToTest.includes(compareValue);
+  }
+
+  // default behaviour -> check strict equality
+  return valueToTest === compareValue;
+};
+
+/**
  * Given an evaluation scope of values, determine if a component is visible or hidden.
  *
  * Note that the `evaluationScope` is often equal to the form values of all components,
@@ -30,7 +68,16 @@ export const getConditional = (
  * scoped inside their parent key so that components can have conditional logic based
  * on their siblings components.
  */
-export const isHidden = (component: AnyComponentSchema, evaluationScope: JSONObject): boolean => {
+export const isHidden = (
+  component: AnyComponentSchema,
+  evaluationScope: JSONObject,
+  getRegistryEntry: GetRegistryEntry,
+  /**
+   * A mapping of component key -> component definition so that the value can be
+   * interpreted in the right context.
+   */
+  componentsMap: Partial<Record<string, AnyComponentSchema>>
+): boolean => {
   // dynamic hidden/visible configuration
   const conditional = getConditional(component);
 
@@ -46,16 +93,27 @@ export const isHidden = (component: AnyComponentSchema, evaluationScope: JSONObj
   // result.
   const {show, when, eq} = conditional;
 
-  // TODO: ensure comparison/check works for Array values (e.g. textfield with multiple: true)
-  // TODO: ensure comparison/check works for selectboxes with their weird data format!
-
   // NOTE: Formio defaults to an empty string if the value is null-ish (null | undefined),
   // which makes things work when the value has been cleared by an earlier pass. It's a bit
   // shaky - in particular for `number` components I'd prefer sticking to `null` and making
   // strict comparisons like that, but let's explore that when we've actually shipped this
   // renderer.
-  const compareValue = getIn(evaluationScope, when) ?? '';
-  const conditionSatisfied = eq === compareValue;
+  const compareValue: JSONValue = getIn(evaluationScope, when) ?? '';
+
+  // delegate the comparison to the registry, if it's hooked up. When it's defined, the
+  // registry definition must handle *all* the equality checks, also the array
+  // containment in case the components supports `multiple: true`. If it's not defined,
+  // we run simple containment/equality checks as fallback behaviour.
+  const referenceComponent = componentsMap?.[when];
+  let conditionSatisfied: boolean;
+  if (referenceComponent === undefined) {
+    conditionSatisfied = defaultTestConditional(referenceComponent, eq, compareValue);
+  } else {
+    const testConditional = referenceComponent
+      ? getRegistryEntry(referenceComponent)?.testConditional ?? defaultTestConditional
+      : defaultTestConditional;
+    conditionSatisfied = testConditional(referenceComponent, eq, compareValue);
+  }
 
   // note that we return whether the component is hidden, not whether it is shown, so
   // we must invert in the return value

@@ -6,11 +6,14 @@ import type {
   EditGridComponentSchema,
   EmailComponentSchema,
   FieldsetComponentSchema,
+  SelectboxesComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
 import {describe, expect, test} from 'vitest';
 
-import {getComponentsMap, hasAnyConditionalLogicCycle} from './formio';
+import {getRegistryEntry} from '@/registry';
+
+import {getComponentsMap, hasAnyConditionalLogicCycle, isHidden} from './formio';
 
 test.each([
   // no components at all
@@ -367,5 +370,79 @@ describe('The getComponentsMap utility', () => {
     expect(map).toHaveProperty('my.email');
     expect(map).toHaveProperty('columsnLayout');
     expect(map).toHaveProperty('wysiwyg');
+  });
+});
+
+describe('isHidden utility', () => {
+  test('Component hidden with value from selectboxes', () => {
+    const component: TextFieldComponentSchema = {
+      type: 'textfield',
+      id: 'textfield',
+      key: 'textfield',
+      label: 'Text field',
+      conditional: {
+        show: false,
+        when: 'selectboxes',
+        eq: 'a',
+      },
+    };
+    const referenceComponent: SelectboxesComponentSchema = {
+      type: 'selectboxes',
+      id: 'selectboxes',
+      key: 'selectboxes',
+      label: 'Select boxes',
+      openForms: {dataSrc: 'manual', translations: {}},
+      values: [
+        {value: 'a', label: 'A'},
+        {value: 'b', label: 'B'},
+      ],
+      defaultValue: {a: false, b: false},
+    };
+    const componentsMap = {[referenceComponent.key]: referenceComponent};
+
+    const result = isHidden(
+      component,
+      {
+        selectboxes: {
+          a: true,
+          b: false,
+        },
+      },
+      getRegistryEntry,
+      componentsMap
+    );
+
+    expect(result).toBe(true);
+  });
+
+  test('Component hidden with value present in array of trigger values', () => {
+    const component: TextFieldComponentSchema = {
+      type: 'textfield',
+      id: 'textfield',
+      key: 'textfield',
+      label: 'Text field',
+      conditional: {
+        show: false,
+        when: 'textfieldMultiple',
+        eq: 'foo',
+      },
+    };
+    const referenceComponent: TextFieldComponentSchema = {
+      type: 'textfield',
+      id: 'textfieldMultiple',
+      key: 'textfieldMultiple',
+      label: 'Textfield multiple',
+      multiple: true,
+    };
+    const componentsMap = {[referenceComponent.key]: referenceComponent};
+
+    const result = isHidden(
+      component,
+      {textfieldMultiple: ['foo', 'bar']},
+      getRegistryEntry,
+      componentsMap
+    );
+
+    expect(result).toBe(true);
   });
 });
