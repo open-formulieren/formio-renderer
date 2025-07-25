@@ -2,6 +2,7 @@ import type {
   AnyComponentSchema,
   BsnComponentSchema,
   ColumnsComponentSchema,
+  ContentComponentSchema,
   EditGridComponentSchema,
   EmailComponentSchema,
   FieldsetComponentSchema,
@@ -9,7 +10,7 @@ import type {
 } from '@open-formulieren/types';
 import {describe, expect, test} from 'vitest';
 
-import {hasAnyConditionalLogicCycle} from './formio';
+import {getComponentsMap, hasAnyConditionalLogicCycle} from './formio';
 
 test.each([
   // no components at all
@@ -310,5 +311,61 @@ describe('editgrid cycle detection', () => {
     const result = hasAnyConditionalLogicCycle([component]);
 
     expect(result).toBe(true);
+  });
+});
+
+describe('The getComponentsMap utility', () => {
+  test('can handle complex nested configurations', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'textfield',
+        key: 'my.textfield',
+        id: 'text1',
+        label: 'A text field',
+      } satisfies TextFieldComponentSchema,
+      {
+        type: 'fieldset',
+        key: 'container',
+        id: 'fieldset1',
+        label: 'A fieldset',
+        hideHeader: false,
+        components: [
+          {
+            type: 'email',
+            key: 'my.email',
+            id: 'email1',
+            label: 'An email field',
+            validateOn: 'blur',
+          } satisfies EmailComponentSchema,
+          {
+            type: 'columns',
+            key: 'columsnLayout',
+            id: 'columns1',
+            columns: [
+              {
+                size: 12,
+                sizeMobile: 4,
+                components: [
+                  {
+                    type: 'content',
+                    key: 'wysiwyg',
+                    id: 'content1',
+                    html: '<p>Henlo</p>',
+                  } satisfies ContentComponentSchema,
+                ],
+              },
+            ],
+          } satisfies ColumnsComponentSchema,
+        ],
+      } satisfies FieldsetComponentSchema,
+    ];
+
+    const map = getComponentsMap(components);
+
+    expect(map).toHaveProperty('my.textfield');
+    expect(map).toHaveProperty('container');
+    expect(map).toHaveProperty('my.email');
+    expect(map).toHaveProperty('columsnLayout');
+    expect(map).toHaveProperty('wysiwyg');
   });
 });

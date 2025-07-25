@@ -76,26 +76,57 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   return true;
 };
 
+/**
+ * Recursively (and depth-first) iterate over all components in the component definition.
+ */
+function* iterComponents(components: AnyComponentSchema[]): Generator<AnyComponentSchema> {
+  for (const component of components) {
+    yield component;
+
+    switch (component.type) {
+      case 'fieldset': {
+        yield* iterComponents(component.components);
+        break;
+      }
+      case 'columns': {
+        for (const column of component.columns) {
+          yield* iterComponents(column.components);
+        }
+        break;
+      }
+      case 'editgrid': {
+        // components inside edit grids are *not* real components and should not be
+        // added to the map
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Given a tree of component definitions, transform it into a mapping of component key
+ * to the component configuration. Useful to look up component key references and
+ * introspect the matching component type/configuration.
+ */
+export const getComponentsMap = (
+  components: AnyComponentSchema[]
+): Record<string, AnyComponentSchema> => {
+  const map: Record<string, AnyComponentSchema> = {};
+  for (const component of iterComponents(components)) {
+    map[component.key] = component;
+  }
+  return map;
+};
+
 function* iterDependencies(components: AnyComponentSchema[]): Generator<[string, string]> {
   // build a map of dependencies
-  for (const component of components) {
+  for (const component of iterComponents(components)) {
     const conditional = getConditional(component);
     if (conditional !== null) {
       yield [component.key, conditional.when];
     }
 
     switch (component.type) {
-      case 'fieldset': {
-        yield* iterDependencies(component.components);
-        break;
-      }
-      case 'columns': {
-        for (const column of component.columns) {
-          yield* iterDependencies(column.components);
-        }
-        break;
-      }
-
       case 'editgrid': {
         // edit grid items run in their own scope with access to the outer scope, but
         // the outer scope doens't have access to the items, so we only need to check
