@@ -5,6 +5,12 @@
       "value": "Verwijderen"
     }
   ],
+  "+zrboi": [
+    {
+      "type": 0,
+      "value": "Invalid IBAN"
+    }
+  ],
   "0EdUXi": [
     {
       "type": 0,
@@ -59,10 +65,60 @@
       "value": "index"
     }
   ],
+  "Bo6onH": [
+    {
+      "type": 0,
+      "value": "You must select at least "
+    },
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "style": null,
+              "type": 2,
+              "value": "minSelectedCount"
+            },
+            {
+              "type": 0,
+              "value": " item"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "style": null,
+              "type": 2,
+              "value": "minSelectedCount"
+            },
+            {
+              "type": 0,
+              "value": " items"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "minSelectedCount"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
       "value": "d"
+    }
+  ],
+  "FfBWqF": [
+    {
+      "type": 0,
+      "value": "Show tooltip"
     }
   ],
   "MJXZYI": [
@@ -71,10 +127,66 @@
       "value": "m"
     }
   ],
+  "RJ+0F/": [
+    {
+      "type": 0,
+      "value": "Yes"
+    }
+  ],
   "RSPyzt": [
     {
       "type": 0,
       "value": "Maand"
+    }
+  ],
+  "TZb5ph": [
+    {
+      "type": 0,
+      "value": "You can only select up to "
+    },
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "style": null,
+              "type": 2,
+              "value": "maxSelectedCount"
+            },
+            {
+              "type": 0,
+              "value": " item"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "style": null,
+              "type": 2,
+              "value": "maxSelectedCount"
+            },
+            {
+              "type": 0,
+              "value": " items"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "maxSelectedCount"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "abKEBH": [
+    {
+      "type": 0,
+      "value": "No"
     }
   ],
   "cKFCTI": [
@@ -117,6 +229,12 @@
     {
       "type": 0,
       "value": "Jaar"
+    }
+  ],
+  "z+/GrY": [
+    {
+      "type": 0,
+      "value": "Invalid Dutch license plate"
     }
   ]
 }

@@ -4,6 +4,11 @@
     "description": "Edit grid item default remove button label",
     "originalDefault": "Remove"
   },
+  "+zrboi": {
+    "defaultMessage": "Invalid IBAN",
+    "description": "Validation error for IBAN that does not pass the mod-97 test.",
+    "originalDefault": "Invalid IBAN"
+  },
   "0EdUXi": {
     "defaultMessage": "Save",
     "description": "Edit grid item default save button label",
@@ -24,20 +29,45 @@
     "description": "Accessible edit icon/button label for item inside edit grid",
     "originalDefault": "Edit item {index}"
   },
+  "Bo6onH": {
+    "defaultMessage": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }.",
+    "description": "Selectboxes minimum selected count error message",
+    "originalDefault": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }."
+  },
   "DBTNgI": {
     "defaultMessage": "d",
     "description": "Placeholder for day part of a date",
     "originalDefault": "d"
+  },
+  "FfBWqF": {
+    "defaultMessage": "Show tooltip",
+    "description": "Tooltip icon label",
+    "originalDefault": "Show tooltip"
   },
   "MJXZYI": {
     "defaultMessage": "m",
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
+  "RJ+0F/": {
+    "defaultMessage": "Yes",
+    "description": "'True' display",
+    "originalDefault": "Yes"
+  },
   "RSPyzt": {
     "defaultMessage": "Month",
     "description": "Date input group: month label",
     "originalDefault": "Month"
+  },
+  "TZb5ph": {
+    "defaultMessage": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }.",
+    "description": "Selectboxes maximum selected count error message",
+    "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
+  },
+  "abKEBH": {
+    "defaultMessage": "No",
+    "description": "'False' display",
+    "originalDefault": "No"
   },
   "cKFCTI": {
     "defaultMessage": "Add another",
@@ -73,5 +103,10 @@
     "defaultMessage": "Year",
     "description": "Date input group: year label",
     "originalDefault": "Year"
+  },
+  "z+/GrY": {
+    "defaultMessage": "Invalid Dutch license plate",
+    "description": "Validation error for license plate.",
+    "originalDefault": "Invalid Dutch license plate"
   }
 }
