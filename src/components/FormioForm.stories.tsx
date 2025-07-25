@@ -449,3 +449,90 @@ export const ThrowsWhenCyclesDetected: Story = {
     expect(await canvas.findByText('Intentional error boundary.')).toBeVisible();
   },
 };
+
+export const EditGridPreviewWithOddConditionals: Story = {
+  args: {
+    components: [
+      {
+        type: 'selectboxes',
+        id: 'selectboxes',
+        key: 'selectboxes',
+        label: 'Select boxes',
+        values: [{value: 'a', label: 'A'}],
+        defaultValue: {a: false},
+        openForms: {translations: {}, dataSrc: 'manual'},
+      },
+      {
+        id: 'outer',
+        type: 'editgrid',
+        key: 'outer',
+        label: 'Outer',
+        groupLabel: 'Outer item',
+        disableAddingRemovingRows: false,
+        components: [
+          {
+            id: 'inner',
+            type: 'editgrid',
+            key: 'inner',
+            label: 'inner',
+            groupLabel: 'Inner item',
+            disableAddingRemovingRows: false,
+            components: [
+              {
+                type: 'checkbox',
+                key: 'checkbox',
+                id: 'checkbox',
+                label: 'Checkbox',
+                defaultValue: false,
+              },
+              {
+                type: 'textfield',
+                id: 'content1',
+                key: 'content1',
+                label: 'Not displayed 1',
+                conditional: {
+                  show: false,
+                  when: 'selectboxes',
+                  eq: 'a',
+                },
+              },
+              {
+                type: 'textfield',
+                id: 'content2',
+                key: 'content2',
+                label: 'Not displayed 2',
+                conditional: {
+                  show: false,
+                  when: 'outer.inner.checkbox',
+                  eq: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    // setting to false and then changing it in the UI seemed to lead to an infinite
+    // loop -> need to investigate!
+    values: {
+      selectboxes: {a: true},
+      outer: [
+        {
+          inner: [
+            {
+              checkbox: true,
+              content1: 'Hide me',
+              content2: 'Hide me',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.queryByText('Not displayed 1')).not.toBeInTheDocument();
+    expect(canvas.queryByText('Not displayed 2')).not.toBeInTheDocument();
+  },
+};
