@@ -1,4 +1,9 @@
 {
+  "+/hjpS": {
+    "defaultMessage": "The value must be {max} or less.",
+    "description": "Validation error for number greater than maximum value.",
+    "originalDefault": "The value must be {max} or less."
+  },
   "+xOWBM": {
     "defaultMessage": "Remove",
     "description": "Edit grid item default remove button label",
@@ -108,6 +113,11 @@
     "defaultMessage": "Day",
     "description": "Date input group: day label",
     "originalDefault": "Day"
+  },
+  "xHVrv5": {
+    "defaultMessage": "The value must be {min} or greater.",
+    "description": "Validation error for number less than minimum value.",
+    "originalDefault": "The value must be {min} or greater."
   },
   "yKo62N": {
     "defaultMessage": "Year",
