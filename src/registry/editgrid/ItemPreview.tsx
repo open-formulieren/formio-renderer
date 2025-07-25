@@ -8,7 +8,9 @@ import {
   OrderedListItem,
 } from '@utrecht/component-library-react';
 import {getIn, setIn} from 'formik';
+import {useMemo} from 'react';
 
+import {getComponentsMap} from '@/formio';
 import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {processVisibility} from '@/visibility';
@@ -19,6 +21,7 @@ export interface ItemPreviewProps {
   components: AnyComponentSchema[];
   keyPrefix: string;
   values: JSONObject;
+  componentsMap: Record<string, AnyComponentSchema>;
   getRegistryEntry: GetRegistryEntry;
 }
 
@@ -33,8 +36,19 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   components,
   keyPrefix,
   values,
+  componentsMap: parentComponentsMap,
   getRegistryEntry,
 }) => {
+  const componentsMap = useMemo(() => {
+    const localComponentsMap: Record<string, AnyComponentSchema> = Object.fromEntries(
+      Object.entries(getComponentsMap(components)).map(([key, component]) => [
+        `${keyPrefix}.${key}`,
+        component,
+      ])
+    );
+    return {...parentComponentsMap, ...localComponentsMap};
+  }, [parentComponentsMap, components]);
+
   // The `ItemBody` component takes care of (recursively) processing the value changes
   // from clearOnHide side-effects. In the preview, we only need to worry about whether
   // a component is visible or not.
@@ -42,6 +56,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
     parentHidden: false,
     initialValues: {}, // actual value is not relevant here, it's handled in `ItemBody`
     getRegistryEntry,
+    componentsMap,
   });
   return (
     <DataList appearance="rows">
@@ -52,6 +67,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
           keyPrefix={keyPrefix}
           values={values}
           getRegistryEntry={getRegistryEntry}
+          componentsMap={componentsMap}
         />
       ))}
     </DataList>
@@ -62,6 +78,7 @@ interface ComponentDataListItemProps {
   component: AnyComponentSchema;
   keyPrefix: string;
   values: JSONObject;
+  componentsMap: Record<string, AnyComponentSchema>;
   getRegistryEntry: GetRegistryEntry;
 }
 
@@ -79,6 +96,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
   component,
   keyPrefix,
   values,
+  componentsMap,
   getRegistryEntry,
 }) => {
   // handle 'layout' components separately so we can recurse into the tree and skip over them,
@@ -101,6 +119,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
               keyPrefix={keyPrefix}
               values={values}
               getRegistryEntry={getRegistryEntry}
+              componentsMap={componentsMap}
             />
           ))}
         </>
@@ -120,6 +139,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
               keyPrefix={keyPrefix}
               values={values}
               getRegistryEntry={getRegistryEntry}
+              componentsMap={componentsMap}
             />
           ))}
         </>
@@ -140,6 +160,7 @@ const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
                     // scope the values again so that conditional logic can work
                     values={setIn(values, `${keyPrefix}.${component.key}`, item)}
                     getRegistryEntry={getRegistryEntry}
+                    componentsMap={componentsMap}
                   />
                 </OrderedListItem>
               ))}
