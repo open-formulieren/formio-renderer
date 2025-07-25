@@ -10,6 +10,7 @@ import Email from './email';
 import Fieldset from './fieldset';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
+import Number from './number';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
@@ -31,6 +32,7 @@ const REGISTRY: Registry = {
   date: DateField,
   phoneNumber: PhoneNumber,
   textarea: Textarea,
+  number: Number,
   checkbox: Checkbox,
   selectboxes: Selectboxes,
   radio: RadioField,
