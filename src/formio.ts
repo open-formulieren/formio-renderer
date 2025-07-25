@@ -4,16 +4,15 @@
  * These are helpers around Formio.js concepts which we implement ourselves rather than
  * depending on formio.js or @formio/js packages.
  */
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
 import {getIn} from 'formik';
-import {ConditionalOptions} from 'formiojs';
 
 import {JSONObject} from './types';
 
-// we don't support the 'json' configuration.
-export type Conditional = Required<Pick<ConditionalOptions, 'show' | 'when' | 'eq'>>;
 
-export const getConditional = (component: AnyComponentSchema): Conditional | null => {
+export const getConditional = (
+  component: AnyComponentSchema
+): Required<OFConditionalOptions> | null => {
   // component must support the construct in the first place
   if (!('conditional' in component)) return null;
   // undefined or null -> nothing to extract
