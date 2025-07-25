@@ -50,7 +50,7 @@
     "@formatjs/cli": "^6.5.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@open-formulieren/design-tokens": "^0.60.1",
-    "@open-formulieren/types": "^0.38.0",
+    "@open-formulieren/types": "^0.45.0",
     "@storybook/addon-docs": "^9.0.18",
     "@storybook/addon-links": "^9.0.18",
     "@storybook/react-vite": "^9.0.18",
