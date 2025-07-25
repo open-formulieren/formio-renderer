@@ -101,7 +101,7 @@ export const NoAsterisks: Story = {
   name: 'No asterisk for required',
   decorators: [withFormSettingsProvider],
   parameters: {
-    renderSettings: {
+    formSettings: {
       requiredFieldsWithAsterisk: false,
     },
   },
