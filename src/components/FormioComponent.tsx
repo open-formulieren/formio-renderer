@@ -23,7 +23,7 @@ const FormioComponent: React.FC<FormioComponentProps> = ({componentDefinition}) 
   if (entry === undefined) {
     return (
       <div>
-        Unkonwn component type <code>{componentDefinition.type}</code>
+        Unknown component type <code>{componentDefinition.type}</code>
       </div>
     );
   }

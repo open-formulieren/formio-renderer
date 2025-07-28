@@ -13,6 +13,7 @@ import LicensePlate from './licenseplate';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
+import Textarea from './textarea';
 import TextField from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
@@ -29,6 +30,7 @@ const REGISTRY: Registry = {
   email: Email,
   date: DateField,
   phoneNumber: PhoneNumber,
+  textarea: Textarea,
   checkbox: Checkbox,
   selectboxes: Selectboxes,
   radio: RadioField,

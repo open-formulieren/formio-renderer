@@ -14,6 +14,11 @@
     "description": "Edit grid item default save button label",
     "originalDefault": "Save"
   },
+  "1TAtDi": {
+    "defaultMessage": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }",
+    "description": "Textarea character remaining count",
+    "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
+  },
   "3C29X9": {
     "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }",
     "description": "Form field label content/wrapper",
@@ -83,6 +88,11 @@
     "defaultMessage": "yyyy",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
+  },
+  "qTqAIS": {
+    "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
+    "description": "Textarea character count",
+    "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
