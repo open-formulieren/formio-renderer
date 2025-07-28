@@ -136,6 +136,18 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
 
 /**
  * Recursively (and depth-first) iterate over all components in the component definition.
+ *
+ * The components returned here are how they are seen from the root down to the leaf
+ * nodes, and matches how we handle values. This has some implications for compnents that
+ * have nested component definitions inside them - we must treat those appropriately:
+ *
+ * - layout components (like fieldsets and columns) have real, addressable child
+ *   components. The layout component itself does not contribute to the value at all,
+ *   they are purely presentational.
+ * - data components (like editgrid) contain a blueprint for each item, where items are
+ *   independent from each other. From the root you can only get the value of the
+ *   editgrid (an array of objects all with identical shape) itself, you cannot obtain
+ *   the value of a particular nested component inside the items.
  */
 function* iterComponents(components: AnyComponentSchema[]): Generator<AnyComponentSchema> {
   for (const component of components) {
@@ -154,7 +166,10 @@ function* iterComponents(components: AnyComponentSchema[]): Generator<AnyCompone
       }
       case 'editgrid': {
         // components inside edit grids are *not* real components and should not be
-        // added to the map
+        // added to the map. Each nested component has its own key, which may be
+        // identical to the key of a component in the outer scope and would cause
+        // key collisions. In Formio, outer scope components cannot refer to inner scope
+        // editgrid components.
         break;
       }
     }

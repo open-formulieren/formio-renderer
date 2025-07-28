@@ -371,6 +371,66 @@ describe('The getComponentsMap utility', () => {
     expect(map).toHaveProperty('columsnLayout');
     expect(map).toHaveProperty('wysiwyg');
   });
+
+  test('does not recurse into editgrid components', () => {
+    const component: EditGridComponentSchema = {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: 'Edit grid',
+      groupLabel: 'Item',
+      disableAddingRemovingRows: true,
+      components: [
+        {
+          type: 'textfield',
+          key: 'nested',
+          id: 'nested',
+          label: 'Nested field',
+        },
+      ],
+    };
+
+    const map = getComponentsMap([component]);
+
+    expect(map).toHaveProperty('editgrid');
+    expect(map).not.toHaveProperty('nested');
+    // virtual paths that are referred to via `component.conditional.when` are *not*
+    // handled at this level, the registry/editgrid code is responsible for prefixing.
+    expect(map).not.toHaveProperty('editgrid.nested');
+  });
+
+  test('editrid nested component keys do not shadow outer scope', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'content',
+        key: 'sibling',
+        id: 'content1',
+        html: '<p>I am returned</p>',
+      } satisfies ContentComponentSchema,
+      {
+        type: 'editgrid',
+        id: 'editgrid',
+        key: 'editgrid',
+        label: 'Edit grid',
+        groupLabel: 'Item',
+        disableAddingRemovingRows: true,
+        components: [
+          {
+            type: 'content',
+            key: 'sibling',
+            id: 'content2',
+            html: '<p>I am not returned</p>',
+          } satisfies ContentComponentSchema,
+        ],
+      } satisfies EditGridComponentSchema,
+    ];
+
+    const map = getComponentsMap(components);
+
+    expect(map).toHaveProperty('sibling');
+    expect(map.sibling.id).toBe('content1');
+    expect(map).toHaveProperty('editgrid');
+  });
 });
 
 describe('isHidden utility', () => {
