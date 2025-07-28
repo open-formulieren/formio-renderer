@@ -15,15 +15,15 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
   const initialValues = extractInitialValues(components, context.getRegistryEntry);
 
   // ensure we keep adding to the parent scope in case of nested edit grids
-  const outerEvaluationScope = context?.getEvaluationScope?.(values) ?? values;
+  const outerGetEvaluationScope = context?.getEvaluationScope ?? ((v: JSONObject): JSONObject => v);
 
   let items: JSONObject[] = getIn(values, key) ?? [];
   for (let index: number = 0; index < items.length; index++) {
     const itemValues = items[index];
 
     const getEvaluationScope = (itemValues: JSONObject): JSONObject => {
-      const evaluationScope: JSONObject = setIn(outerEvaluationScope, key, itemValues);
-      return evaluationScope;
+      const innerEvaluationScope: JSONObject = setIn(values, key, itemValues);
+      return outerGetEvaluationScope(innerEvaluationScope);
     };
 
     // we cannot process visibleComponents and omit the hidden ones, as there is no

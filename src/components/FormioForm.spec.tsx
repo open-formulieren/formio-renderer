@@ -1,3 +1,4 @@
+import type {EditGridComponentSchema} from '@open-formulieren/types';
 import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {createRef, forwardRef} from 'react';
@@ -437,6 +438,119 @@ describe('Updating form errors', () => {
     await waitFor(() => {
       const error = screen.queryByText('Error not displayed anywhere');
       expect(error).not.toBeInTheDocument();
+    });
+  });
+});
+
+describe('Regressions', () => {
+  const NESTED_EDITGRIDS: EditGridComponentSchema = {
+    id: 'outer',
+    type: 'editgrid',
+    key: 'outer',
+    label: 'Outer',
+    groupLabel: 'Outer item',
+    disableAddingRemovingRows: true,
+    components: [
+      {
+        id: 'inner',
+        type: 'editgrid',
+        key: 'inner',
+        label: 'inner',
+        groupLabel: 'Inner item',
+        disableAddingRemovingRows: true,
+        components: [
+          {
+            type: 'textfield',
+            key: 'trigger',
+            id: 'trigger',
+            label: 'Checkbox',
+          },
+          {
+            type: 'textfield',
+            id: 'content2',
+            key: 'content2',
+            label: 'Not displayed 2',
+            conditional: {
+              show: false,
+              when: 'outer.inner.trigger',
+              eq: 'hide',
+            },
+          },
+        ],
+      },
+    ],
+  };
+
+  test('Prevent infinite render loop with nested editgrids', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
+      throw new Error(err);
+    });
+    render(
+      <Form
+        components={[NESTED_EDITGRIDS]}
+        values={{
+          outer: [
+            {
+              inner: [
+                {
+                  trigger: 'hide',
+                  content2: 'Hide me',
+                },
+              ],
+            },
+          ],
+        }}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    const editButton = await screen.findByRole('button', {name: 'Edit item 1'});
+
+    let error: Error | undefined = undefined;
+    try {
+      await userEvent.click(editButton);
+    } catch (e) {
+      error = e;
+      // if an error happens (which shouldn't be the case), make sure we're checking
+      // for the right kind of error!
+      expect(error!.message).toMatch(/Maximum update depth exceeded/);
+    }
+
+    expect(consoleErrorSpy.mock.calls).toHaveLength(0);
+    expect(error).toBeUndefined();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  test('Properly clears hidden fields in nested editgrids', async () => {
+    const onSubmit = vi.fn();
+    render(
+      <Form
+        components={[NESTED_EDITGRIDS]}
+        values={{
+          outer: [
+            {
+              inner: [
+                {
+                  trigger: 'hide',
+                  content2: 'Hide me',
+                },
+              ],
+            },
+          ],
+        }}
+        onSubmit={onSubmit}
+      />
+    );
+
+    await userEvent.click(await screen.findByRole('button', {name: 'Submit'}));
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      outer: [
+        {
+          inner: [{trigger: 'hide'}],
+        },
+      ],
     });
   });
 });
