@@ -80,6 +80,57 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithRows: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      rows: 5,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: '',
+        },
+      },
+    },
+  },
+};
+
+export const WithAutoComplete: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      autocomplete: 'firstname',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: '',
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textarea = canvas.getByLabelText('A simple textarea');
+    expect(textarea).toBeVisible();
+    expect(textarea).toHaveAttribute('autocomplete', 'firstname');
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextareaComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

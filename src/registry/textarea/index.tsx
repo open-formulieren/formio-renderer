@@ -12,7 +12,17 @@ export interface FormioTextareaProps {
 }
 
 export const FormioTextarea: React.FC<FormioTextareaProps> = ({
-  componentDefinition: {key, label, description, tooltip, placeholder, validate, showCharCount},
+  componentDefinition: {
+    key,
+    label,
+    description,
+    tooltip,
+    placeholder,
+    validate,
+    showCharCount,
+    autocomplete,
+    rows,
+  },
 }) => {
   return (
     <Textarea
@@ -24,6 +34,8 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({
       placeholder={placeholder}
       showCharCount={showCharCount}
       maxLength={validate?.maxLength}
+      autoComplete={autocomplete}
+      rows={rows}
     />
   );
 };
