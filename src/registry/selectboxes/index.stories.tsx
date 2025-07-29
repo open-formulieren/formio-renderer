@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, userEvent, waitForElementToBeRemoved, within} from '@storybook/test';
+import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, fn, userEvent, waitForElementToBeRemoved, within} from 'storybook/test';
 
 import {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';

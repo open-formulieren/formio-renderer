@@ -1,6 +1,6 @@
-import {Meta, StoryObj} from '@storybook/react';
-import {expect, within} from '@storybook/test';
+import {Meta, StoryObj} from '@storybook/react-vite';
 import {FormLabel, Textbox} from '@utrecht/component-library-react';
+import {expect, within} from 'storybook/test';
 
 import '@/components/forms/TextField/TextField.scss';
 

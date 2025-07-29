@@ -7,17 +7,11 @@ const config: StorybookConfig = {
   },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   staticDirs: ['../public'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    'storybook-react-intl',
-  ],
+  addons: ['@storybook/addon-links', 'storybook-react-intl', '@storybook/addon-docs'],
   framework: {
     name: '@storybook/react-vite',
     options: {},
   },
-  features: {viewportStoryGlobals: true},
   docs: {},
   typescript: {
     reactDocgen: 'react-docgen-typescript',

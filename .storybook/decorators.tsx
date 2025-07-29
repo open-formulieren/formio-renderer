@@ -1,7 +1,7 @@
-import type {Decorator} from '@storybook/react';
-import {fn} from '@storybook/test';
+import type {Decorator} from '@storybook/react-vite';
 import {Form, Formik} from 'formik';
 import {CSSProperties} from 'react';
+import {fn} from 'storybook/test';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
