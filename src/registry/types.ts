@@ -1,4 +1,4 @@
-import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
 import {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
@@ -81,7 +81,30 @@ export interface VisibilityContext {
    * are used.
    */
   getEvaluationScope?: (currentValues: JSONObject) => JSONObject;
+  /**
+   * A mapping of component key -> component definition so that a value can be
+   * interpreted in the right context.
+   */
+  componentsMap: Partial<Record<string, AnyComponentSchema>>;
 }
+
+export type TestConditional<
+  S,
+  V extends Required<OFConditionalOptions>['eq'] = Required<OFConditionalOptions>['eq'],
+> = (
+  /**
+   * The component definition referenced by `conditional.when`.
+   */
+  referenceComponent: S,
+  /**
+   * The reference value specified in `conditional.eq`.
+   */
+  compareValue: V,
+  /**
+   * The current value of the referenced component to compare against.
+   */
+  valueToTest: JSONValue
+) => boolean;
 
 /**
  * Callback to process the visibility state of a component, required for container/layout
@@ -156,6 +179,11 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * Build the validation schema from the component definition.
        */
       getValidationSchema?: GetValidationSchema<S>;
+      /**
+       * Callback to test a submission value for equality in the context of the
+       * specific component type.
+       */
+      testConditional?: TestConditional<S>;
       /**
        * Apply visibility state and/or side-effects.
        */

@@ -27,6 +27,7 @@ test('processVisibility filters out hidden components and clears values', () => 
     parentHidden: false,
     initialValues: {text: ''},
     getRegistryEntry,
+    componentsMap: {},
   });
 
   expect(visibleComponents).toEqual([]);
@@ -66,6 +67,7 @@ test('processVisibility uses provided evaluation scope', () => {
     initialValues: {text1: '', text2: ''},
     getRegistryEntry,
     getEvaluationScope,
+    componentsMap: {},
   });
 
   expect(visibleComponents).toHaveLength(1);
@@ -98,6 +100,7 @@ test('processVisibility handles duplicate keys in different scopes', () => {
     initialValues: {text1: ''},
     getRegistryEntry,
     getEvaluationScope,
+    componentsMap: {},
   });
 
   expect(visibleComponents).toEqual([]);
@@ -135,6 +138,7 @@ test('processVisibility does not pollute the evaluation scope', () => {
     initialValues: {text1: '', text2: ''},
     getRegistryEntry,
     getEvaluationScope,
+    componentsMap: {},
   });
 
   expect(visibleComponents).toEqual(itemComponents);

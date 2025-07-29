@@ -12,6 +12,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import testConditional from './conditional';
 import getInitialValues from './initialValues';
 import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
@@ -137,6 +138,7 @@ const SelectboxesComponent: RegistryEntry<SelectboxesComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  testConditional,
 };
 
 export default SelectboxesComponent;

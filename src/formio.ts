@@ -4,16 +4,16 @@
  * These are helpers around Formio.js concepts which we implement ourselves rather than
  * depending on formio.js or @formio/js packages.
  */
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
 import {getIn} from 'formik';
-import {ConditionalOptions} from 'formiojs';
 
-import {JSONObject} from './types';
+import type {GetRegistryEntry, TestConditional} from '@/registry/types';
 
-// we don't support the 'json' configuration.
-export type Conditional = Required<Pick<ConditionalOptions, 'show' | 'when' | 'eq'>>;
+import type {JSONObject, JSONValue} from './types';
 
-export const getConditional = (component: AnyComponentSchema): Conditional | null => {
+export const getConditional = (
+  component: AnyComponentSchema
+): Required<OFConditionalOptions> | null => {
   // component must support the construct in the first place
   if (!('conditional' in component)) return null;
   // undefined or null -> nothing to extract
@@ -25,6 +25,42 @@ export const getConditional = (component: AnyComponentSchema): Conditional | nul
 };
 
 /**
+ * Evaluate the condition expressed in component.conditional.
+ *
+ * Note that this is a more strict version of what Formio.js itself imlements. They
+ * essentially just take `String(compareValue) === String(valueToTest)` and have
+ * specialized edge cases for arrays (with an `.includes` check) and objects - which
+ * are _assumed_ to come from selectboxes.
+ */
+const defaultTestConditional: TestConditional<AnyComponentSchema | undefined> = (
+  /**
+   * The component definition referenced by `conditional.when`. Could be undefined for
+   * broken configurations.
+   */
+  referenceComponent: AnyComponentSchema | undefined,
+  /**
+   * The reference value specified in `conditional.eq`.
+   */
+  compareValue: Required<OFConditionalOptions>['eq'],
+  /**
+   * The current value of the referenced component to compare against.
+   */
+  valueToTest: JSONValue
+): boolean => {
+  if (referenceComponent === undefined) return valueToTest === compareValue;
+
+  // check for simple containment in a multiple: true component
+  if ('multiple' in referenceComponent && referenceComponent.multiple) {
+    // should not happen
+    if (!Array.isArray(valueToTest)) return false;
+    return valueToTest.includes(compareValue);
+  }
+
+  // default behaviour -> check strict equality
+  return valueToTest === compareValue;
+};
+
+/**
  * Given an evaluation scope of values, determine if a component is visible or hidden.
  *
  * Note that the `evaluationScope` is often equal to the form values of all components,
@@ -32,7 +68,16 @@ export const getConditional = (component: AnyComponentSchema): Conditional | nul
  * scoped inside their parent key so that components can have conditional logic based
  * on their siblings components.
  */
-export const isHidden = (component: AnyComponentSchema, evaluationScope: JSONObject): boolean => {
+export const isHidden = (
+  component: AnyComponentSchema,
+  evaluationScope: JSONObject,
+  getRegistryEntry: GetRegistryEntry,
+  /**
+   * A mapping of component key -> component definition so that the value can be
+   * interpreted in the right context.
+   */
+  componentsMap: Partial<Record<string, AnyComponentSchema>>
+): boolean => {
   // dynamic hidden/visible configuration
   const conditional = getConditional(component);
 
@@ -48,16 +93,27 @@ export const isHidden = (component: AnyComponentSchema, evaluationScope: JSONObj
   // result.
   const {show, when, eq} = conditional;
 
-  // TODO: ensure comparison/check works for Array values (e.g. textfield with multiple: true)
-  // TODO: ensure comparison/check works for selectboxes with their weird data format!
-
   // NOTE: Formio defaults to an empty string if the value is null-ish (null | undefined),
   // which makes things work when the value has been cleared by an earlier pass. It's a bit
   // shaky - in particular for `number` components I'd prefer sticking to `null` and making
   // strict comparisons like that, but let's explore that when we've actually shipped this
   // renderer.
-  const compareValue = getIn(evaluationScope, when) ?? '';
-  const conditionSatisfied = eq === compareValue;
+  const compareValue: JSONValue = getIn(evaluationScope, when) ?? '';
+
+  // delegate the comparison to the registry, if it's hooked up. When it's defined, the
+  // registry definition must handle *all* the equality checks, also the array
+  // containment in case the components supports `multiple: true`. If it's not defined,
+  // we run simple containment/equality checks as fallback behaviour.
+  const referenceComponent = componentsMap?.[when];
+  let conditionSatisfied: boolean;
+  if (referenceComponent === undefined) {
+    conditionSatisfied = defaultTestConditional(referenceComponent, eq, compareValue);
+  } else {
+    const testConditional = referenceComponent
+      ? getRegistryEntry(referenceComponent)?.testConditional ?? defaultTestConditional
+      : defaultTestConditional;
+    conditionSatisfied = testConditional(referenceComponent, eq, compareValue);
+  }
 
   // note that we return whether the component is hidden, not whether it is shown, so
   // we must invert in the return value
@@ -78,26 +134,72 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   return true;
 };
 
+/**
+ * Recursively (and depth-first) iterate over all components in the component definition.
+ *
+ * The components returned here are how they are seen from the root down to the leaf
+ * nodes, and matches how we handle values. This has some implications for compnents that
+ * have nested component definitions inside them - we must treat those appropriately:
+ *
+ * - layout components (like fieldsets and columns) have real, addressable child
+ *   components. The layout component itself does not contribute to the value at all,
+ *   they are purely presentational.
+ * - data components (like editgrid) contain a blueprint for each item, where items are
+ *   independent from each other. From the root you can only get the value of the
+ *   editgrid (an array of objects all with identical shape) itself, you cannot obtain
+ *   the value of a particular nested component inside the items.
+ */
+function* iterComponents(components: AnyComponentSchema[]): Generator<AnyComponentSchema> {
+  for (const component of components) {
+    yield component;
+
+    switch (component.type) {
+      case 'fieldset': {
+        yield* iterComponents(component.components);
+        break;
+      }
+      case 'columns': {
+        for (const column of component.columns) {
+          yield* iterComponents(column.components);
+        }
+        break;
+      }
+      case 'editgrid': {
+        // components inside edit grids are *not* real components and should not be
+        // added to the map. Each nested component has its own key, which may be
+        // identical to the key of a component in the outer scope and would cause
+        // key collisions. In Formio, outer scope components cannot refer to inner scope
+        // editgrid components.
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Given a tree of component definitions, transform it into a mapping of component key
+ * to the component configuration. Useful to look up component key references and
+ * introspect the matching component type/configuration.
+ */
+export const getComponentsMap = (
+  components: AnyComponentSchema[]
+): Record<string, AnyComponentSchema> => {
+  const map: Record<string, AnyComponentSchema> = {};
+  for (const component of iterComponents(components)) {
+    map[component.key] = component;
+  }
+  return map;
+};
+
 function* iterDependencies(components: AnyComponentSchema[]): Generator<[string, string]> {
   // build a map of dependencies
-  for (const component of components) {
+  for (const component of iterComponents(components)) {
     const conditional = getConditional(component);
     if (conditional !== null) {
       yield [component.key, conditional.when];
     }
 
     switch (component.type) {
-      case 'fieldset': {
-        yield* iterDependencies(component.components);
-        break;
-      }
-      case 'columns': {
-        for (const column of component.columns) {
-          yield* iterDependencies(column.components);
-        }
-        break;
-      }
-
       case 'editgrid': {
         // edit grid items run in their own scope with access to the outer scope, but
         // the outer scope doens't have access to the items, so we only need to check

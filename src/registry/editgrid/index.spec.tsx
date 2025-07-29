@@ -1,9 +1,11 @@
+import type {EditGridComponentSchema} from '@open-formulieren/types';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {IntlProvider} from 'react-intl';
 import {expect, test, vi} from 'vitest';
 
 import FormioForm, {type FormioFormProps} from '@/components/FormioForm';
+import type {JSONObject} from '@/types';
 
 type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit' | 'values'>;
 
@@ -169,4 +171,108 @@ test('Item values side-effects are applied to nested editgrid children in previe
     trigger: 'hide',
     editgrid: [{nestedEditgrid: [{}]}],
   });
+});
+
+test('Nested unconventional components visibility check evaluates correctly', async () => {
+  // selectboxes and components with multiple: true have some specific behaviour that
+  // must be preserved in edit grids
+  interface Values extends JSONObject {
+    outer: {
+      selectboxes: {a: boolean};
+      inner: {
+        checkbox: boolean;
+      }[];
+    }[];
+  }
+  const component: EditGridComponentSchema = {
+    id: 'outer',
+    type: 'editgrid',
+    key: 'outer',
+    label: 'Outer',
+    groupLabel: 'Outer item',
+    disableAddingRemovingRows: false,
+    components: [
+      {
+        type: 'selectboxes',
+        id: 'selectboxes',
+        key: 'selectboxes',
+        label: 'Select boxes',
+        values: [{value: 'a', label: 'A'}],
+        defaultValue: {a: false},
+        openForms: {translations: {}, dataSrc: 'manual'},
+      },
+      {
+        id: 'inner',
+        type: 'editgrid',
+        key: 'inner',
+        label: 'inner',
+        groupLabel: 'Inner item',
+        disableAddingRemovingRows: false,
+        components: [
+          {
+            type: 'checkbox',
+            key: 'checkbox',
+            id: 'checkbox',
+            label: 'Checkbox',
+            defaultValue: false,
+          },
+          {
+            type: 'content',
+            id: 'content1',
+            key: 'content1',
+            html: 'Not displayed 1',
+            conditional: {
+              show: false,
+              when: 'outer.selectboxes',
+              eq: 'a',
+            },
+          },
+          {
+            type: 'content',
+            id: 'content2',
+            key: 'content2',
+            html: 'Not displayed 2',
+            conditional: {
+              show: false,
+              when: 'outer.inner.checkbox',
+              eq: true,
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const values: Values = {
+    outer: [
+      {
+        selectboxes: {a: false},
+        inner: [{checkbox: false}],
+      },
+    ],
+  };
+  const onSubmit = vi.fn();
+
+  render(<Form components={[component]} values={values} onSubmit={onSubmit} />);
+
+  // check initial outer item state
+  await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+  const selectboxesCheckbox = await screen.findByLabelText('A');
+  expect(selectboxesCheckbox).toBeVisible();
+  expect(selectboxesCheckbox).not.toBeChecked();
+
+  // check initial inner item state - this is another button than before (!)
+  await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+  const singleCheckbox = await screen.findByLabelText('Checkbox');
+  expect(singleCheckbox).toBeVisible();
+  expect(singleCheckbox).not.toBeChecked();
+
+  expect(await screen.findAllByText(/Not displayed/)).toHaveLength(2);
+
+  // okay, now toggle the checkboxes to trigger hiding of the content blocks
+  await userEvent.click(singleCheckbox);
+  expect(singleCheckbox).toBeChecked();
+  await userEvent.click(selectboxesCheckbox);
+  expect(selectboxesCheckbox).toBeChecked();
+
+  expect(screen.queryAllByText(/Not displayed/)).toHaveLength(0);
 });

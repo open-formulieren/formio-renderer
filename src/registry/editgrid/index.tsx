@@ -6,6 +6,8 @@ import {useIntl} from 'react-intl';
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import {EditGrid as EditGridField} from '@/components/forms';
+import {getComponentsMap} from '@/formio';
+import {useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
 import {buildValidationSchema} from '@/validationSchema';
@@ -20,11 +22,13 @@ import applyVisibility from './visibility';
 interface ParentValuesContextType {
   keyPrefix: string; // component keys from root to leaf, to track position in nested edit grids
   values: JSONObject;
+  componentsMap: Record<string, AnyComponentSchema>;
 }
 
 const ParentValuesContext = createContext<ParentValuesContextType>({
   keyPrefix: '',
   values: {},
+  componentsMap: {},
 });
 ParentValuesContext.displayName = 'ParentValuesContext';
 
@@ -34,6 +38,7 @@ export interface ItemBodyProps {
   components: AnyComponentSchema[];
   parentKey: string;
   parentValues: JSONObject;
+  parentComponentsMap: Record<string, AnyComponentSchema>;
   initialValues: JSONObject;
   onItemValuesUpdated: (itemValues: JSONObject) => void;
   expanded: boolean;
@@ -45,11 +50,24 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   components,
   parentKey,
   parentValues,
+  parentComponentsMap,
   initialValues,
   onItemValuesUpdated,
   expanded,
 }) => {
   const {values: itemValues} = useFormikContext<JSONObject>();
+
+  const componentsMap = useMemo(() => {
+    const localComponentsMap: Record<string, AnyComponentSchema> = Object.fromEntries(
+      Object.entries(getComponentsMap(components)).map(([key, component]) => [
+        `${parentKey}.${key}`,
+        component,
+      ])
+    );
+    // add the namespaced edit grid item components in the parent map so that siblings
+    // and any parent can be looked up.
+    return {...parentComponentsMap, ...localComponentsMap};
+  }, [parentComponentsMap, components]);
 
   const {visibleComponents, updatedItemValues} = useMemo(() => {
     const {visibleComponents, updatedValues: updatedItemValues} = processVisibility(
@@ -68,6 +86,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
           const result: JSONObject = setIn(parentValues, parentKey, values);
           return result;
         },
+        componentsMap,
       }
     );
     return {visibleComponents, updatedItemValues};
@@ -93,16 +112,23 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     const scopedValues = setIn(parentValues, parentKey, updatedItemValues);
     return (
       <ItemPreview
-        components={visibleComponents}
+        components={components}
         keyPrefix={parentKey}
         values={scopedValues}
         getRegistryEntry={getRegistryEntry}
+        componentsMap={componentsMap}
       />
     );
   }
 
   return (
-    <ParentValuesContext.Provider value={{keyPrefix: parentKey, values: parentValues}}>
+    <ParentValuesContext.Provider
+      value={{
+        keyPrefix: parentKey,
+        values: parentValues,
+        componentsMap: componentsMap,
+      }}
+    >
       <FormFieldContainer>
         {visibleComponents.map((definition, index) => (
           <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
@@ -140,9 +166,15 @@ export const EditGrid: React.FC<EditGridProps> = ({
   const {values: parentValues, setFieldValue, getFieldProps} = useFormikContext<JSONObject>();
   const {value} = getFieldProps<JSONObject[]>(key);
 
-  const {keyPrefix, values: grandParentValues} = useContext(ParentValuesContext);
+  const {
+    keyPrefix,
+    values: grandParentValues,
+    componentsMap: parentComponentsMap,
+  } = useContext(ParentValuesContext);
+  const isRoot = keyPrefix === '';
+
   // ensure we keep setting a deeper scope when dealing with nesting
-  const parentScope = keyPrefix ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
+  const parentScope = !isRoot ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
   const initialValues = extractInitialValues(components, getRegistryEntry);
   const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
@@ -150,6 +182,14 @@ export const EditGrid: React.FC<EditGridProps> = ({
   // build the validation schema from the nested component definitions
   // TODO: take into account hidden components!
   const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+
+  // if this is the root scope (the most outer edit grid), then we must build the components
+  // map from the FormioForm render context.
+  const {components: formConfigurationComponents} = useFormSettings();
+  const componentsMap = useMemo(() => {
+    if (!isRoot) return parentComponentsMap;
+    return getComponentsMap(formConfigurationComponents);
+  }, [isRoot, formConfigurationComponents, parentComponentsMap]);
 
   return (
     <EditGridField<JSONObject>
@@ -167,6 +207,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
           components={components}
           parentKey={keyPrefix ? `${keyPrefix}.${key}` : key}
           parentValues={parentScope}
+          parentComponentsMap={componentsMap}
           initialValues={initialValues}
           onItemValuesUpdated={newItemValues => {
             const updatedFieldValue = replace(value, index, newItemValues);
