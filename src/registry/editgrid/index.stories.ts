@@ -3,8 +3,8 @@ import {
   ContentComponentSchema,
   FieldsetComponentSchema,
 } from '@open-formulieren/types';
-import type {Meta, StoryObj} from '@storybook/react';
-import {expect, userEvent, within} from '@storybook/test';
+import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
 import {getRegistryEntry} from '@/registry';

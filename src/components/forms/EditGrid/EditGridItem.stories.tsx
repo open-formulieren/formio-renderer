@@ -1,7 +1,7 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, userEvent, within} from '@storybook/test';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Paragraph} from '@utrecht/component-library-react';
 import '@utrecht/components/paragraph';
+import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';

@@ -1,8 +1,8 @@
 import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
-import type {Meta, StoryObj} from '@storybook/react';
-import {expect, fn, userEvent, waitFor, within} from '@storybook/test';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import React, {useRef} from 'react';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import FormioForm, {FormStateRef} from './FormioForm';
 

@@ -1,9 +1,9 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
-import {Decorator, Meta, StoryObj} from '@storybook/react';
-import {fn} from '@storybook/test';
+import {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 // @ts-expect-error
 import {Form as ReactFormioForm} from 'react-formio';
+import {fn} from 'storybook/test';
 
 import FormioForm from '@/components/FormioForm';
 import {JSONObject} from '@/types';

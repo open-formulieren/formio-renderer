@@ -1,5 +1,5 @@
 import type {ContentComponentSchema} from '@open-formulieren/types';
-import type {Meta, StoryObj} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 
 import {FormioContent as Content} from './';
 
