@@ -67,6 +67,7 @@
     "@utrecht/components": "^7.4.0",
     "@utrecht/html-content-css": "^1.4.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^3.2.4",
     "ajv": "^8.17.1",
     "babel-plugin-formatjs": "^10.5.34",
     "date-fns": "^4.1.0",
@@ -87,7 +88,7 @@
     "vite-plugin-circular-dependency": "^0.5.0",
     "vite-plugin-dts": "^4.5.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.7"
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@utrecht/component-library-react": "1.0.0-alpha.353",
