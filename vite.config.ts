@@ -6,6 +6,7 @@ import {defineConfig} from 'vite';
 import detectCircularDependencies from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import {coverageConfigDefaults} from 'vitest/config';
 
 import {dependencies, peerDependencies} from './package.json';
 
@@ -67,7 +68,26 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    browser: {
+      provider: 'playwright',
+      enabled: true,
+      instances: [
+        {
+          browser: 'chromium',
+        },
+      ],
+    },
     setupFiles: './vitest.setup.ts',
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.d.ts',
+        'src/**/*.stories.{ts,tsx}',
+        'src/reference/utils.tsx',
+        ...coverageConfigDefaults.exclude,
+      ],
+      reporter: ['text', 'cobertura', 'html'],
+    },
   },
 });
