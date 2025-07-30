@@ -68,7 +68,15 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    browser: {
+      provider: 'playwright',
+      enabled: true,
+      instances: [
+        {
+          browser: 'chromium',
+        },
+      ],
+    },
     setupFiles: './vitest.setup.ts',
     coverage: {
       provider: 'v8',
