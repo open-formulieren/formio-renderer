@@ -1,18 +1,16 @@
-import {useId} from 'react';
+import {useFormikContext} from 'formik';
+import {useId, useMemo} from 'react';
+
+import {getComponentsMap} from '@/formio';
+import {useFormSettings} from '@/hooks';
+import {getRegistryEntry} from '@/registry';
+import type {JSONObject} from '@/types';
+import {processVisibility} from '@/visibility';
 
 import './SoftRequiredErrors.scss';
 import SoftRequiredErrorsMessage from './SoftRequiredErrorsMessage';
-
-export interface SoftRequiredComponent {
-  /**
-   * The path to the component in the form values dict.
-   */
-  pathToComponent: string;
-  /**
-   * The label of the component.
-   */
-  label: string;
-}
+import {getMissingFields, getSoftRequiredComponents} from './utils';
+import type {MissingFields} from './utils';
 
 export interface SoftRequiredErrorsProps {
   /**
@@ -28,9 +26,36 @@ export interface SoftRequiredErrorsProps {
 
 const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({html}) => {
   const id = useId();
-  const missingFields: SoftRequiredComponent[] = [
-    {pathToComponent: "", label: "Textfield"}
-  ];
+  const {values, initialValues} = useFormikContext<JSONObject>();
+  const {components} = useFormSettings();
+
+  const componentsMap = useMemo(() => getComponentsMap(components), [components]);
+
+  // Compute the visible components and associated updated values (via clearOnHide)
+  // every time either the form configuration (components) is modified or when the form
+  // values change. Note that the form values also change as a reaction to processed
+  // values via clearOnHide, and this implies multiple (render) passes to converge.
+  // XXX: this means that component definitions may not have reference cycles in their
+  // conditional logic to prevent infinite render loops!
+  const visibleComponents = useMemo(() => {
+    const {visibleComponents} = processVisibility(components, values, {
+      parentHidden: false,
+      initialValues,
+      getRegistryEntry,
+      componentsMap,
+    });
+    return visibleComponents;
+  }, [components, initialValues, values]);
+
+  const softRequiredComponents = useMemo(
+    () => getSoftRequiredComponents(visibleComponents),
+    [visibleComponents]
+  );
+
+  const missingFields: MissingFields[] = useMemo(
+    () => getMissingFields(softRequiredComponents, values as object),
+    [softRequiredComponents, values]
+  );
 
   if (!missingFields.length) {
     return null;

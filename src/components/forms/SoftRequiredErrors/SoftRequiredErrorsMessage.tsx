@@ -1,12 +1,12 @@
 import parse, {DOMNode} from 'html-react-parser';
 import {FormattedMessage} from 'react-intl';
 
-import type {SoftRequiredComponent} from './SoftRequiredErrors';
+import type {MissingFields} from './utils';
 
 interface SoftRequiredErrorsMessageProps {
   id: string;
   html: string;
-  missingFields: SoftRequiredComponent[];
+  missingFields: MissingFields[];
 }
 
 const SoftRequiredErrorsMessage: React.FC<SoftRequiredErrorsMessageProps> = ({
