@@ -553,4 +553,160 @@ describe('Regressions', () => {
       ],
     });
   });
+
+  test.each([{clearOnHide: true}, {clearOnHide: false}])(
+    'Prevent infinite render loop with hidden outer editgrid using clearOnHide=$clearOnHide',
+    async ({clearOnHide}) => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
+        throw new Error(err);
+      });
+      render(
+        <Form
+          components={[
+            {
+              type: 'textfield',
+              key: 'outerTrigger',
+              id: 'outerTrigger',
+              label: 'Outer trigger',
+            },
+            {
+              id: 'outer',
+              type: 'editgrid',
+              key: 'outer',
+              label: 'Outer',
+              groupLabel: 'Outer item',
+              disableAddingRemovingRows: true,
+              clearOnHide: clearOnHide,
+              conditional: {
+                show: false,
+                when: 'outerTrigger',
+                eq: 'hide',
+              },
+              components: [
+                {
+                  type: 'textfield',
+                  key: 'textfield',
+                  id: 'textfield',
+                  label: 'Textfield',
+                },
+              ],
+            } satisfies EditGridComponentSchema,
+          ]}
+          values={{
+            outer: [
+              {
+                textfield: 'foo bat',
+              },
+            ],
+          }}
+          onSubmit={vi.fn()}
+        />
+      );
+
+      const outerTrigger = await screen.findByLabelText('Outer trigger');
+
+      let error: Error | undefined = undefined;
+      // Hiding the edit-grid shouldn't cause any errors.
+      // And turning the edit-grid back to visible, shouldn't cause any errors either.
+      try {
+        await userEvent.type(outerTrigger, 'hide');
+        await userEvent.clear(outerTrigger);
+      } catch (e) {
+        error = e;
+        // if an error happens (which shouldn't be the case), make sure we're checking
+        // for the right kind of error!
+        expect(error!.message).toMatch(/Maximum update depth exceeded/);
+      }
+
+      expect(consoleErrorSpy.mock.calls).toHaveLength(0);
+      expect(error).toBeUndefined();
+
+      consoleErrorSpy.mockRestore();
+    }
+  );
+
+  test.each([{clearOnHide: true}, {clearOnHide: false}])(
+    'Prevent infinite render loop with hidden inner editgrid using clearOnHide=$clearOnHide',
+    async ({clearOnHide}) => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
+        throw new Error(err);
+      });
+      render(
+        <Form
+          components={[
+            {
+              type: 'textfield',
+              key: 'outerTrigger',
+              id: 'outerTrigger',
+              label: 'Outer trigger',
+            },
+            {
+              id: 'outer',
+              type: 'editgrid',
+              key: 'outer',
+              label: 'Outer',
+              groupLabel: 'Outer item',
+              disableAddingRemovingRows: true,
+              components: [
+                {
+                  id: 'inner',
+                  type: 'editgrid',
+                  key: 'inner',
+                  label: 'Inner',
+                  groupLabel: 'Inner item',
+                  disableAddingRemovingRows: true,
+                  clearOnHide: clearOnHide,
+                  conditional: {
+                    show: false,
+                    when: 'outerTrigger',
+                    eq: 'hide',
+                  },
+                  components: [
+                    {
+                      type: 'textfield',
+                      key: 'textfield',
+                      id: 'textfield',
+                      label: 'Textfield',
+                    },
+                  ],
+                } satisfies EditGridComponentSchema,
+              ],
+            } satisfies EditGridComponentSchema,
+          ]}
+          values={{
+            outer: [
+              {
+                inner: [
+                  {
+                    textfield: 'foo bat',
+                  },
+                ],
+              },
+            ],
+          }}
+          onSubmit={vi.fn()}
+        />
+      );
+
+      const outerTrigger = await screen.findByLabelText('Outer trigger');
+
+      let error: Error | undefined = undefined;
+      // Hiding the edit-grid shouldn't cause any errors.
+      // And turning the edit-grid back to visible, shouldn't cause any errors either.
+      try {
+        await userEvent.type(outerTrigger, 'hide');
+        await userEvent.clear(outerTrigger);
+      } catch (e) {
+        error = e;
+        // if an error happens (which shouldn't be the case), make sure we're checking
+        // for the right kind of error!
+        expect(error!.message).toMatch(/Maximum update depth exceeded/);
+      }
+
+      expect(consoleErrorSpy.mock.calls).toHaveLength(0);
+      expect(error).toBeUndefined();
+
+      consoleErrorSpy.mockRestore();
+    }
+  );
 });
