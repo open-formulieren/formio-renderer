@@ -120,7 +120,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   ...props
 }: EditGridProps<T>) {
   const {getFieldProps, errors, getFieldHelpers} = useFormikContext();
-  const {value: formikItems} = getFieldProps<T[]>(name);
+  const {value: formikItems} = getFieldProps<T[] | undefined>(name);
   const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
   return (
     <FormField type="editgrid" className="utrecht-form-field--openforms">
@@ -134,7 +134,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           <div className="openforms-editgrid">
             {/* Render each item wrapped in an EditGridItem */}
             <ol className="openforms-editgrid__container">
-              {formikItems.map((values, index) =>
+              {formikItems?.map((values, index) =>
                 props.enableIsolation ? (
                   <EditGridItem<T>
                     key={index}
@@ -180,7 +180,9 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 <PrimaryActionButton
                   type="button"
                   onClick={() => {
-                    setIndexToAutoExpand(formikItems.length);
+                    if (formikItems) {
+                      setIndexToAutoExpand(formikItems.length);
+                    }
                     arrayHelpers.push(emptyItem);
                   }}
                 >

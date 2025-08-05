@@ -17,7 +17,15 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
   // ensure we keep adding to the parent scope in case of nested edit grids
   const outerGetEvaluationScope = context?.getEvaluationScope ?? ((v: JSONObject): JSONObject => v);
 
-  let items: JSONObject[] = getIn(values, key) ?? [];
+  let items: JSONObject[] | undefined = getIn(values, key);
+  // Make sure `clearOnHide` actually clears the edit-grid
+  if (items === undefined) {
+    return {
+      updatedDefinition: componentDefinition,
+      updatedValues: values,
+    };
+  }
+
   for (let index: number = 0; index < items.length; index++) {
     const itemValues = items[index];
 
