@@ -4,6 +4,7 @@ import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -34,6 +35,7 @@ const BSNComponent: RegistryEntry<BsnComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default BSNComponent;

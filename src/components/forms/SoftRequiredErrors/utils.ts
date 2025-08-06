@@ -63,7 +63,7 @@ export const getMissingFields = (
     const componentValue = getIn(values, pathParts.join('.'));
 
     const isComponentEmpty = () => {
-      const isFalsy = Array.isArray(componentValue) ? componentValue.length === 0 : !componentValue;
+      const isFalsy = componentValue == null || componentValue.length === 0;
 
       return isEmpty !== undefined ? isEmpty(component, componentValue) : isFalsy;
     };

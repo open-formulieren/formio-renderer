@@ -4,6 +4,7 @@ import Textarea from '@/components/forms/Textarea';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -45,6 +46,7 @@ const TextareaComponent: RegistryEntry<TextareaComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default TextareaComponent;

@@ -4,6 +4,7 @@ import {DateField} from '@/components/forms';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -31,6 +32,7 @@ const DateComponent: RegistryEntry<DateComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default DateComponent;
