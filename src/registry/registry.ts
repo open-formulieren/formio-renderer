@@ -13,6 +13,7 @@ import LicensePlate from './licenseplate';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
+import SoftRequiredErrors from './softRequiredErrors';
 import Textarea from './textarea';
 import TextField from './textfield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
@@ -43,5 +44,6 @@ const REGISTRY: Registry = {
   content: Content,
   columns: Columns,
   fieldset: Fieldset,
+  softRequiredErrors: SoftRequiredErrors,
   // deprecated
 };

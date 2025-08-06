@@ -1,0 +1,24 @@
+// Taken from OF SDK src/scss/components/_soft-required-errors.scss
+
+@use 'microscope-sass/lib/bem';
+@use 'microscope-sass/lib/typography' as typography;
+
+@use '@/scss/alert';
+@use '@utrecht/components/unordered-list';
+
+.openforms-soft-required-errors {
+  // apply all wysiwyg styling
+  // TODO: parametrize this with design tokens -> check with NL DS how to approach this
+  @include typography.wysiwyg;
+
+  // unset, takes the utrecht-alert--warning by default, but can be overridden if desired
+  color: var(--of-soft-required-errors-color, var(--utrecht-alert-warning-color));
+  background-color: var(
+    --of-soft-required-errors-background-color,
+    var(--utrecht-alert-warning-background-color)
+  );
+
+  @include bem.element('missing-fields') {
+    font-weight: var(--of-soft-required-errors-missing-fields-font-weight, 600);
+  }
+}

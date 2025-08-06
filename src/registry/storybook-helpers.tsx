@@ -27,3 +27,30 @@ export const renderComponentInForm = (args: RenderArgs) => (
     </PrimaryActionButton>
   </div>
 );
+
+export interface MultipleComponentsInFormRenderArgs {
+  componentDefinitions: AnyComponentSchema[];
+  onSubmit: FormioFormProps['onSubmit'];
+}
+
+export const renderMultipleComponentsInForm = (args: MultipleComponentsInFormRenderArgs) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        rowGap: '20px',
+      }}
+    >
+      <FormioForm
+        onSubmit={args.onSubmit}
+        components={args.componentDefinitions}
+        id="formio-form"
+        requiredFieldsWithAsterisk
+      />
+      <PrimaryActionButton type="submit" form="formio-form" style={{alignSelf: 'flex-start'}}>
+        Submit
+      </PrimaryActionButton>
+    </div>
+  );
+};
