@@ -3,7 +3,7 @@ import {useId, useMemo} from 'react';
 
 import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
-import {getRegistryEntry} from '@/registry';
+import type {GetRegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {processVisibility} from '@/visibility';
 
@@ -22,9 +22,10 @@ export interface SoftRequiredErrorsProps {
    * contain html tags.
    */
   html: string;
+  getRegistryEntry: GetRegistryEntry;
 }
 
-const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({html}) => {
+const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({html, getRegistryEntry}) => {
   const id = useId();
   const {values, initialValues} = useFormikContext<JSONObject>();
   const {components} = useFormSettings();
@@ -53,8 +54,8 @@ const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({html}) => {
   );
 
   const missingFields: MissingFields[] = useMemo(
-    () => getMissingFields(softRequiredComponents, values as object),
-    [softRequiredComponents, values]
+    () => getMissingFields(softRequiredComponents, values as object, getRegistryEntry),
+    [softRequiredComponents, values, getRegistryEntry]
   );
 
   if (!missingFields.length) {

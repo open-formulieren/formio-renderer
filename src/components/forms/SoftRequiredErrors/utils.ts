@@ -7,7 +7,7 @@ import type {
 } from '@open-formulieren/types';
 import {getIn} from 'formik';
 
-import {getRegistryEntry} from '@/registry';
+import type {GetRegistryEntry} from '@/registry/types';
 
 export interface MissingFields {
   /**
@@ -48,6 +48,7 @@ const LABEL_SEPARATOR = ' > ';
 export const getMissingFields = (
   SoftRequiredComponents: AnyComponentSchema[],
   values: object,
+  getRegistryEntry: GetRegistryEntry,
   keyPrefix: string[] = [],
   labelPrefix: string[] = []
 ): MissingFields[] => {
@@ -71,7 +72,7 @@ export const getMissingFields = (
     switch (component.type) {
       case 'fieldset':
         missingFields.push(
-          ...getMissingFields(component.components, values, pathParts, labelParts)
+          ...getMissingFields(component.components, values, getRegistryEntry, pathParts, labelParts)
         );
         break;
 
@@ -86,6 +87,7 @@ export const getMissingFields = (
               ...getMissingFields(
                 column.components,
                 values,
+                getRegistryEntry,
                 [...pathParts, columnIndex.toString()],
                 [...labelParts]
               )
@@ -111,6 +113,7 @@ export const getMissingFields = (
               ...getMissingFields(
                 component.components,
                 values,
+                getRegistryEntry,
                 [...pathParts, childIndex.toString()],
                 [...labelParts, `${component.groupLabel} ${childIndex + 1}`]
               )

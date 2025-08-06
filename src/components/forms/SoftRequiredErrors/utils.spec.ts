@@ -12,6 +12,8 @@ import {
 } from '@open-formulieren/types';
 import {describe, expect, it, test} from 'vitest';
 
+import {getRegistryEntry} from '@/registry';
+
 import {getMissingFields, getSoftRequiredComponents} from './utils';
 
 const SOFT_REQUIRED_FILE_COMPONENT = {
@@ -470,7 +472,7 @@ describe('regular getMissingFields', () => {
     const values = {filledInSoftRequiredTextfield: 'some value'};
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, values);
+    const missingFields = getMissingFields(softRequiredComponents, values, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'file',
@@ -512,7 +514,7 @@ describe('regular getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'fieldset.file',
@@ -565,7 +567,7 @@ describe('regular getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'columns.0.file',
@@ -604,7 +606,7 @@ describe('regular getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.file',
@@ -659,7 +661,7 @@ describe('regular getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.nestededitgrid.0.file',
@@ -931,7 +933,7 @@ test.each([
     const components: AnyComponentSchema[] = [component as unknown as AnyComponentSchema];
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValue);
+    const missingFields = getMissingFields(softRequiredComponents, formValue, getRegistryEntry);
     expect(missingFields).toStrictEqual(expected);
   }
 );
