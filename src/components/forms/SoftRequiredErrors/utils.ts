@@ -7,6 +7,8 @@ import type {
 } from '@open-formulieren/types';
 import {getIn} from 'formik';
 
+import {getRegistryEntry} from '@/registry';
+
 export interface MissingFields {
   /**
    * The path to the component in the form values dict, used to link the "missing field"
@@ -51,17 +53,19 @@ export const getMissingFields = (
 ): MissingFields[] => {
   const missingFields: MissingFields[] = [];
   for (const component of SoftRequiredComponents) {
+    const registry = getRegistryEntry(component);
     const pathParts = [...keyPrefix, component.key];
     const labelParts = [...labelPrefix, getIn(component, 'label', '')].filter(
       label => label !== ''
     );
 
+    const isEmpty = registry?.isEmpty;
     const componentValue = getIn(values, pathParts.join('.'));
 
     const isComponentEmpty = () => {
       const isFalsy = Array.isArray(componentValue) ? componentValue.length === 0 : !componentValue;
 
-      return isFalsy;
+      return isEmpty !== undefined ? isEmpty(component, componentValue) : isFalsy;
     };
 
     switch (component.type) {
