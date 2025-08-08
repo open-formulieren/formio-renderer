@@ -12,7 +12,7 @@
     "build": "vite build",
     "build:typecheck": "tsc --noEmit",
     "test": "npm-run-all test:*",
-    "test:storybook": "test-storybook",
+    "test:storybook": "test-storybook --coverage",
     "test:vitest": "vitest",
     "format": "prettier --write 'src/**/*' '.storybook/**/*'",
     "checkformat": "prettier --check 'src/**/*' '.storybook/**/*'",

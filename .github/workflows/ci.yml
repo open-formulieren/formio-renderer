@@ -145,6 +145,14 @@ jobs:
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "npx http-server storybook-static --port 6006 --quiet" \
             "npx wait-on -l http://127.0.0.1:6006 && npm run test:storybook"
+          # Prepare coverage
+          npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: storybook
 
   i18n-check:
     name: Check i18n messages extracted

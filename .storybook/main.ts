@@ -7,7 +7,12 @@ const config: StorybookConfig = {
   },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   staticDirs: ['../public'],
-  addons: ['@storybook/addon-links', 'storybook-react-intl', '@storybook/addon-docs'],
+  addons: [
+    '@storybook/addon-links',
+    'storybook-react-intl',
+    '@storybook/addon-docs',
+    '@storybook/addon-coverage',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
