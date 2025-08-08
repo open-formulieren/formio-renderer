@@ -1,6 +1,7 @@
 import type {
   CheckboxComponentSchema,
   ContentComponentSchema,
+  NumberComponentSchema,
   SelectboxesComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
@@ -160,12 +161,29 @@ const {
           eq: true,
         },
       } satisfies ContentComponentSchema,
-      // TODO: number/currency component type, but those aren't implemented yet
+      {
+        type: 'number',
+        key: 'number',
+        id: 'number',
+        label: 'Number',
+      } satisfies NumberComponentSchema,
+      {
+        type: 'content',
+        id: 'content4',
+        key: 'content4',
+        html: `<p>Number not equal to 10</p>`,
+        conditional: {
+          show: false,
+          when: 'number',
+          eq: 10,
+        },
+      } satisfies ContentComponentSchema,
     ],
     submissionData: {
       selectboxes: {a: false, b: true},
       textMultiple: ['item 1', 'item 2'],
       checkbox: true,
+      number: 10,
     },
   },
 
@@ -200,6 +218,17 @@ const {
       await userEvent.click(checkbox);
       expect(checkbox).not.toBeChecked();
       expect(await canvas.findByText('Checkbox unchecked')).toBeVisible();
+    });
+
+    await step('number', async () => {
+      const number = await canvas.findByLabelText('Number');
+      expect(number).toHaveDisplayValue('10');
+
+      // change value and check that the conditional kicks in
+      await userEvent.click(number);
+      await userEvent.type(number, '0');
+      expect(number).toHaveDisplayValue('100');
+      expect(await canvas.findByText('Number not equal to 10')).toBeVisible();
     });
   },
 });

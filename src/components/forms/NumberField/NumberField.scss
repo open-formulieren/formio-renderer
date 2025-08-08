@@ -1,0 +1,12 @@
+@use '@utrecht/components/form-field' as form-field;
+@use '@utrecht/components/paragraph' as paragraph;
+@use '@utrecht/components/textbox' as textbox;
+
+@use '@/scss/bem';
+@use '@/scss/form-field-override';
+
+.utrecht-textbox {
+  @include bem.modifier('openforms') {
+    font-weight: var(--of-input-font-weight, normal);
+  }
+}

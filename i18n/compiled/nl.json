@@ -1,4 +1,18 @@
 {
+  "+/hjpS": [
+    {
+      "type": 0,
+      "value": "The value must be "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": " or less."
+    }
+  ],
   "+xOWBM": [
     {
       "type": 0,
@@ -283,6 +297,20 @@
     {
       "type": 0,
       "value": "Dag"
+    }
+  ],
+  "xHVrv5": [
+    {
+      "type": 0,
+      "value": "The value must be "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": " or greater."
     }
   ],
   "yKo62N": [
