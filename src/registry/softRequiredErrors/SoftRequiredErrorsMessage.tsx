@@ -1,8 +1,8 @@
-import type {SoftRequiredComponent} from './index';
+import {MissingFields} from './missingFields';
 
 interface SoftRequiredErrorsMessageProps {
   html: string;
-  missingFields: SoftRequiredComponent[];
+  missingFields: MissingFields[];
 }
 
 const SoftRequiredErrorsMessage: React.FC<SoftRequiredErrorsMessageProps> = ({html}) => {
