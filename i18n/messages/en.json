@@ -54,6 +54,11 @@
     "description": "Tooltip icon label",
     "originalDefault": "Show tooltip"
   },
+  "GS1Yjy": {
+    "defaultMessage": "Empty fields",
+    "description": "SoftRequiredErrors header",
+    "originalDefault": "Empty fields"
+  },
   "MJXZYI": {
     "defaultMessage": "m",
     "description": "Placeholder for month part of a date",
