@@ -1,4 +1,4 @@
-import type {EditGridComponentSchema} from '@open-formulieren/types';
+import type {EditGridComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {IntlProvider} from 'react-intl';
@@ -275,4 +275,101 @@ test('Nested unconventional components visibility check evaluates correctly', as
   expect(selectboxesCheckbox).toBeChecked();
 
   expect(screen.queryAllByText(/Not displayed/)).toHaveLength(0);
+});
+
+test('Item validation schema adapts to component visibility', async () => {
+  const user = userEvent.setup();
+  interface Values extends JSONObject {
+    outer: {
+      inner: {
+        visible: string;
+        hidden?: string;
+      }[];
+    }[];
+  }
+  const component: EditGridComponentSchema = {
+    type: 'editgrid',
+    id: 'outer',
+    key: 'outer',
+    label: 'Outer',
+    groupLabel: 'Outer item',
+    disableAddingRemovingRows: true, // less buttons to query
+    components: [
+      {
+        type: 'editgrid',
+        id: 'inner',
+        key: 'inner',
+        label: 'Inner',
+        groupLabel: 'Inner item',
+        disableAddingRemovingRows: true, // less buttons to query
+        components: [
+          {
+            type: 'textfield',
+            id: 'visible',
+            key: 'visible',
+            label: 'Visible textfield',
+            hidden: false,
+            clearOnHide: true,
+            validate: {required: true},
+          } satisfies TextFieldComponentSchema,
+          {
+            type: 'textfield',
+            id: 'hidden',
+            key: 'hidden',
+            label: 'Originally hidden textfield',
+            conditional: {
+              show: false,
+              when: 'outer.inner.visible',
+              eq: 'hide',
+            },
+            clearOnHide: false,
+            validate: {pattern: '[a-z]{4}'}, // 4 letters
+          } satisfies TextFieldComponentSchema,
+        ],
+      } satisfies EditGridComponentSchema,
+    ],
+  };
+  const values: Values = {
+    outer: [
+      {
+        inner: [
+          {
+            visible: 'hide',
+            // does not match pattern, but is hidden so validation must be skipped
+            hidden: '123',
+          },
+        ],
+      },
+    ],
+  };
+
+  render(<Form components={[component]} values={values} onSubmit={vi.fn()} />);
+
+  // expand initial outer item
+  await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+  // expand initial inner item - this is another button than before (!)
+  await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+  const visibleInput = await screen.findByLabelText('Visible textfield');
+  expect(visibleInput).toBeVisible();
+  expect(visibleInput).toHaveDisplayValue('hide');
+  expect(screen.queryByLabelText('Originally hidden textfield')).not.toBeInTheDocument();
+
+  // assert that we can save without validation errors
+  const saveButtons = screen.queryAllByRole<HTMLButtonElement>('button', {name: 'Save'});
+  expect(saveButtons).toHaveLength(2);
+  // click the inner save button - we expect it to successfully save so that only the outer save
+  // button remains
+  await user.click(saveButtons[0]);
+  expect(screen.queryAllByRole('button', {name: 'Save'})).toHaveLength(1);
+  expect(screen.queryByText('Invalid')).not.toBeInTheDocument();
+
+  // make the second text field visible - expand the inner item again
+  await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+  await user.type(await screen.findByLabelText('Visible textfield'), '[Backspace]');
+  expect(await screen.findByLabelText('Originally hidden textfield')).toBeVisible();
+
+  const innerSaveButton = screen.getAllByRole<HTMLButtonElement>('button', {name: 'Save'})[0];
+  await userEvent.click(innerSaveButton);
+  expect(await screen.findByText('Invalid')).toBeVisible();
+  expect(screen.queryAllByRole('button', {name: 'Save'})).toHaveLength(2);
 });
