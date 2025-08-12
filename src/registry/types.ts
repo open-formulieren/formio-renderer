@@ -156,6 +156,8 @@ export type ApplyVisibility<S> = (
   updatedValues: JSONObject;
 };
 
+export type IsEmpty<S, V = JSONValue | undefined> = (componentDefinition: S, value: V) => boolean;
+
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
       formField: React.ComponentType<RenderComponentProps<S>>;
@@ -188,6 +190,10 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * Apply visibility state and/or side-effects.
        */
       applyVisibility?: ApplyVisibility<S>;
+      /**
+       * Callback to determine whether the component is empty or not.
+       */
+      isEmpty?: IsEmpty<S>;
     }
   : never;
 

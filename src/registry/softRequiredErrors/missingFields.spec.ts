@@ -1,12 +1,19 @@
 import type {
   AnyComponentSchema,
+  CheckboxComponentSchema,
   ColumnsComponentSchema,
   EditGridComponentSchema,
   FieldsetComponentSchema,
   FileComponentSchema,
+  RadioComponentSchema,
+  SelectComponentSchema,
+  SelectboxesComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
 import {describe, expect, test} from 'vitest';
+
+import {getRegistryEntry} from '@/registry';
+import {JSONObject} from '@/types';
 
 import {getMissingFields, getSoftRequiredComponents} from './missingFields';
 
@@ -561,7 +568,7 @@ describe('getMissingFields', () => {
     const values = {filledInSoftRequiredTextfield: 'some value'};
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, values);
+    const missingFields = getMissingFields(softRequiredComponents, values, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         label: 'File upload',
@@ -598,7 +605,7 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'file',
@@ -644,7 +651,7 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'file',
@@ -676,7 +683,7 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.file',
@@ -724,7 +731,7 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues);
+    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.nestededitgrid.0.file',
@@ -744,3 +751,257 @@ describe('getMissingFields', () => {
     ]);
   });
 });
+
+test.each([
+  {
+    component: {
+      id: 'multipleTextfield',
+      key: 'multipleTextfield',
+      label: 'Empty multiple textfield',
+      type: 'textfield',
+      multiple: true,
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies TextFieldComponentSchema,
+    formValue: {
+      multipleTextfield: [],
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'multipleTextfield',
+        label: 'Empty multiple textfield',
+      },
+    ],
+  },
+  {
+    component: {
+      id: 'selectboxes',
+      key: 'selectboxes',
+      label: 'Empty selectboxes',
+      type: 'selectboxes',
+      defaultValue: {
+        foo: false,
+        bar: false,
+      },
+      values: [
+        {
+          value: 'foo',
+          label: 'Foo',
+        },
+        {
+          value: 'bar',
+          label: 'Bar',
+        },
+      ],
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies SelectboxesComponentSchema,
+    formValue: {
+      selectboxes: {
+        foo: false,
+        bar: false,
+      },
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'selectboxes',
+        label: 'Empty selectboxes',
+      },
+    ],
+  },
+  {
+    component: {
+      id: 'radio',
+      key: 'radio',
+      label: 'Empty radio',
+      type: 'radio',
+      values: [
+        {
+          value: 'foo',
+          label: 'Foo',
+        },
+        {
+          value: 'bar',
+          label: 'Bar',
+        },
+      ],
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies RadioComponentSchema,
+    formValue: {
+      radio: '',
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'radio',
+        label: 'Empty radio',
+      },
+    ],
+  },
+  {
+    component: {
+      id: 'select',
+      key: 'select',
+      label: 'Empty select',
+      type: 'select',
+      data: {
+        values: [
+          {
+            value: 'foo',
+            label: 'Foo',
+          },
+          {
+            value: 'bar',
+            label: 'Bar',
+          },
+        ],
+      },
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies SelectComponentSchema,
+    formValue: {},
+    expected: [
+      {
+        pathToComponent: 'select',
+        label: 'Empty select',
+      },
+    ],
+  },
+  {
+    component: {
+      id: 'checkbox',
+      key: 'checkbox',
+      label: 'Empty checkbox',
+      type: 'checkbox',
+      defaultValue: false,
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies CheckboxComponentSchema,
+    formValue: {
+      select: '',
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'checkbox',
+        label: 'Empty checkbox',
+      },
+    ],
+  },
+  {
+    component: {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: 'Empty editgrid',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Editgrid item',
+      components: [],
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies EditGridComponentSchema,
+    formValue: {
+      editgrid: [],
+    },
+    expected: [
+      {
+        pathToComponent: 'editgrid',
+        label: 'Empty editgrid',
+      },
+    ],
+  },
+  {
+    component: {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: 'Empty editgrid with children',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Editgrid item',
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+          openForms: {
+            // @ts-ignore
+            softRequired: true,
+          },
+        } satisfies TextFieldComponentSchema,
+      ],
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies EditGridComponentSchema,
+    formValue: {
+      editgrid: [],
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'editgrid',
+        label: 'Empty editgrid with children',
+      },
+    ],
+  },
+  {
+    component: {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: 'Editgrid with empty children',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Editgrid item',
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+          openForms: {
+            // @ts-ignore
+            softRequired: true,
+          },
+        } satisfies TextFieldComponentSchema,
+      ],
+      openForms: {
+        // @ts-ignore
+        softRequired: true,
+      },
+    } satisfies EditGridComponentSchema,
+    formValue: {
+      editgrid: [
+        {
+          textfield: '',
+        },
+      ],
+    } as JSONObject,
+    expected: [
+      {
+        pathToComponent: 'editgrid.0.textfield',
+        label: 'Editgrid with empty children > Editgrid item 1 > Textfield',
+      },
+    ],
+  },
+])(
+  '$component.label soft required components should be reported',
+  ({component, formValue, expected}) => {
+    const components: AnyComponentSchema[] = [component as unknown as AnyComponentSchema];
+
+    const softRequiredComponents = getSoftRequiredComponents(components);
+    const missingFields = getMissingFields(softRequiredComponents, formValue, getRegistryEntry);
+    expect(missingFields).toStrictEqual(expected);
+  }
+);

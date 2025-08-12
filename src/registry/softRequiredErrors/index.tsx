@@ -45,8 +45,8 @@ export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   );
 
   const missingFields: MissingFields[] = useMemo(
-    () => getMissingFields(softRequiredComponents, values),
-    [softRequiredComponents, values]
+    () => getMissingFields(softRequiredComponents, values, getRegistryEntry),
+    [softRequiredComponents, values, getRegistryEntry]
   );
 
   if (!missingFields.length) {
