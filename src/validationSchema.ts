@@ -1,9 +1,13 @@
 import {AnyComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
+import {useCallback, useRef} from 'react';
 import {IntlShape} from 'react-intl';
 import {z} from 'zod';
+import {ValidationError} from 'zod-formik-adapter';
 
 import type {GetRegistryEntry} from '@/registry/types';
+
+import {JSONObject} from './types';
 
 export type KeySchemaPair = [string, z.ZodFirstPartySchemaTypes];
 
@@ -64,4 +68,97 @@ export const buildValidationSchema = (
   }, {} satisfies SchemaRecord);
   const composedSchema = composeValidationSchemas(Object.entries(allSchemas));
   return composedSchema;
+};
+
+type Schema = z.ZodSchema<JSONObject>;
+
+/**
+ * Validate an object against a Zod validation schema.
+ *
+ * @throws ValidationError if the object does not conform to the validation schema.
+ */
+export const validate = async <T = JSONObject>(schema: Schema, obj: T): Promise<void> => {
+  const result = await schema.safeParseAsync(obj);
+  if (result.success) return;
+
+  // transform into validation error
+  const error = new ValidationError(result.error.message);
+  error.inner = result.error.errors.map(err => ({
+    message: err.message,
+    path: err.path.join('.'),
+  }));
+  throw error;
+};
+
+export interface UseValidationSchema {
+  /**
+   * Setter to update the validation schema to use in the validate call.
+   *
+   * It is guaranteed to have a stable identity.
+   */
+  setSchema: (newSchema: Schema) => void;
+  /**
+   * Validation callback to pass to Formik's `validationSchema` prop. Throws
+   * zod-formik-adapter's ValidationError when there are schema parsing errors.
+   *
+   * It is guaranteed to have a stable identity.
+   */
+  validate: (obj: JSONObject) => Promise<void>;
+}
+
+export const useValidationSchema = (schema: Schema): UseValidationSchema => {
+  // the ref itself is stable, so using it in useCallback dependencies makes those
+  // callbacks stable identities too.
+  const ref = useRef<Schema>(schema);
+
+  const setSchema = useCallback((newSchema: Schema) => (ref.current = newSchema), [ref]);
+  const _validate = useCallback(
+    async (obj: JSONObject): Promise<void> => await validate(ref.current, obj),
+    [ref]
+  );
+
+  return {
+    setSchema,
+    validate: _validate,
+  };
+};
+
+export interface UseValidationSchemas {
+  /**
+   * Setter to update the validation schema to use in the validate call.
+   *
+   * It is guaranteed to have a stable identity.
+   */
+  setSchema: (index: number, newSchema: Schema) => void;
+  /**
+   * Validation callback to pass to Formik's `validationSchema` prop. Throws
+   * zod-formik-adapter's ValidationError when there are schema parsing errors.
+   *
+   * It is guaranteed to have a stable identity.
+   */
+  validate: (index: number, obj: JSONObject) => Promise<void>;
+}
+
+/**
+ * Multi-schema variant of useValidationSchema, suitable for edit grids/array values.
+ */
+export const useValidationSchemas = (schemas: Schema[]): UseValidationSchemas => {
+  // the ref itself is stable, so using it in useCallback dependencies makes those
+  // callbacks stable identities too.
+  const ref = useRef<Schema[]>(schemas);
+
+  const setSchema = useCallback(
+    (index: number, newSchema: Schema) => (ref.current[index] = newSchema),
+    [ref]
+  );
+  const _validate = useCallback(
+    async (index: number, obj: JSONObject): Promise<void> =>
+      await validate(ref.current[index], obj),
+    [ref]
+  );
+
+  return {
+    setSchema,
+    validate: _validate,
+  };
 };
