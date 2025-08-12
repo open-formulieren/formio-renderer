@@ -1,5 +1,23 @@
 # Changes
 
+## 0.7.0 (TBD)
+
+Feature release with some architectural rework.
+
+**💥 Breaking changes**
+
+The low-level `EditGrid` component no longer accepts a `getItemValidationSchema` prop. This has been
+replaced with the `validate` prop. This change is necessary to be able to dynamically update the
+schema depending on the currently visible fields.
+
+**Features**
+
+...
+
+**Bugfixes**
+
+...
+
 ## 0.6.1 (2025-06-03)
 
 Fixed a packaging bug which caused the type declarations to be omitted.

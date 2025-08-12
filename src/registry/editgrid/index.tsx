@@ -2,6 +2,7 @@ import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formuliere
 import {replace, setIn, useFormikContext} from 'formik';
 import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
+import {z} from 'zod';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
@@ -10,7 +11,7 @@ import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import {JSONObject} from '@/types';
-import {buildValidationSchema} from '@/validationSchema';
+import {buildValidationSchema, useValidationSchemas} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
@@ -33,6 +34,7 @@ const ParentValuesContext = createContext<ParentValuesContextType>({
 ParentValuesContext.displayName = 'ParentValuesContext';
 
 export interface ItemBodyProps {
+  index: number;
   renderNested: React.FC<FormioComponentProps>;
   getRegistryEntry: GetRegistryEntry;
   components: AnyComponentSchema[];
@@ -41,10 +43,12 @@ export interface ItemBodyProps {
   parentComponentsMap: Record<string, AnyComponentSchema>;
   initialValues: JSONObject;
   onItemValuesUpdated: (itemValues: JSONObject) => void;
+  onValidationSchemaChange: (index: number, schema: z.ZodSchema<JSONObject>) => void;
   expanded: boolean;
 }
 
 const ItemBody: React.FC<ItemBodyProps> = ({
+  index,
   renderNested: FormioComponent,
   getRegistryEntry,
   components,
@@ -53,8 +57,10 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   parentComponentsMap,
   initialValues,
   onItemValuesUpdated,
+  onValidationSchemaChange,
   expanded,
 }) => {
+  const intl = useIntl();
   const {values: itemValues} = useFormikContext<JSONObject>();
 
   const componentsMap = useMemo(() => {
@@ -89,8 +95,23 @@ const ItemBody: React.FC<ItemBodyProps> = ({
         componentsMap,
       }
     );
+    const updatedValidationSchema = buildValidationSchema(
+      visibleComponents,
+      intl,
+      getRegistryEntry
+    );
+    onValidationSchemaChange(index, updatedValidationSchema);
     return {visibleComponents, updatedItemValues};
-  }, [parentValues, parentKey, components, initialValues, itemValues]);
+  }, [
+    intl,
+    getRegistryEntry,
+    onValidationSchemaChange,
+    parentValues,
+    parentKey,
+    components,
+    initialValues,
+    itemValues,
+  ]);
 
   // handle the side-effects from the visibility checks that apply clearOnHide to the
   // values. We must call the parent update handler to make sure the outer Formik state
@@ -162,7 +183,6 @@ export const EditGrid: React.FC<EditGridProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
 }) => {
-  const intl = useIntl();
   const {values: parentValues, setFieldValue, getFieldProps} = useFormikContext<JSONObject>();
   const {value} = getFieldProps<JSONObject[]>(key);
 
@@ -179,10 +199,6 @@ export const EditGrid: React.FC<EditGridProps> = ({
   const initialValues = extractInitialValues(components, getRegistryEntry);
   const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
 
-  // build the validation schema from the nested component definitions
-  // TODO: take into account hidden components!
-  const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
-
   // if this is the root scope (the most outer edit grid), then we must build the components
   // map from the FormioForm render context.
   const {components: formConfigurationComponents} = useFormSettings();
@@ -190,6 +206,8 @@ export const EditGrid: React.FC<EditGridProps> = ({
     if (!isRoot) return parentComponentsMap;
     return getComponentsMap(formConfigurationComponents);
   }, [isRoot, formConfigurationComponents, parentComponentsMap]);
+
+  const {setSchema, validate: validateFn} = useValidationSchemas([]);
 
   return (
     <EditGridField<JSONObject>
@@ -202,6 +220,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
       getItemBody={(_, index: number, {expanded}) => (
         <ItemBody
+          index={index}
           renderNested={FormioComponent}
           getRegistryEntry={getRegistryEntry}
           components={components}
@@ -213,13 +232,14 @@ export const EditGrid: React.FC<EditGridProps> = ({
             const updatedFieldValue = replace(value, index, newItemValues);
             setFieldValue(key, updatedFieldValue);
           }}
+          onValidationSchemaChange={setSchema}
           expanded={expanded}
         />
       )}
       emptyItem={emptyItem}
       addButtonLabel={addAnother}
       canEditItem={() => true}
-      getItemValidationSchema={() => zodSchema}
+      validate={validateFn}
       saveItemLabel={saveRow}
       canRemoveItem={() => !disableAddingRemovingRows}
       removeItemLabel={removeRow}

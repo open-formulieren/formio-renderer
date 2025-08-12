@@ -3,8 +3,6 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {Formik, FormikErrors, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
-import type {z} from 'zod';
-import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
@@ -46,7 +44,7 @@ interface WithoutIsolation {
   saveLabel?: never;
   onChange?: never;
   initiallyExpanded?: false;
-  validationSchema?: never;
+  validate?: never;
   errors?: never;
 }
 
@@ -84,7 +82,13 @@ interface WithIsolation<T> {
    * Set to `true` for newly added items so that the user can start editing directly.
    */
   initiallyExpanded?: boolean;
-  validationSchema?: z.ZodType<T>;
+  /**
+   * Validate hook to pass to Formik's `validationSchema` prop. It must validate the
+   * shape of a single item.
+   *
+   * Must throw zod-formik-adapter's `ValidationError` for invalid data.
+   */
+  validate?: (obj: JSONObject) => Promise<void>;
   errors?: FormikErrors<T>;
 }
 
@@ -146,9 +150,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             enableReinitialize
             validateOnChange={false}
             validateOnBlur={false}
-            validationSchema={
-              props.validationSchema ? toFormikValidationSchema(props.validationSchema) : undefined
-            }
+            validationSchema={props.validate ? {validate: props.validate} : undefined}
             onSubmit={async values => {
               if (props.canEdit) props.onChange(values);
               setExpanded(false);

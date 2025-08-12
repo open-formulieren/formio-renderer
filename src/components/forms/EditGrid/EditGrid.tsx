@@ -4,7 +4,6 @@ import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';
-import type {z} from 'zod';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -75,7 +74,7 @@ interface WithoutIsolation<T> {
    * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
    */
   getItemBody: (values: T, index: number, opts: {expanded: false}) => React.ReactNode;
-  getItemValidationSchema?: never;
+  validate?: never;
 }
 
 interface WithIsolation<T> {
@@ -97,11 +96,11 @@ interface WithIsolation<T> {
    */
   getItemBody: (values: T, index: number, opts: {expanded: boolean}) => React.ReactNode;
   /**
-   * Callback to obtain a Zod validation schema for client-side validation of the item.
-   * Gets passed the item index in the array of values. Return `undefined` to indicate
-   * no validation schema should be applied.
+   * Callback to validate a single item. It receives the item index and the item values.
+   *
+   * Must throw zod-formik-adapter's `ValidationError` for invalid data.
    */
-  getItemValidationSchema?: (index: number) => z.ZodType<T>;
+  validate?: (index: number, values: T) => Promise<void>;
 }
 
 export type EditGridProps<T> = EditGridBaseProps<T> & (WithoutIsolation<T> | WithIsolation<T>);
@@ -144,7 +143,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     enableIsolation
                     data={values}
                     canEdit={props.canEditItem?.(values, index) ?? true}
-                    validationSchema={props.getItemValidationSchema?.(index)}
+                    validate={props.validate ? props.validate.bind(null, index) : undefined}
                     errors={getIn(errors, `${name}.${index}`)}
                     saveLabel={props.saveItemLabel}
                     onChange={(newValue: T) => {
