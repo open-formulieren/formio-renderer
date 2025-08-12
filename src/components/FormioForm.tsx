@@ -114,7 +114,6 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     const initialValues = extractInitialValues(components, getRegistryEntry);
     values = deepMergeValues(initialValues, values);
 
-    // TODO: test that it reacts to changed form definitions!
     const {setSchema, validate} = useValidationSchema(
       buildValidationSchema(components, intl, getRegistryEntry)
     );
