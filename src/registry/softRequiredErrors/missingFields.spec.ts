@@ -76,20 +76,9 @@ describe('getSoftRequiredFields', () => {
     ];
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    expect(softRequiredComponents).toStrictEqual([
-      SOFT_REQUIRED_FILE_COMPONENT,
-      {
-        id: 'softRequiredTextfield',
-        key: 'softRequiredTextfield',
-        type: 'textfield',
-        label: 'Soft required textfield',
-        defaultValue: '',
-        openForms: {
-          // @ts-expect-error soft required on textfield is not officially supported yet
-          softRequired: true,
-        },
-      } satisfies TextFieldComponentSchema,
-    ]);
+    expect(softRequiredComponents).toHaveLength(2);
+    expect(softRequiredComponents[0]).toBe(components[0]);
+    expect(softRequiredComponents[1]).toBe(components[1]);
   });
 
   test('getSoftRequiredFields should resolve soft required components nested in fieldset', () => {
@@ -118,6 +107,7 @@ describe('getSoftRequiredFields', () => {
     ];
 
     const softRequiredComponents = getSoftRequiredComponents(components);
+    expect(softRequiredComponents).toHaveLength(1);
     expect(softRequiredComponents).toStrictEqual([
       {
         type: 'fieldset',
