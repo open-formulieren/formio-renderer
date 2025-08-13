@@ -11,6 +11,7 @@ import Fieldset from './fieldset';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
 import Number from './number';
+import Partners from './partners';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Selectboxes from './selectboxes';
@@ -42,6 +43,7 @@ const REGISTRY: Registry = {
   licenseplate: LicensePlate,
   bsn: BSN,
   editgrid: EditGrid,
+  partners: Partners,
   // layout
   content: Content,
   columns: Columns,
