@@ -181,6 +181,48 @@ export const WithPrefixAndSuffix: Story = {
   },
 };
 
+export const WithValuePrefixAndValueSuffix: Story = {
+  args: {
+    name: 'number',
+    label: 'Number',
+    valuePrefix: '$',
+    valueSuffix: '%',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        number: 123,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+    expect(number).toHaveDisplayValue('$123%');
+  },
+};
+
+export const WithFixedNumberOfDecimals: Story = {
+  args: {
+    name: 'number',
+    label: 'Number',
+    fixedDecimalScale: true,
+    decimalLimit: 4,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        number: 10,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+    expect(number).toHaveDisplayValue('10.0000');
+  },
+};
+
 export const ValidationError: Story = {
   parameters: {
     formik: {

@@ -4,6 +4,7 @@ import BSN from './bsn';
 import Checkbox from './checkbox';
 import Columns from './columns';
 import Content from './content';
+import Currency from './currency';
 import DateField from './date';
 import EditGrid from './editgrid';
 import Email from './email';
@@ -36,6 +37,7 @@ const REGISTRY: Registry = {
   number: Number,
   checkbox: Checkbox,
   selectboxes: Selectboxes,
+  currency: Currency,
   radio: RadioField,
   // special types
   iban: IBAN,

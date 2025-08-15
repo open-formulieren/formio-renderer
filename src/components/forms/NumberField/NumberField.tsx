@@ -67,10 +67,25 @@ export interface NumberFieldProps {
    */
   suffix?: string;
   /**
+   * Indicator that describes the field value. It is placed before the value
+   * inside the input field.
+   */
+  valuePrefix?: string;
+  /**
+   * Indicator that describes the field value. It is placed after the value
+   * inside the input field.
+   */
+  valueSuffix?: string;
+  /**
    * Whether to format the number with a thousand separator. Which separator to use
    * will be determined based on the locale.
    */
   useThousandSeparator?: boolean;
+  /**
+   * Whether to format the value with a fixed number of decimals - equal to the value
+   * passed to the decimalLimit property.
+   */
+  fixedDecimalScale?: boolean;
 }
 
 export interface Separators {
@@ -102,7 +117,10 @@ const NumberField: React.FC<NumberFieldProps> = ({
   allowNegative = false,
   prefix,
   suffix,
+  valuePrefix,
+  valueSuffix,
   useThousandSeparator = false,
+  fixedDecimalScale = false,
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
@@ -155,6 +173,9 @@ const NumberField: React.FC<NumberFieldProps> = ({
           valueIsNumericString={valueIsNumericString}
           customInput={Textbox}
           aria-describedby={errorMessageId}
+          prefix={valuePrefix}
+          suffix={valueSuffix}
+          fixedDecimalScale={fixedDecimalScale}
           {...extraProps}
         />
       </InputContainer>
