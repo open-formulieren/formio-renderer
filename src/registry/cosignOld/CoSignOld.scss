@@ -1,0 +1,31 @@
+@use '@utrecht/components/button-link';
+@use '@utrecht/components/form-field';
+
+@use '@/scss/alert';
+@use '@/scss/bem';
+@use '@/scss/button-override';
+@use '@/scss/responsive';
+
+.openforms-co-sign-old {
+  @include bem.element('representation') {
+    box-sizing: border-box;
+    border: 1px solid var(--of-color-border);
+    background-color: var(--of-cosign-bg);
+    padding: 12px; // originally set to: $grid-margin-2, which is overridden in the SDK to 12px
+  }
+
+  @include bem.element('login-button') {
+    display: flex;
+    align-items: center;
+    gap: 7.5px; // originally set to: $grid-container-margin-base / 2, where $grid-container-margin-base is overridden in the SDK to 15px
+
+    @include responsive.mobile-only {
+      gap: 0;
+      .utrecht-button,
+      .utrecht-button-link {
+        width: 75%;
+        justify-content: flex-start;
+      }
+    }
+  }
+}

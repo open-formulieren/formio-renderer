@@ -14,6 +14,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   warning: 'exclamation-triangle',
   calendar: 'calendar-days',
   refresh: 'refresh',
+  error: 'exclamation-circle',
 };
 
 interface FontAwesomeSolidIconProps {
