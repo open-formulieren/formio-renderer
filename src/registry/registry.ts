@@ -5,6 +5,7 @@ import BSN from './bsn';
 import Checkbox from './checkbox';
 import Columns from './columns';
 import Content from './content';
+import CosignOld from './coSign';
 import Cosign from './cosign';
 import Currency from './currency';
 import DateField from './date';
@@ -64,4 +65,5 @@ const REGISTRY: Registry = {
   fieldset: Fieldset,
   softRequiredErrors: SoftRequiredErrors,
   // deprecated
+  coSign: CosignOld,
 };

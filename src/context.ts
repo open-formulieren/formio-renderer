@@ -18,6 +18,7 @@ export interface FormSettings {
   /**
    * Configuration necessary specific to certain Formio component types.
    */
+  // TODO-107: add type hints for cosign legacy
   componentParameters?: {
     addressNL?: AddressNLParameters;
   };
