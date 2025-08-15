@@ -26,7 +26,15 @@ const buildValidationSchema = (component: NumberComponentSchema) => {
 };
 
 describe('number component validation', () => {
-  test.each(['0', '4.9', '15', '20.1'])(
+  test.each([5, 5.0, 7.5, 10, 10.0])('accepts values inside min-max range (value: %s)', value => {
+    const schema = buildValidationSchema(BASE_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each([0, 4.9, 15, 20.1])(
     'does not accept values outside min-max range (value: %s)',
     value => {
       const schema = buildValidationSchema(BASE_COMPONENT);

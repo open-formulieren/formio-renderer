@@ -41,7 +41,7 @@ export const MinimalConfiguration: Story = {
     const canvas = within(canvasElement);
 
     const numberField = canvas.getByLabelText('Number');
-    await expect(numberField).toHaveDisplayValue('12,34');
+    expect(numberField).toHaveDisplayValue('12,34');
   },
 };
 
@@ -69,7 +69,7 @@ export const MinimalConfigurationWithEnglishLocale: Story = {
     const canvas = within(canvasElement);
 
     const numberField = canvas.getByLabelText('Number');
-    await expect(numberField).toHaveDisplayValue('12.34');
+    expect(numberField).toHaveDisplayValue('12.34');
   },
 };
 
@@ -118,7 +118,7 @@ export const AdditionalConfiguration: Story = {
     const canvas = within(canvasElement);
 
     const numberField = canvas.getByLabelText('Number');
-    await expect(numberField).toHaveDisplayValue('-10,12');
+    expect(numberField).toHaveDisplayValue('-10,12');
   },
 };
 
@@ -156,8 +156,8 @@ export const ValidateRequired: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const textField = canvas.getByLabelText('Number');
-    expect(textField).toBeVisible();
+    const numberField = canvas.getByLabelText('Number');
+    expect(numberField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
@@ -276,7 +276,7 @@ export const SingleValueDisplay: ValueDisplayStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByText('12,3457')).toBeInTheDocument();
+    expect(canvas.getByText('12,3457')).toBeInTheDocument();
   },
 };
 
@@ -299,6 +299,6 @@ export const SingleValueDisplayWithEnglishLocale: ValueDisplayStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByText('12.35')).toBeInTheDocument();
+    expect(canvas.getByText('12.35')).toBeInTheDocument();
   },
 };
