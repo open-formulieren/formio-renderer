@@ -4,6 +4,7 @@ import NumberField from '@/components/forms/NumberField';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -46,6 +47,7 @@ const NumberFieldComponent: RegistryEntry<NumberComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default NumberFieldComponent;
