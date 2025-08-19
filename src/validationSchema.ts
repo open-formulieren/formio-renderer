@@ -1,13 +1,13 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 import {useCallback, useRef} from 'react';
-import {IntlShape} from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import {z} from 'zod';
 import {ValidationError} from 'zod-formik-adapter';
 
 import type {GetRegistryEntry} from '@/registry/types';
 
-import {JSONObject} from './types';
+import type {JSONObject} from './types';
 
 export type KeySchemaPair = [string, z.ZodFirstPartySchemaTypes];
 
@@ -145,15 +145,20 @@ export interface UseValidationSchemas {
 export const useValidationSchemas = (schemas: Schema[]): UseValidationSchemas => {
   // the ref itself is stable, so using it in useCallback dependencies makes those
   // callbacks stable identities too.
-  const ref = useRef<Schema[]>(schemas);
+  const ref = useRef<(Schema | undefined)[]>(schemas);
 
   const setSchema = useCallback(
     (index: number, newSchema: Schema) => (ref.current[index] = newSchema),
     [ref]
   );
   const _validate = useCallback(
-    async (index: number, obj: JSONObject): Promise<void> =>
-      await validate(ref.current[index], obj),
+    async (index: number, obj: JSONObject): Promise<void> => {
+      const schema = ref.current[index];
+      if (schema === undefined) {
+        throw new Error(`No schema at index ${index} - this is likely a logical bug.`);
+      }
+      return await validate(schema, obj);
+    },
     [ref]
   );
 
