@@ -60,15 +60,15 @@ const LABEL_SEPARATOR = ' > ';
  * presentation components. Editgrid components *can* be part of the result, when they
  * are soft-required and don't have any children.
  *
- * @param {AnyComponentSchema[]} components A list of form components.
- * @param {JSONObject} values The form values.
- * @param {string[]} keyPrefix A list of the keys of parent components. Used in recursion
+ * @param components A list of form components.
+ * @param values The form values.
+ * @param keyPrefix A list of the keys of parent components. Used in recursion
  *     to easily access the value of the current component.
- * @param {string[]} labelPrefix A list of the labels of parent components. Used in
+ * @param labelPrefix A list of the labels of parent components. Used in
  *     recursion to create a singular label containing references to parent components.
- * @param {GetRegistryEntry} getRegistryEntry
+ * @param getRegistryEntry
  *
- * @return {MissingFields[]} The list of missing/empty components. Each item in this list
+ * @return The list of missing/empty components. Each item in this list
  *     only contains a `label`, describing the location of the component, and a
  *     `pathToComponent` which points to the exact location of the component data in the
  *     form values.

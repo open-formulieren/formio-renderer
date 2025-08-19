@@ -6,10 +6,9 @@ import isEmpty from './empty';
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   ['', true],
   // Non-empty state
-  ['test', false],
+  ['1970-01-01', false],
 ])(
   'Date isEmpty compares against defined, non-empty array state of value',
   (valueToTest: any, expected: boolean) => {
@@ -28,14 +27,11 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [[], true],
   [[''], true],
   [['      '], true],
   // Non-empty state
-  [['    foo'], false],
-  [['foo    '], false],
-  [['foo'], false],
+  [['1970-01-01'], false],
 ])(
   'Multiple date isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {

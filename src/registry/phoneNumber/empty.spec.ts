@@ -8,7 +8,6 @@ test.each([
   [undefined, true],
   ['', true],
   // Non-empty state
-  ['test', false],
   ['0612345678', false],
 ])(
   'PhoneNumber isEmpty compares against defined string with more then 0 characters state of value',
@@ -32,14 +31,13 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [[], true],
   [[''], true],
   [['      '], true],
   // Non-empty state
-  [['    foo'], false],
-  [['foo    '], false],
-  [['foo'], false],
+  [['    0612345678'], false],
+  [['0612345678    '], false],
+  [['0612345678'], false],
 ])(
   'Multiple phoneNumber isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {

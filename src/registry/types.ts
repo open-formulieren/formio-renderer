@@ -156,7 +156,7 @@ export type ApplyVisibility<S> = (
   updatedValues: JSONObject;
 };
 
-export type IsEmpty<S, V = JSONValue | undefined> = (componentDefinition: S, value: V) => boolean;
+export type IsEmpty<S, V = JSONValue> = (componentDefinition: S, value: V | undefined) => boolean;
 
 export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {

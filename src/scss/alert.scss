@@ -1,5 +1,6 @@
-@use '@/scss/bem';
 @use '@utrecht/components/alert';
+
+@use '@/scss/bem';
 
 // Temporary CSS override to get the colour of the icon to work.
 // Might not be necessary anymore when we move to a newer version of utrecht components.

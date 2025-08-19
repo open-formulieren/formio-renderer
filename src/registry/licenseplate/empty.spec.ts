@@ -8,7 +8,7 @@ test.each([
   [undefined, true],
   ['', true],
   // Non-empty state
-  ['foo', false],
+  ['aa-aa-aa', false],
 ])(
   'Licenseplate isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {
@@ -34,14 +34,13 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [[], true],
   [[''], true],
   [['      '], true],
   // Non-empty state
-  [['    foo'], false],
-  [['foo    '], false],
-  [['foo'], false],
+  [['    aa-aa-aa'], false],
+  [['aa-aa-aa    '], false],
+  [['aa-aa-aa'], false],
 ])(
   'Multiple licenseplate isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {

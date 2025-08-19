@@ -8,15 +8,13 @@ import isEmpty from './empty';
 test.each([
   // Empty states
   [undefined, true],
-  ['foobar', true],
-  [{}, true],
   [[], true],
   // Non-empty states
   [[{}], false],
   [[{textfield: ''}], false],
 ])(
   'Editgrid isEmpty compares against defined, non-empty array state of value',
-  (valueToTest: JSONObject, expected: boolean) => {
+  (valueToTest: JSONObject[] | undefined, expected: boolean) => {
     const component: EditGridComponentSchema = {
       type: 'editgrid',
       key: 'editgrid',

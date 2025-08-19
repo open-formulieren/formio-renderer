@@ -4,12 +4,12 @@ import {expect, test} from 'vitest';
 import isEmpty from './empty';
 
 test.each([
-  // option is unchecked
-  [{'123': false}, true],
-  // option is checked
-  [{'123': true}, false],
-  // no options
+  // Empty states
+  [undefined, true],
   [{}, true],
+  [{'123': false}, true],
+  // Non-empty states
+  [{'123': true}, false],
 ])(
   'Selectboxes isEmpty compares against checked/unchecked state of value',
   (valueToTest: Record<string, boolean>, expected: boolean) => {

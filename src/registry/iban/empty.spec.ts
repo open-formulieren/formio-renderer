@@ -28,7 +28,6 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [[], true],
   [[''], true],
   [['      '], true],

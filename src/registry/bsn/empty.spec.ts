@@ -33,9 +33,7 @@ test.each([
   [[''], true],
   [['      '], true],
   // Non-empty state
-  [['    foo'], false],
-  [['foo    '], false],
-  [['foo'], false],
+  [['111222333'], false],
 ])(
   'Multiple bsn isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: string[] | undefined, expected: boolean) => {

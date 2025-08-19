@@ -6,9 +6,7 @@ import isEmpty from './empty';
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [false, true],
-  ['', true],
   // Non-empty state
   [true, false],
 ])(

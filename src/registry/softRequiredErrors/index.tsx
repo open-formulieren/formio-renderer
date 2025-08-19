@@ -37,7 +37,7 @@ export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
       componentsMap,
     });
     return visibleComponents;
-  }, [components, initialValues, values]);
+  }, [components, componentsMap, getRegistryEntry, initialValues, values]);
 
   const softRequiredComponents = useMemo(
     () => getSoftRequiredComponents(visibleComponents),
@@ -54,13 +54,11 @@ export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   }
 
   return (
-    <>
-      <Alert type="warning" icon={<Icon icon="warning" />}>
-        <HTMLContent>
-          <SoftRequiredErrorsMessage html={html} missingFields={missingFields} />
-        </HTMLContent>
-      </Alert>
-    </>
+    <Alert type="warning" icon={<Icon icon="warning" />}>
+      <HTMLContent>
+        <SoftRequiredErrorsMessage html={html} missingFields={missingFields} />
+      </HTMLContent>
+    </Alert>
   );
 };
 

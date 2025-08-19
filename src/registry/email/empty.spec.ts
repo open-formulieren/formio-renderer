@@ -8,7 +8,7 @@ test.each([
   [undefined, true],
   ['', true],
   // Non-empty state
-  ['test', false],
+  ['test@mail.com', false],
 ])(
   'Email isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {
@@ -28,14 +28,13 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
-  [null, true],
   [[], true],
   [[''], true],
   [['      '], true],
   // Non-empty state
-  [['    foo'], false],
-  [['foo    '], false],
-  [['foo'], false],
+  [['    test@mail.com'], false],
+  [['test@mail.com    '], false],
+  [['test@mail.com'], false],
 ])(
   'Multiple email isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: any, expected: boolean) => {

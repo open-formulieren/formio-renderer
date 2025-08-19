@@ -6,7 +6,7 @@ const isEmpty: IsEmpty<CheckboxComponentSchema, boolean | undefined> = (
   _componentDefinition,
   value
 ) => {
-  return value == null || !value;
+  return !value;
 };
 
 export default isEmpty;
