@@ -1,6 +1,6 @@
 # Changes
 
-## 0.7.0 (TBD)
+## 0.7.0 (2025-08-19)
 
 Feature release with some architectural rework.
 
@@ -12,11 +12,34 @@ schema depending on the currently visible fields.
 
 **Features**
 
-...
+- [`#100`][#100] Implemented the `iban` component type.
+- [`#73`][#73] Implemented the `content` component type, now built on top of the `utrecht-html` NL
+  Design System component.
+- [`#59`][#59] Added support for the `clearOnHide` component configuration option.
+- [`#101`][#101] Implemented the `licenseplate` component type.
+- [`#109`][#109] Implemented the `textarea` component type.
+- [`#103`][#103] Implemented the `number` component type.
 
 **Bugfixes**
 
-...
+- [`#133`][#133], [`#141`][#141] Fixed two situations where infinite renders could happen with
+  nested edit grids.
+
+**Project maintenance**
+
+- Added CI check for outdated i18n messages.
+- [`#127`][#127] Upgraded to Storybook 9.
+- [`#127`][#127] Added code coverage instrumentation and reporting.
+
+[#100]: https://github.com/open-formulieren/formio-renderer/issues/100
+[#73]: https://github.com/open-formulieren/formio-renderer/issues/73
+[#59]: https://github.com/open-formulieren/formio-renderer/issues/100
+[#101]: https://github.com/open-formulieren/formio-renderer/issues/101
+[#133]: https://github.com/open-formulieren/formio-renderer/issues/133
+[#109]: https://github.com/open-formulieren/formio-renderer/issues/109
+[#127]: https://github.com/open-formulieren/formio-renderer/issues/127
+[#141]: https://github.com/open-formulieren/formio-renderer/issues/141
+[#103]: https://github.com/open-formulieren/formio-renderer/issues/103
 
 ## 0.6.1 (2025-06-03)
 
