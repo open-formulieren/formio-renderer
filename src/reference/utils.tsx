@@ -48,6 +48,11 @@ const renderCustom = (args: ReferenceStoryArgs) => {
 
 const renderReference = (args: ReferenceStoryArgs) => (
   <>
+    {/*
+      NOTE: in development with Storybook, this triggers "Rendered more hooks than
+      during the previous render." errors. YOu can simply re-mount the story and then
+      it's fine again. We have no option at the moment for a different solution.
+    */}
     <ReactFormioForm
       form={{
         display: 'form',

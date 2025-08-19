@@ -1,7 +1,11 @@
-import type {EditGridComponentSchema} from '@open-formulieren/types';
+import type {
+  AnyComponentSchema,
+  EditGridComponentSchema,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {createRef, forwardRef} from 'react';
+import {createRef, forwardRef, useState} from 'react';
 import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
 
@@ -440,6 +444,55 @@ describe('Updating form errors', () => {
       expect(error).not.toBeInTheDocument();
     });
   });
+});
+
+test('Modifying the form definition updates the validation schema', async () => {
+  const user = userEvent.setup();
+  const onSubmit = vi.fn();
+  const initial: TextFieldComponentSchema = {
+    id: 'textfield',
+    type: 'textfield',
+    key: 'textfield',
+    label: 'Textfield with max length',
+    validate: {maxLength: 10},
+  };
+  const updated: TextFieldComponentSchema = {
+    ...initial,
+    validate: {maxLength: 3},
+  };
+
+  const TestComponent: React.FC = () => {
+    const [components, setComponents] = useState<AnyComponentSchema[]>([initial]);
+    return (
+      <>
+        <button onClick={() => setComponents([updated])}>Update component</button>
+        <Form components={components} onSubmit={onSubmit} />
+      </>
+    );
+  };
+
+  render(<TestComponent />);
+
+  // initially validate the text field - 10 chars is okay
+  const texfield = await screen.findByLabelText('Textfield with max length');
+  const submitButton = screen.getByRole('button', {name: 'Submit'});
+  await user.type(texfield, '12345678901');
+  await user.click(submitButton);
+  expect(await screen.findByText('String must contain at most 10 character(s)')).toBeVisible();
+  expect(onSubmit).not.toHaveBeenCalled();
+
+  // correct the input and check that we can submit
+  await user.clear(texfield);
+  await user.type(texfield, '1234ab');
+  await user.click(submitButton);
+  expect(onSubmit).toHaveBeenCalledWith({textfield: '1234ab'});
+
+  // now update the component definition, which should update the validation schema
+  await user.click(screen.getByRole('button', {name: 'Update component'}));
+  const updatedTexfield = await screen.findByLabelText('Textfield with max length');
+  expect(updatedTexfield).toHaveDisplayValue('1234ab');
+  await user.click(submitButton);
+  expect(await screen.findByText('String must contain at most 3 character(s)')).toBeVisible();
 });
 
 describe('Regressions', () => {

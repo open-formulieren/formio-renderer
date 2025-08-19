@@ -2,12 +2,12 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
 import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
 import {useIntl} from 'react-intl';
-import {toFormikValidationSchema} from 'zod-formik-adapter';
+import {z} from 'zod';
 
 import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
-import {buildValidationSchema} from '@/validationSchema';
+import {buildValidationSchema, useValidationSchema} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
@@ -114,9 +114,9 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     const initialValues = extractInitialValues(components, getRegistryEntry);
     values = deepMergeValues(initialValues, values);
 
-    // build the validation schema from the component definitions
-    // TODO: take into account hidden components!
-    const zodSchema = buildValidationSchema(components, intl, getRegistryEntry);
+    const {setSchema, validate} = useValidationSchema(
+      buildValidationSchema(components, intl, getRegistryEntry)
+    );
 
     return (
       <FormSettingsProvider
@@ -130,13 +130,18 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
           initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
           validateOnChange={false}
           validateOnBlur={false}
-          validationSchema={toFormikValidationSchema(zodSchema)}
+          validationSchema={{validate}}
           onSubmit={async values => {
             await onSubmit(values);
           }}
         >
           {/* TODO: pre-process components to ensure they have an ID? */}
-          <InnerFormioForm id={id} components={components} ref={ref}>
+          <InnerFormioForm
+            id={id}
+            components={components}
+            ref={ref}
+            onValidationSchemaChange={setSchema}
+          >
             {children}
           </InnerFormioForm>
         </Formik>
@@ -145,13 +150,16 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
   }
 );
 
-export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'>;
+export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'> & {
+  onValidationSchemaChange: (schema: z.ZodSchema<JSONObject>) => void;
+};
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
-  ({components, id, children}, ref) => {
+  ({components, id, onValidationSchemaChange, children}, ref) => {
+    const intl = useIntl();
     const {values, setValues, errors, setErrors, setTouched, initialValues} =
       useFormikContext<JSONObject>();
 
@@ -190,8 +198,15 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         getRegistryEntry,
         componentsMap,
       });
+
+      const updatedValidationSchema = buildValidationSchema(
+        visibleComponents,
+        intl,
+        getRegistryEntry
+      );
+      onValidationSchemaChange(updatedValidationSchema);
       return {visibleComponents, updatedValues};
-    }, [components, initialValues, values]);
+    }, [intl, onValidationSchemaChange, components, initialValues, values]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
     // values. We can't call setValues directly, since updating state during render like

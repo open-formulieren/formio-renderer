@@ -4,6 +4,7 @@ import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
 import {withFormik} from '@/sb-decorators';
+import {validate} from '@/validationSchema';
 
 import EditGrid from '.';
 
@@ -83,9 +84,11 @@ export const WithIsolation: Story = {
         </span>
       </>
     ),
-    getItemValidationSchema: () => {
-      let fieldSchema = z.string().refine(value => value !== 'Item 1', {message: 'Nooope'});
-      return z.object({myField: fieldSchema});
+    validate: async (_: number, values: ItemData) => {
+      const schema = z.object({
+        myField: z.string().refine(value => value !== 'Item 1', {message: 'Nooope'}),
+      });
+      await validate(schema, values);
     },
     canRemoveItem: () => true,
     canEditItem: () => true,

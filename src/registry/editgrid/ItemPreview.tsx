@@ -89,8 +89,6 @@ interface ComponentDataListItemProps {
  * the layout and oddballs like editgrid first recurse into them for the leaf node display,
  * so that we don't clutter the summary view with layout details, just like how Formio
  * skips over layout components.
- *
- * @todo ensure that a component is checked for visibility before it's rendered.
  */
 const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
   component,

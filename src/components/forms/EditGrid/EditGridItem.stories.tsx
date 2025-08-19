@@ -5,6 +5,8 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
+import {JSONObject} from '@/types';
+import {validate} from '@/validationSchema';
 
 import {EditGridItem} from '.';
 
@@ -87,9 +89,12 @@ export const IsolatedModeWithZodSchema: Story = {
   args: {
     ...IsolatedMode.args,
     enableIsolation: true,
-    validationSchema: z.object({
-      topLevelKey: z.string().max(5), // max 5 characters
-    }),
+    validate: async (obj: JSONObject) => {
+      const schema = z.object({
+        topLevelKey: z.string().max(5), // max 5 characters
+      });
+      await validate(schema, obj);
+    },
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
