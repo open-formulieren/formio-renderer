@@ -2,7 +2,7 @@ import type {SelectboxesComponentSchema} from '@open-formulieren/types';
 
 import {IsEmpty} from '@/registry/types';
 
-const isEmpty: IsEmpty<SelectboxesComponentSchema, Record<string, boolean> | null | undefined> = (
+const isEmpty: IsEmpty<SelectboxesComponentSchema, Record<string, boolean> | null> = (
   _componentDefinition,
   value
 ) => {

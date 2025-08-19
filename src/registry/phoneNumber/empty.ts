@@ -2,9 +2,7 @@ import type {PhoneNumberComponentSchema} from '@open-formulieren/types';
 
 import {IsEmpty} from '@/registry/types';
 
-type TextValue = string | string[] | undefined;
-
-const isEmpty: IsEmpty<PhoneNumberComponentSchema, TextValue> = (_component, value) => {
+const isEmpty: IsEmpty<PhoneNumberComponentSchema, string | string[]> = (_component, value) => {
   // Based on the formio textfield implementation https://github.com/formio/formio.js/blob/29939fc9d66f2b95527c90d3cf7729570c3d3010/src/components/textfield/TextField.js#L300
   if (value === undefined) {
     return true;
