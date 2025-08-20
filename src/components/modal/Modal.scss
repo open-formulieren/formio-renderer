@@ -1,0 +1,87 @@
+@use '@utrecht/components/button';
+@use '@utrecht/components/heading-1';
+@use '@/scss/bem';
+@use '@/scss/responsive';
+
+body:has(.openforms-modal[open]) {
+  overflow: hidden;
+}
+
+.openforms-modal {
+  &[open] {
+    display: grid;
+  }
+
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: auto 1fr;
+  grid-row-gap: 20px;
+  grid-template-areas:
+    'body close'
+    'body close';
+  padding: 40px;
+
+  box-sizing: border-box;
+  inline-size: 90dvw;
+
+  min-block-size: 20dvh;
+  block-size: fit-content;
+  max-block-size: 90dvh;
+
+  border: 1px solid #eee;
+  background-color: #fff;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 6px 20px rgba(0, 0, 0, 0.2);
+
+  @include responsive.desktop {
+    inline-size: 50dvw;
+
+    min-block-size: 30dvh;
+    max-block-size: 50dvh;
+  }
+
+  &:has(.openforms-modal__title) {
+    grid-template-areas:
+      'title close'
+      'body body';
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(1px);
+  }
+
+  @include bem.element('close') {
+    position: relative;
+    top: -33px;
+    right: -34px;
+
+    grid-area: close;
+    align-self: start;
+    justify-self: end;
+    transition:
+      transform ease 0.1s,
+      opacity ease 0.1s;
+    opacity: 0.5;
+    font-size: 150%;
+
+    &:focus {
+      outline: revert;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 0.7;
+    }
+  }
+
+  @include bem.element('title') {
+    grid-area: title;
+    break-inside: avoid-column;
+  }
+
+  @include bem.element('body') {
+    grid-area: body;
+    overflow-y: auto;
+  }
+}
