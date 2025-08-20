@@ -16,6 +16,7 @@ import {extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import applyVisibility from './visibility';
 
@@ -251,6 +252,7 @@ const EditGridComponent: RegistryEntry<EditGridComponentSchema> = {
   formField: EditGrid,
   getInitialValues,
   applyVisibility,
+  isEmpty,
 };
 
 export default EditGridComponent;

@@ -4,6 +4,7 @@ import Checkbox from '@/components/forms/Checkbox';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
@@ -30,6 +31,7 @@ const CheckboxComponent: RegistryEntry<CheckboxComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default CheckboxComponent;

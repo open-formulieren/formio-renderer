@@ -10,6 +10,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   edit: 'edit',
   remove: 'trash-can',
   tooltip: 'question-circle',
+  warning: 'exclamation-triangle',
 };
 
 interface FontAwesomeSolidIconProps {

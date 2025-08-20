@@ -4,6 +4,7 @@ import RadioField from '@/components/forms/RadioField';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
@@ -33,6 +34,7 @@ const RadioComponent: RegistryEntry<RadioComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  isEmpty,
 };
 
 export default RadioComponent;

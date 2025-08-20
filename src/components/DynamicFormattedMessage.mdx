@@ -1,0 +1,130 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as DynamicFormattedMessageStories from './DynamicFormattedMessage.stories';
+
+<Meta of={DynamicFormattedMessageStories} />
+
+# DynamicFormattedMessage
+
+The `DynamicFormattedMessage` component is a custom implementation of the react-intl
+`FormattedMessage` for dynamically defined messages.
+
+The react-intl `FormattedMessage` (and `useIntl().formatMessage`, for that matter), don't allow
+dynamic messages, as they require the messages to be statically evaluable
+https://github.com/formatjs/babel-plugin-react-intl/issues/119. `DynamicFormattedMessage` bypasses
+the evaluation, allowing dynamic messages.
+
+For rendering translations, you should use `FormattedMessage` or `useIntl().formatMessage`.
+`DynamicFormattedMessage` should only be used for more dynamic situations, like rendering rich text
+derived from component props (situations like as the SoftRequiredErrors component).
+
+<Canvas of={DynamicFormattedMessageStories.Default} />
+
+## Props
+
+<ArgTypes />
+
+## Dynamic messages
+
+The big selling point of this component are the dynamic messages. With these we can easily and
+safely render rich dynamic content to the React application. This is quite useful for components as
+the SoftRequiredErrors, which has dynamic and admin-defined rich content.
+
+<Canvas of={DynamicFormattedMessageStories.DynamicMessage} />
+
+## Variables
+
+You can place variables in the `defaultMessage` to dynamically change the content. Place a variable
+tag, like `{ your_variable_name }`, in the `defaultMessage`. To populate the variable, you simply
+add your new variable to the `values` property and assign the value.
+
+```tsx
+import DynamicFormattedMessage from '@/components/DynamicFormattedMessage';
+
+const Message: React.FC = () => {
+  return (
+    <DynamicFormattedMessage
+      description="Message description"
+      defaultMessage="Hi {name}"
+      values={{
+        name: 'Robin',
+      }}
+    />
+  );
+};
+```
+
+## Rich-text variable values
+
+The variables also support rich text values. You can assign inline rich values, or pass a React
+component as value.
+
+Using rich text values follows the same logic as the simple variable values: simply define you
+variable and assign the value. When using React components as value you define them as regular
+elements: `<YourCustomReactElement />`.
+
+The React components used as variable values are fully functional:
+
+- Render as proper React elements, supporting css and javascript functionalities
+- Allow the use of Hooks
+- Update/re-render with state changes
+
+```tsx
+import DynamicFormattedMessage from '@/components/DynamicFormattedMessage';
+
+const VariableTemplate: React.FC<{message: string}> = ({message}) => <p>{message}</p>;
+
+const Message: React.FC = () => {
+  const richText = '{welcome} {personalQuestion}';
+
+  return (
+    <DynamicFormattedMessage
+      description="Message description"
+      defaultMessage={richText}
+      values={{
+        welcome: <p>Hi Robin,</p>,
+        personalQuestion: <VariableTemplate message="How are you today?" />,
+      }}
+    />
+  );
+};
+```
+
+<Canvas of={DynamicFormattedMessageStories.RichVariables} />
+
+## useFormikContext in variable values
+
+The variable value React components can also access the global state of the application, meaning
+they can fetch the form values from `useFormikContext`, and display them:
+
+```tsx
+import {useFormikContext} from 'formik';
+
+import DynamicFormattedMessage from '@/components/DynamicFormattedMessage';
+
+const VariableTemplate: React.FC = () => {
+  const {values} = useFormikContext<Record<string, any>>();
+
+  return (
+    <ul>
+      {Object.entries(values).map(([key, value]) => (
+        <li key={key}>
+          Field <b>{key}</b> has value <i>{value}</i>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const Message: React.FC = () => {
+  return (
+    <DynamicFormattedMessage
+      description="Message description"
+      defaultMessage="{formValues}"
+      values={{
+        formValues: <VariableTemplate />,
+      }}
+    />
+  );
+};
+```

@@ -13,6 +13,7 @@ import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
 import testConditional from './conditional';
+import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
@@ -139,6 +140,7 @@ const SelectboxesComponent: RegistryEntry<SelectboxesComponentSchema> = {
   getInitialValues,
   getValidationSchema,
   testConditional,
+  isEmpty,
 };
 
 export default SelectboxesComponent;
