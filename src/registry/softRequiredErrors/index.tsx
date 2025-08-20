@@ -25,29 +25,28 @@ export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
 
   const componentsMap = useMemo(() => getComponentsMap(components), [components]);
 
-  // Compute the visible components and associated updated values (via clearOnHide)
-  // every time either the form configuration (components) is modified or when the form
-  // values change. Note that the form values also change as a reaction to processed
-  // values via clearOnHide, and this implies multiple (render) passes to converge.
-  const visibleComponents = useMemo(() => {
+  // Because `visibleComponents` changes with every `values` change, it doesn't make
+  // sense to separate these functions. (Grouping them in 1 useMemo has the same effect
+  // as 3 separate useMemo's)
+  // When we do notice a performance hit, we can further investigate, redesign, optimize.
+  // Maybe a `useProcessVisibility` hook could solve some of the issues/lighten the
+  // workload.
+  const missingFields: MissingFields[] = useMemo(() => {
+    // We only show visible components in the soft-required list.
     const {visibleComponents} = processVisibility(components, values, {
       parentHidden: false,
       initialValues,
       getRegistryEntry,
       componentsMap,
     });
-    return visibleComponents;
+
+    // Filter the list of visible components to the components that are actually
+    // soft-required.
+    const softRequiredComponents = getSoftRequiredComponents(visibleComponents);
+
+    // Get the missing/empty soft-required fields, and return them.
+    return getMissingFields(softRequiredComponents, values, getRegistryEntry);
   }, [components, componentsMap, getRegistryEntry, initialValues, values]);
-
-  const softRequiredComponents = useMemo(
-    () => getSoftRequiredComponents(visibleComponents),
-    [visibleComponents]
-  );
-
-  const missingFields: MissingFields[] = useMemo(
-    () => getMissingFields(softRequiredComponents, values, getRegistryEntry),
-    [softRequiredComponents, values, getRegistryEntry]
-  );
 
   if (!missingFields.length) {
     return null;
