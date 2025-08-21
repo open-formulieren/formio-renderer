@@ -4,6 +4,7 @@ import BSN from './bsn';
 import Checkbox from './checkbox';
 import Columns from './columns';
 import Content from './content';
+import Cosign from './cosign';
 import Currency from './currency';
 import DateField from './date';
 import EditGrid from './editgrid';
@@ -43,6 +44,7 @@ const REGISTRY: Registry = {
   iban: IBAN,
   licenseplate: LicensePlate,
   bsn: BSN,
+  cosign: Cosign,
   editgrid: EditGrid,
   // layout
   content: Content,

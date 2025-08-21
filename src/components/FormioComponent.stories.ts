@@ -67,7 +67,9 @@ export const UnregisteredComponent: Story = {
   args: {
     componentDefinition: {
       id: 'component-unregistered',
-      type: 'cosign',
+      // @ts-expect-error to avoid having to change this story everytime the specified component is
+      // implemented, set it to a non-existing component type
+      type: 'unregisteredComponent',
       key: 'component-unregistered',
       label: 'Unregistered component',
       validateOn: 'blur',
