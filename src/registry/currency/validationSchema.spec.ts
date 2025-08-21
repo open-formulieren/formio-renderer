@@ -1,4 +1,4 @@
-import type {NumberComponentSchema} from '@open-formulieren/types';
+import type {CurrencyComponentSchema} from '@open-formulieren/types';
 import {createIntl} from 'react-intl';
 import {describe, expect, test} from 'vitest';
 
@@ -8,11 +8,12 @@ import getValidationSchema from './validationSchema';
 
 const intl = createIntl({locale: 'en', messages: {}});
 
-const BASE_COMPONENT: NumberComponentSchema = {
-  type: 'number',
-  id: 'number',
-  key: 'number',
-  label: 'Number',
+const BASE_COMPONENT: CurrencyComponentSchema = {
+  type: 'currency',
+  id: 'currency',
+  key: 'currency',
+  currency: 'EUR',
+  label: 'Currency',
   validateOn: 'blur',
   validate: {
     min: 5,
@@ -20,12 +21,12 @@ const BASE_COMPONENT: NumberComponentSchema = {
   },
 };
 
-const buildValidationSchema = (component: NumberComponentSchema) => {
+const buildValidationSchema = (component: CurrencyComponentSchema) => {
   const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
 };
 
-describe('number component validation', () => {
+describe('currency component validation', () => {
   test.each([5, 5.0, 7.5, 10, 10.0])('accepts values inside min-max range (value: %s)', value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
@@ -49,7 +50,7 @@ describe('number component validation', () => {
     [false, null],
     [true, null],
   ])('required %s (value: %s)', (required, value) => {
-    const component: NumberComponentSchema = {
+    const component: CurrencyComponentSchema = {
       ...BASE_COMPONENT,
       validate: {...BASE_COMPONENT.validate, required},
     };

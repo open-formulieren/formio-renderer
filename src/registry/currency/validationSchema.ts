@@ -1,4 +1,4 @@
-import type {NumberComponentSchema} from '@open-formulieren/types';
+import type {CurrencyComponentSchema} from '@open-formulieren/types';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
@@ -14,20 +14,28 @@ const NUMBER_LESS_THAN_MIN_MESSAGE = defineMessage({
   defaultMessage: 'The value must be {min} or greater.',
 });
 
-const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
+const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate} = componentDefinition;
+  const {key, validate, currency} = componentDefinition;
   const required = validate?.required;
   const max = validate?.max;
   const min = validate?.min;
 
+  const numberFormat = new Intl.NumberFormat(intl.locale, {style: 'currency', currency});
+  const maxFormatted = max && numberFormat.format(max);
+  const minFormatted = min && numberFormat.format(min);
+
   let schema: z.ZodFirstPartySchemaTypes = z.number();
   if (max !== undefined)
-    schema = schema.lte(max, {message: intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max})});
+    schema = schema.lte(max, {
+      message: intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max: maxFormatted}),
+    });
   if (min !== undefined)
-    schema = schema.gte(min, {message: intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min})});
+    schema = schema.gte(min, {
+      message: intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min: minFormatted}),
+    });
   if (!required) schema = schema.nullable().optional();
 
   // For numbers, a missing value is null, which doesn't trigger the required validation of zod,

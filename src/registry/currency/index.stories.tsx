@@ -1,64 +1,67 @@
-import {NumberComponentSchema} from '@open-formulieren/types';
+import type {CurrencyComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
-import {FormioFormProps} from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
 import ValueDisplay from './ValueDisplay';
-import {FormioNumberField as Number} from './index';
+import {FormioCurrencyField as Currency} from './index';
 
 export default {
-  title: 'Component registry / basic / number',
-  component: Number,
+  title: 'Component registry / basic / currency',
+  component: Currency,
   decorators: [withFormik],
   globals: {
     locale: 'nl',
   },
-} satisfies Meta<typeof Number>;
+} satisfies Meta<typeof Currency>;
 
-type Story = StoryObj<typeof Number>;
+type Story = StoryObj<typeof Currency>;
 
 export const MinimalConfiguration: Story = {
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validateOn: 'blur',
     },
   },
   parameters: {
     formik: {
       initialValues: {
-        number: 12.34,
+        currency: 12.34,
       },
     },
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const numberField = canvas.getByLabelText('Number');
-    expect(numberField).toHaveDisplayValue('12,34');
+    const numberField = canvas.getByLabelText('Currency');
+    // Formatted using a non-breaking space
+    expect(numberField).toHaveDisplayValue('€\u00A012,34');
   },
 };
 
 export const MinimalConfigurationWithEnglishLocale: Story = {
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validateOn: 'blur',
     },
   },
   parameters: {
     formik: {
       initialValues: {
-        number: 12.34,
+        currency: 12.34,
       },
     },
   },
@@ -68,18 +71,19 @@ export const MinimalConfigurationWithEnglishLocale: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const numberField = canvas.getByLabelText('Number');
-    expect(numberField).toHaveDisplayValue('12.34');
+    const numberField = canvas.getByLabelText('Currency');
+    expect(numberField).toHaveDisplayValue('€12.34');
   },
 };
 
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validateOn: 'blur',
       description: 'A description',
       tooltip: 'A tooltip',
@@ -88,7 +92,7 @@ export const WithTooltip: Story = {
   parameters: {
     formik: {
       initialValues: {
-        number: null,
+        currency: null,
       },
     },
   },
@@ -97,33 +101,33 @@ export const WithTooltip: Story = {
 export const AdditionalConfiguration: Story = {
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validateOn: 'blur',
       allowNegative: true,
-      suffix: 'm<sup>2</sup>',
-      decimalLimit: 2,
+      decimalLimit: 3,
     },
   },
   parameters: {
     formik: {
       initialValues: {
-        number: -10.12345,
+        currency: -10.12345,
       },
     },
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const numberField = canvas.getByLabelText('Number');
-    expect(numberField).toHaveDisplayValue('-10,12');
+    const numberField = canvas.getByLabelText('Currency');
+    expect(numberField).toHaveDisplayValue('-€\u00A010,123');
   },
 };
 
 interface ValidationStoryArgs {
-  componentDefinition: NumberComponentSchema;
+  componentDefinition: CurrencyComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
 }
 
@@ -143,10 +147,11 @@ export const ValidateRequired: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validate: {
         required: true,
       },
@@ -156,8 +161,8 @@ export const ValidateRequired: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const numberField = canvas.getByLabelText('Number');
-    expect(numberField).toBeVisible();
+    const currencyField = canvas.getByLabelText('Currency');
+    expect(currencyField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
@@ -169,10 +174,11 @@ export const ValidateMax: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validate: {
         max: 10,
       },
@@ -182,25 +188,25 @@ export const ValidateMax: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const number = canvas.getByLabelText('Number');
+    const currencyField = canvas.getByLabelText('Currency');
     const submit = canvas.getByRole('button', {name: 'Submit'});
 
     // Assert that value lower than max is fine
-    await userEvent.type(number, '9,1');
+    await userEvent.type(currencyField, '9,1');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or less.')).toBeNull();
+    expect(await canvas.queryByText('The value must be € 10,00 or less.')).toBeNull();
 
     // Assert that value equal to max is fine
-    await userEvent.clear(number);
-    await userEvent.type(number, '10');
+    await userEvent.clear(currencyField);
+    await userEvent.type(currencyField, '10');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or less.')).toBeNull();
+    expect(await canvas.queryByText('The value must be € 10,00 or less.')).toBeNull();
 
     // Assert that value greater than max is not fine
-    await userEvent.clear(number);
-    await userEvent.type(number, '10,5');
+    await userEvent.clear(currencyField);
+    await userEvent.type(currencyField, '10,5');
     await userEvent.click(submit);
-    expect(await canvas.findByText('The value must be 10 or less.')).toBeVisible();
+    expect(await canvas.findByText('The value must be € 10,00 or less.')).toBeVisible();
   },
 };
 
@@ -209,10 +215,11 @@ export const ValidateMin: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
       validate: {
         min: 10,
       },
@@ -222,30 +229,30 @@ export const ValidateMin: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const number = canvas.getByLabelText('Number');
+    const currencyField = canvas.getByLabelText('Currency');
     const submit = canvas.getByRole('button', {name: 'Submit'});
 
     // Assert that value greater than min is fine
-    await userEvent.type(number, '11,1');
+    await userEvent.type(currencyField, '11,1');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or greater.')).toBeNull();
+    expect(await canvas.queryByText('The value must be € 10,00 or greater.')).toBeNull();
 
     // Assert that value equal to min is fine
-    await userEvent.clear(number);
-    await userEvent.type(number, '10');
+    await userEvent.clear(currencyField);
+    await userEvent.type(currencyField, '10');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or greater.')).toBeNull();
+    expect(await canvas.queryByText('The value must be € 10,00 or greater.')).toBeNull();
 
     // Assert that value less than min is not fine
-    await userEvent.clear(number);
-    await userEvent.type(number, '9,1');
+    await userEvent.clear(currencyField);
+    await userEvent.type(currencyField, '9,1');
     await userEvent.click(submit);
-    expect(await canvas.findByText('The value must be 10 or greater.')).toBeVisible();
+    expect(await canvas.findByText('The value must be € 10,00 or greater.')).toBeVisible();
   },
 };
 
 interface ValueDisplayStoryArgs {
-  componentDefinition: NumberComponentSchema;
+  componentDefinition: CurrencyComponentSchema;
   value: number;
 }
 
@@ -264,19 +271,19 @@ export const SingleValueDisplay: ValueDisplayStory = {
   ...BaseValueDisplayStory,
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'currency',
+      currency: 'EUR',
       validateOn: 'blur',
-      decimalLimit: 4,
     },
-    value: 12.3456789,
+    value: 12.34,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByText('12,3457')).toBeInTheDocument();
+    expect(canvas.getByText('€ 12,34')).toBeInTheDocument();
   },
 };
 
@@ -284,14 +291,15 @@ export const SingleValueDisplayWithEnglishLocale: ValueDisplayStory = {
   ...BaseValueDisplayStory,
   args: {
     componentDefinition: {
-      id: 'number',
-      type: 'number',
-      key: 'number',
-      label: 'Number',
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'currency',
+      currency: 'EUR',
       validateOn: 'blur',
-      decimalLimit: 2,
+      decimalLimit: 3,
     },
-    value: 12.345678,
+    value: 12.3456,
   },
   globals: {
     locale: 'en',
@@ -299,6 +307,6 @@ export const SingleValueDisplayWithEnglishLocale: ValueDisplayStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByText('12.35')).toBeInTheDocument();
+    expect(canvas.getByText('€12.346')).toBeInTheDocument();
   },
 };

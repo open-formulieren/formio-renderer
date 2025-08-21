@@ -67,10 +67,25 @@ export interface NumberFieldProps {
    */
   suffix?: string;
   /**
+   * Indicator that describes the field value. It is placed before the value
+   * inside the input field.
+   */
+  valuePrefix?: string;
+  /**
+   * Indicator that describes the field value. It is placed after the value
+   * inside the input field.
+   */
+  valueSuffix?: string;
+  /**
    * Whether to format the number with a thousand separator. Which separator to use
    * will be determined based on the locale.
    */
   useThousandSeparator?: boolean;
+  /**
+   * Whether to format the value with a fixed number of decimals - equal to the value
+   * passed to the decimalLimit property.
+   */
+  fixedDecimalScale?: boolean;
 }
 
 export interface Separators {
@@ -91,14 +106,6 @@ export const getSeparators = (locale: string): Separators => {
   return {decimalSeparator, thousandSeparator};
 };
 
-export const convertToNumber = (value: string, locale: string): number | null => {
-  if (!value) return null;
-
-  const {decimalSeparator, thousandSeparator} = getSeparators(locale);
-  value = value.split(thousandSeparator).join('').replace(decimalSeparator, '.');
-  return parseFloat(value);
-};
-
 const NumberField: React.FC<NumberFieldProps> = ({
   name,
   label,
@@ -110,24 +117,21 @@ const NumberField: React.FC<NumberFieldProps> = ({
   allowNegative = false,
   prefix,
   suffix,
+  valuePrefix,
+  valueSuffix,
   useThousandSeparator = false,
+  fixedDecimalScale = false,
   ...extraProps
 }) => {
   const {validateField} = useFormikContext();
-  const [{value, ...props}, {error = '', touched}, {setValue}] = useField<number | null>(name);
+  // Note that we have a custom onValueChange handler, so `value` and `onBlur` is the only relevant
+  // field input props
+  const [{value, onBlur}, {error = '', touched}, {setValue}] = useField<number | null>(name);
   const {locale} = useIntl();
   const id = useId();
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-
-  // To make sure we save a number to the formik field, we need a custom onChange
-  // handler to convert the string to a number
-  async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const parsed = convertToNumber(value, locale);
-    await setValue(parsed);
-  }
 
   const {decimalSeparator, thousandSeparator} = getSeparators(locale);
   //  Note on valueIsNumericString: passing it as true means that the string
@@ -149,13 +153,15 @@ const NumberField: React.FC<NumberFieldProps> = ({
       <InputContainer prefix={prefix} suffix={suffix}>
         <NumericFormat
           value={value}
-          {...props}
-          onChange={onChange}
           onBlur={async e => {
-            props.onBlur(e);
+            onBlur(e);
             await validateField(name);
           }}
           id={id}
+          onValueChange={async values => {
+            const value = values.floatValue !== undefined ? values.floatValue : null;
+            await setValue(value);
+          }}
           className="utrecht-textbox--openforms"
           readOnly={isReadonly}
           invalid={invalid}
@@ -167,6 +173,9 @@ const NumberField: React.FC<NumberFieldProps> = ({
           valueIsNumericString={valueIsNumericString}
           customInput={Textbox}
           aria-describedby={errorMessageId}
+          prefix={valuePrefix}
+          suffix={valueSuffix}
+          fixedDecimalScale={fixedDecimalScale}
           {...extraProps}
         />
       </InputContainer>

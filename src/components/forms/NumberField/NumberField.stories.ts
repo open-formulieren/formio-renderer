@@ -35,11 +35,11 @@ export const Default: Story = {
     // Assert that clicking on the label focuses the input
     const label = canvas.getByText('Number');
     await userEvent.click(label);
-    await expect(canvas.getByRole('textbox')).toHaveFocus();
+    expect(canvas.getByRole('textbox')).toHaveFocus();
 
     // Assert that you are not able to type letters
     await userEvent.type(input, 'foo');
-    await expect(input).toHaveDisplayValue('');
+    expect(input).toHaveDisplayValue('');
   },
 };
 
@@ -82,12 +82,12 @@ export const LocalisedWithDecimals: Story = {
     const input = canvas.getByLabelText('Number');
 
     // Assert that you're able to provide a decimal number
-    await expect(input).toHaveDisplayValue('1,5');
+    expect(input).toHaveDisplayValue('1,5');
 
     // Assert that you're able to provide a decimal number with comma
     await userEvent.clear(input);
     await userEvent.type(input, '2,3');
-    await expect(input).toHaveDisplayValue('2,3');
+    expect(input).toHaveDisplayValue('2,3');
   },
 };
 
@@ -110,7 +110,7 @@ export const LocalisedWithThousandSeparator: Story = {
     // Assert that you're able to provide a large number, formatted with a Dutch thousand separator
     await userEvent.clear(input);
     await userEvent.type(input, '10000');
-    await expect(input).toHaveDisplayValue('10.000');
+    expect(input).toHaveDisplayValue('10.000');
   },
 };
 
@@ -127,7 +127,7 @@ export const DecimalLimit: Story = {
 
     await userEvent.clear(input);
     await userEvent.type(input, '10.12345');
-    await expect(input).toHaveDisplayValue('10.123');
+    expect(input).toHaveDisplayValue('10.123');
   },
 };
 
@@ -144,7 +144,7 @@ export const NegativeValueNotAllowed: Story = {
     // Assert negative input not possible
     await userEvent.clear(input);
     await userEvent.type(input, '-10');
-    await expect(input).toHaveDisplayValue('10');
+    expect(input).toHaveDisplayValue('10');
   },
 };
 
@@ -161,7 +161,7 @@ export const NegativeValueAllowed: Story = {
     // Assert negative input allowed
     await userEvent.clear(input);
     await userEvent.type(input, '-10');
-    await expect(input).toHaveDisplayValue('-10');
+    expect(input).toHaveDisplayValue('-10');
   },
 };
 
@@ -178,6 +178,48 @@ export const WithPrefixAndSuffix: Story = {
         number: 123,
       },
     },
+  },
+};
+
+export const WithValuePrefixAndValueSuffix: Story = {
+  args: {
+    name: 'number',
+    label: 'Number',
+    valuePrefix: '$',
+    valueSuffix: '%',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        number: 123,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+    expect(number).toHaveDisplayValue('$123%');
+  },
+};
+
+export const WithFixedNumberOfDecimals: Story = {
+  args: {
+    name: 'number',
+    label: 'Number',
+    fixedDecimalScale: true,
+    decimalLimit: 4,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        number: 10,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+    expect(number).toHaveDisplayValue('10.0000');
   },
 };
 
@@ -204,7 +246,7 @@ export const ValidationError: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText('invalid')).toBeVisible();
+    expect(canvas.getByText('invalid')).toBeVisible();
   },
 };
 
