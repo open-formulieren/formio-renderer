@@ -27,26 +27,16 @@ const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
   const maxFormatted = max && numberFormat.format(max);
   const minFormatted = min && numberFormat.format(min);
 
-  const isLessThanOrEqualToMaximum = (value: number | null): boolean => {
-    if (max === undefined || value === null) return true;
-    return value <= max;
-  };
-
-  const isGreaterThanOrEqualToMinimum = (value: number | null): boolean => {
-    if (min === undefined || value === null) return true;
-    return value >= min;
-  };
-
-  let schema: z.ZodFirstPartySchemaTypes = z
-    .number()
-    .nullable() // null is also a valid value
-    .refine(isLessThanOrEqualToMaximum, {
+  let schema: z.ZodFirstPartySchemaTypes = z.number();
+  if (max !== undefined)
+    schema = schema.lte(max, {
       message: intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max: maxFormatted}),
-    })
-    .refine(isGreaterThanOrEqualToMinimum, {
+    });
+  if (min !== undefined)
+    schema = schema.gte(min, {
       message: intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min: minFormatted}),
     });
-  if (!required) schema = schema.optional();
+  if (!required) schema = schema.nullable().optional();
 
   // For numbers, a missing value is null, which doesn't trigger the required validation of zod,
   // so we set it to undefined manually
