@@ -1,0 +1,30 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as PartnersStories from './Partners.stories';
+
+<Meta of={PartnersStories} />
+
+# Partners
+
+The partners component is used to easily fetch and display some basic information about the users
+partners.
+
+The partners component is only ment to display the partners retrieved from the source-system.
+Partners may not be edited in the form. In the case that the information about one or more partners
+is incorrect, the user must resolve this via their municipality or other officials that are
+responsible for this data.
+
+When submitting the form, the partners data is included in the submission data.
+
+<Canvas of={PartnersStories.Default} />
+
+## Manually defining partners
+
+In the case that not partners can be retrieved from the source-system, we allow the user to manually
+add one partner.
+
+<Canvas of={PartnersStories.NoDataRetrieved} />
+
+## Props
+
+<ArgTypes of={PartnersStories} />

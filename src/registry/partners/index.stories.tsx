@@ -1,5 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
+import FormioComponent from '@/components/FormioComponent';
+import {getRegistryEntry} from '@/registry';
 import {withFormik} from '@/sb-decorators';
 
 import {PartnersField} from './';
@@ -8,6 +10,10 @@ export default {
   title: 'Component registry / special / partners',
   component: PartnersField,
   decorators: [withFormik],
+  args: {
+    renderNested: FormioComponent,
+    getRegistryEntry: getRegistryEntry,
+  },
 } satisfies Meta<typeof PartnersField>;
 
 type Story = StoryObj<typeof PartnersField>;
