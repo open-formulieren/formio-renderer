@@ -6,12 +6,18 @@ import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import DateInputGroup from './DateInputGroup';
+import DatePicker from './DatePicker';
 
 /**
  * Which widget to render for the field. Either an input group (for known dates) or
  * a calendar to pick an available date.
  */
 export type DateFieldWidget = 'inputGroup' | 'datePicker';
+
+interface DatePickerProps {
+  minDate: Date;
+  maxDate: Date;
+}
 
 export interface DateFieldProps {
   /**
@@ -52,8 +58,13 @@ export interface DateFieldProps {
    * The kind of date input widget.
    */
   widget: DateFieldWidget;
+  /**
+   * Optional extra properties for a date picker widget.
+   */
+  datePickerProps?: DatePickerProps;
 }
 
+// TODO-82: update description
 /**
  * Implements a form field to select dates.
  *
@@ -72,6 +83,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   widget,
+  datePickerProps,
 }) => {
   const id = useId();
   const {getFieldMeta} = useFormikContext();
@@ -97,8 +109,18 @@ const DateField: React.FC<DateFieldProps> = ({
       break;
     }
     case 'datePicker': {
-      dateInput = <>Not implemented</>;
-      break;
+      dateInput = (
+        <DatePicker
+          name={name}
+          label={label}
+          tooltip={tooltip}
+          isRequired={isRequired}
+          // TODO-82: this should be the read only prop
+          isDisabled={isDisabled}
+          aria-describedby={errorMessageId}
+          {...datePickerProps}
+        />
+      );
     }
   }
 

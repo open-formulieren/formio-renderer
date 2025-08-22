@@ -1,0 +1,19 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import DateField from '../DateField.js';
+import * as DatePickerStories from './DateField-DatePicker.stories.tsx';
+import DatePicker from './DatePicker.js';
+
+<Meta of={DatePickerStories} />
+
+# DateField - date picker
+
+## Forgettable dates
+
+Fancy description
+
+## Widget prop
+
+Use the prop `widget="datePicker"` to use this widget.
+
+<Canvas of={DatePickerStories.DatePicker} />

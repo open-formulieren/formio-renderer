@@ -1,10 +1,21 @@
-import {parseISO} from 'date-fns';
+import {parseISO, pa} from 'date-fns';
 
 import type {DatePart, DatePartValues} from './types';
+
+const RE_PARTS = {
+  year: '(?<year>\\d{4})',
+  month: '(?<month>\\d{1,2})',
+  day: '(?<day>\\d{1,2})',
+};
 
 const isValidDate = (value: Date): boolean => {
   return !isNaN(value.valueOf());
 };
+
+export interface LocaleMeta {
+  partsOrder: DatePart[];
+  separator: string;
+}
 
 /**
  * Parse a given string into a JS Date instance. The date is expected to be in ISO-8601
@@ -13,12 +24,37 @@ const isValidDate = (value: Date): boolean => {
  * If no date could be parsed (either because it's incomplete, wrong format or just
  * non-sensical), returns `null`.
  */
-export const parseDate = (value: string): Date | null => {
+export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
-  const parsed = parseISO(value);
+  let parsed;
+  if (meta) {
+    // respect the order of the parts, but be lax about the separator
+    const orderedParts = orderByPart(RE_PARTS, meta);
+    const re = new RegExp(orderedParts.join('[^0-9]'));
+    const match = value.match(re);
+    if (!match) return null;
+    const {year, month, day} = match.groups;
+    parsed = parseISOFromParts(year, month, day);
+  } else {
+    parsed = parseISO(value);
+  }
   // Invalid dates are also instances of Date :/
   return isValidDate(parsed) ? parsed : null;
 };
+
+
+export const orderByPart = (parts, meta) => {
+  return Object.keys(parts)
+    .sort((a, b) => meta[a] - meta[b])
+    .map(part => parts[part]);
+};
+
+const parseISOFromParts = (yearStr: string, monthStr: string, dayStr: string): Date => {
+  const bits = [yearStr.padStart(4, '0'), monthStr.padStart(2, '0'), dayStr.padStart(2, '0')];
+  const ISOFormatted = bits.join('-');
+  return parseISO(ISOFormatted)
+};
+
 
 /**
  * Try to parse the date parts into a valid date and return the ISO-8601 string. If the
@@ -32,11 +68,6 @@ export const partsToUnvalidatedISO8601 = (parts: DatePartValues): string => {
   ];
   return bits.join('-');
 };
-
-export interface LocaleMeta {
-  partsOrder: DatePart[];
-  separator: string;
-}
 
 const TEST_DATE = new Date(2023, 4, 31);
 /**
