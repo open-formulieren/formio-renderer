@@ -11,6 +11,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   remove: 'trash-can',
   tooltip: 'question-circle',
   warning: 'exclamation-triangle',
+  calendar: 'calendar-days',
 };
 
 interface FontAwesomeSolidIconProps {
@@ -28,6 +29,7 @@ interface FontAwesomeSolidIconProps {
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
+  onClick: () => void;
 }
 
 const FontAwesomeSolidIcon: React.FC<FontAwesomeSolidIconProps> = ({
@@ -36,6 +38,8 @@ const FontAwesomeSolidIcon: React.FC<FontAwesomeSolidIconProps> = ({
   ['aria-label']: ariaLabel,
   ['aria-describedby']: ariaDescribedBy,
   icon,
+  onClick = () => {},
+  ...props
 }) => {
   const iconName = FA_MAP[icon] ?? icon;
   const className = clsx('fa-solid', `fa-${iconName}`, extraClassName);
@@ -45,6 +49,8 @@ const FontAwesomeSolidIcon: React.FC<FontAwesomeSolidIconProps> = ({
       aria-hidden={ariaHidden}
       aria-label={ariaLabel || undefined}
       aria-describedby={ariaDescribedBy || undefined}
+      onClick={onClick}
+      {...props}
     />
   );
 };
