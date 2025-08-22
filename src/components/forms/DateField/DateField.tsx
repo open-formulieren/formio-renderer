@@ -6,14 +6,39 @@ import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import DateInputGroup from './DateInputGroup';
+import DatePicker from './DatePicker';
+
+/**
+ * Props specific for the input group widget
+ */
+export interface InputGroupProps {}
+
+export interface DatePickerProps {
+  /**
+   * Earliest date that is selectable in the calendar.
+   */
+  minDate?: Date;
+  /**
+   * Latest date that is selectable in the calendar.
+   */
+  maxDate?: Date;
+}
 
 /**
  * Which widget to render for the field. Either an input group (for known dates) or
  * a calendar to pick an available date.
  */
-export type DateFieldWidget = 'inputGroup' | 'datePicker';
+export type WidgetProps =
+  | {
+      widget: 'inputGroup';
+      widgetProps?: InputGroupProps;
+    }
+  | {
+      widget: 'datePicker';
+      widgetProps?: DatePickerProps;
+    };
 
-export interface DateFieldProps {
+interface DateFieldCommonProps {
   /**
    * The name of the form field/input, used to set/track the field value in the form state.
    */
@@ -48,20 +73,19 @@ export interface DateFieldProps {
    * How to autocomplete the field from the browser.
    */
   autoComplete?: string;
-  /**
-   * The kind of date input widget.
-   */
-  widget: DateFieldWidget;
 }
 
+export type DateFieldProps = DateFieldCommonProps & WidgetProps;
+
 /**
- * Implements a form field to select dates.
+ * Implements a form field to enter and/or select dates.
  *
- * For accessibility reasons, there should always be a text field allowing users to
- * manually type in the date. However, when the field is focused, this toggles the
- * calendar where a date can be selected using a pointer device.
- *
- * @todo on mobile devices, use the native date picker?
+ * The field has two variants:
+ *  1. Input groups - consists of separate inputs for day, month, and year. Suitable for known
+ *     dates such as birthdays.
+ *  2. Datepicker - text input with a calendar where a date can be selected, that toggles when
+ *     focussing the field. Suitable for nearby dates such as appointments.
+ * The variant to use can be selected using the `widget` prop.
  */
 const DateField: React.FC<DateFieldProps> = ({
   name,
@@ -72,6 +96,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   widget,
+  widgetProps,
 }) => {
   const id = useId();
   const {getFieldMeta} = useFormikContext();
@@ -97,8 +122,17 @@ const DateField: React.FC<DateFieldProps> = ({
       break;
     }
     case 'datePicker': {
-      dateInput = <>Not implemented</>;
-      break;
+      dateInput = (
+        <DatePicker
+          name={name}
+          label={label}
+          tooltip={tooltip}
+          isRequired={isRequired}
+          isDisabled={isDisabled}
+          aria-describedby={errorMessageId}
+          {...widgetProps}
+        />
+      );
     }
   }
 
