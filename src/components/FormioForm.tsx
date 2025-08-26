@@ -1,6 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
-import {forwardRef, useEffect, useImperativeHandle, useMemo} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import {z} from 'zod';
 
@@ -45,6 +45,14 @@ export interface FormioFormProps {
    * client side validation runs.
    */
   errors?: Errors;
+
+  /**
+   * Callback invoked when form values update.
+   *
+   * The form value changes can be triggered by user input or automatic calculated value
+   * changes, e.g. client-side form logic such as `clearOnHide`.
+   */
+  onChange?: (values: JSONObject) => void | Promise<void>;
 
   /**
    * Callback when the form validates (client-side) to submit the entered values.
@@ -95,7 +103,10 @@ export interface FormStateRef {
  * boundary around the `FormioForm` component.
  */
 const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
-  ({components, values = {}, errors, onSubmit, id, children, requiredFieldsWithAsterisk}, ref) => {
+  (
+    {components, values = {}, errors, onChange, onSubmit, id, children, requiredFieldsWithAsterisk},
+    ref
+  ) => {
     const intl = useIntl();
 
     const isConditionalLogicInvalid = useMemo(
@@ -135,20 +146,44 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
             await onSubmit(values);
           }}
         >
-          {/* TODO: pre-process components to ensure they have an ID? */}
-          <InnerFormioForm
-            id={id}
-            components={components}
-            ref={ref}
-            onValidationSchemaChange={setSchema}
-          >
-            {children}
-          </InnerFormioForm>
+          <>
+            {onChange && <FormValuesObserver onChange={onChange} />}
+
+            {/* TODO: pre-process components to ensure they have an ID? */}
+            <InnerFormioForm
+              id={id}
+              components={components}
+              ref={ref}
+              onValidationSchemaChange={setSchema}
+            >
+              {children}
+            </InnerFormioForm>
+          </>
         </Formik>
       </FormSettingsProvider>
     );
   }
 );
+
+const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> = ({onChange}) => {
+  // only dispatch after the first mount. Code vendored from streamich/react-use, licensed
+  // under the Unlicense license.
+  const isFirstMountRef = useRef<boolean>(true);
+  const isFirstMount = isFirstMountRef.current;
+
+  const {values} = useFormikContext<JSONObject>();
+  useEffect(() => {
+    if (!isFirstMount) {
+      onChange(values);
+    }
+  }, [values]);
+
+  if (isFirstMountRef.current) {
+    isFirstMountRef.current = false;
+  }
+
+  return null;
+};
 
 export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'> & {
   onValidationSchemaChange: (schema: z.ZodSchema<JSONObject>) => void;
