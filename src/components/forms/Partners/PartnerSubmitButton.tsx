@@ -2,6 +2,8 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {FormattedMessage} from 'react-intl';
 
+import Loader from '@/components/loader';
+
 import {ManuallyAddedPartnerDetails} from './types';
 
 const PartnerSubmitButton: React.FC = () => {
@@ -15,11 +17,8 @@ const PartnerSubmitButton: React.FC = () => {
       }}
       disabled={isSubmitting}
     >
-      {isSubmitting ? (
-        <p>[loader]</p>
-      ) : (
-        // @TODO add spinner
-        // <Loader modifiers={['centered', 'only-child', 'small', 'gray']} />
+      <Loader modifiers={['centered', 'only-child', 'small', 'gray']} loading={isSubmitting} />
+      {!isSubmitting && (
         <FormattedMessage
           description="Add partner: save partner data button text"
           defaultMessage="Save"
