@@ -17,6 +17,20 @@ The `onSubmit` callback receives the entered form values when the HTML form is s
 
 <Canvas of={FormioFormStories.Example} />
 
+## Subscribing to value changes
+
+The `onChange` prop receives _every_ value change in the form state, which covers:
+
+- value changes because of user input (selecting a checkbox, typing in a text field...)
+- calculated/derived values, e.g. the result of `clearOnHide` which leads to a `values` update.
+
+You get the full `values` object in the callback, where the last call represents the current form
+values state. No debouncing or artificial delays are applied - that's left up to the caller if it's
+required.
+
+Note that in edit grids the form state is only updated when the edits in an item are saved, not
+while the user is typing/changing item field values.
+
 ## Programmatically updating form values
 
 The `FormioForm` component supports programmatically setting form values - typically to process

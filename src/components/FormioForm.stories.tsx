@@ -27,6 +27,7 @@ export default {
     ),
   ],
   args: {
+    onChange: fn(),
     onSubmit: fn(),
     id: 'formioform',
     requiredFieldsWithAsterisk: true,

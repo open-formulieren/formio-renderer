@@ -11,7 +11,7 @@ import {describe, expect, test, vi} from 'vitest';
 
 import FormioForm, {type FormStateRef, type FormioFormProps} from './FormioForm';
 
-type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit' | 'values'>;
+type FormProps = Pick<FormioFormProps, 'components' | 'onChange' | 'onSubmit' | 'values'>;
 
 const Form = forwardRef<FormStateRef, FormProps>((props, ref) => {
   return (
@@ -493,6 +493,77 @@ test('Modifying the form definition updates the validation schema', async () => 
   expect(updatedTexfield).toHaveDisplayValue('1234ab');
   await user.click(submitButton);
   expect(await screen.findByText('String must contain at most 3 character(s)')).toBeVisible();
+});
+
+describe('onChange prop', () => {
+  test('is called for changes because of user input', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        components={[
+          {
+            id: 'comp1',
+            type: 'textfield',
+            key: 'foo',
+            label: 'Foo',
+            defaultValue: '',
+          },
+        ]}
+        onChange={onChange}
+        onSubmit={vi.fn()}
+      />
+    );
+    const input = await screen.findByLabelText('Foo');
+    expect(input).toBeVisible();
+
+    await user.type(input, 'Sample');
+
+    expect(onChange).toBeCalledTimes(6); // once for each character
+    expect(onChange).toHaveBeenLastCalledWith({foo: 'Sample'});
+  });
+
+  test('is called for changes from clearOnHide', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        components={[
+          {
+            id: 'comp1',
+            type: 'textfield',
+            key: 'foo',
+            label: 'Foo',
+            defaultValue: '',
+          },
+          {
+            id: 'comp2',
+            type: 'email',
+            key: 'email',
+            label: 'Email',
+            defaultValue: 'info@example.com',
+            validateOn: 'blur',
+            clearOnHide: true,
+            conditional: {
+              show: false,
+              when: 'foo',
+              eq: 'hide',
+            },
+          },
+        ]}
+        onChange={onChange}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    const input = await screen.findByLabelText('Foo');
+    expect(input).toBeVisible();
+    await user.type(input, 'hide');
+
+    // we expect both the user input change and the calculated clearOnHide change
+    expect(onChange).toHaveBeenCalledWith({foo: 'hide', email: 'info@example.com'});
+    expect(onChange).toHaveBeenLastCalledWith({foo: 'hide'});
+  });
 });
 
 describe('Regressions', () => {
