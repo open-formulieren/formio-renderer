@@ -7,7 +7,7 @@ import type {GetRegistryEntry} from '@/registry/types';
 import PartnerForm from './PartnerForm';
 import {ManuallyAddedPartnerDetails} from './types';
 
-interface PartnerModalProps {
+export interface PartnerModalProps {
   partnerToEdit: ManuallyAddedPartnerDetails;
   isOpen: boolean;
   onSave: (partner: ManuallyAddedPartnerDetails) => void;
