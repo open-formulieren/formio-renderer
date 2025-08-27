@@ -1,6 +1,12 @@
+import clsx from 'clsx';
 import {getIn, setIn} from 'formik';
 
 import type {JSONPrimitive} from '@/types';
+
+/**
+ * Prefix for the BEM class naming
+ */
+const PREFIX = 'openforms';
 
 /**
  * @private
@@ -83,3 +89,16 @@ export function merge<Leaf extends JSONValuePlusUndefined, RLeaf = Leaf>(
   // type cast because TSC runs into infinite recursion if we use generics for this...
   return target as any as NestedObject<RLeaf>;
 }
+
+/**
+ * Prefix a name/string/identifier with the Open Forms specific prefix.
+ */
+export const applyPrefix = (name: string): string => {
+  return `${PREFIX}-${name}`;
+};
+
+export const getBEMClassName = (base: string, modifiers: string[] = []): string => {
+  const prefixedBase = applyPrefix(base);
+  const prefixedModifiers = modifiers.map(mod => applyPrefix(`${base}--${mod}`));
+  return clsx(prefixedBase, ...prefixedModifiers);
+};
