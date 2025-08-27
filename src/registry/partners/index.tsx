@@ -1,8 +1,12 @@
-import type {PartnersComponentSchema} from '@open-formulieren/types';
+import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import Partners from '@/components/forms/Partners';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
+
+import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
+import getInitialValues from './initialValues';
 
 export interface PartnersFieldProps {
   componentDefinition: PartnersComponentSchema;
@@ -27,12 +31,11 @@ export const PartnersField: React.FC<PartnersFieldProps> = ({
   );
 };
 
-const PartnersComponent: RegistryEntry<PartnersComponentSchema> = {
+const PartnersComponent: RegistryEntry<PartnersComponentSchema, PartnerDetails[]> = {
   formField: PartnersField,
-  // @TODO
-  // valueDisplay: ValueDisplay,
-  // getInitialValues,
-  // getValidationSchema,
+  valueDisplay: ValueDisplay,
+  getInitialValues,
+  isEmpty,
 };
 
 export default PartnersComponent;
