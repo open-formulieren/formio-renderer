@@ -1,0 +1,92 @@
+@use '@/scss/bem';
+
+.modal {
+  &[open] {
+    display: grid;
+  }
+
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'body close'
+    'body close';
+  padding: 40px;
+
+  inline-size: 90dvw;
+
+  min-block-size: 20dvh;
+  block-size: fit-content;
+  max-block-size: 90dvh;
+
+  border: 1px solid #eee;
+  background-color: #fff;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 6px 20px rgba(0, 0, 0, 0.2);
+
+  @media (min-width: 992px) {
+    inline-size: 50dvw;
+
+    min-block-size: 30dvh;
+    max-block-size: 50dvh;
+  }
+
+  &:has(.modal__title) {
+    grid-template-areas:
+      'title close'
+      'body body';
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(1px);
+  }
+
+  @include bem.element('close') {
+    position: relative;
+    top: -33px;
+    right: -34px;
+
+    grid-area: close;
+    align-self: start;
+    justify-self: end;
+    border: none;
+    transition: transform ease 0.1s;
+    opacity: 0.5;
+    font-size: 150%;
+
+    &:focus {
+      outline: revert;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  @include bem.element('title') {
+    grid-area: title;
+    break-inside: avoid-column;
+
+    color: var(
+      --utrecht-heading-1-color,
+      var(--utrecht-heading-color, var(--utrecht-document-color, inherit))
+    );
+    font-family: var(
+        --utrecht-heading-1-font-family,
+        var(--utrecht-heading-font-family, var(--utrecht-document-font-family))
+      ),
+      sans-serif;
+    font-size: var(--utrecht-heading-1-font-size, revert);
+    font-weight: var(--utrecht-heading-1-font-weight, var(--utrecht-heading-font-weight, bold));
+    line-height: var(--utrecht-heading-1-line-height);
+
+    margin-block-start: 0;
+    margin-block-end: 20px;
+  }
+
+  @include bem.element('body') {
+    grid-area: body;
+    overflow-y: auto;
+  }
+}

@@ -101,6 +101,11 @@
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
   },
+  "oxM3rx": {
+    "defaultMessage": "Close modal",
+    "description": "Modal close button title",
+    "originalDefault": "Close modal"
+  },
   "qTqAIS": {
     "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
     "description": "Textarea character count",
