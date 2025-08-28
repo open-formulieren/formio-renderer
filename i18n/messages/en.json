@@ -29,6 +29,11 @@
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
+  "4IX8hk": {
+    "defaultMessage": "Loading...",
+    "description": "(Async) select options loading message",
+    "originalDefault": "Loading..."
+  },
   "9SgPC6": {
     "defaultMessage": "Remove item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
@@ -63,6 +68,11 @@
     "defaultMessage": "m",
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
+  },
+  "QPdaOi": {
+    "defaultMessage": "No results found",
+    "description": "Select 'no options' message",
+    "originalDefault": "No results found"
   },
   "RJ+0F/": {
     "defaultMessage": "Yes",
