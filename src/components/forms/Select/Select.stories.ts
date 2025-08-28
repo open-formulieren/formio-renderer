@@ -12,6 +12,8 @@ export default {
   component: Select,
   decorators: [withFormik],
   args: {
+    name: 'test',
+    label: 'test',
     options: [
       {value: 'option-1', label: 'Option 1'},
       {value: 'option-2', label: 'Option 2'},
@@ -182,5 +184,18 @@ export const ValidateOnBlur: Story = {
     input.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+};
+
+export const AutoSelectOnlyOption: Story = {
+  args: {
+    options: [{value: 'onlyOption', label: 'Only available option'}],
+    autoSelectOnlyOption: true,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText('Only available option')).toBeVisible();
   },
 };
