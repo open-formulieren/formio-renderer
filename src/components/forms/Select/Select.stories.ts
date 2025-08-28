@@ -93,3 +93,94 @@ export const WithTooltip: Story = {
     tooltip: 'Example short tooltip.',
   },
 };
+
+export const ValidationError: Story = {
+  name: 'Validation error',
+  parameters: {
+    formik: {
+      initialValues: {
+        select: '',
+      },
+      initialErrors: {
+        select: 'invalid',
+      },
+      initialTouched: {
+        select: true,
+      },
+    },
+  },
+  args: {
+    name: 'select',
+    label: 'Select',
+    description: 'Description above the errors',
+    isDisabled: false,
+    isRequired: true,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('invalid')).toBeVisible();
+  },
+};
+
+export const WithValidationErrorAndTooltip: Story = {
+  ...ValidationError,
+  args: {
+    ...ValidationError.args,
+    tooltip: 'Tooltip content.',
+  },
+
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const input = canvas.getByLabelText(args.label as string);
+    // the tooltip gets announced by itself and we do not expect it to be in the input
+    // description too, as otherwise screenreaders encounter it twice.
+    expect(input).toHaveAccessibleDescription('Select... invalid');
+  },
+};
+
+export const NoAsterisks: Story = {
+  name: 'No asterisk for required',
+  decorators: [withFormSettingsProvider],
+  parameters: {
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
+  },
+  args: {
+    name: 'test',
+    label: 'Default required',
+    isRequired: true,
+  },
+};
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Validate on blur');
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    await userEvent.click(input);
+    await userEvent.click(await canvas.findByRole('option', {name: 'Option 2'}));
+    expect(input).toHaveFocus();
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    input.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+};

@@ -75,8 +75,7 @@ const Select: React.FC<SelectProps> = ({
   noOptionSelectedValue = undefined,
 }) => {
   const {validateField} = useFormikContext();
-  // TODO: deal with multiple values
-  const [{value, ...props}, {error = '', touched}, {setValue}] = useField<
+  const [{value}, {error = '', touched}, {setValue, setTouched}] = useField<
     string[] | string | undefined
   >(name);
   const id = useId();
@@ -127,10 +126,17 @@ const Select: React.FC<SelectProps> = ({
           }
           setValue(rawValue);
         }}
-        onBlur={async e => {
-          props.onBlur(e);
+        onBlur={async () => {
+          // we need to manually set the field as touched because the search input does
+          // not have the `name` of the actual field, which leads to another, unrelated,
+          // name being marked as 'touched'
+          // See https://github.com/jaredpalmer/formik/blob/0e0cf9ea09ec864dd63c52cf775f862795ef2cf4/packages/formik/src/Formik.tsx#L693
+          // for the upstream code
+          await setTouched(true);
           await validateField(name);
         }}
+        aria-describedby={errorMessageId}
+        aria-invalid={invalid ? invalid : undefined}
       />
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import {FormattedMessage} from 'react-intl';
-import Select, {type Props} from 'react-select';
+import Select, {type GroupBase, type InputProps, type Props, components} from 'react-select';
 
 import './ReactSelectWrapper.scss';
 
@@ -44,6 +44,18 @@ function formikToSelectValue<O extends BaseOption = BaseOption>(
 
   return options.find(o => o.value === formikValue) || null;
 }
+
+// Pass along our own aria-describedby if provided
+const Input = <O extends BaseOption = BaseOption>(props: InputProps<O>) => {
+  const describedByBits: string[] = [
+    props['aria-describedby'],
+    // see https://github.com/JedWatson/react-select/issues/1570
+    // @ts-expect-error parent component doesn't have an aria-describedby prop
+    props.selectProps?.['aria-describedby'],
+  ].filter(b => !!b);
+  const describedby = describedByBits.length ? describedByBits.join(' ') : undefined;
+  return <components.Input<O, boolean, GroupBase<O>> {...props} aria-describedby={describedby} />;
+};
 
 /**
  * Wrapper around react-select taking care of the type generics and NL DS integration.
@@ -91,6 +103,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
         },
       }}
       unstyled
+      components={{Input: Input<O>}}
       getOptionValue={opt => opt.value}
       isDisabled={isDisabled}
       loadingMessage={() => (
