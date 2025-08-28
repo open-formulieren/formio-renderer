@@ -25,6 +25,18 @@
       "value": "Invalid IBAN"
     }
   ],
+  "/HGnU6": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
+  "/oxZic": [
+    {
+      "type": 0,
+      "value": "Initials"
+    }
+  ],
   "0EdUXi": [
     {
       "type": 0,
@@ -89,6 +101,18 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "3gJYD8": [
+    {
+      "type": 0,
+      "value": "Add partner"
+    }
+  ],
+  "5Uub2B": [
+    {
+      "type": 0,
+      "value": "Edit partner"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -97,6 +121,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "9UF9Z7": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "At/y3w": [
@@ -153,6 +183,12 @@
       "value": "."
     }
   ],
+  "Bvyr/X": [
+    {
+      "type": 0,
+      "value": "Add partner"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -169,6 +205,18 @@
     {
       "type": 0,
       "value": "Empty fields"
+    }
+  ],
+  "H8mxqp": [
+    {
+      "type": 0,
+      "value": "Date of birth"
+    }
+  ],
+  "LXXhoO": [
+    {
+      "type": 0,
+      "value": "Affixes"
     }
   ],
   "MJXZYI": [
@@ -233,6 +281,12 @@
       "value": "."
     }
   ],
+  "X9Jjme": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -243,6 +297,12 @@
     {
       "type": 0,
       "value": "Add another"
+    }
+  ],
+  "eAmrdi": [
+    {
+      "type": 0,
+      "value": "Loading..."
     }
   ],
   "ht1O2Z": [
@@ -291,6 +351,12 @@
       "pluralType": "cardinal",
       "type": 6,
       "value": "charCount"
+    }
+  ],
+  "r4wx7J": [
+    {
+      "type": 0,
+      "value": "Lastname"
     }
   ],
   "sGwqUb": [

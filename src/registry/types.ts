@@ -158,7 +158,7 @@ export type ApplyVisibility<S> = (
 
 export type IsEmpty<S, V = JSONValue> = (componentDefinition: S, value: V | undefined) => boolean;
 
-export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
+export type RegistryEntry<S, V = JSONValue> = [S] extends [AnyComponentSchema] // prevent distributing unions in a single schema
   ? {
       formField: React.ComponentType<RenderComponentProps<S>>;
       /**
@@ -169,14 +169,14 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
        * layout component may contain nested input components each with their own
        * default values.
        */
-      getInitialValues?: GetInitialValues<S>;
+      getInitialValues?: GetInitialValues<S, V>;
       /**
        * Derive the summary/read-only of a field for the given component definition.
        *
        * The raw form field value is displayed in a useful way for summaries, taking the
        * intrinsic data type of the component into account.
        */
-      valueDisplay?: React.ComponentType<ValueDisplayProps<S>>;
+      valueDisplay?: React.ComponentType<ValueDisplayProps<S, V>>;
       /**
        * Build the validation schema from the component definition.
        */
@@ -193,7 +193,7 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
       /**
        * Callback to determine whether the component is empty or not.
        */
-      isEmpty?: IsEmpty<S>;
+      isEmpty?: IsEmpty<S, V>;
     }
   : never;
 

@@ -1,0 +1,58 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as LoaderStories from './Loader.stories';
+
+<Meta of={LoaderStories} />
+
+# Loader
+
+The `Loader` component is a simple spinner with a screen-reader accessible "loading content" text,
+which can be used to indicate that the application is loading content.
+
+Based on the `loading` prop, the component either shows or hides the spinner and accessible content.
+
+The `modifiers` prop is used to customize the spinner, to better fit different situations.
+
+<Canvas of={LoaderStories.Default} />
+
+## How to use
+
+The `Loader` component makes use of the accessible role `status`, this is used to alert
+screen-readers about changes in the page content. In this case, the `role=status` alerts the
+screen-reader that we are loading some content.
+
+In compliance with the
+[WCAG 2.2 guidelines](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22#tests), the element with
+the role `status` should be present in the DOM before the content change happens. This is to ensure
+that the changing of the content is correctly noticed and passed to accessibility tooling.
+
+When using the `Loader` component, make sure it's always rendered, even if there is nothing to load.
+Use the `loading` property to indicate when something _is_ loading, to show the spinner and alert
+accessibility tooling. For example:
+
+```tsx
+import {PrimaryActionButton} from '@utrecht/component-library-react';
+import {useFormikContext} from 'formik';
+import {FormattedMessage} from 'react-intl';
+
+const SubmitButton: React.FC = () => {
+  const {isSubmitting, submitForm} = useFormikContext();
+  return (
+    <PrimaryActionButton
+      type="button"
+      onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        await submitForm();
+      }}
+      disabled={isSubmitting}
+    >
+      <Loader modifiers={['centered', 'only-child', 'small', 'gray']} loading={isSubmitting} />
+      {!isSubmitting && <FormattedMessage description="Save button text" defaultMessage="Save" />}
+    </PrimaryActionButton>
+  );
+};
+```
+
+## Props
+
+<ArgTypes />

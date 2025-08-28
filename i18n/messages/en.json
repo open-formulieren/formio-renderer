@@ -14,6 +14,16 @@
     "description": "Validation error for IBAN that does not pass the mod-97 test.",
     "originalDefault": "Invalid IBAN"
   },
+  "/HGnU6": {
+    "defaultMessage": "BSN",
+    "description": "Label for partners BSN",
+    "originalDefault": "BSN"
+  },
+  "/oxZic": {
+    "defaultMessage": "Initials",
+    "description": "Label for partners initials",
+    "originalDefault": "Initials"
+  },
   "0EdUXi": {
     "defaultMessage": "Save",
     "description": "Edit grid item default save button label",
@@ -29,10 +39,25 @@
     "description": "Form field label content/wrapper",
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
+  "3gJYD8": {
+    "defaultMessage": "Add partner",
+    "description": "Partner modal title",
+    "originalDefault": "Add partner"
+  },
+  "5Uub2B": {
+    "defaultMessage": "Edit partner",
+    "description": "Partners component 'edit partner' button label",
+    "originalDefault": "Edit partner"
+  },
   "9SgPC6": {
     "defaultMessage": "Remove item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
     "originalDefault": "Remove item {index}"
+  },
+  "9UF9Z7": {
+    "defaultMessage": "No information provided",
+    "description": "Emtpy field message",
+    "originalDefault": "No information provided"
   },
   "At/y3w": {
     "defaultMessage": "Edit item {index}",
@@ -43,6 +68,11 @@
     "defaultMessage": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }.",
     "description": "Selectboxes minimum selected count error message",
     "originalDefault": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }."
+  },
+  "Bvyr/X": {
+    "defaultMessage": "Add partner",
+    "description": "Partners component 'add partner' button label",
+    "originalDefault": "Add partner"
   },
   "DBTNgI": {
     "defaultMessage": "d",
@@ -58,6 +88,16 @@
     "defaultMessage": "Empty fields",
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
+  },
+  "H8mxqp": {
+    "defaultMessage": "Date of birth",
+    "description": "Label for partners dateOfBirth",
+    "originalDefault": "Date of birth"
+  },
+  "LXXhoO": {
+    "defaultMessage": "Affixes",
+    "description": "Label for partners affixes",
+    "originalDefault": "Affixes"
   },
   "MJXZYI": {
     "defaultMessage": "m",
@@ -79,6 +119,11 @@
     "description": "Selectboxes maximum selected count error message",
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
   },
+  "X9Jjme": {
+    "defaultMessage": "Save",
+    "description": "Add partner: save partner data button text",
+    "originalDefault": "Save"
+  },
   "abKEBH": {
     "defaultMessage": "No",
     "description": "'False' display",
@@ -88,6 +133,11 @@
     "defaultMessage": "Add another",
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
+  },
+  "eAmrdi": {
+    "defaultMessage": "Loading...",
+    "description": "Loading content text",
+    "originalDefault": "Loading..."
   },
   "ht1O2Z": {
     "defaultMessage": "Invalid BSN",
@@ -108,6 +158,11 @@
     "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
+  },
+  "r4wx7J": {
+    "defaultMessage": "Lastname",
+    "description": "Label for partners lastName",
+    "originalDefault": "Lastname"
   },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
