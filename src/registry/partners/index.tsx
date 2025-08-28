@@ -7,6 +7,7 @@ import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
 
 export interface PartnersFieldProps {
   componentDefinition: PartnersComponentSchema;
@@ -36,6 +37,7 @@ const PartnersComponent: RegistryEntry<PartnersComponentSchema, PartnerDetails[]
   valueDisplay: ValueDisplay,
   getInitialValues,
   isEmpty,
+  getValidationSchema,
 };
 
 export default PartnersComponent;
