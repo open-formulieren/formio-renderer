@@ -1,6 +1,6 @@
 import {FormField} from '@utrecht/component-library-react';
 import {useField, useFormikContext} from 'formik';
-import {useId} from 'react';
+import {useEffect, useId} from 'react';
 import type {MultiValue, SingleValue} from 'react-select';
 
 import HelpText from '@/components/forms/HelpText';
@@ -33,6 +33,11 @@ export interface SelectProps {
    */
   options: Option[];
   /**
+   * If enabled and when there is only one possible option in the `options`,
+   * automatically select it.
+   */
+  autoSelectOnlyOption?: boolean;
+  /**
    * Allow multiple options selection or not.
    */
   isMulti?: boolean;
@@ -63,10 +68,13 @@ export interface SelectProps {
   noOptionSelectedValue?: undefined | '';
 }
 
+const EMPTY_MULTI_SELECT_VALUE: string[] = [];
+
 const Select: React.FC<SelectProps> = ({
   name,
   label,
   options,
+  autoSelectOnlyOption,
   isMulti = false,
   isRequired,
   isDisabled,
@@ -87,12 +95,24 @@ const Select: React.FC<SelectProps> = ({
   // converted to an empty array and otherwise we pass the value along as is.
   let wrapperValue: string | string[] | null;
   if (isMulti && !Array.isArray(value)) {
-    wrapperValue = [];
+    wrapperValue = EMPTY_MULTI_SELECT_VALUE; // forces a stable reference
   } else if (isMulti && Array.isArray(value)) {
     wrapperValue = value;
   } else {
     wrapperValue = value ?? null;
   }
+
+  useEffect(() => {
+    // if the option is not enabled, do nothing
+    if (!autoSelectOnlyOption) return;
+    // if a value is set, do nothing either
+    if ((Array.isArray(wrapperValue) && wrapperValue.length >= 1) || wrapperValue) return;
+    // if there are not exactly one option, do nothing
+    if (options.length !== 1) return;
+    // otherwise update the value to the single option value
+    const optionValue = options[0].value;
+    setValue(isMulti ? [optionValue] : optionValue);
+  }, [setValue, autoSelectOnlyOption, isMulti, wrapperValue, options]);
 
   return (
     <FormField type="select" invalid={invalid} className="utrecht-form-field--openforms">
@@ -109,7 +129,7 @@ const Select: React.FC<SelectProps> = ({
         inputId={id}
         options={options}
         isMulti={isMulti}
-        isClearable={!isRequired}
+        isClearable={!isRequired && !(autoSelectOnlyOption && options.length === 1)}
         isRequired={isRequired}
         isDisabled={isDisabled}
         formikValue={wrapperValue}
