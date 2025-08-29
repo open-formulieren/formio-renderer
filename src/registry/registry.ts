@@ -15,6 +15,7 @@ import LicensePlate from './licenseplate';
 import Number from './number';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
+import Select from './select';
 import Selectboxes from './selectboxes';
 import SoftRequiredErrors from './softRequiredErrors';
 import Textarea from './textarea';
@@ -38,6 +39,7 @@ const REGISTRY: Registry = {
   number: Number,
   checkbox: Checkbox,
   selectboxes: Selectboxes,
+  select: Select,
   currency: Currency,
   radio: RadioField,
   // special types
