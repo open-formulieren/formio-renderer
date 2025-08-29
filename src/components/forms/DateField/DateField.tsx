@@ -15,8 +15,8 @@ import DatePicker from './DatePicker';
 export type DateFieldWidget = 'inputGroup' | 'datePicker';
 
 interface DatePickerProps {
-  minDate: Date;
-  maxDate: Date;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export interface DateFieldProps {
@@ -57,6 +57,7 @@ export interface DateFieldProps {
   /**
    * The kind of date input widget.
    */
+  // TODO-82: would it make sense to revise this in to {widget: {type: DateFieldWidget, ...props}}?
   widget: DateFieldWidget;
   /**
    * Optional extra properties for a date picker widget. Will be ignored if the widget

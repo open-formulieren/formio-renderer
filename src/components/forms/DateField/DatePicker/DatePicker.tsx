@@ -1,5 +1,5 @@
 import {Paragraph, Textbox} from '@utrecht/component-library-react';
-import {formatISO} from 'date-fns';
+import {formatISO, parseISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useId, useState} from 'react';
 import {flushSync} from 'react-dom';
@@ -12,7 +12,7 @@ import Icon from '@/components/icons';
 
 import {useDateLocaleMeta} from '../hooks';
 import {PART_PLACEHOLDERS} from '../messages';
-import {parseDate} from '../utils';
+import {localeFormattedDateToParts, parseDate, partsToUnvalidatedISO8601} from '../utils';
 import './DatePicker.scss';
 import DatePickerCalendar from './DatePickerCalendar';
 
@@ -78,10 +78,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
-  const [inputValue, setInputValue] = useState('');
   const {validateField} = useFormikContext();
-  // value is an ISO-8601 string _if_ a valid date was provided at some point.
-  const [{value, onBlur}, {error, touched}, {setTouched, setValue}] = useField<string>(name);
+  const [{value, onBlur, onChange}, {error, touched}, {setTouched, setValue}] =
+    useField<string>(name);
   const {
     refs,
     floatingStyles,
@@ -103,7 +102,12 @@ const DatePicker: React.FC<DatePickerProps> = ({
     .map(part => placeholderMap[part])
     .join(dateLocaleMeta.separator);
 
-  const currentDate = parseDate(value);
+  // Value can be anything, so we need to try and parse for both ISO-8601 and locale-formatted
+  // string.
+  const currentDate = parseDate(value); // ?? parseDate(value, dateLocaleMeta);
+  // console.log(currentDate);
+  // If the value was parsed into a valid date, format it according to the locale.
+  // Use the (invalid) value otherwise.
   const textboxValue =
     currentDate !== null
       ? formatDate(currentDate, {
@@ -111,7 +115,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           month: 'numeric',
           day: 'numeric',
         })
-      : inputValue;
+      : value;
 
   const referenceProps = getReferenceProps();
   return (
@@ -128,17 +132,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
         <Textbox
           name={name}
           value={textboxValue}
-          onChange={async event => {
-            const enteredText = event.target.value;
-            setInputValue(enteredText);
-
-            const newDate = parseDate(enteredText, dateLocaleMeta);
-            // if we couldn't parse a valid date -> clear the value in the formik state
-            const newValue = newDate ? formatISO(newDate, {representation: 'date'}) : '';
+          onChange={onChange}
+          onBlur={async event => {
+            const value = event.target.value;
+            // Attempt to create a date object
+            const date = parseDate(value, dateLocaleMeta);
+            // If we were able to create a date object, format it to an ISO-8601 string and
+            // set it as the field value. Otherwise, just set the entered value to the field
+            // directly. It's up to the validation libraries to check this.
+            const newValue = date ? formatISO(date, {representation: 'date'}) : value;
             await setValue(newValue);
-          }}
-          onBlur={async e => {
-            onBlur(e);
+            onBlur(event);
             await validateField(name);
           }}
           className="utrecht-textbox--openforms"
@@ -183,7 +187,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             });
             await setTouched(true);
           }}
-          currentDate={currentDate ?? undefined}
+          currentDate={undefined}
           minDate={minDate}
           maxDate={maxDate}
         />

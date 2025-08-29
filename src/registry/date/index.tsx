@@ -1,6 +1,7 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
 
 import {DateField} from '@/components/forms';
+import {parseDate} from '@/components/forms/DateField/utils';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
@@ -13,8 +14,13 @@ export interface FormioDateProps {
 }
 
 export const FormioDate: React.FC<FormioDateProps> = ({
-  componentDefinition: {key, label, tooltip, description, validate},
+  // TODO-82: widget should be properly type hinted in our types. It currently already
+  //  exists in the formio configuration actually
+  componentDefinition: {key, label, tooltip, description, validate, widget, datePicker},
 }) => {
+  const parsedMax = datePicker?.maxDate ? parseDate(datePicker.maxDate) : null;
+  const parsedMin = datePicker?.minDate ? parseDate(datePicker.minDate) : null;
+
   return (
     <DateField
       name={key}
@@ -22,7 +28,11 @@ export const FormioDate: React.FC<FormioDateProps> = ({
       tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
-      widget="inputGroup"
+      widget={widget}
+      datePickerProps={{
+        maxDate: parsedMax ?? undefined,
+        minDate: parsedMin ?? undefined,
+      }}
     />
   );
 };
