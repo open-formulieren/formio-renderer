@@ -3,16 +3,8 @@ import {useId} from 'react';
 import {FormattedMessage, type MessageDescriptor, defineMessages, useIntl} from 'react-intl';
 
 import './DatePartInput.scss';
+import {PART_PLACEHOLDERS} from './messages';
 import type {DatePart} from './types';
-
-const PART_PLACEHOLDERS: Record<DatePart, MessageDescriptor> = defineMessages({
-  year: {
-    description: 'Placeholder for year part of a date',
-    defaultMessage: 'yyyy',
-  },
-  month: {description: 'Placeholder for month part of a date', defaultMessage: 'm'},
-  day: {description: 'Placeholder for day part of a date', defaultMessage: 'd'},
-});
 
 const PART_LABELS: Record<DatePart, MessageDescriptor> = defineMessages({
   year: {

@@ -25,6 +25,7 @@ export interface IconProps {
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
+  onClick?: () => void;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -34,6 +35,8 @@ const Icon: React.FC<IconProps> = ({
   ['aria-label']: ariaLabel,
   ['aria-describedby']: ariaDescribedBy,
   icon,
+  onClick = () => {},
+  ...props
 }) => {
   switch (library) {
     case 'font-awesome': {
@@ -44,6 +47,8 @@ const Icon: React.FC<IconProps> = ({
           aria-hidden={ariaHidden}
           aria-label={ariaLabel}
           aria-describedby={ariaDescribedBy}
+          onClick={onClick}
+          {...props}
         />
       );
     }

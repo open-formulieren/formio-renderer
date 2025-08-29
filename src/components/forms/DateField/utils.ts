@@ -2,8 +2,32 @@ import {parseISO} from 'date-fns';
 
 import type {DatePart, DatePartValues} from './types';
 
+const RE_PARTS = {
+  year: '(?<year>\\d{4})',
+  month: '(?<month>\\d{1,2})',
+  day: '(?<day>\\d{1,2})',
+};
+
 const isValidDate = (value: Date): boolean => {
   return !isNaN(value.valueOf());
+};
+
+export interface LocaleMeta {
+  partsOrder: DatePart[];
+  separator: string;
+}
+
+export const localeFormattedDateToParts = (
+  value: string,
+  meta: LocaleMeta
+): DatePartValues | null => {
+  // Respect the order of the parts, but be lax about the separator
+  const orderedParts = meta.partsOrder.map(part => RE_PARTS[part]);
+  const re = new RegExp(orderedParts.join(meta.separator));
+  const match = value.match(re) as RegExpMatchArray & {groups: DatePartValues};
+
+  if (!match) return null;
+  return match.groups;
 };
 
 /**
@@ -13,9 +37,17 @@ const isValidDate = (value: Date): boolean => {
  * If no date could be parsed (either because it's incomplete, wrong format or just
  * non-sensical), returns `null`.
  */
-export const parseDate = (value: string): Date | null => {
+export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
-  const parsed = parseISO(value);
+  const partsOrder = meta?.partsOrder ?? ['year', 'month', 'day']; // default is ISO-8601
+  // respect the order of the parts, but be lax about the separator
+  const orderedParts = partsOrder.map(part => RE_PARTS[part]);
+  const re = new RegExp(orderedParts.join(meta?.separator ?? '-'));
+  const match = value.match(re) as RegExpMatchArray & {groups: DatePartValues};
+  if (!match) return null;
+  const {year, month, day} = match.groups;
+  const parsed = parseISO(partsToUnvalidatedISO8601({year, month, day}));
+
   // Invalid dates are also instances of Date :/
   return isValidDate(parsed) ? parsed : null;
 };
@@ -32,11 +64,6 @@ export const partsToUnvalidatedISO8601 = (parts: DatePartValues): string => {
   ];
   return bits.join('-');
 };
-
-export interface LocaleMeta {
-  partsOrder: DatePart[];
-  separator: string;
-}
 
 const TEST_DATE = new Date(2023, 4, 31);
 /**
