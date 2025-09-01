@@ -19,26 +19,24 @@ export interface LocaleMeta {
 
 /**
  * Parse a given string into a JS Date instance. The date is expected to be in ISO-8601
- * YYYY-MM-DD format. If date locale meta is passed, the locale formatted date is converted
- * into a ISO-8601 first.
+ * YYYY-MM-DD format, or formatted according to the locale if the meta was passed. Note that
+ * single digit months or days are zero-padded automatically, meaning YYYY-M-D is also a valid
+ * format.
  *
  * If no date could be parsed (either because it's incomplete, wrong format or just
  * non-sensical), returns `null`.
  */
 export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
-  let parsed;
-  if (meta) {
-    // respect the order of the parts, but be lax about the separator
-    const orderedParts = meta.partsOrder.map(part => RE_PARTS[part]);
-    const re = new RegExp(orderedParts.join('[^0-9]'));
-    const match = value.match(re) as RegExpMatchArray & {groups: DatePartValues};
-    if (!match) return null;
-    const {year, month, day} = match.groups;
-    parsed = parseISO(partsToUnvalidatedISO8601({year, month, day}));
-  } else {
-    parsed = parseISO(value);
-  }
+
+  const partsOrder = meta?.partsOrder ?? ['year', 'month', 'day']; // default ISO-8601 order
+  const orderedParts = partsOrder.map(part => RE_PARTS[part]);
+  const re = new RegExp(orderedParts.join(meta?.separator ?? '-')); // default ISO-8601 separator
+  const match = value.match(re) as RegExpMatchArray & {groups: DatePartValues};
+  if (!match) return null;
+  const {year, month, day} = match.groups;
+  const parsed = parseISO(partsToUnvalidatedISO8601({year, month, day}));
+
   // Invalid dates are also instances of Date :/
   return isValidDate(parsed) ? parsed : null;
 };
