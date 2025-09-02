@@ -1,11 +1,12 @@
 {
   "name": "@open-formulieren/formio-renderer",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
