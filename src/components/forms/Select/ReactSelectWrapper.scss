@@ -1,0 +1,139 @@
+@use '@utrecht/components/form-field';
+@use '@utrecht/components/select';
+
+@use '@/scss/bem';
+@use '@/scss/form-field-override';
+
+// --utrecht-textbox-placeholder-color
+
+/**
+ * Additional styles for react-select component, using the utrecht-select as base.
+ *
+ * The utrecht-select component currently only appears to support native HTML selects
+ * rather than dynamic-with-search-field select library solutions.
+ *
+ * See https://nl-design-system.github.io/utrecht/storybook/?path=/docs/css-component-select--docs
+ * for the upstream component.
+ *
+ * We opt for react-select now, but do plan to replace our own usage with the community
+ * component whenever it becomes available and is feature complete, across the SDK,
+ * formio-builder and formio-renderer libraries.
+ *
+ * Note that we deliberately do not scope these styles under .openforms-theme and don't
+ * adhere to BEM methodology in a strict way so that we don't pollute the utrecht
+ * namespace.
+ */
+.utrecht-select {
+  @include bem.modifier('openforms') {
+    & + .rs-menu {
+      --_rs-menu-border-color: var(
+        --utrecht-select-border-color,
+        var(--utrecht-form-control-border-color, var(--of-field-border-color))
+      );
+
+      background-color: var(
+        --of-select-menu-background-color,
+        var(--utrecht-select-background-color, var(--of-color-bg, #fff))
+      );
+      border: var(--of-select-menu-border, solid 1px var(--_rs-menu-border-color));
+      border-radius: var(--of-select-menu-border-radius, 0);
+      box-shadow: var(
+        --of-select-menu-box-shadow,
+        0 0 0 1px hsla(0, 0%, 0%, 0.1),
+        0 4px 11px hsla(0, 0%, 0%, 0.1)
+      );
+      margin-block-start: var(--of-select-menu-margin-block-start, 0);
+      margin-block-end: var(--of-select-menu-margin-block-end, 0);
+      max-inline-size: var(
+        --utrecht-select-max-inline-size,
+        var(--utrecht-form-control-max-inline-size)
+      );
+
+      .rs-menu__option {
+        padding-block-start: var(--of-select-menu-option-padding-block-start, 4px);
+        padding-block-end: var(--of-select-menu-option-padding-block-end, 4px);
+        padding-inline-start: var(--of-select-menu-option-padding-inline-start, 8px);
+        padding-inline-end: var(--of-select-menu-option-padding-inline-end, 8px);
+        font-weight: var(--of-select-menu-option-font-weight, normal);
+
+        &--focus,
+        &--focus-visible {
+          background-color: var(
+            --of-select-menu-option-focus-background-color,
+            var(--of-select-highlighted-bg, #e6e6e6)
+          );
+        }
+      }
+
+      .rs-no-options {
+        padding-block-start: var(--of-select-menu-option-padding-block-start, 4px);
+        padding-block-end: var(--of-select-menu-option-padding-block-end, 4px);
+        padding-inline-start: var(--of-select-menu-option-padding-inline-start, 8px);
+        padding-inline-end: var(--of-select-menu-option-padding-inline-end, 8px);
+      }
+    }
+
+    .rs-value--multi {
+      background-color: var(
+        --of-select-value-multi-background-color,
+        var(--of-color-primary, transparent)
+      );
+      color: var(--of-select-value-multi-color, var(--of-color-bg, #fff));
+      font-size: var(--of-select-value-multi-font-size, 1rem);
+      font-weight: var(--of-select-value-multi-font-weight, 400);
+      line-height: var(--of-select-value-multi-line-height, normal);
+      letter-spacing: normal;
+      margin-inline-end: var(--of-select-value-multi-margin-inline-end, 2px);
+      margin-inline-start: var(--of-select-value-multi-margin-inline-start, 2px);
+      padding-inline-end: var(--of-select-value-multi-padding-inline-end, 4px);
+      padding-inline-start: var(--of-select-value-multi-padding-inline-start, 6px);
+      padding-block-end: var(--of-select-value-multi-padding-block-end, 4px);
+      padding-block-start: var(--of-select-value-multi-padding-block-start, 4px);
+      white-space: normal;
+      column-gap: 1px;
+
+      :first-child::after {
+        content: '|';
+        opacity: 0.25;
+        margin-inline-start: 5px;
+      }
+
+      [role='button'] {
+        cursor: pointer;
+        opacity: 0.75;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .rs-input {
+      color: var(--utrecht-textbox-color, var(--utrecht-form-control-color));
+      font-family: var(--utrecht-textbox-font-family, var(--utrecht-form-control-font-family));
+      font-size: var(--utrecht-textbox-font-size, var(--utrecht-form-control-font-size, inherit));
+      font-weight: var(
+        --of-input-font-weight,
+        var(--utrecht-textbox-font-weight, var(--utrecht-form-control-font-weight, initial))
+      );
+    }
+
+    .rs-placeholder {
+      // See https://github.com/nl-design-system/utrecht/blob/c2c1994f1a9e557812d9c3e6acd2ee05bba29f12/components/textbox/src/_mixin.scss#L200
+      color: var(
+        --utrecht-textbox-placeholder-color,
+        var(
+          --utrecht-form-control-placeholder-color,
+          var(--utrecht-textbox-color, var(--utrecht-form-control-color))
+        )
+      );
+      font-style: var(--utrecht-form-control-placeholder-font-style);
+      opacity: 100%;
+    }
+  }
+
+  @include bem.modifier('openforms-is-multi') {
+    padding-block-end: var(--of-select-multi-padding-block-end, 8.5px);
+    padding-block-start: var(--of-select-multi-padding-block-start, 8.5px);
+  }
+}
