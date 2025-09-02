@@ -1,5 +1,25 @@
 # Changes
 
+## 0.8.0 (2025-09-02)
+
+Feature release.
+
+- Added support for rendering user-supplied strings with ICU message format.
+- [`#108`][#108] Implemented the `softRequiredErrors` component type.
+- [`#81`][#81] Implemented the `currency` component type.
+- [`#97`][#97] Implemented the `cosign` (v2) component type.
+- [`#79`][#79] Added `onChange` prop to `FormioForm` component, receiving the updated form field
+  values.
+- [`#82`][#82] Ported the `FloatingWidget` from the SDK.
+- [`#105`][#105] Implemented the `select` component type.
+
+[#108]: https://github.com/open-formulieren/formio-renderer/issues/108
+[#81]: https://github.com/open-formulieren/formio-renderer/issues/81
+[#97]: https://github.com/open-formulieren/formio-renderer/issues/97
+[#79]: https://github.com/open-formulieren/formio-renderer/issues/79
+[#82]: https://github.com/open-formulieren/formio-renderer/issues/82
+[#105]: https://github.com/open-formulieren/formio-renderer/issues/105
+
 ## 0.7.0 (2025-08-19)
 
 Feature release with some architectural rework.
