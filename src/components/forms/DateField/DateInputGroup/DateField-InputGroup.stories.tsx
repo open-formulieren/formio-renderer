@@ -6,7 +6,7 @@ import {z} from 'zod';
 
 import {withFormik} from '@/sb-decorators';
 
-import DateField from './DateField';
+import DateField from '../DateField';
 
 export default {
   title: 'Internal API / Forms / DateField / InputGroup',

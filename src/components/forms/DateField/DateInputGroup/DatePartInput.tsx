@@ -2,9 +2,9 @@ import {FormLabel, Textbox} from '@utrecht/component-library-react';
 import {useId} from 'react';
 import {FormattedMessage, type MessageDescriptor, defineMessages, useIntl} from 'react-intl';
 
+import {PART_PLACEHOLDERS} from '../messages';
+import type {DatePart} from '../types';
 import './DatePartInput.scss';
-import {PART_PLACEHOLDERS} from './messages';
-import type {DatePart} from './types';
 
 const PART_LABELS: Record<DatePart, MessageDescriptor> = defineMessages({
   year: {

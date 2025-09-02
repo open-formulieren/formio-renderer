@@ -1,8 +1,8 @@
 import {InputGroupItem} from '@/components/forms/InputGroup';
 
+import {useDateLocaleMeta} from '../hooks';
+import type {DatePart} from '../types';
 import DatePartInput from './DatePartInput';
-import {useDateLocaleMeta} from './hooks';
-import type {DatePart} from './types';
 
 export interface DateInputItemsProps {
   /**
