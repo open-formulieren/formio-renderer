@@ -188,19 +188,19 @@ export const ValidateMax: ValidationStory = {
     // Assert that value lower than max is fine
     await userEvent.type(number, '9,1');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or less.')).toBeNull();
+    expect(canvas.queryByText('De waarde moet 10 of kleiner zijn.')).toBeNull();
 
     // Assert that value equal to max is fine
     await userEvent.clear(number);
     await userEvent.type(number, '10');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or less.')).toBeNull();
+    expect(canvas.queryByText('De waarde moet 10 of kleiner zijn.')).toBeNull();
 
     // Assert that value greater than max is not fine
     await userEvent.clear(number);
     await userEvent.type(number, '10,5');
     await userEvent.click(submit);
-    expect(await canvas.findByText('The value must be 10 or less.')).toBeVisible();
+    expect(await canvas.findByText('De waarde moet 10 of kleiner zijn.')).toBeVisible();
   },
 };
 
@@ -228,19 +228,19 @@ export const ValidateMin: ValidationStory = {
     // Assert that value greater than min is fine
     await userEvent.type(number, '11,1');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or greater.')).toBeNull();
+    expect(canvas.queryByText('De waarde moet 10 of groter zijn.')).toBeNull();
 
     // Assert that value equal to min is fine
     await userEvent.clear(number);
     await userEvent.type(number, '10');
     await userEvent.click(submit);
-    expect(await canvas.queryByText('The value must be 10 or greater.')).toBeNull();
+    expect(canvas.queryByText('De waarde moet 10 of groter zijn.')).toBeNull();
 
     // Assert that value less than min is not fine
     await userEvent.clear(number);
     await userEvent.type(number, '9,1');
     await userEvent.click(submit);
-    expect(await canvas.findByText('The value must be 10 or greater.')).toBeVisible();
+    expect(await canvas.findByText('De waarde moet 10 of groter zijn.')).toBeVisible();
   },
 };
 

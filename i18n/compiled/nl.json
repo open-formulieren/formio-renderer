@@ -2,7 +2,7 @@
   "+/hjpS": [
     {
       "type": 0,
-      "value": "The value must be "
+      "value": "De waarde moet "
     },
     {
       "type": 1,
@@ -10,7 +10,7 @@
     },
     {
       "type": 0,
-      "value": " or less."
+      "value": " of kleiner zijn."
     }
   ],
   "+xOWBM": [
@@ -22,7 +22,7 @@
   "+zrboi": [
     {
       "type": 0,
-      "value": "Invalid IBAN"
+      "value": "Ongeldig IBAN"
     }
   ],
   "0EdUXi": [
@@ -39,19 +39,31 @@
           "value": [
             {
               "type": 0,
-              "value": "1 character remaining"
-            }
-          ]
-        },
-        "other": {
-          "value": [
+              "value": "Nog "
+            },
             {
               "type": 1,
               "value": "remainingCharCount"
             },
             {
               "type": 0,
-              "value": " characters remaining"
+              "value": " karakter over."
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Nog "
+            },
+            {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
+              "type": 0,
+              "value": " karakters over."
             }
           ]
         }
@@ -92,7 +104,7 @@
   "4IX8hk": [
     {
       "type": 0,
-      "value": "Loading..."
+      "value": "Opties ophalen..."
     }
   ],
   "9SgPC6": [
@@ -118,45 +130,15 @@
   "Bo6onH": [
     {
       "type": 0,
-      "value": "You must select at least "
+      "value": "Zorg dat dit veld "
     },
     {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "style": null,
-              "type": 2,
-              "value": "minSelectedCount"
-            },
-            {
-              "type": 0,
-              "value": " item"
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "style": null,
-              "type": 2,
-              "value": "minSelectedCount"
-            },
-            {
-              "type": 0,
-              "value": " items"
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
+      "type": 1,
       "value": "minSelectedCount"
     },
     {
       "type": 0,
-      "value": "."
+      "value": " of meer opties aangevinkt heeft.."
     }
   ],
   "DBTNgI": [
@@ -168,13 +150,13 @@
   "FfBWqF": [
     {
       "type": 0,
-      "value": "Show tooltip"
+      "value": "Toon tooltip"
     }
   ],
   "GS1Yjy": [
     {
       "type": 0,
-      "value": "Empty fields"
+      "value": "Velden zonder antwoord"
     }
   ],
   "MJXZYI": [
@@ -186,13 +168,13 @@
   "QPdaOi": [
     {
       "type": 0,
-      "value": "No results found"
+      "value": "Geen opties om te kiezen"
     }
   ],
   "RJ+0F/": [
     {
       "type": 0,
-      "value": "Yes"
+      "value": "Ja"
     }
   ],
   "RSPyzt": [
@@ -204,51 +186,21 @@
   "TZb5ph": [
     {
       "type": 0,
-      "value": "You can only select up to "
+      "value": "Zorg dat dit veld "
     },
     {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "style": null,
-              "type": 2,
-              "value": "maxSelectedCount"
-            },
-            {
-              "type": 0,
-              "value": " item"
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "style": null,
-              "type": 2,
-              "value": "maxSelectedCount"
-            },
-            {
-              "type": 0,
-              "value": " items"
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
+      "type": 1,
       "value": "maxSelectedCount"
     },
     {
       "type": 0,
-      "value": "."
+      "value": " of minder opties aagevinkt heeft."
     }
   ],
   "abKEBH": [
     {
       "type": 0,
-      "value": "No"
+      "value": "Nee"
     }
   ],
   "cKFCTI": [
@@ -276,8 +228,12 @@
         "one": {
           "value": [
             {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
               "type": 0,
-              "value": "1 character"
+              "value": " karakter"
             }
           ]
         },
@@ -289,7 +245,7 @@
             },
             {
               "type": 0,
-              "value": " characters"
+              "value": " karakters"
             }
           ]
         }
@@ -297,6 +253,10 @@
       "pluralType": "cardinal",
       "type": 6,
       "value": "charCount"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "sGwqUb": [
@@ -320,7 +280,7 @@
   "xHVrv5": [
     {
       "type": 0,
-      "value": "The value must be "
+      "value": "De waarde moet "
     },
     {
       "type": 1,
@@ -328,7 +288,7 @@
     },
     {
       "type": 0,
-      "value": " or greater."
+      "value": " of groter zijn."
     }
   ],
   "yKo62N": [
@@ -340,7 +300,7 @@
   "z+/GrY": [
     {
       "type": 0,
-      "value": "Invalid Dutch license plate"
+      "value": "Ongeldig Nederlands kenteken"
     }
   ]
 }
