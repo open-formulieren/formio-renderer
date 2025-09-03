@@ -1,32 +1,8 @@
-@use '@/scss/bem';
+@use '@utrecht/components/button';
 @use '@utrecht/components/calendar';
 
-// TODO-82: not sure if this is the problem, but this class doesn't seem to be applied anywhere in
-//  the SDK
-.openforms-datepicker {
-  padding: 0;
-  border: 0;
-  border-radius: var(--of-datepicker-border-radius, 0);
-  box-sizing: border-box;
-  background: var(--of-datepicker-background, var(--of-color-bg));
-  box-shadow: var(
-    --of-datepicker-box-shadow,
-    1px 0 0 #e6e6e6,
-    -1px 0 0 #e6e6e6,
-    0 1px 0 #e6e6e6,
-    0 -1px 0 #e6e6e6,
-    0 3px 13px rgba(0, 0, 0, 0.08)
-  );
-
-  @include bem.element('arrow') {
-    fill: var(--of-color-bg, #fff);
-
-    path[clip-path] {
-      stroke: var(--of-datepicker-arrow-border-color, #e6e6e6);
-      stroke-width: var(--of-datepicker-arrow-stroke-width, 3);
-    }
-  }
-}
+@use '@/scss/button-override';
+@use '@/scss/bem';
 
 .openforms-datepicker-textbox {
   position: relative;
