@@ -1,5 +1,12 @@
 # Changes
 
+## 0.8.1 (2025-09-03)
+
+Bugfix release.
+
+- Fixed missing `Select` export (low-level component).
+- Fixed missing `isLoading` prop for the `Select` component.
+
 ## 0.8.0 (2025-09-02)
 
 Feature release.
