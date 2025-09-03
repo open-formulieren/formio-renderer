@@ -4,6 +4,7 @@ export {default as Checkbox} from './Checkbox';
 export {default as RadioField} from './RadioField';
 export {default as DateField} from './DateField';
 export {default as NumberField} from './NumberField';
+export {default as SelectField} from './Select';
 
 // Complex form inputs
 export {default as EditGrid} from './EditGrid';

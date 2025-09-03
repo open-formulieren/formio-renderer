@@ -33,6 +33,10 @@ export interface SelectProps {
    */
   options: Option[];
   /**
+   * Indicator whether options are still being retrieved.
+   */
+  isLoading?: boolean;
+  /**
    * If enabled and when there is only one possible option in the `options`,
    * automatically select it.
    */
@@ -73,6 +77,7 @@ const EMPTY_MULTI_SELECT_VALUE: string[] = [];
 const Select: React.FC<SelectProps> = ({
   name,
   label,
+  isLoading,
   options,
   autoSelectOnlyOption,
   isMulti = false,
@@ -127,6 +132,7 @@ const Select: React.FC<SelectProps> = ({
       <ReactSelectWrapper<Option>
         name={name}
         inputId={id}
+        isLoading={isLoading}
         options={options}
         isMulti={isMulti}
         isClearable={!isRequired && !(autoSelectOnlyOption && options.length === 1)}
