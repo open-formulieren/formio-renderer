@@ -1,5 +1,9 @@
 # Changes
 
+## 0.8.1 (2025-09-04)
+
+Added the missing (Dutch) translations.
+
 ## 0.8.1 (2025-09-03)
 
 Bugfix release.
