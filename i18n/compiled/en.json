@@ -38,8 +38,12 @@
         "one": {
           "value": [
             {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
               "type": 0,
-              "value": "1 character remaining"
+              "value": " character remaining."
             }
           ]
         },
@@ -51,7 +55,7 @@
             },
             {
               "type": 0,
-              "value": " characters remaining"
+              "value": " characters remaining."
             }
           ]
         }
@@ -276,8 +280,12 @@
         "one": {
           "value": [
             {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
               "type": 0,
-              "value": "1 character"
+              "value": " character"
             }
           ]
         },
@@ -297,6 +305,10 @@
       "pluralType": "cardinal",
       "type": 6,
       "value": "charCount"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "sGwqUb": [

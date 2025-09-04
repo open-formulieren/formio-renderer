@@ -188,7 +188,7 @@ export const AutoExpand: Story = {
   },
 };
 
-export const showCharCountWithoutLimit: Story = {
+export const ShowCharCountWithoutLimit: Story = {
   name: 'Show character count without a character limit',
   args: {
     name: 'ShowCharCount',
@@ -203,6 +203,9 @@ export const showCharCountWithoutLimit: Story = {
       },
     },
   },
+  globals: {
+    locale: 'nl',
+  },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     const input = await canvas.findByLabelText('Show char count');
@@ -211,15 +214,15 @@ export const showCharCountWithoutLimit: Story = {
 
     // Expect the 'X characters' text to be shown, with the right amount of used
     // characters.
-    const charactersUsedMessage = await canvas.findByText('21 characters');
+    const charactersUsedMessage = await canvas.findByText('21 karakters.');
     expect(charactersUsedMessage).toBeVisible();
 
     // Expect that the character count is also accessible by screen-readers.
-    expect(input).toHaveAccessibleDescription('21 characters');
+    expect(input).toHaveAccessibleDescription('21 karakters.');
   },
 };
 
-export const showCharCountWithLimit: Story = {
+export const ShowCharCountWithLimit: Story = {
   name: 'Show character count with a character limit',
   args: {
     name: 'ShowCharCount',
@@ -237,6 +240,9 @@ export const showCharCountWithLimit: Story = {
       }),
     },
   },
+  globals: {
+    locale: 'nl',
+  },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
     const input = await canvas.findByLabelText('Show char count');
@@ -250,30 +256,30 @@ export const showCharCountWithLimit: Story = {
 
       // Expect the 'characters remaining' text to be shown, with the right amount of
       // remaining characters.
-      expect(await canvas.findByText('29 characters remaining')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('29 characters remaining');
+      expect(await canvas.findByText('Nog 29 karakters over.')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('Nog 29 karakters over.');
     });
 
     await step('Character count for 1 character remaining', async () => {
       // Show the correct message when 1 character left.
       await userEvent.type(input, " I'm standing on the edge...");
 
-      expect(await canvas.findByText('1 character remaining')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('1 character remaining');
+      expect(await canvas.findByText('Nog 1 karakter over.')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('Nog 1 karakter over.');
     });
 
     await step('Character count for 0 characters remaining', async () => {
       await userEvent.type(input, ' ');
 
-      expect(await canvas.findByText('0 characters remaining')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('0 characters remaining');
+      expect(await canvas.findByText('Nog 0 karakters over.')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('Nog 0 karakters over.');
     });
 
     await step('Character count beyond characters limit', async () => {
       await userEvent.type(input, 'And I can go beyond it!');
 
-      expect(await canvas.findByText('-23 characters remaining')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('-23 characters remaining');
+      expect(await canvas.findByText('Nog -23 karakters over.')).toBeVisible();
+      expect(input).toHaveAccessibleDescription('Nog -23 karakters over.');
 
       // Trigger the zog validation
       await userEvent.tab();

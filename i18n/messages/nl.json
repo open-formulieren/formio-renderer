@@ -1,6 +1,6 @@
 {
   "+/hjpS": {
-    "defaultMessage": "The value must be {max} or less.",
+    "defaultMessage": "De waarde moet {max} of kleiner zijn.",
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
@@ -10,7 +10,7 @@
     "originalDefault": "Remove"
   },
   "+zrboi": {
-    "defaultMessage": "Invalid IBAN",
+    "defaultMessage": "Ongeldig IBAN",
     "description": "Validation error for IBAN that does not pass the mod-97 test.",
     "originalDefault": "Invalid IBAN"
   },
@@ -20,7 +20,7 @@
     "originalDefault": "Save"
   },
   "1TAtDi": {
-    "defaultMessage": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }",
+    "defaultMessage": "{remainingCharCount, plural, one {Nog {remainingCharCount} karakter over.} other {Nog {remainingCharCount} karakters over.} }",
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
@@ -30,7 +30,7 @@
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
   "4IX8hk": {
-    "defaultMessage": "Loading...",
+    "defaultMessage": "Opties ophalen...",
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
   },
@@ -45,7 +45,7 @@
     "originalDefault": "Edit item {index}"
   },
   "Bo6onH": {
-    "defaultMessage": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }.",
+    "defaultMessage": "Zorg dat dit veld {minSelectedCount} of meer opties aangevinkt heeft..",
     "description": "Selectboxes minimum selected count error message",
     "originalDefault": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }."
   },
@@ -56,12 +56,12 @@
     "originalDefault": "d"
   },
   "FfBWqF": {
-    "defaultMessage": "Show tooltip",
+    "defaultMessage": "Toon tooltip",
     "description": "Tooltip icon label",
     "originalDefault": "Show tooltip"
   },
   "GS1Yjy": {
-    "defaultMessage": "Empty fields",
+    "defaultMessage": "Velden zonder antwoord",
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
   },
@@ -72,12 +72,12 @@
     "originalDefault": "m"
   },
   "QPdaOi": {
-    "defaultMessage": "No results found",
+    "defaultMessage": "Geen opties om te kiezen",
     "description": "Select 'no options' message",
     "originalDefault": "No results found"
   },
   "RJ+0F/": {
-    "defaultMessage": "Yes",
+    "defaultMessage": "Ja",
     "description": "'True' display",
     "originalDefault": "Yes"
   },
@@ -87,12 +87,12 @@
     "originalDefault": "Month"
   },
   "TZb5ph": {
-    "defaultMessage": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }.",
+    "defaultMessage": "Zorg dat dit veld {maxSelectedCount} of minder opties aagevinkt heeft.",
     "description": "Selectboxes maximum selected count error message",
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
   },
   "abKEBH": {
-    "defaultMessage": "No",
+    "defaultMessage": "Nee",
     "description": "'False' display",
     "originalDefault": "No"
   },
@@ -112,7 +112,7 @@
     "originalDefault": "yyyy"
   },
   "qTqAIS": {
-    "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
+    "defaultMessage": "{charCount, plural, one {{charCount} karakter} other {{charCount} karakters} }.",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
@@ -132,7 +132,7 @@
     "originalDefault": "Day"
   },
   "xHVrv5": {
-    "defaultMessage": "The value must be {min} or greater.",
+    "defaultMessage": "De waarde moet {min} of groter zijn.",
     "description": "Validation error for number less than minimum value.",
     "originalDefault": "The value must be {min} or greater."
   },
@@ -142,7 +142,7 @@
     "originalDefault": "Year"
   },
   "z+/GrY": {
-    "defaultMessage": "Invalid Dutch license plate",
+    "defaultMessage": "Ongeldig Nederlands kenteken",
     "description": "Validation error for license plate.",
     "originalDefault": "Invalid Dutch license plate"
   }

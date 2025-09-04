@@ -20,7 +20,7 @@
     "originalDefault": "Save"
   },
   "1TAtDi": {
-    "defaultMessage": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }",
+    "defaultMessage": "{remainingCharCount, plural, one {{remainingCharCount} character remaining.} other {{remainingCharCount} characters remaining.} }",
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
@@ -110,7 +110,7 @@
     "originalDefault": "yyyy"
   },
   "qTqAIS": {
-    "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
+    "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
