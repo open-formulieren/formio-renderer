@@ -1,7 +1,7 @@
-import {expect, test} from 'vitest';
+import {describe, expect, test} from 'vitest';
 
 import type {DatePartValues} from './types';
-import {partsToUnvalidatedISO8601} from './utils';
+import {getDateLocaleMeta, parseDate, partsToUnvalidatedISO8601} from './utils';
 
 test.each([
   [{year: '2024', month: '1', day: '1'}, '2024-01-01'],
@@ -33,3 +33,47 @@ test.each([
     expect(result).toBe(expected);
   }
 );
+
+describe('Parse date validation', () => {
+  test.each(['2025-09-01', '2025-9-01', '2025-09-1', '2025-9-1'] satisfies string[])(
+    'Valid value',
+    () => {
+      const result = parseDate('2025-09-01');
+      expect(result).not.toBeNull();
+    }
+  );
+
+  test.each([
+    '20',
+    '2000-01',
+    '2000-13-20',
+    '2000-12-32',
+    '20-12-2000',
+    '12/20/2000',
+  ] satisfies string[])('Invalid value: %s', (value: string) => {
+    const result = parseDate(value);
+    expect(result).toBeNull();
+  });
+
+  test('Valid value with meta', () => {
+    const meta = getDateLocaleMeta('en');
+    const result = parseDate('12/20/2000', meta);
+    expect(result).not.toBeNull();
+  });
+
+  test.each([
+    '20',
+    '2000/01',
+    '2000-13-20',
+    '2000-12-1',
+    '2000-12-32',
+    '12',
+    '12/20',
+    '13/20/2000',
+    '12/32/2000',
+  ] satisfies string[])('Invalid value with meta: %s', (value: string) => {
+    const meta = getDateLocaleMeta('en');
+    const result = parseDate(value, meta);
+    expect(result).toBeNull();
+  });
+});

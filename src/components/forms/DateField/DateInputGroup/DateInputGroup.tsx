@@ -3,9 +3,9 @@ import {useEffect, useState} from 'react';
 
 import {InputGroup} from '@/components/forms/InputGroup';
 
+import type {DatePart, DatePartValues} from '../types';
+import {parseDate, partsToUnvalidatedISO8601} from '../utils';
 import DateInputItems from './DateInputItems';
-import type {DatePart, DatePartValues} from './types';
-import {parseDate, partsToUnvalidatedISO8601} from './utils';
 
 const dateStringToParts = (value: string): DatePartValues => {
   const dateValue = parseDate(value);

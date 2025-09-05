@@ -45,10 +45,19 @@ describe('date component validation', () => {
     expect(success).toBe(false);
   });
 
-  test('Invalid date', () => {
+  test.each([
+    '2024-10-69',
+    '2024-15-10',
+    '30-10-2024',
+    '10-30-2024',
+    '2024/01/01',
+    42,
+    12.34,
+    null,
+  ])('Invalid date: %s', date => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse('2024-15-69');
+    const {success} = schema.safeParse(date);
 
     expect(success).toBe(false);
   });

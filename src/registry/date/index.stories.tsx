@@ -17,13 +17,15 @@ export default {
 
 type Story = StoryObj<typeof FormioDate>;
 
-export const MinimalConfiguration: Story = {
+export const MinimalConfigurationInputGroup: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
       type: 'date',
       key: 'my.date',
       label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
     } satisfies DateComponentSchema,
   },
   parameters: {
@@ -37,7 +39,29 @@ export const MinimalConfiguration: Story = {
   },
 };
 
-export const WithTooltip: Story = {
+export const MinimalConfigurationDatePicker: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'datePicker'},
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: '',
+        },
+      },
+    },
+  },
+};
+
+export const WithTooltipInputGroup: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
@@ -46,6 +70,32 @@ export const WithTooltip: Story = {
       label: 'Your date',
       tooltip: 'Surprise!',
       description: 'A description',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: '',
+        },
+      },
+    },
+  },
+};
+
+export const WithTooltipDatePicker: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      tooltip: 'Surprise!',
+      description: 'A description',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'datePicker'},
     } satisfies DateComponentSchema,
   },
   parameters: {
@@ -75,7 +125,7 @@ const BaseValidationStory: ValidationStory = {
   },
 };
 
-export const ValidateRequired: ValidationStory = {
+export const ValidateRequiredInputGroup: ValidationStory = {
   ...BaseValidationStory,
   args: {
     onSubmit: fn(),
@@ -84,6 +134,8 @@ export const ValidateRequired: ValidationStory = {
       type: 'date',
       key: 'my.date',
       label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
       validate: {
         required: true,
       },
@@ -100,7 +152,7 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
-export const ValidateValidDate: ValidationStory = {
+export const ValidateRequiredDatePicker: ValidationStory = {
   ...BaseValidationStory,
   args: {
     onSubmit: fn(),
@@ -109,6 +161,32 @@ export const ValidateValidDate: ValidationStory = {
       type: 'date',
       key: 'my.date',
       label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'datePicker'},
+      validate: {
+        required: true,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const InvalidDateInputGroup: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
       validate: {
         required: false,
       },
@@ -132,6 +210,35 @@ export const ValidateValidDate: ValidationStory = {
     expect(monthInput).toHaveDisplayValue('13');
     expect(dayInput).toHaveDisplayValue('8');
     expect(yearInput).toHaveDisplayValue('2000');
+  },
+};
+
+export const InvalidDateDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'datePicker'},
+      validate: {
+        required: false,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = canvas.getByLabelText('Your date');
+    await userEvent.type(date, '13/32/2000');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid input')).toBeVisible();
+
+    expect(date).toHaveDisplayValue('13/32/2000');
   },
 };
 
@@ -159,6 +266,8 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'date',
       key: 'my.date',
       label: 'A date field',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
       multiple: false,
     } satisfies DateComponentSchema,
     value: '1980-01-01',
@@ -173,6 +282,8 @@ export const SingleEmptyValueDisplay: ValueDisplayStory = {
       type: 'date',
       key: 'my.date',
       label: 'A date field',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
       multiple: false,
     } satisfies DateComponentSchema,
     value: '',
@@ -187,6 +298,8 @@ export const MultiValueDisplay: ValueDisplayStory = {
       type: 'date',
       key: 'my.date',
       label: 'A date field',
+      // @ts-expect-error this is not in the schema yet
+      widget: {type: 'inputGroup'},
       multiple: true,
     } satisfies DateComponentSchema,
     value: ['1980-01-01', '', '2025-03-21'],
