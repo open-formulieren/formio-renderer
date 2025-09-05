@@ -1,0 +1,22 @@
+import {ArgTypes, Meta} from '@storybook/addon-docs/blocks';
+
+import * as ModalStories from './Modal.stories';
+
+<Meta of={ModalStories} />
+
+# Modal
+
+The modal uses the native HTML dialog element with all its features.
+
+To open the modal, we need a useEffect hook. The dialog element does support a `open` property, but
+this can only be used to show the dialog without modal functionalities.
+
+Opening the modal automatically sets the correct aria-tags. Also, the close button get autofocus,
+making closing the modal easier for vision-impaired users.
+
+The modal can be closed using the `[esc]` key, or by clicking the "close" button on the top-right of
+the modal.
+
+## Props
+
+<ArgTypes />
