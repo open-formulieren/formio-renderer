@@ -65,6 +65,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2KKNKT": [
+    {
+      "type": 0,
+      "value": "Previous year"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -117,6 +123,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "AustF4": [
+    {
+      "type": 0,
+      "value": "Next month"
     }
   ],
   "Bo6onH": [
@@ -179,6 +191,18 @@
     {
       "type": 0,
       "value": "Empty fields"
+    }
+  ],
+  "IhLYXK": [
+    {
+      "type": 0,
+      "value": "Toggle calendar"
+    }
+  ],
+  "KWP1b9": [
+    {
+      "type": 0,
+      "value": "Previous month"
     }
   ],
   "MJXZYI": [
@@ -249,6 +273,12 @@
       "value": "."
     }
   ],
+  "Tip5+d": [
+    {
+      "type": 0,
+      "value": "Next year"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -271,6 +301,12 @@
     {
       "type": 0,
       "value": "yyyy"
+    }
+  ],
+  "ph6ljt": [
+    {
+      "type": 0,
+      "value": "Invalid input"
     }
   ],
   "qTqAIS": [

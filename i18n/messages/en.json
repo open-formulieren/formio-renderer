@@ -24,6 +24,11 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "2KKNKT": {
+    "defaultMessage": "Previous year",
+    "description": "Calendar: previous year button title",
+    "originalDefault": "Previous year"
+  },
   "3C29X9": {
     "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }",
     "description": "Form field label content/wrapper",
@@ -44,6 +49,11 @@
     "description": "Accessible edit icon/button label for item inside edit grid",
     "originalDefault": "Edit item {index}"
   },
+  "AustF4": {
+    "defaultMessage": "Next month",
+    "description": "Calendar: next month button title",
+    "originalDefault": "Next month"
+  },
   "Bo6onH": {
     "defaultMessage": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }.",
     "description": "Selectboxes minimum selected count error message",
@@ -63,6 +73,16 @@
     "defaultMessage": "Empty fields",
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
+  },
+  "IhLYXK": {
+    "defaultMessage": "Toggle calendar",
+    "description": "Datepicker: accessible calendar toggle label",
+    "originalDefault": "Toggle calendar"
+  },
+  "KWP1b9": {
+    "defaultMessage": "Previous month",
+    "description": "Calendar: previous month button title",
+    "originalDefault": "Previous month"
   },
   "MJXZYI": {
     "defaultMessage": "m",
@@ -89,6 +109,11 @@
     "description": "Selectboxes maximum selected count error message",
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
   },
+  "Tip5+d": {
+    "defaultMessage": "Next year",
+    "description": "Calendar: next year button title",
+    "originalDefault": "Next year"
+  },
   "abKEBH": {
     "defaultMessage": "No",
     "description": "'False' display",
@@ -108,6 +133,11 @@
     "defaultMessage": "yyyy",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
+  },
+  "ph6ljt": {
+    "defaultMessage": "Invalid input",
+    "description": "Invalid input validation error for date field",
+    "originalDefault": "Invalid input"
   },
   "qTqAIS": {
     "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
