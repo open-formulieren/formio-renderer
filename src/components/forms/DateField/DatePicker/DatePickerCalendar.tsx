@@ -1,50 +1,66 @@
 // Calendar component documentation:
 // https://nl-design-system.github.io/utrecht/storybook-react/index.html?path=/docs/react-component-calendar--docs
 import {Calendar} from '@utrecht/component-library-react';
-import {enGB, nl} from 'date-fns/locale';
-import {useIntl} from 'react-intl';
+import type {Locale} from 'date-fns';
+import {FormattedMessage, useIntl} from 'react-intl';
+import {useAsync} from 'react-use';
 
-// FIXME: together with src/i18n.js, see how we can make this a dynamic import without
-//  breaking the bundles/cache busting mechanisms.
-export const loadCalendarLocale = (locale: string) => {
+/**
+ * Dynamically import the calendar locale.
+ */
+const loadCalendarLocale = async (locale: string): Promise<Locale> => {
   switch (locale) {
     case 'nl':
+      const {default: nl} = await import('date-fns/locale/nl');
       return nl;
+    case 'en':
     default:
-      return enGB;
+      const {default: en} = await import('date-fns/locale/en-GB');
+      return en;
   }
 };
 
 const DatePickerCalendar: typeof Calendar = props => {
-  const locale = useCalendarLocale();
-  const {formatMessage} = useIntl();
+  const intl = useIntl();
+
+  // Load the calendar locale
+  const {
+    loading,
+    value: locale,
+    error,
+  } = useAsync(async () => {
+    return await loadCalendarLocale(intl.locale);
+  }, [intl.locale]);
+
+  if (loading) {
+    return <FormattedMessage description="Calendar loading message" defaultMessage="Loading..." />;
+  }
+  if (error) {
+    throw error;
+  }
+
   return (
     <Calendar
       locale={locale}
-      previousYearButtonTitle={formatMessage({
+      previousYearButtonTitle={intl.formatMessage({
         description: 'Calendar: previous year button title',
         defaultMessage: 'Previous year',
       })}
-      nextYearButtonTitle={formatMessage({
+      nextYearButtonTitle={intl.formatMessage({
         description: 'Calendar: next year button title',
         defaultMessage: 'Next year',
       })}
-      previousMonthButtonTitle={formatMessage({
+      previousMonthButtonTitle={intl.formatMessage({
         description: 'Calendar: previous month button title',
         defaultMessage: 'Previous month',
       })}
-      nextMonthButtonTitle={formatMessage({
+      nextMonthButtonTitle={intl.formatMessage({
         description: 'Calendar: next month button title',
         defaultMessage: 'Next month',
       })}
       {...props}
     />
   );
-};
-
-export const useCalendarLocale = () => {
-  const intl = useIntl();
-  return loadCalendarLocale(intl.locale);
 };
 
 export default DatePickerCalendar;
