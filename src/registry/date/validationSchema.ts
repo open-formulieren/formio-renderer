@@ -14,13 +14,14 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate = {}} = componentDefinition;
-  // FIXME: minDate and maxDate are typed as any in Formio's types!
-  // TODO-82: in the backend, we set 'minDate' and 'maxDate' to the 'datePicker' prop. Is it correct
-  //  fetching them from 'validate'? Also in the requirements of the datepicker ticket, minDate and
-  //  maxDate are listed under the datePicker prop. Seems like validation will not be applied when
-  //  we swap the component
-  const {required, minDate, maxDate} = validate;
+  const {key, validate = {}, datePicker} = componentDefinition;
+  const {required} = validate;
+  // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
+  // need to do this here. Once we swapped formio for our own renderer - and also implemented
+  // support in the form builder for choosing which widget to use - the min and max dates should be
+  // moved to either the `validate` or `openForms` prop, probably.
+  const minDate = datePicker?.minDate;
+  const maxDate = datePicker?.maxDate;
 
   let dateSchema = z.coerce.date();
   if (minDate) {
