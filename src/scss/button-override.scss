@@ -1,0 +1,53 @@
+// Taken from OF SDK src/scss/components/_button.scss
+@use '@/scss/bem';
+
+@use './responsive';
+
+// The Open Forms theme applies some utrecht-button overrides that cannot be specified
+// throughdesign tokens.
+
+.openforms-theme {
+  .utrecht-button,
+  .utrecht-button-link,
+  .utrecht-link-button {
+    // For buttons without any state or buttons being hovered over, apply a 3d effect
+    // by making the top and left border transparent.
+    &,
+    &:hover {
+      // However, if the button has visible focus, apply the border color to all borders
+      // otherwise it looks a bit broken.
+      &:not(:focus, :focus-visible) {
+        border-block-start-color: transparent;
+        border-inline-start-color: transparent;
+      }
+    }
+
+    // approximate browser default behaviour for focus outline
+    &:focus-visible {
+      --utrecht-button-border-radius: 2px;
+    }
+  }
+
+  .utrecht-table .utrecht-button {
+    --_utrecht-button-background-color: transparent;
+    --utrecht-button-padding-block-start: 0;
+    --utrecht-button-padding-block-end: 0;
+
+    &:hover {
+      --utrecht-button-subtle-hover-background-color: transparent;
+      --utrecht-button-subtle-danger-hover-background-color: transparent;
+    }
+  }
+}
+
+@include responsive.mobile-only {
+  .openforms-theme {
+    .utrecht-button,
+    .utrecht-button-link {
+      display: flex;
+      inline-size: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+}

@@ -15,6 +15,18 @@ const BASE_COMPONENT: DateComponentSchema = {
   label: 'Date field',
 };
 
+const BASE_DATEPICKER: DateComponentSchema['datePicker'] = {
+  showWeeks: false,
+  startingDay: 0,
+  initDate: '',
+  minMode: 'day',
+  maxMode: 'day',
+  yearRows: 0,
+  yearColumns: 0,
+  minDate: null,
+  maxDate: null,
+};
+
 const buildValidationSchema = (component: DateComponentSchema) => {
   const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
@@ -45,10 +57,19 @@ describe('date component validation', () => {
     expect(success).toBe(false);
   });
 
-  test('Invalid date', () => {
+  test.each([
+    '2024-10-69',
+    '2024-15-10',
+    '30-10-2024',
+    '10-30-2024',
+    '2024/01/01',
+    42,
+    12.34,
+    null,
+  ])('Invalid date: %s', date => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse('2024-15-69');
+    const {success} = schema.safeParse(date);
 
     expect(success).toBe(false);
   });
@@ -65,7 +86,10 @@ describe('date component validation', () => {
     ['2024-01-01', true],
     ['2030-07-21', false],
   ])('Minimum date: %s (valid: %s)', (minDate, valid) => {
-    const component: DateComponentSchema = {...BASE_COMPONENT, validate: {minDate}};
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, minDate},
+    };
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse('2025-02-11');
@@ -77,7 +101,10 @@ describe('date component validation', () => {
     ['2024-01-01', false],
     ['2030-07-21', true],
   ])('Maximum date: %s (valid: %s)', (maxDate, valid) => {
-    const component: DateComponentSchema = {...BASE_COMPONENT, validate: {maxDate}};
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, maxDate},
+    };
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse('2025-02-11');

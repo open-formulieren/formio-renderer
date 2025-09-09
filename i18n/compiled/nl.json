@@ -73,6 +73,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2KKNKT": [
+    {
+      "type": 0,
+      "value": "Previous year"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -127,6 +133,12 @@
       "value": "index"
     }
   ],
+  "AustF4": [
+    {
+      "type": 0,
+      "value": "Next month"
+    }
+  ],
   "Bo6onH": [
     {
       "type": 0,
@@ -157,6 +169,18 @@
     {
       "type": 0,
       "value": "Velden zonder antwoord"
+    }
+  ],
+  "IhLYXK": [
+    {
+      "type": 0,
+      "value": "Toggle calendar"
+    }
+  ],
+  "KWP1b9": [
+    {
+      "type": 0,
+      "value": "Previous month"
     }
   ],
   "MJXZYI": [
@@ -197,6 +221,12 @@
       "value": " of minder opties aagevinkt heeft."
     }
   ],
+  "Tip5+d": [
+    {
+      "type": 0,
+      "value": "Next year"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -219,6 +249,12 @@
     {
       "type": 0,
       "value": "jjjj"
+    }
+  ],
+  "ph6ljt": [
+    {
+      "type": 0,
+      "value": "Invalid input"
     }
   ],
   "qTqAIS": [
