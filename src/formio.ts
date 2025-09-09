@@ -20,7 +20,7 @@ export const getConditional = (
   if (component.conditional == undefined) return null;
   const {show, when, eq} = component.conditional;
   // incomplete configuration -> nothing to extract
-  if (show === undefined || when === undefined || eq === undefined) return null;
+  if (show == undefined || when == undefined || eq === undefined) return null;
   return {show, when, eq};
 };
 
