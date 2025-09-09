@@ -1,7 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {addDays, subDays} from 'date-fns';
-import {expect, fn, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
@@ -51,8 +51,8 @@ export const DatePicker: Story = {
     expect(date).toBeInTheDocument();
 
     // Ensure clicking the icon opens the calendar
-    expect(await canvas.queryByRole('dialog')).toBeNull();
-    await userEvent.click(canvas.getByLabelText('Toggle calendar'));
+    expect(canvas.queryByRole('dialog')).toBeNull();
+    await userEvent.click(canvas.getByLabelText('Toon/verberg de kalender'));
     expect(canvas.getByRole('dialog')).toBeVisible();
   },
 };
@@ -95,7 +95,7 @@ export const DatePickerLimitedRange: Story = {
     const canvas = within(canvasElement);
 
     // Calendar is by default not visible, until you focus the field
-    expect(await canvas.queryByRole('dialog')).toBeNull();
+    expect(canvas.queryByRole('dialog')).toBeNull();
     await userEvent.click(canvas.getByText('Date'));
     expect(await canvas.findByRole('dialog')).toBeVisible();
   },
@@ -113,13 +113,13 @@ export const DatePickerKeyboardNavigation: Story = {
     const canvas = within(canvasElement);
 
     // Calendar is by default not visible, until you focus the field
-    expect(await canvas.queryByRole('dialog')).toBeNull();
+    expect(canvas.queryByRole('dialog')).toBeNull();
     await userEvent.click(canvas.getByText('Date'));
     expect(await canvas.findByRole('dialog')).toBeVisible();
 
     // Ensure ESC key closes the dialog again
     await userEvent.keyboard('[Escape]');
-    expect(await canvas.queryByRole('dialog')).toBeNull();
+    expect(canvas.queryByRole('dialog')).toBeNull();
   },
 };
 
@@ -149,20 +149,24 @@ export const DatePickerTypeDateManually: Story = {
   play: async ({canvasElement, parameters}) => {
     const canvas = within(canvasElement);
 
-    expect(await canvas.queryByRole('dialog')).toBeNull();
+    expect(canvas.queryByRole('dialog')).toBeNull();
     const date = canvas.getByLabelText('Date');
     await userEvent.type(date, '29-08-2025');
     expect(date).toHaveDisplayValue('29-08-2025');
 
     // Ensure formatting is applied on blur
     date.blur();
-    expect(await canvas.queryByRole('dialog')).toBeNull();
+    await waitFor(() => {
+      expect(canvas.queryByRole('dialog')).toBeNull();
+    });
     expect(date).toHaveDisplayValue('29-8-2025');
 
     // Ensure that the date is properly highlighted in the calendar
     await userEvent.click(date);
     expect(await canvas.findByRole('dialog')).toBeVisible();
-    const selectedEventButton = canvas.getByRole('button', {name: 'vrijdag 29 augustus 2025'});
+    const selectedEventButton = await canvas.findByRole('button', {
+      name: 'vrijdag 29 augustus 2025',
+    });
     expect(selectedEventButton).toBeVisible();
     expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 

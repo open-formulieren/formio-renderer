@@ -25,7 +25,7 @@
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
   "2KKNKT": {
-    "defaultMessage": "Previous year",
+    "defaultMessage": "Vorig jaar",
     "description": "Calendar: previous year button title",
     "originalDefault": "Previous year"
   },
@@ -50,7 +50,7 @@
     "originalDefault": "Edit item {index}"
   },
   "AustF4": {
-    "defaultMessage": "Next month",
+    "defaultMessage": "Volgende maand",
     "description": "Calendar: next month button title",
     "originalDefault": "Next month"
   },
@@ -76,12 +76,12 @@
     "originalDefault": "Empty fields"
   },
   "IhLYXK": {
-    "defaultMessage": "Toggle calendar",
+    "defaultMessage": "Toon/verberg de kalender",
     "description": "Datepicker: accessible calendar toggle label",
     "originalDefault": "Toggle calendar"
   },
   "KWP1b9": {
-    "defaultMessage": "Previous month",
+    "defaultMessage": "Vorige maand",
     "description": "Calendar: previous month button title",
     "originalDefault": "Previous month"
   },
@@ -112,7 +112,7 @@
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
   },
   "Tip5+d": {
-    "defaultMessage": "Next year",
+    "defaultMessage": "Volgend jaar",
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
   },
@@ -137,7 +137,7 @@
     "originalDefault": "yyyy"
   },
   "ph6ljt": {
-    "defaultMessage": "Invalid input",
+    "defaultMessage": "Ongeldige invoer",
     "description": "Invalid input validation error for date field",
     "originalDefault": "Invalid input"
   },
