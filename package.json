@@ -52,7 +52,7 @@
     "@formatjs/cli": "^6.5.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@open-formulieren/design-tokens": "^0.60.1",
-    "@open-formulieren/types": "^0.45.0",
+    "@open-formulieren/types": "^0.47.0",
     "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-docs": "^9.1.1",
     "@storybook/addon-links": "^9.1.1",
