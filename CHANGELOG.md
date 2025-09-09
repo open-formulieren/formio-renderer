@@ -1,5 +1,15 @@
 # Changes
 
+## 0.9.0 (2025-09-09)
+
+Feature release.
+
+- [`#82`][#82] Implemented date picker for the `date` component type.
+- Fixed handling of `component.conditional` produced by formio.js builder which violates its type
+  definitions.
+
+[#82]: https://github.com/open-formulieren/formio-renderer/issues/82
+
 ## 0.8.2 (2025-09-04)
 
 Added the missing (Dutch) translations.
