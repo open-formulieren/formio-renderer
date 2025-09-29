@@ -22,6 +22,10 @@ export interface DatePickerProps {
    * Latest date that is selectable in the calendar.
    */
   maxDate?: Date;
+  /**
+   * An array of ISO-8601 (YYYY-MM-DD) date strings, representing not-available dates.
+   */
+  disabledDates?: string[];
 }
 
 /**
