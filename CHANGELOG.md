@@ -1,5 +1,11 @@
 # Changes
 
+## 0.10.0 (2025-09-29)
+
+Small feature release.
+
+- Ported the `disabledDates` prop for the datefield with datepicker widget.
+
 ## 0.9.0 (2025-09-09)
 
 Feature release.
