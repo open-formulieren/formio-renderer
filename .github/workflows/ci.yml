@@ -160,28 +160,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: open-formulieren/actions/check-message-extraction@v1
         with:
-          node-version-file: '.nvmrc'
-          cache: npm
+          paths: i18n/{compiled,messages}
+          extraction-command: ./bin/makemessages.sh
+          compilation-command: npm run compilemessages
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Extract messages and check for changes
-        run: |
-          ./bin/makemessages.sh
-          npm run compilemessages
-          git diff --exit-code i18n
-
-      - name: Write failure markdown
-        if: ${{ failure() }}
-        run: |
-          first_changed_file=$(git diff --name-only --diff-filter=M i18n | head -n 1)
-          first_lineno=$(git diff -U0 $first_changed_file | grep '^@@' | head -1 | sed -E 's/.*\+([0-9]+).*/\1/')
-          echo "::error file=$first_changed_file,line=$first_lineno,title=Outdated::There are changes detected in the i18n messages"
-          echo 'Please make sure to extract and compile messages locally commit the changes.' >> $GITHUB_STEP_SUMMARY
-        shell: bash
+      # Only actually does anything in release/* branches or for pushed tags
+      - uses: open-formulieren/actions/check-missing-translations@v1
+        with:
+          messages-path: i18n/messages
+          locales: nl
 
   deploy:
     runs-on: ubuntu-latest
@@ -190,6 +179,7 @@ jobs:
       - unit-tests
       - interaction-tests
       - prettier
+      - i18n-check
     # do not run in forks & only publish main branch
     if: github.ref_name == 'main' && github.repository_owner == 'open-formulieren'
 
@@ -256,6 +246,7 @@ jobs:
       - unit-tests
       - interaction-tests
       - prettier
+      - i18n-check
 
     # do not publish in forks or non-tag pushes
     if: startsWith(github.ref, 'refs/tags/') && github.repository_owner == 'open-formulieren'
