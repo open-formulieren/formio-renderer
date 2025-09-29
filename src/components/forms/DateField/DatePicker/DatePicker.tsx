@@ -50,6 +50,10 @@ interface DatePickerProps {
    * Dates after this value will be unavailable for selection.
    */
   maxDate?: Date;
+  /**
+   * An array of ISO-8601 (YYYY-MM-DD) date strings, representing not-available dates.
+   */
+  disabledDates?: string[];
 }
 
 /**
@@ -75,6 +79,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   'aria-describedby': ariaDescribedBy,
   minDate,
   maxDate,
+  disabledDates,
 }) => {
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
@@ -115,6 +120,15 @@ const DatePicker: React.FC<DatePickerProps> = ({
           day: 'numeric',
         })
       : value;
+
+  const calendarEvents: React.ComponentProps<typeof DatePickerCalendar>['events'] = disabledDates
+    ? disabledDates.map(date => ({
+        date: date,
+        emphasis: false,
+        selected: false,
+        disabled: true,
+      }))
+    : undefined;
 
   const referenceProps = getReferenceProps();
   return (
@@ -189,6 +203,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           currentDate={currentDate ?? undefined}
           minDate={minDate}
           maxDate={maxDate}
+          events={calendarEvents}
         />
       </FloatingWidget>
     </>

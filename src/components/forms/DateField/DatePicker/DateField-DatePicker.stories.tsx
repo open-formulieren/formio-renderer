@@ -101,6 +101,42 @@ export const DatePickerLimitedRange: Story = {
   },
 };
 
+export const DatePickerDisabledDates: Story = {
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'Today disabled',
+    description: 'This is a custom description',
+    tooltip: 'A short tooltip.',
+    isDisabled: false,
+    isRequired: false,
+    widgetProps: {
+      disabledDates: ['2023-05-20', new Date().toISOString(), addDays(new Date(), 3).toISOString()],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: '2023-05-31',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    // calendar is by default not visible, until you focus the field
+    expect(canvas.queryByRole('dialog')).toBeNull();
+    await userEvent.click(canvas.getByText('Today disabled'));
+
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+
+    // today should be set to disabled
+    const disabledEventButton = await canvas.findByRole('button', {name: 'zaterdag 20 mei 2023'});
+    expect(disabledEventButton).toBeVisible();
+    expect(disabledEventButton).toHaveClass('utrecht-button--disabled');
+    expect(disabledEventButton).toBeDisabled();
+  },
+};
+
 export const DatePickerKeyboardNavigation: Story = {
   args: {
     widget: 'datePicker',
