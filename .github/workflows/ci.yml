@@ -251,6 +251,13 @@ jobs:
     # do not publish in forks or non-tag pushes
     if: startsWith(github.ref, 'refs/tags/') && github.repository_owner == 'open-formulieren'
 
+    environment:
+      name: release
+      url: https://www.npmjs.com/package/@open-formulieren/formio-renderer
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -261,7 +268,10 @@ jobs:
           scope: '@open-formulieren'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          # update npm
+          npm install -g npm@latest
+          npm install
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -275,5 +285,3 @@ jobs:
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
           npm publish --access public --new-version=$VERSION
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
