@@ -297,6 +297,12 @@
       "value": "Invalid BSN"
     }
   ],
+  "m3gWAH": [
+    {
+      "type": 0,
+      "value": "Invalid Dutch postal code"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
