@@ -13,6 +13,7 @@ import Fieldset from './fieldset';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
 import Number from './number';
+import PostalCodeField from './postalcode';
 import PhoneNumber from './phoneNumber';
 import RadioField from './radio';
 import Select from './select';
@@ -45,6 +46,7 @@ const REGISTRY: Registry = {
   // special types
   iban: IBAN,
   licenseplate: LicensePlate,
+  postalcode: PostalCodeField,
   bsn: BSN,
   cosign: Cosign,
   editgrid: EditGrid,
