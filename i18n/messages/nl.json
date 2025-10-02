@@ -131,6 +131,11 @@
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN"
   },
+  "m3gWAH": {
+    "defaultMessage": "Ongeldig Nederlands postcode",
+    "description": "Validation error for postal code.",
+    "originalDefault": "Invalid Dutch postal code"
+  },
   "nfRRDu": {
     "defaultMessage": "jjjj",
     "description": "Placeholder for year part of a date",

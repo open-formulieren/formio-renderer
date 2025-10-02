@@ -245,6 +245,12 @@
       "value": "Ongeldig BSN"
     }
   ],
+  "m3gWAH": [
+    {
+      "type": 0,
+      "value": "Ongeldig Nederlands postcode"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
