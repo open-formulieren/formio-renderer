@@ -1,4 +1,4 @@
-import {TextFieldComponentSchema} from '@open-formulieren/types';
+import {PostcodeComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
@@ -21,12 +21,14 @@ export const MinimalConfiguration: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A simple postalcodefield',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
+      validateOn: 'blur',
     },
   },
   parameters: {
@@ -44,13 +46,14 @@ export const WithPlaceholder: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'postalcodefield',
       label: 'A simple postalcodefield',
-      placeholder: 'Ada',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
+      validateOn: 'blur',
     },
   },
   parameters: {
@@ -66,13 +69,15 @@ export const WithTooltip: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A simple postalcodefield',
       tooltip: 'Surprise!',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
+      validateOn: 'blur',
     },
   },
   parameters: {
@@ -87,7 +92,7 @@ export const WithTooltip: Story = {
 };
 
 interface ValidationStoryArgs {
-  componentDefinition: TextFieldComponentSchema;
+  componentDefinition: PostcodeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
 }
 
@@ -108,14 +113,16 @@ export const ValidateRequired: ValidationStory = {
     onSubmit: fn(),
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A postalcode field',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
         required: true,
       },
-    } satisfies TextFieldComponentSchema,
+      validateOn: 'blur',
+    } satisfies PostcodeComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -134,13 +141,15 @@ export const ValidatePattern: ValidationStory = {
     onSubmit: fn(),
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A postalcode field',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
-    } satisfies TextFieldComponentSchema,
+      validateOn: 'blur',
+    } satisfies PostcodeComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -149,7 +158,7 @@ export const ValidatePattern: ValidationStory = {
     await userEvent.type(textField, 'foobar f10');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid')).toBeVisible();
+    expect(await canvas.findByText('Invalid Dutch postal code')).toBeVisible();
   },
 };
 
@@ -159,13 +168,15 @@ export const PassesAllValidations: ValidationStory = {
     onSubmit: fn(),
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A postalcode field',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
-    } satisfies TextFieldComponentSchema,
+      validateOn: 'blur',
+    } satisfies PostcodeComponentSchema,
   },
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
@@ -179,7 +190,7 @@ export const PassesAllValidations: ValidationStory = {
 };
 
 interface ValueDisplayStoryArgs {
-  componentDefinition: TextFieldComponentSchema;
+  componentDefinition: PostcodeComponentSchema;
   value: string | string[];
 }
 
@@ -199,14 +210,16 @@ export const SingleValueDisplay: ValueDisplayStory = {
   args: {
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A postalcodefield',
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
+      validateOn: 'blur',
       multiple: false,
-    } satisfies TextFieldComponentSchema,
+    } satisfies PostcodeComponentSchema,
     value: '1000 XY',
   },
 };
@@ -216,14 +229,16 @@ export const MultiValueDisplay: ValueDisplayStory = {
   args: {
     componentDefinition: {
       id: 'component1',
-      type: 'textfield',
+      type: 'postcode',
       key: 'my.postalcodefield',
       label: 'A postalcodefield',
       multiple: true,
+      inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
       },
-    } satisfies TextFieldComponentSchema,
+      validateOn: 'blur',
+    } satisfies PostcodeComponentSchema,
     value: ['1000 XY', '2000 YX'],
   },
 };

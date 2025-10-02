@@ -46,7 +46,7 @@ const REGISTRY: Registry = {
   // special types
   iban: IBAN,
   licenseplate: LicensePlate,
-  postalcode: PostalCodeField,
+  postcode: PostalCodeField,
   bsn: BSN,
   cosign: Cosign,
   editgrid: EditGrid,

@@ -1,10 +1,10 @@
-import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import type {PostcodeComponentSchema} from '@open-formulieren/types';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 
 import './ValueDisplay.scss';
 
 export interface ValueDisplayProps {
-  componentDefinition: TextFieldComponentSchema;
+  componentDefinition: PostcodeComponentSchema;
   value: string | string[] | undefined;
 }
 

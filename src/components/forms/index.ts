@@ -3,7 +3,6 @@ export {default as TextField} from './TextField';
 export {default as Checkbox} from './Checkbox';
 export {default as RadioField} from './RadioField';
 export {default as DateField} from './DateField';
-export {default as PostalCodeField} from './PostalCodeField';
 export {default as NumberField} from './NumberField';
 export {default as SelectField} from './Select';
 
