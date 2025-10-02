@@ -1,30 +1,29 @@
-import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import type {PostcodeComponentSchema} from '@open-formulieren/types';
+import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
-// TODO: show a custom error message?
+const POSTAL_CODE_PATTERN: PostcodeComponentSchema['validate']['pattern'] =
+  '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$';
+const POSTAL_CODE_REGEX = new RegExp(POSTAL_CODE_PATTERN);
 
-const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = componentDefinition => {
-  const {key, validate = {}} = componentDefinition;
-  const {required, maxLength, pattern} = validate;
+const POSTAL_CODE_INVALID_MESSAGE = defineMessage({
+  description: 'Validation error for postal code.',
+  defaultMessage: 'Invalid Dutch postal code',
+});
 
-  let schema: z.ZodString | z.ZodOptional<z.ZodString> = z.string();
-  if (maxLength !== undefined) schema = schema.max(maxLength);
+const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
+  componentDefinition,
+  intl
+) => {
+  const {key, validate} = componentDefinition;
+  const required = validate?.required;
 
-  if (pattern) {
-    let normalizedPattern = pattern;
-    // Formio implicitly adds the ^ and $ markers to consider the whole value
-    if (!normalizedPattern.startsWith('^')) normalizedPattern = `^${normalizedPattern}`;
-    if (!normalizedPattern.endsWith('$')) normalizedPattern = `${normalizedPattern}$`;
-    schema = schema.regex(new RegExp(normalizedPattern));
-  }
-
-  if (required) {
-    schema = schema.min(1);
-  } else {
-    schema = schema.optional();
-  }
+  let schema: z.ZodFirstPartySchemaTypes = z
+    .string()
+    .regex(POSTAL_CODE_REGEX, {message: intl.formatMessage(POSTAL_CODE_INVALID_MESSAGE)});
+  if (!required) schema = schema.or(z.literal('')).optional();
 
   return {[key]: schema};
 };

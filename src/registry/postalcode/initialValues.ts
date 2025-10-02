@@ -1,12 +1,12 @@
-import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import type {PostcodeComponentSchema} from '@open-formulieren/types';
 
 import type {GetInitialValues} from '@/registry/types';
 
-const getInitialValues: GetInitialValues<TextFieldComponentSchema, string | string[]> = ({
+const getInitialValues: GetInitialValues<PostcodeComponentSchema, string | string[]> = ({
   key,
   defaultValue,
   multiple = false,
-}: TextFieldComponentSchema) => {
+}: PostcodeComponentSchema) => {
   // if no default value is explicitly specified, return the empty value, depending on
   // whether it's multiple false/true on this component.
   if (defaultValue === undefined) {

@@ -1,6 +1,6 @@
-import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import type {PostcodeComponentSchema} from '@open-formulieren/types';
 
-import PostalCodeField from '@/components/forms/PostalCodeField';
+import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
@@ -9,25 +9,26 @@ import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 
 export interface FormioPostCodeProps {
-  componentDefinition: TextFieldComponentSchema;
+  componentDefinition: PostcodeComponentSchema;
 }
 
 export const FormioPostCode: React.FC<FormioPostCodeProps> = ({
   componentDefinition: {key, label, description, tooltip, validate},
 }) => {
   return (
-    <PostalCodeField
+    <TextField
       name={key}
       label={label}
       tooltip={tooltip}
       description={description}
-      isRequired={validate?.required}
-      placeholder="AAAA-10"
+      isRequired={validate.required}
+      pattern={validate.pattern}
+      placeholder="AAAA 10"
     />
   );
 };
 
-const PostalCodeComponent: RegistryEntry<TextFieldComponentSchema> = {
+const PostalCodeComponent: RegistryEntry<PostcodeComponentSchema> = {
   formField: FormioPostCode,
   valueDisplay: ValueDisplay,
   getInitialValues,
