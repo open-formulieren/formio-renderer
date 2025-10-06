@@ -10,7 +10,7 @@ import {FormioPostCode as PostalCodeField} from './';
 import ValueDisplay from './ValueDisplay';
 
 export default {
-  title: 'Component registry / basic / postal code field',
+  title: 'Component registry / custom / postal code field',
   component: PostalCodeField,
   decorators: [withFormik],
 } satisfies Meta<typeof PostalCodeField>;
