@@ -60,7 +60,7 @@ const useFloatingWidget = (): UseFloatingWidget => {
   const keepClosed = useRef<boolean>(false);
   const arrowRef = useRef<SVGSVGElement | null>(null);
 
-  const onOpenChange: UseFloatingOptions['onOpenChange'] = (open, _event, _reason) => {
+  const onOpenChange: UseFloatingOptions['onOpenChange'] = (open: boolean) => {
     setIsOpen(open);
     if (open && keepClosed.current) {
       keepClosed.current = false;

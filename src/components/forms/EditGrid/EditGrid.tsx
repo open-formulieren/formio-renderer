@@ -1,6 +1,5 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {FormField} from '@utrecht/component-library-react';
+import {FormField, PrimaryActionButton} from '@utrecht/component-library-react';
 import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';

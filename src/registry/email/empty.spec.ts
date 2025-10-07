@@ -11,7 +11,7 @@ test.each([
   ['test@mail.com', false],
 ])(
   'Email isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: EmailComponentSchema = {
       type: 'email',
       key: 'email',
@@ -37,7 +37,7 @@ test.each([
   [['test@mail.com'], false],
 ])(
   'Multiple email isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: EmailComponentSchema = {
       type: 'email',
       key: 'email',

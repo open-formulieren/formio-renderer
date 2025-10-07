@@ -11,7 +11,7 @@ test.each([
   ['0612345678', false],
 ])(
   'PhoneNumber isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: PhoneNumberComponentSchema = {
       openForms: {
         translations: {},
@@ -40,7 +40,7 @@ test.each([
   [['0612345678'], false],
 ])(
   'Multiple phoneNumber isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: string | string[] | undefined, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: PhoneNumberComponentSchema = {
       openForms: {
         translations: {},

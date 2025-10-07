@@ -6,7 +6,7 @@ import {useMemo} from 'react';
 import Icon from '@/components/icons';
 import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
-import {RegistryEntry, RenderComponentProps} from '@/registry/types';
+import type {RegistryEntry, RenderComponentProps} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {processVisibility} from '@/visibility';
 
@@ -16,7 +16,7 @@ import {type MissingFields, getMissingFields, getSoftRequiredComponents} from '.
 
 export type SoftRequiredErrorsProps = RenderComponentProps<SoftRequiredErrorsComponentSchema>;
 
-export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
+export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   componentDefinition: {html},
   getRegistryEntry,
 }) => {
@@ -62,7 +62,7 @@ export const SoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
 };
 
 const SoftRequiredErrorsComponent: RegistryEntry<SoftRequiredErrorsComponentSchema> = {
-  formField: SoftRequiredErrors,
+  formField: FormioSoftRequiredErrors,
 };
 
 export default SoftRequiredErrorsComponent;

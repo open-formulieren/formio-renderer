@@ -1,6 +1,11 @@
-import {Fieldset, FieldsetLegend, SecondaryActionButton} from '@utrecht/component-library-react';
-import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {Formik, FormikErrors, setNestedObjectValues} from 'formik';
+import {
+  Fieldset,
+  FieldsetLegend,
+  PrimaryActionButton,
+  SecondaryActionButton,
+} from '@utrecht/component-library-react';
+import type {FormikErrors} from 'formik';
+import {Formik, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
 

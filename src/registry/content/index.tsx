@@ -1,6 +1,6 @@
 import type {ContentComponentSchema} from '@open-formulieren/types';
 import {HTMLContent} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import DOMPurify from 'dompurify';
 
 import type {RegistryEntry} from '@/registry/types';

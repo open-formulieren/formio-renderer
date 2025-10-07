@@ -1,6 +1,6 @@
 import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
-import {IntlShape} from 'react-intl';
-import {z} from 'zod';
+import type {IntlShape} from 'react-intl';
+import type {z} from 'zod';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import type {JSONObject, JSONValue} from '@/types';

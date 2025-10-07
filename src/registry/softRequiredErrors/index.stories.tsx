@@ -8,12 +8,12 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, within} from 'storybook/test';
 
 import {getRegistryEntry} from '@/registry';
-import {SoftRequiredErrors} from '@/registry/softRequiredErrors/index';
+import {FormioSoftRequiredErrors} from '@/registry/softRequiredErrors/index';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 export default {
   title: 'Component registry / layout / SoftRequiredErrors',
-  component: SoftRequiredErrors,
+  component: FormioSoftRequiredErrors,
   decorators: [withFormik, withFormSettingsProvider],
   args: {
     componentDefinition: {
@@ -31,9 +31,9 @@ export default {
     },
     getRegistryEntry: getRegistryEntry,
   },
-} satisfies Meta<typeof SoftRequiredErrors>;
+} satisfies Meta<typeof FormioSoftRequiredErrors>;
 
-type Story = StoryObj<typeof SoftRequiredErrors>;
+type Story = StoryObj<typeof FormioSoftRequiredErrors>;
 
 export const MinimalConfiguration: Story = {
   name: 'Minimal configuration',

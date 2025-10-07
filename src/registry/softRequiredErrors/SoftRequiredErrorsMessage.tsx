@@ -4,7 +4,7 @@ import {FormattedMessage} from 'react-intl';
 
 import DynamicFormattedMessage from '@/components/DynamicFormattedMessage';
 
-import {MissingFields} from './missingFields';
+import type {MissingFields} from './missingFields';
 
 interface SoftRequiredErrorsListProps {
   missingFields: MissingFields[];

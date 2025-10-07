@@ -11,7 +11,7 @@ test.each([
   ['foo', false],
 ])(
   'Textfield isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: TextFieldComponentSchema = {
       type: 'textfield',
       key: 'textfield',
@@ -35,7 +35,7 @@ test.each([
   [['foo'], false],
 ])(
   'Multiple textfield isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: TextFieldComponentSchema = {
       type: 'textfield',
       key: 'textfield',

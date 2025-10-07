@@ -81,5 +81,5 @@ export function merge<Leaf extends JSONValuePlusUndefined, RLeaf = Leaf>(
   }
 
   // type cast because TSC runs into infinite recursion if we use generics for this...
-  return target as any as NestedObject<RLeaf>;
+  return target as unknown as NestedObject<RLeaf>;
 }

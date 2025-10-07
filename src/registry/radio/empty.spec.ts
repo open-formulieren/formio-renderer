@@ -11,7 +11,7 @@ test.each([
   ['foo', false],
 ])(
   'Radio isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: RadioComponentSchema = {
       openForms: {
         translations: {},

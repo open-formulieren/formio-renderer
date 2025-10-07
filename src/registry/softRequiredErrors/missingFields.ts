@@ -6,8 +6,8 @@ import type {
 } from '@open-formulieren/types';
 import {getIn} from 'formik';
 
-import {GetRegistryEntry} from '@/registry/types';
-import {JSONObject} from '@/types';
+import type {GetRegistryEntry} from '@/registry/types';
+import type {JSONObject} from '@/types';
 
 export interface MissingFields {
   /**
@@ -142,18 +142,20 @@ export const getMissingFields = (
         }
 
         // If editgrid has empty soft-required children, add them to the list.
-        if (!isComponentEmpty && Array.isArray(componentValue)) {
-          for (let childIndex = 0; childIndex < componentValue.length; childIndex++) {
-            missingFields.push(
-              ...getMissingFields(
-                component.components,
-                values,
-                getRegistryEntry,
-                [...pathParts, childIndex.toString()],
-                [...labelParts, `${component.groupLabel} ${childIndex + 1}`]
-              )
-            );
-          }
+        if (isComponentEmpty || !Array.isArray(componentValue)) {
+          break;
+        }
+
+        for (let childIndex = 0; childIndex < componentValue.length; childIndex++) {
+          missingFields.push(
+            ...getMissingFields(
+              component.components,
+              values,
+              getRegistryEntry,
+              [...pathParts, childIndex.toString()],
+              [...labelParts, `${component.groupLabel} ${childIndex + 1}`]
+            )
+          );
         }
         break;
 

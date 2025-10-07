@@ -1,9 +1,25 @@
 import {FontAwesomeSolidIcon} from './FontAwesome';
 import type {RendererIcon} from './types';
 
+interface VisibleIconProps {
+  /**
+   * Specify whether the icon should be hidden from screenreaders or not. Hidden by default.
+   */
+  'aria-hidden': false | 'false';
+  onClick: () => void;
+}
+
+interface HiddenIconProps {
+  /**
+   * Specify whether the icon should be hidden from screenreaders or not. Hidden by default.
+   */
+  'aria-hidden'?: true | 'true';
+  onClick?: () => void;
+}
+
 // TODO: if/when we support pluggable icon libraries, this probably needs to become
 // generic.
-export interface IconProps {
+interface BaseIconProps {
   library?: 'font-awesome';
   /**
    * Icon to display.
@@ -17,16 +33,13 @@ export interface IconProps {
    */
   className?: string;
   /**
-   * Specify whether the icon should be hidden from screenreaders or not. Hidden by default.
-   */
-  'aria-hidden'?: boolean | 'true' | 'false';
-  /**
    * Accessible icon label in case the icon is not hidden to screen readers.
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
-  onClick?: () => void;
 }
+
+export type IconProps = BaseIconProps & (HiddenIconProps | VisibleIconProps);
 
 const Icon: React.FC<IconProps> = ({
   library = 'font-awesome',
@@ -35,7 +48,7 @@ const Icon: React.FC<IconProps> = ({
   ['aria-label']: ariaLabel,
   ['aria-describedby']: ariaDescribedBy,
   icon,
-  onClick = () => {},
+  onClick,
   ...props
 }) => {
   switch (library) {

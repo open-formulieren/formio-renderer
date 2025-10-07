@@ -1,6 +1,6 @@
 import {expect, test} from 'vitest';
 
-import {JSONObject} from './types';
+import type {JSONObject} from './types';
 import {deepMergeValues} from './values';
 
 test('Deep merge empty objects', () => {

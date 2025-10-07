@@ -1,5 +1,5 @@
 import {FormLabel} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
 
 import {useFormSettings} from '@/hooks';

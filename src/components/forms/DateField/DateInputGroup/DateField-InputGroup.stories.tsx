@@ -1,4 +1,4 @@
-import {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {expect, fn, userEvent, within} from 'storybook/test';

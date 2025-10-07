@@ -1,4 +1,4 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 
 import type {GetRegistryEntry} from '@/registry/types';

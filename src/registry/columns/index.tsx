@@ -1,5 +1,5 @@
 import type {ColumnsComponentSchema} from '@open-formulieren/types';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
@@ -15,7 +15,7 @@ export interface ColumnsProps {
   renderNested: React.FC<FormioComponentProps>;
 }
 
-export const Columns: React.FC<ColumnsProps> = ({
+export const FormioColumns: React.FC<ColumnsProps> = ({
   componentDefinition: {columns},
   renderNested: FormioComponent,
 }) => {
@@ -38,7 +38,7 @@ export const Columns: React.FC<ColumnsProps> = ({
 };
 
 const ColumnsComponent: RegistryEntry<ColumnsComponentSchema> = {
-  formField: Columns,
+  formField: FormioColumns,
   getInitialValues,
   getValidationSchema,
   applyVisibility,

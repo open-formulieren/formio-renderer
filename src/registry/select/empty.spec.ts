@@ -13,7 +13,7 @@ test.each([
   [['bar'], false],
 ])(
   'Select isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | string[] | undefined, expected: boolean) => {
     const component: SelectComponentSchema = {
       openForms: {
         translations: {},

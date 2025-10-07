@@ -1,12 +1,12 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
-import {Decorator, Meta, StoryObj} from '@storybook/react-vite';
+import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
-// @ts-expect-error
+// @ts-expect-error no TS definitions included
 import {Form as ReactFormioForm} from 'react-formio';
 import {fn} from 'storybook/test';
 
 import FormioForm from '@/components/FormioForm';
-import {JSONObject} from '@/types';
+import type {JSONObject} from '@/types';
 
 export const hideSpinner: Decorator = Story => (
   <>
@@ -69,6 +69,7 @@ const renderReference = (args: ReferenceStoryArgs) => (
       submission={{data: args.submissionData ?? {}}}
       options={{noAlerts: true}}
       onSubmit={(event: {data: JSONObject}) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {submit, ...values} = event.data;
         args.onSubmit?.(values);
       }}

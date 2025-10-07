@@ -1,6 +1,6 @@
 import type {SelectboxesComponentSchema} from '@open-formulieren/types';
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId, useRef} from 'react';
 

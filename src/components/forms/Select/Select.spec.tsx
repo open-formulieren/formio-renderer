@@ -49,7 +49,9 @@ test('clearing select variants', async () => {
   const select2 = screen.getByLabelText('Select 2');
   expect(select2).toBeVisible();
 
+  // eslint-disable-next-line import/no-named-as-default-member
   await selectEvent.clearFirst(select1);
+  // eslint-disable-next-line import/no-named-as-default-member
   await selectEvent.clearFirst(select2);
   await user.click(screen.getByRole('button', {name: 'Submit'}));
 

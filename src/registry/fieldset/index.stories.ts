@@ -1,24 +1,24 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
-import {FormioFormProps} from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
-import {Fieldset} from './';
+import {FormioFieldset} from './';
 
 export default {
   title: 'Component registry / layout / fieldset',
-  component: Fieldset,
+  component: FormioFieldset,
   decorators: [withFormik],
   args: {
     renderNested: FormioComponent,
   },
-} satisfies Meta<typeof Fieldset>;
+} satisfies Meta<typeof FormioFieldset>;
 
-type Story = StoryObj<typeof Fieldset>;
+type Story = StoryObj<typeof FormioFieldset>;
 
 export const MinimalConfiguration: Story = {
   args: {

@@ -7,7 +7,8 @@ import type {
 } from '@open-formulieren/types';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 
-import {ReferenceMeta, storyFactory} from './utils';
+import type {ReferenceMeta} from './utils';
+import {storyFactory} from './utils';
 
 /**
  * Stories to guard the 'hidden' feature behaviour against the Formio.js reference.
@@ -354,7 +355,7 @@ const {custom: ConditionallyVisibleInEditGrid, reference: ConditionallyVisibleIn
           disableAddingRemovingRows: false,
           groupLabel: 'Item',
           hideLabel: false,
-          // @ts-expect-error
+          // @ts-expect-error option not defined in our TS types, but required for Formio.js
           inlineEdit: false,
           components: [
             {

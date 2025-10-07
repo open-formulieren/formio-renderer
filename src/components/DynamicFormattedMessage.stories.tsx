@@ -159,7 +159,7 @@ export const RichVariables: Story = {
     values: {
       inlineRichVariable: (
         <p data-testid="inlineRichVariable" style={{color: 'rebeccapurple'}}>
-          hello, i'm an inline rich variable
+          hello, i&apos;m an inline rich variable
         </p>
       ),
       simpleReactComponent: (

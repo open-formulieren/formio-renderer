@@ -10,13 +10,15 @@ import {useIntl} from 'react-intl';
  */
 const loadCalendarLocale = async (locale: string): Promise<Locale> => {
   switch (locale) {
-    case 'nl':
+    case 'nl': {
       const {default: nl} = await import('date-fns/locale/nl');
       return nl;
+    }
     case 'en':
-    default:
+    default: {
       const {default: en} = await import('date-fns/locale/en-GB');
       return en;
+    }
   }
 };
 
@@ -29,7 +31,7 @@ const DatePickerCalendar: typeof Calendar = props => {
     let isMounted = true;
     const loadLocale = async () => {
       const calendarLocale = await loadCalendarLocale(intl.locale);
-      isMounted && setCalendarLocale(calendarLocale);
+      if (isMounted) setCalendarLocale(calendarLocale);
     };
     loadLocale();
 
