@@ -1,6 +1,8 @@
+import {install} from '@sinonjs/fake-timers';
+import type {InstalledClock} from '@sinonjs/fake-timers';
 import type {Decorator} from '@storybook/react-vite';
 import {Form, Formik} from 'formik';
-import {CSSProperties} from 'react';
+import {type CSSProperties, useEffect} from 'react';
 import {fn} from 'storybook/test';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -66,3 +68,34 @@ export const withFormSettingsProvider: Decorator = (Story, {parameters}) => (
     <Story />
   </FormSettingsProvider>
 );
+
+const ClockCleanup: React.FC<React.PropsWithChildren<{clock: InstalledClock}>> = ({
+  clock,
+  children,
+}) => {
+  useEffect(() => {
+    return () => {
+      try {
+        clock.uninstall();
+      } catch {
+        // no-op: clock might already be uninstalled by HMR/StrictMode double-invoke
+      }
+    };
+  }, [clock]);
+  return <>{children}</>;
+};
+
+export const withMockDate: Decorator = (Story, {parameters}) => {
+  const mockDate: Date = parameters.mockDate;
+  const clock = install({
+    now: mockDate.getTime(),
+    // leave timers alone so setTimeout/interval/etc behave normally
+    toFake: ['Date'],
+  });
+
+  return (
+    <ClockCleanup clock={clock}>
+      <Story />
+    </ClockCleanup>
+  );
+};
