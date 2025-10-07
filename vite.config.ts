@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
 import detectCircularDependencies from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
+import eslint from 'vite-plugin-eslint2';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {coverageConfigDefaults} from 'vitest/config';
 
@@ -23,7 +24,7 @@ export const packageRegexes = externalPackages.map(
   packageName => new RegExp(`^${packageName}(/.*)?`)
 );
 
-export default defineConfig({
+export default defineConfig(({mode}) => ({
   plugins: [
     tsconfigPaths(),
     react({
@@ -40,6 +41,10 @@ export default defineConfig({
       },
     }),
     detectCircularDependencies(),
+    eslint({
+      build: true,
+      emitErrorAsWarning: mode === 'development',
+    }),
     dts({tsconfigPath: './tsconfig.prod.json'}),
   ],
   resolve: {
@@ -82,4 +87,4 @@ export default defineConfig({
       reporter: ['text', 'cobertura', 'html'],
     },
   },
-});
+}));
