@@ -172,18 +172,31 @@ const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> 
   // only dispatch after the first mount. Code vendored from streamich/react-use, licensed
   // under the Unlicense license.
   const isFirstMountRef = useRef<boolean>(true);
-  const isFirstMount = isFirstMountRef.current;
+  const onChangeRef = useRef(onChange);
+
+  // update the callback if it changes - since hooks run in a fixed order, the new reference
+  // will be update for the actual update
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const {values} = useFormikContext<JSONObject>();
   useEffect(() => {
+    const isFirstMount = isFirstMountRef.current;
     if (!isFirstMount) {
-      onChange(values);
+      // use the `onChange` from the ref so that we don't need to include it in the
+      // dependency array and potentially fire excessive amount of change events if the
+      // caller forgets to wrap their onChange in `useCallback`.
+      onChangeRef.current(values);
     }
   }, [values]);
 
-  if (isFirstMountRef.current) {
-    isFirstMountRef.current = false;
-  }
+  // ensure we remove the flag for the first mount
+  useEffect(() => {
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+    }
+  });
 
   return null;
 };
@@ -218,7 +231,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
           setTouched(setNestedObjectValues(newErrors, true));
         },
       }),
-      [setValues, errors, setErrors]
+      [setValues, errors, setErrors, setTouched]
     );
 
     const componentsMap = useMemo(() => getComponentsMap(components), [components]);
@@ -244,7 +257,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       );
       onValidationSchemaChange(updatedValidationSchema);
       return {visibleComponents, updatedValues};
-    }, [intl, onValidationSchemaChange, components, initialValues, values]);
+    }, [intl, onValidationSchemaChange, components, componentsMap, initialValues, values]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
     // values. We can't call setValues directly, since updating state during render like

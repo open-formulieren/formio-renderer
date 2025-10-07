@@ -47,7 +47,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
       ])
     );
     return {...parentComponentsMap, ...localComponentsMap};
-  }, [parentComponentsMap, components]);
+  }, [parentComponentsMap, components, keyPrefix]);
 
   // The `ItemBody` component takes care of (recursively) processing the value changes
   // from clearOnHide side-effects. In the preview, we only need to worry about whether

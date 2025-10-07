@@ -7,18 +7,18 @@ import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
-import {Fieldset} from './';
+import {FormioFieldset} from './';
 
 export default {
   title: 'Component registry / layout / fieldset',
-  component: Fieldset,
+  component: FormioFieldset,
   decorators: [withFormik],
   args: {
     renderNested: FormioComponent,
   },
-} satisfies Meta<typeof Fieldset>;
+} satisfies Meta<typeof FormioFieldset>;
 
-type Story = StoryObj<typeof Fieldset>;
+type Story = StoryObj<typeof FormioFieldset>;
 
 export const MinimalConfiguration: Story = {
   args: {

@@ -184,6 +184,7 @@ export const PassesAllValidations: ValidationStory = {
     const canvas = within(canvasElement);
 
     const select = canvas.getByLabelText('A select');
+    // eslint-disable-next-line import/no-named-as-default-member
     await selectEvent.select(select, 'Second');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));

@@ -58,6 +58,7 @@ export const SingleSelectOption: Story = {
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    // eslint-disable-next-line import/no-named-as-default-member
     await selectEvent.select(canvas.getByLabelText('test'), 'Option 1');
     await waitFor(() => {
       expect(canvas.queryByRole('listbox')).not.toBeInTheDocument();
@@ -75,7 +76,9 @@ export const MultipleSelectOptions: Story = {
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    // eslint-disable-next-line import/no-named-as-default-member
     await selectEvent.select(canvas.getByLabelText('test'), 'Option 1');
+    // eslint-disable-next-line import/no-named-as-default-member
     await selectEvent.select(canvas.getByLabelText('test'), 'Option 2');
     await waitFor(() => {
       expect(canvas.queryByRole('listbox')).not.toBeInTheDocument();

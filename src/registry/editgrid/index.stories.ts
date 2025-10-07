@@ -10,11 +10,11 @@ import FormioComponent from '@/components/FormioComponent';
 import {getRegistryEntry} from '@/registry';
 import {withFormik} from '@/sb-decorators';
 
-import {EditGrid} from './';
+import {FormioEditGrid} from './';
 
 export default {
   title: 'Component registry / special / editgrid',
-  component: EditGrid,
+  component: FormioEditGrid,
   decorators: [withFormik],
   args: {
     renderNested: FormioComponent,
@@ -24,9 +24,9 @@ export default {
     renderNested: {table: {disable: true}},
     getRegistryEntry: {table: {disable: true}},
   },
-} satisfies Meta<typeof EditGrid>;
+} satisfies Meta<typeof FormioEditGrid>;
 
-type Story = StoryObj<typeof EditGrid>;
+type Story = StoryObj<typeof FormioEditGrid>;
 
 export const MinimalConfiguration: Story = {
   args: {

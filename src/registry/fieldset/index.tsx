@@ -16,7 +16,7 @@ export interface FieldsetProps {
   renderNested: React.FC<FormioComponentProps>;
 }
 
-export const Fieldset: React.FC<FieldsetProps> = ({
+export const FormioFieldset: React.FC<FieldsetProps> = ({
   componentDefinition: {components, hideHeader = false, label, tooltip},
   renderNested: FormioComponent,
 }) => {
@@ -42,7 +42,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
 };
 
 const FieldsetComponent: RegistryEntry<FieldsetComponentSchema> = {
-  formField: Fieldset,
+  formField: FormioFieldset,
   getInitialValues,
   getValidationSchema,
   applyVisibility,

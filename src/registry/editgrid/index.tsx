@@ -74,7 +74,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     // add the namespaced edit grid item components in the parent map so that siblings
     // and any parent can be looked up.
     return {...parentComponentsMap, ...localComponentsMap};
-  }, [parentComponentsMap, components]);
+  }, [parentComponentsMap, components, parentKey]);
 
   const {visibleComponents, updatedItemValues} = useMemo(() => {
     const {visibleComponents, updatedValues: updatedItemValues} = processVisibility(
@@ -105,11 +105,13 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     return {visibleComponents, updatedItemValues};
   }, [
     intl,
+    index,
     getRegistryEntry,
     onValidationSchemaChange,
     parentValues,
     parentKey,
     components,
+    componentsMap,
     initialValues,
     itemValues,
   ]);
@@ -166,7 +168,7 @@ export interface EditGridProps {
   getRegistryEntry: GetRegistryEntry;
 }
 
-export const EditGrid: React.FC<EditGridProps> = ({
+export const FormioEditGrid: React.FC<EditGridProps> = ({
   componentDefinition: {
     key,
     components,
@@ -249,7 +251,7 @@ export const EditGrid: React.FC<EditGridProps> = ({
 };
 
 const EditGridComponent: RegistryEntry<EditGridComponentSchema> = {
-  formField: EditGrid,
+  formField: FormioEditGrid,
   getInitialValues,
   applyVisibility,
   isEmpty,

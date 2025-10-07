@@ -7,18 +7,18 @@ import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
-import {Columns} from './';
+import {FormioColumns} from './';
 
 export default {
   title: 'Component registry / layout / columns',
-  component: Columns,
+  component: FormioColumns,
   decorators: [withFormik],
   args: {
     renderNested: FormioComponent,
   },
-} satisfies Meta<typeof Columns>;
+} satisfies Meta<typeof FormioColumns>;
 
-type Story = StoryObj<typeof Columns>;
+type Story = StoryObj<typeof FormioColumns>;
 
 export const MinimalConfiguration: Story = {
   args: {
