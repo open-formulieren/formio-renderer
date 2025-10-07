@@ -1,6 +1,7 @@
 import {expect, test} from 'vitest';
 
-import {Separators, getSeparators} from './NumberField';
+import type {Separators} from './NumberField';
+import {getSeparators} from './NumberField';
 
 test.each([
   ['nl', {decimalSeparator: ',', thousandSeparator: '.'}],

@@ -110,7 +110,7 @@ export const isHidden = (
     conditionSatisfied = defaultTestConditional(referenceComponent, eq, compareValue);
   } else {
     const testConditional = referenceComponent
-      ? getRegistryEntry(referenceComponent)?.testConditional ?? defaultTestConditional
+      ? (getRegistryEntry(referenceComponent)?.testConditional ?? defaultTestConditional)
       : defaultTestConditional;
     conditionSatisfied = testConditional(referenceComponent, eq, compareValue);
   }

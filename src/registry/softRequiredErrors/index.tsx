@@ -6,7 +6,7 @@ import {useMemo} from 'react';
 import Icon from '@/components/icons';
 import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
-import {RegistryEntry, RenderComponentProps} from '@/registry/types';
+import type {RegistryEntry, RenderComponentProps} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {processVisibility} from '@/visibility';
 

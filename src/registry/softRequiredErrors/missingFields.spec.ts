@@ -13,7 +13,7 @@ import type {
 import {describe, expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
-import {JSONObject} from '@/types';
+import type {JSONObject} from '@/types';
 
 import {getMissingFields, getSoftRequiredComponents} from './missingFields';
 
@@ -751,7 +751,7 @@ test.each([
       type: 'textfield',
       multiple: true,
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies TextFieldComponentSchema,
@@ -786,7 +786,7 @@ test.each([
         },
       ],
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies SelectboxesComponentSchema,
@@ -820,7 +820,7 @@ test.each([
         },
       ],
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies RadioComponentSchema,
@@ -853,7 +853,7 @@ test.each([
         ],
       },
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies SelectComponentSchema,
@@ -873,7 +873,7 @@ test.each([
       type: 'checkbox',
       defaultValue: false,
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies CheckboxComponentSchema,
@@ -897,7 +897,7 @@ test.each([
       groupLabel: 'Editgrid item',
       components: [],
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies EditGridComponentSchema,
@@ -926,13 +926,13 @@ test.each([
           key: 'textfield',
           label: 'Textfield',
           openForms: {
-            // @ts-ignore
+            // @ts-expect-error not officially supported yet in the types
             softRequired: true,
           },
         } satisfies TextFieldComponentSchema,
       ],
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies EditGridComponentSchema,
@@ -961,13 +961,13 @@ test.each([
           key: 'textfield',
           label: 'Textfield',
           openForms: {
-            // @ts-ignore
+            // @ts-expect-error not officially supported yet in the types
             softRequired: true,
           },
         } satisfies TextFieldComponentSchema,
       ],
       openForms: {
-        // @ts-ignore
+        // @ts-expect-error not officially supported yet in the types
         softRequired: true,
       },
     } satisfies EditGridComponentSchema,

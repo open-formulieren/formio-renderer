@@ -20,7 +20,7 @@ import {
   useRole,
 } from '@floating-ui/react';
 import {Icon as UtrechtIcon} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useEffect, useState} from 'react';
 import {useIntl} from 'react-intl';
 

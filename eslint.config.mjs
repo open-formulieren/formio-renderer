@@ -32,6 +32,9 @@ const config = defineConfig([
         ...globals.vitest,
       },
     },
+    rules: {
+      'react/display-name': 'off',
+    },
   },
 ]);
 

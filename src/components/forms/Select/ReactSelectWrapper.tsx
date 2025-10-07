@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
 import Select, {type GroupBase, type InputProps, type Props, components} from 'react-select';
 
@@ -98,6 +98,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
       }}
       styles={{
         control: baseStyles => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const {outline, ...keep} = baseStyles;
           return keep;
         },

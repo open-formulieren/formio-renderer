@@ -5,7 +5,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
-import {JSONObject} from '@/types';
+import type {JSONObject} from '@/types';
 import {validate} from '@/validationSchema';
 
 import {EditGridItem} from '.';

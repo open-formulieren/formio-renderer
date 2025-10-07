@@ -1,8 +1,9 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {Form, Formik, FormikErrors, setNestedObjectValues, useFormikContext} from 'formik';
+import type {FormikErrors} from 'formik';
+import {Form, Formik, setNestedObjectValues, useFormikContext} from 'formik';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
 import {useIntl} from 'react-intl';
-import {z} from 'zod';
+import type {z} from 'zod';
 
 import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
@@ -165,6 +166,8 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
   }
 );
 
+FormioForm.displayName = 'FormioForm';
+
 const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> = ({onChange}) => {
   // only dispatch after the first mount. Code vendored from streamich/react-use, licensed
   // under the Unlicense license.
@@ -267,6 +270,8 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
     );
   }
 );
+
+InnerFormioForm.displayName = 'InnerFormioForm';
 
 /**
  * Deep merge the updates into the prev values.

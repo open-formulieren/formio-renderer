@@ -1,4 +1,4 @@
-import {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
+import type {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 import {withFormik} from '@/sb-decorators';

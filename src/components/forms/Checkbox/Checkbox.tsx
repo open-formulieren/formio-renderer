@@ -3,7 +3,7 @@ import {
   FormFieldDescription,
   Checkbox as UtrechtCheckbox,
 } from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
@@ -62,6 +62,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
   tooltip,
 }) => {
   const {validateField} = useFormikContext();
+  // the value should not be passed down to underlying checkbox
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [{value, ...props}, {error = '', touched}] = useField<boolean | undefined>({
     name,
     type: 'checkbox',

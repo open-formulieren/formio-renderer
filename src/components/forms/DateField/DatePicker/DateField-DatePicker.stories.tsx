@@ -1,4 +1,4 @@
-import {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {addDays, subDays} from 'date-fns';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';

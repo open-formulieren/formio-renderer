@@ -11,7 +11,7 @@ test.each([
   ['aa-aa-aa', false],
 ])(
   'Licenseplate isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: LicensePlateComponentSchema = {
       openForms: {
         translations: {},
@@ -43,7 +43,7 @@ test.each([
   [['aa-aa-aa'], false],
 ])(
   'Multiple licenseplate isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: LicensePlateComponentSchema = {
       openForms: {
         translations: {},

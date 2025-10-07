@@ -1,9 +1,9 @@
-import {SelectComponentSchema} from '@open-formulieren/types';
+import type {SelectComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import selectEvent from 'react-select-event';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
-import {FormioFormProps} from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 

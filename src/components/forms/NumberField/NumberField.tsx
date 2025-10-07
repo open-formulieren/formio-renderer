@@ -97,12 +97,9 @@ export const getSeparators = (locale: string): Separators => {
   const numberFormat = new Intl.NumberFormat(locale);
   // We get the separators by formatting an arbitrary number and extracting
   // them from the parts
-  const parts = numberFormat.formatToParts(1000.1);
-  // @ts-ignore value will not be undefined, because the number 1000.1 is guaranteed to give
-  // both groups
-  const decimalSeparator = parts.find(part => part.type === 'decimal').value;
-  // @ts-ignore
-  const thousandSeparator = parts.find(part => part.type === 'group').value;
+  const parts = numberFormat.formatToParts(1000.1 as const);
+  const decimalSeparator = parts.find(part => part.type === 'decimal')!.value;
+  const thousandSeparator = parts.find(part => part.type === 'group')!.value;
   return {decimalSeparator, thousandSeparator};
 };
 

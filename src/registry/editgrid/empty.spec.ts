@@ -1,7 +1,7 @@
 import type {EditGridComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
-import {JSONObject} from '@/types';
+import type {JSONObject} from '@/types';
 
 import isEmpty from './empty';
 

@@ -1,7 +1,8 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 
-import FormioForm, {FormioFormProps} from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
+import FormioForm from '@/components/FormioForm';
 
 export interface RenderArgs {
   componentDefinition: AnyComponentSchema;

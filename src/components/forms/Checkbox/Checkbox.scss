@@ -87,9 +87,9 @@
 
       // description for the option itself
       .utrecht-form-field-description:not(
-          .utrecht-form-field-description--openforms-helptext,
-          .utrecht-form-field-description--invalid
-        ) {
+        .utrecht-form-field-description--openforms-helptext,
+        .utrecht-form-field-description--invalid
+      ) {
         background: var(--_of-utrecht-form-field-checkbox-background-color);
         grid-column-start: input;
         grid-column-end: description;

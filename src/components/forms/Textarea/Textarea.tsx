@@ -1,6 +1,6 @@
 import {FormField, Paragraph, Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
 import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-library-react/dist/Textarea';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId, useLayoutEffect, useRef} from 'react';
 import {FormattedMessage} from 'react-intl';

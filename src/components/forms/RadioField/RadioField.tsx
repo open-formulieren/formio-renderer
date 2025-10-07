@@ -1,5 +1,5 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useField} from 'formik';
 import {useId} from 'react';
 

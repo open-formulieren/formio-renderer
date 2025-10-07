@@ -1,7 +1,8 @@
 import {expect, test} from 'vitest';
 import {z} from 'zod';
 
-import {KeySchemaPair, composeValidationSchemas} from './validationSchema';
+import type {KeySchemaPair} from './validationSchema';
+import {composeValidationSchemas} from './validationSchema';
 
 test('Construct simple schema from one key-schema pair', () => {
   const pair: KeySchemaPair = ['foo', z.string()];
@@ -18,6 +19,7 @@ test('Construct schema from one dotted-key-schema pair', () => {
 
   expect(schema.shape.foo).toBeInstanceOf(z.ZodObject);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const foo: any = schema.shape.foo;
   expect(foo.shape.bar).toBeInstanceOf(z.ZodString);
 });
@@ -34,6 +36,7 @@ test('Complex schema composition from multiple key-schema pairs', () => {
   expect(schema).toBeInstanceOf(z.ZodObject);
   expect(Object.keys(schema.shape)).toEqual(['foo']);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fooSchema: any = schema.shape.foo;
   expect(fooSchema).toBeInstanceOf(z.ZodObject);
   expect(Object.keys(fooSchema.shape)).toEqual(['bar', 'yeet']);

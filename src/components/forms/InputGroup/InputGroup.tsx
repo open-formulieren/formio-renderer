@@ -1,5 +1,5 @@
 import {Fieldset, FieldsetLegend, Paragraph} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';

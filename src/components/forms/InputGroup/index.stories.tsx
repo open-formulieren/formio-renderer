@@ -1,11 +1,11 @@
-import {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-vite';
 import {FormLabel, Textbox} from '@utrecht/component-library-react';
 import {expect, within} from 'storybook/test';
 
 import '@/components/forms/TextField/TextField.scss';
 
 import {InputGroup, InputGroupItem} from '.';
-import {InputGroupProps} from './InputGroup';
+import type {InputGroupProps} from './InputGroup';
 
 interface StoryArgs extends InputGroupProps {
   labels: string[];

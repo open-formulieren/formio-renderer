@@ -11,7 +11,7 @@ test.each([
   ['foo', false],
 ])(
   'Textarea isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: TextareaComponentSchema = {
       type: 'textarea',
       key: 'textarea',
@@ -37,7 +37,7 @@ test.each([
   [['foo'], false],
 ])(
   'Multiple textarea isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: TextareaComponentSchema = {
       type: 'textarea',
       key: 'textarea',

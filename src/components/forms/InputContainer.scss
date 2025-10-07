@@ -58,7 +58,11 @@ $affixes: 'prefix', 'suffix';
       margin-inline-end: var(
         --of-input-container-prefix-margin-inline-end,
         calc(
-          -1 * var(--of-input-container-prefix-border-width, var(--of-input-container-affix-border-width))
+          -1 *
+            var(
+              --of-input-container-prefix-border-width,
+              var(--of-input-container-affix-border-width)
+            )
         )
       );
     }
@@ -69,7 +73,11 @@ $affixes: 'prefix', 'suffix';
       margin-inline-start: var(
         --of-input-container-prefix-margin-inline-start,
         calc(
-          -1 * var(--of-input-container-prefix-border-width, var(--of-input-container-affix-border-width))
+          -1 *
+            var(
+              --of-input-container-prefix-border-width,
+              var(--of-input-container-affix-border-width)
+            )
         )
       );
     }

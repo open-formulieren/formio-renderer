@@ -8,11 +8,6 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
 
-/**
- * Props specific for the input group widget
- */
-export interface InputGroupProps {}
-
 export interface DatePickerProps {
   /**
    * Earliest date that is selectable in the calendar.
@@ -35,7 +30,6 @@ export interface DatePickerProps {
 export type WidgetProps =
   | {
       widget: 'inputGroup';
-      widgetProps?: InputGroupProps;
     }
   | {
       widget: 'datePicker';
@@ -99,8 +93,7 @@ const DateField: React.FC<DateFieldProps> = ({
   description,
   tooltip,
   autoComplete,
-  widget,
-  widgetProps,
+  ...props
 }) => {
   const id = useId();
   const {getFieldMeta} = useFormikContext();
@@ -110,7 +103,7 @@ const DateField: React.FC<DateFieldProps> = ({
   const errorMessageId = isInvalid ? `${id}-error-message` : undefined;
 
   let dateInput: React.ReactElement;
-  switch (widget) {
+  switch (props.widget) {
     case 'inputGroup': {
       dateInput = (
         <DateInputGroup
@@ -134,7 +127,7 @@ const DateField: React.FC<DateFieldProps> = ({
           isRequired={isRequired}
           isDisabled={isDisabled}
           aria-describedby={errorMessageId}
-          {...widgetProps}
+          {...props.widgetProps}
         />
       );
     }

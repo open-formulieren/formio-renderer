@@ -11,7 +11,7 @@ test.each([
   ['test', false],
 ])(
   'Iban isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: IbanComponentSchema = {
       type: 'iban',
       key: 'iban',
@@ -37,7 +37,7 @@ test.each([
   [['foo'], false],
 ])(
   'Multiple iban isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: IbanComponentSchema = {
       type: 'iban',
       key: 'iban',

@@ -11,7 +11,7 @@ test.each([
   ['1970-01-01', false],
 ])(
   'Date isEmpty compares against defined, non-empty array state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string | undefined, expected: boolean) => {
     const component: DateComponentSchema = {
       type: 'date',
       key: 'date',
@@ -34,7 +34,7 @@ test.each([
   [['1970-01-01'], false],
 ])(
   'Multiple date isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: string[] | undefined, expected: boolean) => {
     const component: DateComponentSchema = {
       type: 'date',
       key: 'date',

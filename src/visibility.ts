@@ -1,4 +1,4 @@
-import {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
 
 import {getClearOnHide, isHidden} from '@/formio';

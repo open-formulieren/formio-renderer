@@ -18,7 +18,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({
 }) => {
   const parsedMax = datePicker?.maxDate ? parseDate(datePicker.maxDate) : null;
   const parsedMin = datePicker?.minDate ? parseDate(datePicker.minDate) : null;
-
+  const widget = openForms?.widget ?? 'datePicker';
   return (
     <DateField
       name={key}
@@ -26,11 +26,15 @@ export const FormioDate: React.FC<FormioDateProps> = ({
       tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
-      widget={openForms?.widget ?? 'datePicker'}
-      widgetProps={{
-        maxDate: parsedMax ?? undefined,
-        minDate: parsedMin ?? undefined,
-      }}
+      widget={widget}
+      widgetProps={
+        widget === 'datePicker'
+          ? {
+              maxDate: parsedMax ?? undefined,
+              minDate: parsedMin ?? undefined,
+            }
+          : undefined
+      }
     />
   );
 };

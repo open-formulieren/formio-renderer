@@ -2,7 +2,7 @@ import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formuliere
 import {replace, setIn, useFormikContext} from 'formik';
 import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
-import {z} from 'zod';
+import type {z} from 'zod';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
@@ -10,7 +10,7 @@ import {EditGrid as EditGridField} from '@/components/forms';
 import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
-import {JSONObject} from '@/types';
+import type {JSONObject} from '@/types';
 import {buildValidationSchema, useValidationSchemas} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';

@@ -2,9 +2,10 @@ import type {MessageFormatElement} from '@formatjs/icu-messageformat-parser';
 import {formatMessage as coreFormatMessage} from '@formatjs/intl';
 import type {ResolvedIntlConfig} from '@formatjs/intl/src/types';
 import {DEFAULT_INTL_CONFIG} from '@formatjs/intl/src/utils';
-import {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
+import type {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
 import React, {useId} from 'react';
-import {MessageDescriptor, useIntl} from 'react-intl';
+import type {MessageDescriptor} from 'react-intl';
+import {useIntl} from 'react-intl';
 
 export interface DynamicFormattedMessageProps {
   description: string | object;

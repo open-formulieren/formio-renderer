@@ -11,7 +11,7 @@ test.each([
   [true, false],
 ])(
   'Checkbox isEmpty compares against checked/unchecked state of value',
-  (valueToTest: any, expected: boolean) => {
+  (valueToTest: boolean | undefined, expected: boolean) => {
     const component: CheckboxComponentSchema = {
       type: 'checkbox',
       key: 'checkbox',

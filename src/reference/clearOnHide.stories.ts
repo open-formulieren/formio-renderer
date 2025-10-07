@@ -1,6 +1,7 @@
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
-import {ReferenceMeta, hideSpinner, storyFactory} from './utils';
+import type {ReferenceMeta} from './utils';
+import {hideSpinner, storyFactory} from './utils';
 
 /**
  * Stories to guard the 'clear on hide' feature behaviour against the Formio.js

@@ -1,8 +1,8 @@
-import {LicensePlateComponentSchema} from '@open-formulieren/types';
+import type {LicensePlateComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
-import {FormioFormProps} from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
