@@ -3,7 +3,7 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {addDays, subDays} from 'date-fns';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
-import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {withFormSettingsProvider, withFormik, withMockDate} from '@/sb-decorators';
 
 import DateField from '../DateField';
 
@@ -34,6 +34,7 @@ export default {
 type Story = StoryObj<typeof DateField>;
 
 export const DatePicker: Story = {
+  decorators: [withMockDate],
   args: {
     widget: 'datePicker',
     name: 'date',
@@ -42,6 +43,9 @@ export const DatePicker: Story = {
     tooltip: 'A short tooltip.',
     isDisabled: false,
     isRequired: true,
+  },
+  parameters: {
+    mockDate: new Date('2025-09-29T12:00:00+02:00'),
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -79,7 +83,10 @@ export const DatePickerWithEnglishLocale: Story = {
   },
 };
 
+const sept29th = new Date('2025-09-29T12:00:00+02:00');
+
 export const DatePickerLimitedRange: Story = {
+  decorators: [withMockDate],
   args: {
     widget: 'datePicker',
     name: 'date',
@@ -87,9 +94,12 @@ export const DatePickerLimitedRange: Story = {
     isDisabled: false,
     isRequired: false,
     widgetProps: {
-      minDate: subDays(new Date(), 3),
-      maxDate: addDays(new Date(), 3),
+      minDate: subDays(sept29th, 3),
+      maxDate: addDays(sept29th, 3),
     },
+  },
+  parameters: {
+    mockDate: sept29th,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
