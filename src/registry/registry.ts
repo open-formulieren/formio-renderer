@@ -22,6 +22,7 @@ import Selectboxes from './selectboxes';
 import SoftRequiredErrors from './softRequiredErrors';
 import Textarea from './textarea';
 import TextField from './textfield';
+import TimeField from './timefield';
 import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
 
 export const getRegistryEntry: GetRegistryEntry = (
@@ -36,6 +37,7 @@ const REGISTRY: Registry = {
   textfield: TextField,
   email: Email,
   date: DateField,
+  time: TimeField,
   phoneNumber: PhoneNumber,
   textarea: Textarea,
   number: Number,

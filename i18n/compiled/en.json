@@ -71,6 +71,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2/fIuh": [
+    {
+      "type": 0,
+      "value": "SS"
+    }
+  ],
   "2KKNKT": [
     {
       "type": 0,
@@ -239,6 +245,16 @@
     {
       "type": 0,
       "value": "House number"
+  "MusEU7": [
+    {
+      "type": 0,
+      "value": "Second"
+    }
+  ],
+  "Pxbd/v": [
+    {
+      "type": 0,
+      "value": "HH"
     }
   ],
   "QPdaOi": [
@@ -327,6 +343,12 @@
       "value": "The submitted value does not match the postcode pattern: 1234 AB"
     }
   ],
+  "aKCkLp": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -355,6 +377,12 @@
     {
       "type": 0,
       "value": "Add another"
+    }
+  ],
+  "fTd8X/": [
+    {
+      "type": 0,
+      "value": "Invalid time"
     }
   ],
   "ht1O2Z": [
@@ -391,6 +419,12 @@
     {
       "type": 0,
       "value": "Invalid input"
+    }
+  ],
+  "qFr3r5": [
+    {
+      "type": 0,
+      "value": "Time must conform format HH:MM:SS"
     }
   ],
   "qTqAIS": [
@@ -435,6 +469,10 @@
     {
       "type": 0,
       "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
+  "rxk4HZ": [
+    {
+      "type": 0,
+      "value": "Minute"
     }
   ],
   "sGwqUb": [
@@ -447,6 +485,12 @@
     {
       "type": 0,
       "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+    }
+  ],
+  "t8hAwH": [
+    {
+      "type": 0,
+      "value": "Hour"
     }
   ],
   "vCObuG": [
