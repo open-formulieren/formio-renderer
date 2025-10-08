@@ -44,7 +44,6 @@ export interface TimeFieldProps {
   autoComplete?: string;
 }
 
-// TODO: add documentation
 const TimeField: React.FC<TimeFieldProps> = ({
   name,
   label,
