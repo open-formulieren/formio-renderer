@@ -36,9 +36,9 @@ test.each([
 
 describe('Parse date validation', () => {
   test.each(['2025-09-01', '2025-9-01', '2025-09-1', '2025-9-1'] satisfies string[])(
-    'Valid value',
-    () => {
-      const result = parseDate('2025-09-01');
+    'Valid value: %s',
+    (value: string) => {
+      const result = parseDate(value);
       expect(result).not.toBeNull();
     }
   );
