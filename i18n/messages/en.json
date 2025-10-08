@@ -24,6 +24,11 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "2/fIuh": {
+    "defaultMessage": "SS",
+    "description": "Placeholder for second part of a time",
+    "originalDefault": "SS"
+  },
   "2KKNKT": {
     "defaultMessage": "Previous year",
     "description": "Calendar: previous year button title",
@@ -89,6 +94,16 @@
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
+  "MusEU7": {
+    "defaultMessage": "Second",
+    "description": "Time input group: second label",
+    "originalDefault": "Second"
+  },
+  "Pxbd/v": {
+    "defaultMessage": "HH",
+    "description": "Placeholder for hour part of a time",
+    "originalDefault": "HH"
+  },
   "QPdaOi": {
     "defaultMessage": "No results found",
     "description": "Select 'no options' message",
@@ -114,6 +129,11 @@
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
   },
+  "aKCkLp": {
+    "defaultMessage": "MM",
+    "description": "Placeholder for minute part of a time",
+    "originalDefault": "MM"
+  },
   "abKEBH": {
     "defaultMessage": "No",
     "description": "'False' display",
@@ -123,6 +143,11 @@
     "defaultMessage": "Add another",
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
+  },
+  "fTd8X/": {
+    "defaultMessage": "Invalid time",
+    "description": "Validation error for time that does not pass 24-hours format.",
+    "originalDefault": "Invalid time"
   },
   "ht1O2Z": {
     "defaultMessage": "Invalid BSN",
@@ -139,10 +164,20 @@
     "description": "Invalid input validation error for date field",
     "originalDefault": "Invalid input"
   },
+  "qFr3r5": {
+    "defaultMessage": "Time must conform format HH:MM:SS",
+    "description": "Validation error describing shape of time format.",
+    "originalDefault": "Time must conform format HH:MM:SS"
+  },
   "qTqAIS": {
     "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
+  },
+  "rxk4HZ": {
+    "defaultMessage": "Minute",
+    "description": "Time input group: minute label",
+    "originalDefault": "Minute"
   },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
@@ -153,6 +188,11 @@
     "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+  },
+  "t8hAwH": {
+    "defaultMessage": "Hour",
+    "description": "Time input group: hour label",
+    "originalDefault": "Hour"
   },
   "vCObuG": {
     "defaultMessage": "Day",

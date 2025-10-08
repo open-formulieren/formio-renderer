@@ -73,6 +73,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2/fIuh": [
+    {
+      "type": 0,
+      "value": "SS"
+    }
+  ],
   "2KKNKT": [
     {
       "type": 0,
@@ -189,6 +195,18 @@
       "value": "m"
     }
   ],
+  "MusEU7": [
+    {
+      "type": 0,
+      "value": "Seconde"
+    }
+  ],
+  "Pxbd/v": [
+    {
+      "type": 0,
+      "value": "HH"
+    }
+  ],
   "QPdaOi": [
     {
       "type": 0,
@@ -227,6 +245,12 @@
       "value": "Volgend jaar"
     }
   ],
+  "aKCkLp": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -237,6 +261,12 @@
     {
       "type": 0,
       "value": "Nog één toevoegen"
+    }
+  ],
+  "fTd8X/": [
+    {
+      "type": 0,
+      "value": "Ongeldige tijd"
     }
   ],
   "ht1O2Z": [
@@ -255,6 +285,12 @@
     {
       "type": 0,
       "value": "Ongeldige invoer"
+    }
+  ],
+  "qFr3r5": [
+    {
+      "type": 0,
+      "value": "Tijd moet voldoen aan het formaat HH:MM:SS"
     }
   ],
   "qTqAIS": [
@@ -295,6 +331,12 @@
       "value": "."
     }
   ],
+  "rxk4HZ": [
+    {
+      "type": 0,
+      "value": "Minuut"
+    }
+  ],
   "sGwqUb": [
     {
       "type": 0,
@@ -305,6 +347,12 @@
     {
       "type": 0,
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
+    }
+  ],
+  "t8hAwH": [
+    {
+      "type": 0,
+      "value": "Uur"
     }
   ],
   "vCObuG": [
