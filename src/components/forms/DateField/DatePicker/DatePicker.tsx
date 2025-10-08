@@ -59,11 +59,6 @@ interface DatePickerProps {
 /**
  * Implements a form field to select dates.
  *
- * The entered value is tracked and we attempt to parse it into a valid date. If it's a
- * valid date, the real field state is updated with the new value, otherwise the field
- * value is cleared. This means that the Formik state is either an empty string, or a
- * valid ISO-8601 date string.
- *
  * For accessibility reasons, there should always be a text field allowing users to
  * manually type in the date. However, when the field is focused, this toggles the
  * calendar where a date can be selected using a pointer device.
