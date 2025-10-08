@@ -79,6 +79,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2/fIuh": [
+    {
+      "type": 0,
+      "value": "SS"
+    }
+  ],
   "2KKNKT": [
     {
       "type": 0,
@@ -171,6 +177,12 @@
       "value": "Straatnaam"
     }
   ],
+  "DZjLaH": [
+    {
+      "type": 0,
+      "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -181,6 +193,20 @@
     {
       "type": 0,
       "value": "Velden zonder antwoord"
+    }
+  ],
+  "GThFIc": [
+    {
+      "type": 0,
+      "value": "Tijd moet na "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
     }
   ],
   "IhLYXK": [
@@ -207,6 +233,12 @@
       "value": "m"
     }
   ],
+  "MusEU7": [
+    {
+      "type": 0,
+      "value": "Seconde"
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -217,6 +249,12 @@
     {
       "type": 0,
       "value": "Huisnummer"
+    }
+  ],
+  "Pxbd/v": [
+    {
+      "type": 0,
+      "value": "HH"
     }
   ],
   "QPdaOi": [
@@ -275,10 +313,30 @@
       "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
     }
   ],
+  "aKCkLp": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
       "value": "Nee"
+    }
+  ],
+  "ampZcZ": [
+    {
+      "type": 0,
+      "value": "Tijd moet voor "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
     }
   ],
   "bKPaUj": [
@@ -391,6 +449,12 @@
       "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
     }
   ],
+  "rxk4HZ": [
+    {
+      "type": 0,
+      "value": "Minuut"
+    }
+  ],
   "sGwqUb": [
     {
       "type": 0,
@@ -403,10 +467,38 @@
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
     }
   ],
+  "t8hAwH": [
+    {
+      "type": 0,
+      "value": "Uur"
+    }
+  ],
   "vCObuG": [
     {
       "type": 0,
       "value": "Dag"
+    }
+  ],
+  "vMKP5p": [
+    {
+      "type": 0,
+      "value": "Tijd moet vallen tussen "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " en "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "xHVrv5": [

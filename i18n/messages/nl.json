@@ -29,6 +29,11 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "2/fIuh": {
+    "defaultMessage": "SS",
+    "description": "Placeholder for second part of a time",
+    "originalDefault": "SS"
+  },
   "2KKNKT": {
     "defaultMessage": "Vorig jaar",
     "description": "Calendar: previous year button title",
@@ -75,6 +80,11 @@
     "description": "Label for addressNL streetName read only result",
     "originalDefault": "Street name"
   },
+  "DZjLaH": {
+    "defaultMessage": "Uur moet tussen 0-23 zijn en minuut tussen 0-59.",
+    "description": "Validation error describing shape of time format.",
+    "originalDefault": "Hour must be between 0-23 and minute between 0-59"
+  },
   "FfBWqF": {
     "defaultMessage": "Toon tooltip",
     "description": "Tooltip icon label",
@@ -84,6 +94,11 @@
     "defaultMessage": "Velden zonder antwoord",
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
+  },
+  "GThFIc": {
+    "defaultMessage": "Tijd moet na {minTime} zijn.",
+    "description": "Validation error describing the value is not after the minimum time.",
+    "originalDefault": "Time must be after {minTime}"
   },
   "IhLYXK": {
     "defaultMessage": "Toon/verberg de kalender",
@@ -107,6 +122,11 @@
     "isTranslated": true,
     "originalDefault": "m"
   },
+  "MusEU7": {
+    "defaultMessage": "Seconde",
+    "description": "Time input group: second label",
+    "originalDefault": "Second"
+  },
   "Oc3efT": {
     "defaultMessage": "Plaats is verplicht.",
     "description": "Validation error for required addressNL.city field.",
@@ -116,6 +136,11 @@
     "defaultMessage": "Huisnummer",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
+  },
+  "Pxbd/v": {
+    "defaultMessage": "HH",
+    "description": "Placeholder for hour part of a time",
+    "originalDefault": "HH"
   },
   "QPdaOi": {
     "defaultMessage": "Geen opties om te kiezen",
@@ -157,10 +182,20 @@
     "description": "Validation error for postcode.",
     "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
   },
+  "aKCkLp": {
+    "defaultMessage": "MM",
+    "description": "Placeholder for minute part of a time",
+    "originalDefault": "MM"
+  },
   "abKEBH": {
     "defaultMessage": "Nee",
     "description": "'False' display",
     "originalDefault": "No"
+  },
+  "ampZcZ": {
+    "defaultMessage": "Tijd moet voor {maxTime} zijn.",
+    "description": "Validation error describing the value is not before the maximum time.",
+    "originalDefault": "Time must be before {maxTime}"
   },
   "bKPaUj": {
     "defaultMessage": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456).",
@@ -227,6 +262,11 @@
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
+  "rxk4HZ": {
+    "defaultMessage": "Minuut",
+    "description": "Time input group: minute label",
+    "originalDefault": "Minute"
+  },
   "sGwqUb": {
     "defaultMessage": "Een BSN moet uit 9 cijfers bestaan",
     "description": "Validation error describing shape of BSN.",
@@ -237,10 +277,20 @@
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
+  "t8hAwH": {
+    "defaultMessage": "Uur",
+    "description": "Time input group: hour label",
+    "originalDefault": "Hour"
+  },
   "vCObuG": {
     "defaultMessage": "Dag",
     "description": "Date input group: day label",
     "originalDefault": "Day"
+  },
+  "vMKP5p": {
+    "defaultMessage": "Tijd moet vallen tussen {minTime} en {maxTime}.",
+    "description": "Validation error describing the value is not in-between the minimum and maximum time.",
+    "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
   "xHVrv5": {
     "defaultMessage": "De waarde moet {min} of groter zijn.",
