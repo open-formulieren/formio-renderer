@@ -23,7 +23,7 @@ export const PostCodeField: React.FC<FormioPostCodeProps> = ({
       description={description}
       isRequired={validate.required}
       pattern={validate.pattern}
-      placeholder="AAAA 10"
+      placeholder="1234 AB"
     />
   );
 };
