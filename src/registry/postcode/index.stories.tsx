@@ -135,7 +135,9 @@ export const ValidatePattern: ValidationStory = {
     await userEvent.type(textField, 'foobar f10');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid Dutch postcode')).toBeVisible();
+    expect(
+      await canvas.findByText('The submitted value does not match the postcode pattern: 1234 AB')
+    ).toBeVisible();
   },
 };
 
