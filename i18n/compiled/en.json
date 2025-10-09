@@ -105,12 +105,6 @@
       "value": "Loading..."
     }
   ],
-  "8WTgpF": [
-    {
-      "type": 0,
-      "value": "Invalid Dutch postcode"
-    }
-  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -283,6 +277,12 @@
     {
       "type": 0,
       "value": "Next year"
+    }
+  ],
+  "WpfP0s": [
+    {
+      "type": 0,
+      "value": "The submitted value does not match the postcode pattern: 1234 AB"
     }
   ],
   "abKEBH": [

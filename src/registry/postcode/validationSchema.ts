@@ -10,7 +10,7 @@ const POSTCODE_REGEX = new RegExp(POSTCODE_PATTERN);
 
 const POSTCODE_INVALID_MESSAGE = defineMessage({
   description: 'Validation error for postcode.',
-  defaultMessage: 'Invalid Dutch postcode',
+  defaultMessage: 'The submitted value does not match the postcode pattern: 1234 AB',
 });
 
 const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (

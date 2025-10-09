@@ -39,11 +39,6 @@
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
   },
-  "8WTgpF": {
-    "defaultMessage": "Ongeldige postcode",
-    "description": "Validation error for postcode.",
-    "originalDefault": "Invalid Dutch postcode"
-  },
   "9SgPC6": {
     "defaultMessage": "Verwijder item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
@@ -120,6 +115,11 @@
     "defaultMessage": "Volgend jaar",
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
+  },
+  "WpfP0s": {
+    "defaultMessage": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB",
+    "description": "Validation error for postcode.",
+    "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
   },
   "abKEBH": {
     "defaultMessage": "Nee",

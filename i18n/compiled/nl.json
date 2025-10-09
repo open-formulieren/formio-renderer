@@ -113,12 +113,6 @@
       "value": "Opties ophalen..."
     }
   ],
-  "8WTgpF": [
-    {
-      "type": 0,
-      "value": "Ongeldige postcode"
-    }
-  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -231,6 +225,12 @@
     {
       "type": 0,
       "value": "Volgend jaar"
+    }
+  ],
+  "WpfP0s": [
+    {
+      "type": 0,
+      "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
     }
   ],
   "abKEBH": [
