@@ -7,6 +7,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
+import DateTimePicker from '@/components/forms/DateField/DatePicker/DateTimePicker';
 
 export interface DatePickerProps {
   /**
@@ -121,6 +122,20 @@ const DateField: React.FC<DateFieldProps> = ({
     case 'datePicker': {
       dateInput = (
         <DatePicker
+          name={name}
+          label={label}
+          tooltip={tooltip}
+          isRequired={isRequired}
+          isDisabled={isDisabled}
+          aria-describedby={errorMessageId}
+          {...props.widgetProps}
+        />
+      );
+      break;
+    }
+    case 'dateTimePicker': {
+      dateInput = (
+        <DateTimePicker
           name={name}
           label={label}
           tooltip={tooltip}

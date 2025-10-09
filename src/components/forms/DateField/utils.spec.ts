@@ -1,7 +1,7 @@
 import {describe, expect, test} from 'vitest';
 
 import type {DatePartValues} from './types';
-import {getDateLocaleMeta, parseDate, partsToUnvalidatedISO8601} from './utils';
+import {getDateLocaleMeta, parseDate, parseDateTime, partsToUnvalidatedISO8601} from './utils';
 
 test.each([
   [{year: '2024', month: '1', day: '1'}, '2024-01-01'],
@@ -42,6 +42,14 @@ describe('Parse date validation', () => {
       expect(result).not.toBeNull();
     }
   );
+
+  test('datetime', () => {
+    const meta = getDateLocaleMeta('nl');
+    const result = parseDateTime('08-10-2025 16:15', meta);
+    expect(result).not.toBeNull();
+    // Note: Date takes a month index (0-11)
+    expect(result).toEqual(new Date(2025, 9, 8, 16, 15, 0));
+  });
 
   test.each([
     '20',

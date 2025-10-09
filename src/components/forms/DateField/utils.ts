@@ -41,16 +41,50 @@ export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
   return isValidDate(parsed) ? parsed : null;
 };
 
+export const parseDateTime = (value: string, meta?: LocaleMeta): Date | null => {
+  if (!value) return null;
+
+  // TODO-83: a lot of assumptions are made on the format here, not suuuper nice...
+  const [date, time] = value.includes('T') ? value.split('T') : value.split(' ');
+  // TODO-83: this assumes no stupid American time notation
+  const [hour, minute, second] = time ? time.split(':') : [];
+
+  const partsOrder = meta?.partsOrder ?? ['year', 'month', 'day']; // default ISO-8601 order
+  const orderedParts = partsOrder.map(part => RE_PARTS[part]);
+  const re = new RegExp(orderedParts.join(meta?.separator ?? '-')); // default ISO-8601 separator
+  const match = date.match(re) as RegExpMatchArray & {groups: DatePartValues};
+  if (!match) return null;
+  const {year, month, day} = match.groups;
+  const parsed = parseISO(
+    partsToUnvalidatedISO8601({
+      year,
+      month,
+      day,
+      hour: hour ?? '',
+      minute: minute ?? '',
+      second: second ?? '',
+    })
+  );
+
+  // Invalid dates are also instances of Date :/
+  return isValidDate(parsed) ? parsed : null;
+};
+
 /**
  * Format date parts into an (unvalidated) ISO-8601 string.
  */
 export const partsToUnvalidatedISO8601 = (parts: DatePartValues): string => {
-  const bits = [
+  const dateBits = [
     parts.year.padStart(4, '0'),
     parts.month.padStart(2, '0'),
     parts.day.padStart(2, '0'),
   ];
-  return bits.join('-');
+  const timeBits = [
+    parts.hour ? parts.hour.padStart(2, '0') : '00',
+    parts.minute ? parts.minute.padStart(2, '0') : '00',
+    parts.second ? parts.second.padStart(2, '0') : '00',
+  ];
+  return dateBits.join('-') + 'T' + timeBits.join(':');
 };
 
 const TEST_DATE = new Date(2023, 4, 31);

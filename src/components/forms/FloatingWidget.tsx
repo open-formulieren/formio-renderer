@@ -131,6 +131,8 @@ export interface FloatingWidgetProps {
   children: React.ReactNode;
 }
 
+// TODO-83: there seems to be a small bug in the floating widget. When it loses focus, the
+//  widget closes. But the focus shifts to its parent, which causes it to immediately open again.
 const FloatingWidget: React.FC<FloatingWidgetProps> = ({
   isOpen,
   context,
