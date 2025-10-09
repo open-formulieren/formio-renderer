@@ -227,6 +227,12 @@
       "value": "Volgend jaar"
     }
   ],
+  "WpfP0s": [
+    {
+      "type": 0,
+      "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,

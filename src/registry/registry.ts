@@ -14,6 +14,7 @@ import IBAN from './iban';
 import LicensePlate from './licenseplate';
 import Number from './number';
 import PhoneNumber from './phoneNumber';
+import PostCode from './postcode';
 import RadioField from './radio';
 import Select from './select';
 import Selectboxes from './selectboxes';
@@ -45,6 +46,7 @@ const REGISTRY: Registry = {
   // special types
   iban: IBAN,
   licenseplate: LicensePlate,
+  postcode: PostCode,
   bsn: BSN,
   cosign: Cosign,
   editgrid: EditGrid,

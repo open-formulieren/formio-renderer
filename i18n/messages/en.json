@@ -114,6 +114,11 @@
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
   },
+  "WpfP0s": {
+    "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
+    "description": "Validation error for postcode.",
+    "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
+  },
   "abKEBH": {
     "defaultMessage": "No",
     "description": "'False' display",
