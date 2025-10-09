@@ -105,6 +105,12 @@
       "value": "Loading..."
     }
   ],
+  "8WTgpF": [
+    {
+      "type": 0,
+      "value": "Invalid Dutch postcode"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -295,12 +301,6 @@
     {
       "type": 0,
       "value": "Invalid BSN"
-    }
-  ],
-  "m3gWAH": [
-    {
-      "type": 0,
-      "value": "Invalid Dutch postal code"
     }
   ],
   "nfRRDu": [

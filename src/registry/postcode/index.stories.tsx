@@ -6,24 +6,24 @@ import {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
-import {FormioPostCode as PostalCodeField} from './';
+import {PostCodeField} from './';
 import ValueDisplay from './ValueDisplay';
 
 export default {
-  title: 'Component registry / custom / postal code field',
-  component: PostalCodeField,
+  title: 'Component registry / custom / postcode',
+  component: PostCodeField,
   decorators: [withFormik],
-} satisfies Meta<typeof PostalCodeField>;
+} satisfies Meta<typeof PostCodeField>;
 
-type Story = StoryObj<typeof PostalCodeField>;
+type Story = StoryObj<typeof PostCodeField>;
 
 export const MinimalConfiguration: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A simple postal code field',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -35,7 +35,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          postalcode: '',
+          postcode: '',
         },
       },
     },
@@ -47,8 +47,8 @@ export const WithPlaceholder: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'postalcodefield',
-      label: 'A simple postal code field',
+      key: 'postcode',
+      label: 'A simple postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -59,7 +59,7 @@ export const WithPlaceholder: Story = {
   parameters: {
     formik: {
       initialValues: {
-        postalcode: '',
+        postcode: '',
       },
     },
   },
@@ -70,8 +70,8 @@ export const WithTooltip: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A simple postal code field',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
       tooltip: 'Surprise!',
       inputMask: '9999 AA',
       validate: {
@@ -84,7 +84,7 @@ export const WithTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          postalcode: '',
+          postcode: '',
         },
       },
     },
@@ -114,8 +114,8 @@ export const ValidateRequired: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A postal code field',
+      key: 'my.postcode',
+      label: 'A postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -127,7 +127,7 @@ export const ValidateRequired: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const textField = canvas.getByLabelText('A postal code field');
+    const textField = canvas.getByLabelText('A postcode field');
     expect(textField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
@@ -142,8 +142,8 @@ export const ValidatePattern: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A postal code field',
+      key: 'my.postcode',
+      label: 'A postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -154,11 +154,11 @@ export const ValidatePattern: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const textField = canvas.getByLabelText('A postal code field');
+    const textField = canvas.getByLabelText('A postcode field');
     await userEvent.type(textField, 'foobar f10');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid Dutch postal code')).toBeVisible();
+    expect(await canvas.findByText('Invalid Dutch postcode')).toBeVisible();
   },
 };
 
@@ -169,8 +169,8 @@ export const PassesAllValidations: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A postal code field',
+      key: 'my.postcode',
+      label: 'A postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -181,7 +181,7 @@ export const PassesAllValidations: ValidationStory = {
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
 
-    const textField = canvas.getByLabelText('A postal code field');
+    const textField = canvas.getByLabelText('A postcode field');
     await userEvent.type(textField, '1000 XY');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
@@ -211,8 +211,8 @@ export const SingleValueDisplay: ValueDisplayStory = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A postal codefield',
+      key: 'my.postcode',
+      label: 'A postcode field',
       inputMask: '9999 AA',
       validate: {
         pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
@@ -230,8 +230,8 @@ export const MultiValueDisplay: ValueDisplayStory = {
     componentDefinition: {
       id: 'component1',
       type: 'postcode',
-      key: 'my.postalcodefield',
-      label: 'A postal codefield',
+      key: 'my.postcode',
+      label: 'A postcode field',
       multiple: true,
       inputMask: '9999 AA',
       validate: {

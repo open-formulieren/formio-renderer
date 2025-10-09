@@ -113,6 +113,12 @@
       "value": "Opties ophalen..."
     }
   ],
+  "8WTgpF": [
+    {
+      "type": 0,
+      "value": "Ongeldige postcode"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -243,12 +249,6 @@
     {
       "type": 0,
       "value": "Ongeldig BSN"
-    }
-  ],
-  "m3gWAH": [
-    {
-      "type": 0,
-      "value": "Ongeldig Nederlands postcode"
     }
   ],
   "nfRRDu": [

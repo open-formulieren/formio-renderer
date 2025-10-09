@@ -39,6 +39,11 @@
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
   },
+  "8WTgpF": {
+    "defaultMessage": "Invalid Dutch postcode",
+    "description": "Validation error for postcode.",
+    "originalDefault": "Invalid Dutch postcode"
+  },
   "9SgPC6": {
     "defaultMessage": "Remove item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
@@ -128,11 +133,6 @@
     "defaultMessage": "Invalid BSN",
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN"
-  },
-  "m3gWAH": {
-    "defaultMessage": "Invalid Dutch postal code",
-    "description": "Validation error for postal code.",
-    "originalDefault": "Invalid Dutch postal code"
   },
   "nfRRDu": {
     "defaultMessage": "yyyy",

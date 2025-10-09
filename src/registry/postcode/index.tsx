@@ -12,7 +12,7 @@ export interface FormioPostCodeProps {
   componentDefinition: PostcodeComponentSchema;
 }
 
-export const FormioPostCode: React.FC<FormioPostCodeProps> = ({
+export const PostCodeField: React.FC<FormioPostCodeProps> = ({
   componentDefinition: {key, label, description, tooltip, validate},
 }) => {
   return (
@@ -28,12 +28,12 @@ export const FormioPostCode: React.FC<FormioPostCodeProps> = ({
   );
 };
 
-const PostalCodeComponent: RegistryEntry<PostcodeComponentSchema> = {
-  formField: FormioPostCode,
+const PostCodeComponent: RegistryEntry<PostcodeComponentSchema> = {
+  formField: PostCodeField,
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
   isEmpty,
 };
 
-export default PostalCodeComponent;
+export default PostCodeComponent;
