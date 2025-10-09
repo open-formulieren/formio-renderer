@@ -42,29 +42,6 @@ export const MinimalConfiguration: Story = {
   },
 };
 
-export const WithPlaceholder: Story = {
-  args: {
-    componentDefinition: {
-      id: 'component1',
-      type: 'postcode',
-      key: 'postcode',
-      label: 'A simple postcode field',
-      inputMask: '9999 AA',
-      validate: {
-        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
-      },
-      validateOn: 'blur',
-    },
-  },
-  parameters: {
-    formik: {
-      initialValues: {
-        postcode: '',
-      },
-    },
-  },
-};
-
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {
