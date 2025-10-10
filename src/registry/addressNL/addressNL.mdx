@@ -1,0 +1,151 @@
+import {Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as AutofillStories from './autofill.stories';
+import * as PresentationStories from './index.stories';
+
+<Meta title="Component registry / custom / addressNL" name="Docs" />
+
+# AddressNL component
+
+The `addressNL` component captures the individual parts of a Dutch address so that we can operate on
+structured data rather than plain text fields.
+
+The minimal information is the postcode (format `1234 AB`) combined with a house number (which can
+optionally have a house letter and/or addition). From this information, the street name and city can
+be derived.
+
+The minimal component configuration provides input fields for:
+
+- postcode
+- house number
+- houser letter
+- addition
+
+## Features
+
+**BRK validation**
+
+BRK (ownership) validation is possible with the async validation plugin. It operates on the provided
+postcode, house number, letter and addition to resolve the property at the specified address.
+
+This was the original reason why the component was added.
+
+**Derive city/street name**
+
+When `deriveAddress` is enabled, the postcode and house number are used to look up the street name
+and city. If a result is obtained, they are displayed in addition to the input fields.
+
+**Validation options for city**
+
+A pattern can be specified for the city input so that input can be restricted.
+
+A custom validation message can be specified for this.
+
+**Validation options for postcode**
+
+A pattern can be specified for the postcode input so that a subset of postcodes can be enforced for
+geographical restrictions within a municipality.
+
+A custom validation message can be specified for this.
+
+**Layout**
+
+There are single and double column layouts.
+
+## Presentational behaviour
+
+Because this is a composite component, the presentational behaviour is not always obvious.
+
+### Required components
+
+If the component itself is required, the fieldset legend is excluded from such markers. Instead, the
+postcode and house number fields are marked as required to convey this.
+
+**With asterisk for required fields**
+
+<Canvas of={PresentationStories.MinimalConfigurationSingleColumn} />
+
+**Without asterisk for required fields**
+
+<Canvas of={PresentationStories.WithoutAsteriskForRequiredFields} />
+
+### Optional components
+
+If the component itself is not required, starting to fill out one field does make other fields
+required.
+
+As soon as postcode or house number is not empty, the other field becomes required and is also
+validated as such. If the street name and city fields are visible, they follow this logic.
+
+<Canvas of={PresentationStories.WithStreetAndCityFields} />
+
+## Autofill behaviour
+
+Autofill is enabled when `deriveAddress: true` is enabled in the component. It also requires the
+`FormioForm` to be rendered with the necessary component parameters so that a callback function for
+the lookup is available.
+
+See [#2566](https://github.com/open-formulieren/open-forms/issues/2566) for the source ticket.
+
+**Happy flow**
+
+For happy flow autofill, the resolved street name and city are filled in the disabled fields. The
+user cannot modify these values. Under the hood, some extra state is shipped to guard against input
+tampering via the API.
+
+<Canvas of={AutofillStories.HappyFlow} />
+
+Modifying the postcode or house number resets the derived fields again and performs a new lookup if
+the inputs are valid.
+
+<Canvas of={AutofillStories.ModifyInputAfterAutofill} />
+
+**Address resolution failure**
+
+If the address fails to resolve - because it doesn't (yet) exist, the address lookup must return an
+empty city and street name, and the fields will be cleared. The fields _remain_ disabled and
+effectively block submitting the form, as valid input is expected.
+
+These situations can happen when new houses are being built and the street signage is already
+present, but not registered in the BAG yet.
+
+In the future, an option will be added to allow manual entry in such cases.
+
+<Canvas of={AutofillStories.AddressDoesNotResolve} />
+
+**Address lookup errors**
+
+If the address lookup fails due to (server) error, then the lookup must return `null` to indicate
+this. In this case, the city and street name fields become editable so that the user can proceed
+filling out the form.
+
+Under the hood, a marker is set so that the data is flagged as non-authentic.
+
+<Canvas of={AutofillStories.LookupFailureSimulation} />
+
+## Scenario's to still cover (TODO)
+
+Capture in stories!
+
+**BRK scenario**
+
+With `deriveAddress: false`.
+
+- Don't display city/street fields.
+- Display the validation error (from async plugin) under the component as a whole.
+
+**With prefilled address**
+
+With `deriveAddress: false`.
+
+All fields are read-only unless prefill fails, then `deriveAddress` can be enabled.
+
+City and street are displayed.
+
+This will require some backend changes to support prefill and incorporate the prefill status.
+
+## TODO
+
+- Option to hide legend
+- Option for strict validation with `deriveAddress: true`, pinning the fields to readonly (enabled
+  by default). Will need component migration in backend.
