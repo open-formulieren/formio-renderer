@@ -14,6 +14,11 @@
     "description": "Validation error for IBAN that does not pass the mod-97 test.",
     "originalDefault": "Invalid IBAN"
   },
+  "/RrV7w": {
+    "defaultMessage": "House number addition must be up to four letters and digits.",
+    "description": "Validation error for addressNL.houseNumberAddition field.",
+    "originalDefault": "House number addition must be up to four letters and digits."
+  },
   "0EdUXi": {
     "defaultMessage": "Save",
     "description": "Edit grid item default save button label",
@@ -64,6 +69,11 @@
     "description": "Placeholder for day part of a date",
     "originalDefault": "d"
   },
+  "DEetjI": {
+    "defaultMessage": "Street name",
+    "description": "Label for addressNL streetName read only result",
+    "originalDefault": "Street name"
+  },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
     "description": "Tooltip icon label",
@@ -84,10 +94,25 @@
     "description": "Calendar: previous month button title",
     "originalDefault": "Previous month"
   },
+  "LsgvKh": {
+    "defaultMessage": "Postcode",
+    "description": "Label for addressNL postcode input",
+    "originalDefault": "Postcode"
+  },
   "MJXZYI": {
     "defaultMessage": "m",
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
+  },
+  "Oc3efT": {
+    "defaultMessage": "You must provide a city.",
+    "description": "Validation error for required addressNL.city field.",
+    "originalDefault": "You must provide a city."
+  },
+  "PCv4sQ": {
+    "defaultMessage": "House number",
+    "description": "Label for addressNL houseNumber input",
+    "originalDefault": "House number"
   },
   "QPdaOi": {
     "defaultMessage": "No results found",
@@ -109,10 +134,20 @@
     "description": "Selectboxes maximum selected count error message",
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
   },
+  "TcqyzM": {
+    "defaultMessage": "You must provide a postcode.",
+    "description": "Validation error when AddressNL.houseNumber is provided but not postcode",
+    "originalDefault": "You must provide a postcode."
+  },
   "Tip5+d": {
     "defaultMessage": "Next year",
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
+  },
+  "UONGQo": {
+    "defaultMessage": "You must provide a house number.",
+    "description": "Validation error when AddressNL.postcode is provided but not houseNumber",
+    "originalDefault": "You must provide a house number."
   },
   "WpfP0s": {
     "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
@@ -124,6 +159,21 @@
     "description": "'False' display",
     "originalDefault": "No"
   },
+  "bKPaUj": {
+    "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
+    "description": "Validation error for addressNL.houseNumber field.",
+    "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
+  },
+  "bv/J3Y": {
+    "defaultMessage": "You must provide a street name.",
+    "description": "Validation error for required addressNL.streetName field.",
+    "originalDefault": "You must provide a street name."
+  },
+  "cBsrax": {
+    "defaultMessage": "House letter",
+    "description": "Label for addressNL houseLetter input",
+    "originalDefault": "House letter"
+  },
   "cKFCTI": {
     "defaultMessage": "Add another",
     "description": "Edit grid add button, default label text",
@@ -134,10 +184,25 @@
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN"
   },
+  "lVNV/d": {
+    "defaultMessage": "House number addition",
+    "description": "Label for addressNL houseNumberAddition input",
+    "originalDefault": "House number addition"
+  },
   "nfRRDu": {
     "defaultMessage": "yyyy",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
+  },
+  "osSl3z": {
+    "defaultMessage": "City",
+    "description": "Label for addressNL city read only result",
+    "originalDefault": "City"
+  },
+  "pHX3oF": {
+    "defaultMessage": "House letter must be a single letter.",
+    "description": "Validation error for addressNL.houseLetter field.",
+    "originalDefault": "House letter must be a single letter."
   },
   "ph6ljt": {
     "defaultMessage": "Invalid input",
@@ -148,6 +213,11 @@
     "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
+  },
+  "rQ5vC9": {
+    "defaultMessage": "Postcode must be four digits followed by two letters (e.g. 1234 AB).",
+    "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
+    "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
