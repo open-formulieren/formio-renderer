@@ -1,0 +1,26 @@
+@use '@utrecht/components/form-fieldset';
+
+@use '@/scss/bem';
+@use '@/scss/responsive';
+@use '@/registry/fieldset/Fieldset.scss';
+
+.openforms-addressnl {
+  @include bem.modifier('single-column') {
+    --_of-addressnl-grid-template-columns: 1fr;
+  }
+
+  @include bem.modifier('double-column') {
+    --_of-addressnl-grid-template-columns: 1fr 1fr;
+
+    @include responsive.mobile-only {
+      --_of-addressnl-grid-template-columns: 1fr;
+    }
+  }
+
+  @include bem.element('form-field-container') {
+    display: grid;
+    grid-template-columns: var(--_of-addressnl-grid-template-columns);
+    grid-column-gap: var(--of-addressnl-column-gap, 8px);
+    grid-row-gap: var(--of-addressnl-row-gap, var(--of-form-field-container-gap, 24px));
+  }
+}
