@@ -5,6 +5,7 @@ import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
 
+import type {FormSettings} from '@/context';
 import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
@@ -79,6 +80,10 @@ export interface FormioFormProps {
    * is added to the label of optional fields to specify the field is not required.
    */
   requiredFieldsWithAsterisk?: boolean;
+  /**
+   * Configuration necessary specific to certain Formio component types.
+   */
+  componentParameters?: FormSettings['componentParameters'];
 }
 
 export type UpdateValues = JSONObjectWithUndefined;
@@ -105,7 +110,17 @@ export interface FormStateRef {
  */
 const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
   (
-    {components, values = {}, errors, onChange, onSubmit, id, children, requiredFieldsWithAsterisk},
+    {
+      components,
+      values = {},
+      errors,
+      onChange,
+      onSubmit,
+      id,
+      children,
+      requiredFieldsWithAsterisk,
+      componentParameters,
+    },
     ref
   ) => {
     const intl = useIntl();
@@ -134,6 +149,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
       <FormSettingsProvider
         requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
         components={components}
+        componentParameters={componentParameters}
       >
         <Formik<JSONObject>
           initialValues={values}
