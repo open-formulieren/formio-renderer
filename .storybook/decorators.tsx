@@ -64,6 +64,7 @@ export const withFormSettingsProvider: Decorator = (Story, {parameters}) => (
   <FormSettingsProvider
     requiredFieldsWithAsterisk={parameters?.formSettings?.requiredFieldsWithAsterisk ?? true}
     components={parameters?.formSettings?.components ?? []}
+    componentParameters={parameters?.formSettings?.componentParameters}
   >
     <Story />
   </FormSettingsProvider>

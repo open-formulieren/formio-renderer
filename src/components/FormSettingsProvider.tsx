@@ -1,6 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import {FormSettingsContext} from '@/context';
+import type {FormSettings} from '@/context';
 
 export interface FormSettingsProviderProps {
   /**
@@ -9,15 +10,19 @@ export interface FormSettingsProviderProps {
    */
   requiredFieldsWithAsterisk?: boolean;
   components: AnyComponentSchema[];
+  componentParameters?: FormSettings['componentParameters'];
   children?: React.ReactNode;
 }
 
 const FormSettingsProvider: React.FC<FormSettingsProviderProps> = ({
   requiredFieldsWithAsterisk,
   components,
+  componentParameters,
   children,
 }) => (
-  <FormSettingsContext.Provider value={{requiredFieldsWithAsterisk, components}}>
+  <FormSettingsContext.Provider
+    value={{requiredFieldsWithAsterisk, components, componentParameters}}
+  >
     {children}
   </FormSettingsContext.Provider>
 );
