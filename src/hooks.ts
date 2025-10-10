@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, useEffect, useState} from 'react';
 
 import {FieldConfigContext, FormSettingsContext} from './context';
 
@@ -18,3 +18,17 @@ export const useFieldConfig = (name: string): string => {
   }
   return name;
 };
+
+/**
+ * Track a debounced value.
+ *
+ * @param delay Delay in milliseconds.
+ */
+export function useDebounce<T>(value: T, delay: number) {
+  const [debounced, setDebounced] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+}
