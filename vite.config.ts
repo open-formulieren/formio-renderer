@@ -50,6 +50,7 @@ export default defineConfig(({mode}) => ({
   resolve: {
     alias: {
       '@/components': resolve(__dirname, 'src/components'),
+      '@/registry': resolve(__dirname, 'src/registry'),
       '@/scss': resolve(__dirname, 'src/scss'),
     },
   },
