@@ -25,6 +25,12 @@
       "value": "Ongeldig IBAN"
     }
   ],
+  "/RrV7w": [
+    {
+      "type": 0,
+      "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
+    }
+  ],
   "0EdUXi": [
     {
       "type": 0,
@@ -159,6 +165,12 @@
       "value": "d"
     }
   ],
+  "DEetjI": [
+    {
+      "type": 0,
+      "value": "Straatnaam"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -183,10 +195,28 @@
       "value": "Vorige maand"
     }
   ],
+  "LsgvKh": [
+    {
+      "type": 0,
+      "value": "Postcode"
+    }
+  ],
   "MJXZYI": [
     {
       "type": 0,
       "value": "m"
+    }
+  ],
+  "Oc3efT": [
+    {
+      "type": 0,
+      "value": "Plaats is verplicht."
+    }
+  ],
+  "PCv4sQ": [
+    {
+      "type": 0,
+      "value": "Huisnummer"
     }
   ],
   "QPdaOi": [
@@ -221,10 +251,22 @@
       "value": " of minder opties aagevinkt heeft."
     }
   ],
+  "TcqyzM": [
+    {
+      "type": 0,
+      "value": "Postcode is verplicht."
+    }
+  ],
   "Tip5+d": [
     {
       "type": 0,
       "value": "Volgend jaar"
+    }
+  ],
+  "UONGQo": [
+    {
+      "type": 0,
+      "value": "Huisnummer is verplicht."
     }
   ],
   "WpfP0s": [
@@ -239,6 +281,24 @@
       "value": "Nee"
     }
   ],
+  "bKPaUj": [
+    {
+      "type": 0,
+      "value": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456)."
+    }
+  ],
+  "bv/J3Y": [
+    {
+      "type": 0,
+      "value": "Straatnaam is verplicht."
+    }
+  ],
+  "cBsrax": [
+    {
+      "type": 0,
+      "value": "Huisletter"
+    }
+  ],
   "cKFCTI": [
     {
       "type": 0,
@@ -251,10 +311,28 @@
       "value": "Ongeldig BSN"
     }
   ],
+  "lVNV/d": [
+    {
+      "type": 0,
+      "value": "Huisnummertoevoeging"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
       "value": "jjjj"
+    }
+  ],
+  "osSl3z": [
+    {
+      "type": 0,
+      "value": "Plaats"
+    }
+  ],
+  "pHX3oF": [
+    {
+      "type": 0,
+      "value": "Huisletter moet één enkele letter zijn."
     }
   ],
   "ph6ljt": [
@@ -299,6 +377,12 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "rQ5vC9": [
+    {
+      "type": 0,
+      "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
     }
   ],
   "sGwqUb": [
