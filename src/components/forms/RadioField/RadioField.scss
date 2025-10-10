@@ -8,14 +8,6 @@
 
 // Design tokens: see src/components/radio-field.tokens.json
 
-// Extensions on NL DS components
-.utrecht-form-fieldset {
-  @include bem.element('legend') {
-    margin-block-end: var(--utrecht-form-field-label-margin-block-end);
-    margin-block-start: 0;
-  }
-}
-
 .utrecht-form-field {
   @include bem.modifier('openforms') {
     &.utrecht-form-field--radio {
