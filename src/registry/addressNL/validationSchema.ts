@@ -41,10 +41,28 @@ const CITY_INVALID_MESSAGE = defineMessage({
   defaultMessage: 'You must provide a city.',
 });
 
-const buildPostcodeSchema = (intl: IntlShape, isRequired: boolean): z.ZodFirstPartySchemaTypes => {
+interface PostcodeOptions {
+  pattern: string | undefined;
+  message: string | undefined;
+}
+
+const buildPostcodeSchema = (
+  intl: IntlShape,
+  isRequired: boolean,
+  {pattern, message}: PostcodeOptions
+): z.ZodFirstPartySchemaTypes => {
+  if (!message) {
+    message = intl.formatMessage(POSTCODE_INVALID_MESSAGE);
+  }
+
   let postcodeSchema: z.ZodFirstPartySchemaTypes = z
     .string()
-    .regex(DEFAULT_POSTCODE_REGEX, {message: intl.formatMessage(POSTCODE_INVALID_MESSAGE)});
+    .regex(DEFAULT_POSTCODE_REGEX, {message});
+  // add the custom pattern *on top of* the default pattern, which is always supposed to
+  // be less strict than custom patterns
+  if (pattern) {
+    postcodeSchema = postcodeSchema.regex(new RegExp(pattern), {message});
+  }
   if (!isRequired) {
     postcodeSchema = postcodeSchema.optional();
   }
@@ -79,10 +97,25 @@ const buildStreetNameSchema = (
   return streetNameSchema;
 };
 
-const buildCitySchema = (intl: IntlShape, isRequired: boolean): z.ZodFirstPartySchemaTypes => {
+interface CityOptions {
+  pattern: string | undefined;
+  message: string | undefined;
+}
+
+const buildCitySchema = (
+  intl: IntlShape,
+  isRequired: boolean,
+  {pattern, message}: CityOptions
+): z.ZodFirstPartySchemaTypes => {
+  if (!message) {
+    message = intl.formatMessage(CITY_INVALID_MESSAGE);
+  }
   let citySchema: z.ZodFirstPartySchemaTypes = z.string();
+  if (pattern) {
+    citySchema = citySchema.regex(new RegExp(pattern), {message});
+  }
   if (isRequired) {
-    citySchema = citySchema.min(1, {message: intl.formatMessage(CITY_INVALID_MESSAGE)});
+    citySchema = citySchema.min(1, {message});
   } else {
     citySchema = citySchema.optional();
   }
@@ -118,15 +151,27 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate, deriveAddress = false} = componentDefinition;
+  const {key, validate, deriveAddress = false, openForms} = componentDefinition;
   const required = Boolean(validate?.required);
 
-  const postcodeSchema = buildPostcodeSchema(intl, required);
+  const customPostcodePattern = openForms?.components?.postcode?.validate?.pattern;
+  const customPostcodeMessage = openForms?.components?.postcode?.errors?.pattern;
+  const postcodeSchema = buildPostcodeSchema(intl, required, {
+    pattern: customPostcodePattern,
+    message: customPostcodeMessage,
+  });
+
   const houseNumberSchema = buildHouseNumberSchema(intl, required);
 
   // if address derivation is enabled, street name and city are required
   const streetNameSchema = buildStreetNameSchema(intl, required && deriveAddress);
-  const citySchema = buildCitySchema(intl, required && deriveAddress);
+
+  const customCityPattern = openForms?.components?.city?.validate?.pattern;
+  const customCityMessage = openForms?.components?.city?.errors?.pattern;
+  const citySchema = buildCitySchema(intl, required && deriveAddress, {
+    pattern: customCityPattern,
+    message: customCityMessage,
+  });
 
   const schema: z.ZodFirstPartySchemaTypes = z
     .object({

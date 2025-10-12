@@ -189,7 +189,6 @@ export const CustomPatternsAndErrorMessages: Story = {
     formSettings: {
       componentParameters: {
         addressNL: {
-          // simulate unresolved address lookup
           addressAutoComplete: async () => ({
             streetName: 'Laanlaan',
             city: 'Betondam',
