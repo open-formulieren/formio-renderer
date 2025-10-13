@@ -75,12 +75,16 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
     showCityAndStreetFields && Boolean(isRequired || hasPostcode || hasHouseNumber);
 
   return (
-    // TODO: handle invalid state
     <fieldset
-      className={clsx('openforms-fieldset', 'openforms-addressnl', {
-        'openforms-addressnl--double-column': layout === 'doubleColumn',
-        'openforms-addressnl--single-column': layout === 'singleColumn',
-      })}
+      className={clsx(
+        'openforms-fieldset',
+        invalid && 'openforms-fieldset--invalid',
+        'openforms-addressnl',
+        {
+          'openforms-addressnl--double-column': layout === 'doubleColumn',
+          'openforms-addressnl--single-column': layout === 'singleColumn',
+        }
+      )}
       aria-describedby={description ? descriptionid : undefined}
     >
       <legend
