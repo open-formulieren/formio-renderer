@@ -211,6 +211,16 @@
       "value": "Empty fields"
     }
   ],
+  "GThFIc": [
+    {
+      "type": 0,
+      "value": "Time must be after "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    }
+  ],
   "IhLYXK": [
     {
       "type": 0,
@@ -235,6 +245,12 @@
       "value": "m"
     }
   ],
+  "MusEU7": [
+    {
+      "type": 0,
+      "value": "Second"
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -245,10 +261,6 @@
     {
       "type": 0,
       "value": "House number"
-  "MusEU7": [
-    {
-      "type": 0,
-      "value": "Second"
     }
   ],
   "Pxbd/v": [
@@ -355,6 +367,16 @@
       "value": "No"
     }
   ],
+  "ampZcZ": [
+    {
+      "type": 0,
+      "value": "Time must be before "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    }
+  ],
   "bKPaUj": [
     {
       "type": 0,
@@ -377,12 +399,6 @@
     {
       "type": 0,
       "value": "Add another"
-    }
-  ],
-  "fTd8X/": [
-    {
-      "type": 0,
-      "value": "Invalid time"
     }
   ],
   "ht1O2Z": [
@@ -469,6 +485,8 @@
     {
       "type": 0,
       "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
+    }
+  ],
   "rxk4HZ": [
     {
       "type": 0,
@@ -497,6 +515,24 @@
     {
       "type": 0,
       "value": "Day"
+    }
+  ],
+  "vMKP5p": [
+    {
+      "type": 0,
+      "value": "Time must be in-between "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " and "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
     }
   ],
   "xHVrv5": [

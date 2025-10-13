@@ -18,6 +18,11 @@ const BASE_COMPONENT: TimeComponentSchema = {
   validateOn: 'blur',
 };
 
+const MIN_TIME_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '09:00'}};
+const MAX_TIME_COMPONENT = {...BASE_COMPONENT, validate: {maxTime: '17:00'}};
+const PERIOD_TIME_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '09:00', maxTime: '17:00'}};
+const NEXT_DAY_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '15:00', maxTime: '09:00'}};
+
 const buildValidationSchema = (component: TimeComponentSchema) => {
   const schemas = getValidationSchema(component, intl, getRegistryEntry);
   return schemas[component.key];
@@ -60,18 +65,82 @@ describe('time component validation', () => {
     42,
     12.34,
     null,
-  ])('Invalid date: %s', date => {
+  ])('Invalid time: %s', value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(date);
+    const {success} = schema.safeParse(value);
 
     expect(success).toBe(false);
   });
 
-  test.each(['23:59:59', '00:00:00'])('Valid date: %s', time => {
+  test.each(['08:00:00', '00:00:00'])('Invalid min time: %s', value => {
+    const schema = buildValidationSchema(MIN_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(false);
+  });
+
+  test.each(['18:00:00', '23:59:59'])('Invalid max time: %s', value => {
+    const schema = buildValidationSchema(MAX_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(false);
+  });
+
+  test.each(['08:00:00', '18:00:00', '00:00:00'])('Invalid period time: %s', value => {
+    const schema = buildValidationSchema(PERIOD_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(false);
+  });
+
+  test.each(['10:00:00', '14:00:00'])('Invalid next day time: %s', value => {
+    const schema = buildValidationSchema(NEXT_DAY_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(false);
+  });
+
+  test.each(['23:59:59', '00:00:00'])('Valid time: %s', value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(time);
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each(['09:00:00', '23:59:59'])('Valid min time: %s', value => {
+    const schema = buildValidationSchema(MIN_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each(['17:00:00', '00:00:00'])('Valid max time: %s', value => {
+    const schema = buildValidationSchema(MAX_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each(['09:00:00', '17:00:00'])('Valid period time: %s', value => {
+    const schema = buildValidationSchema(PERIOD_TIME_COMPONENT);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each(['15:00:00', '09:00:00', '00:00:00'])('Valid next day time: %s', value => {
+    const schema = buildValidationSchema(NEXT_DAY_COMPONENT);
+
+    const {success} = schema.safeParse(value);
 
     expect(success).toBe(true);
   });

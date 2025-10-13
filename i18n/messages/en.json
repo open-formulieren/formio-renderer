@@ -89,6 +89,11 @@
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
   },
+  "GThFIc": {
+    "defaultMessage": "Time must be after {minTime}",
+    "description": "Validation error describing the value is not after the minimum time.",
+    "originalDefault": "Time must be after {minTime}"
+  },
   "IhLYXK": {
     "defaultMessage": "Toggle calendar",
     "description": "Datepicker: accessible calendar toggle label",
@@ -118,6 +123,7 @@
     "defaultMessage": "House number",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
+  },
   "MusEU7": {
     "defaultMessage": "Second",
     "description": "Time input group: second label",
@@ -193,15 +199,15 @@
     "description": "Label for addressNL houseLetter input",
     "originalDefault": "House letter"
   },
+  "ampZcZ": {
+    "defaultMessage": "Time must be before {maxTime}",
+    "description": "Validation error describing the value is not before the maximum time.",
+    "originalDefault": "Time must be before {maxTime}"
+  },
   "cKFCTI": {
     "defaultMessage": "Add another",
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
-  },
-  "fTd8X/": {
-    "defaultMessage": "Invalid time",
-    "description": "Validation error for time that does not pass 24-hours format.",
-    "originalDefault": "Invalid time"
   },
   "ht1O2Z": {
     "defaultMessage": "Invalid BSN",
@@ -247,6 +253,7 @@
     "defaultMessage": "Postcode must be four digits followed by two letters (e.g. 1234 AB).",
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
+  },
   "rxk4HZ": {
     "defaultMessage": "Minute",
     "description": "Time input group: minute label",
@@ -271,6 +278,11 @@
     "defaultMessage": "Day",
     "description": "Date input group: day label",
     "originalDefault": "Day"
+  },
+  "vMKP5p": {
+    "defaultMessage": "Time must be in-between {minTime} and {maxTime}",
+    "description": "Validation error describing the value is not in-between the minimum and maximum time.",
+    "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
   "xHVrv5": {
     "defaultMessage": "The value must be {min} or greater.",

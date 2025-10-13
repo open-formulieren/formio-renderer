@@ -189,6 +189,20 @@
       "value": "Velden zonder antwoord"
     }
   ],
+  "GThFIc": [
+    {
+      "type": 0,
+      "value": "Tijd moet na "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
+    }
+  ],
   "IhLYXK": [
     {
       "type": 0,
@@ -213,6 +227,12 @@
       "value": "m"
     }
   ],
+  "MusEU7": [
+    {
+      "type": 0,
+      "value": "Seconde"
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -223,10 +243,6 @@
     {
       "type": 0,
       "value": "Huisnummer"
-  "MusEU7": [
-    {
-      "type": 0,
-      "value": "Seconde"
     }
   ],
   "Pxbd/v": [
@@ -303,6 +319,20 @@
       "value": "Nee"
     }
   ],
+  "ampZcZ": [
+    {
+      "type": 0,
+      "value": "Tijd moet voor "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
+    }
+  ],
   "bKPaUj": [
     {
       "type": 0,
@@ -325,12 +355,6 @@
     {
       "type": 0,
       "value": "Nog één toevoegen"
-    }
-  ],
-  "fTd8X/": [
-    {
-      "type": 0,
-      "value": "Ongeldige tijd"
     }
   ],
   "ht1O2Z": [
@@ -417,6 +441,8 @@
     {
       "type": 0,
       "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
+    }
+  ],
   "rxk4HZ": [
     {
       "type": 0,
@@ -445,6 +471,28 @@
     {
       "type": 0,
       "value": "Dag"
+    }
+  ],
+  "vMKP5p": [
+    {
+      "type": 0,
+      "value": "Tijd moet vallen tussen "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " en "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "xHVrv5": [

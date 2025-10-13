@@ -90,6 +90,11 @@
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
   },
+  "GThFIc": {
+    "defaultMessage": "Tijd moet na {minTime} zijn.",
+    "description": "Validation error describing the value is not after the minimum time.",
+    "originalDefault": "Time must be after {minTime}"
+  },
   "IhLYXK": {
     "defaultMessage": "Toon/verberg de kalender",
     "description": "Datepicker: accessible calendar toggle label",
@@ -112,6 +117,11 @@
     "isTranslated": true,
     "originalDefault": "m"
   },
+  "MusEU7": {
+    "defaultMessage": "Seconde",
+    "description": "Time input group: second label",
+    "originalDefault": "Second"
+  },
   "Oc3efT": {
     "defaultMessage": "Plaats is verplicht.",
     "description": "Validation error for required addressNL.city field.",
@@ -121,10 +131,6 @@
     "defaultMessage": "Huisnummer",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
-  "MusEU7": {
-    "defaultMessage": "Seconde",
-    "description": "Time input group: second label",
-    "originalDefault": "Second"
   },
   "Pxbd/v": {
     "defaultMessage": "HH",
@@ -181,6 +187,11 @@
     "description": "'False' display",
     "originalDefault": "No"
   },
+  "ampZcZ": {
+    "defaultMessage": "Tijd moet voor {maxTime} zijn.",
+    "description": "Validation error describing the value is not before the maximum time.",
+    "originalDefault": "Time must be before {maxTime}"
+  },
   "bKPaUj": {
     "defaultMessage": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456).",
     "description": "Validation error for addressNL.houseNumber field.",
@@ -200,11 +211,6 @@
     "defaultMessage": "Nog één toevoegen",
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
-  },
-  "fTd8X/": {
-    "defaultMessage": "Ongeldige tijd",
-    "description": "Validation error for time that does not pass 24-hours format.",
-    "originalDefault": "Invalid time"
   },
   "ht1O2Z": {
     "defaultMessage": "Ongeldig BSN",
@@ -250,6 +256,7 @@
     "defaultMessage": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB).",
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
+  },
   "rxk4HZ": {
     "defaultMessage": "Minuut",
     "description": "Time input group: minute label",
@@ -274,6 +281,11 @@
     "defaultMessage": "Dag",
     "description": "Date input group: day label",
     "originalDefault": "Day"
+  },
+  "vMKP5p": {
+    "defaultMessage": "Tijd moet vallen tussen {minTime} en {maxTime}.",
+    "description": "Validation error describing the value is not in-between the minimum and maximum time.",
+    "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
   "xHVrv5": {
     "defaultMessage": "De waarde moet {min} of groter zijn.",
