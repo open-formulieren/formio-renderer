@@ -246,3 +246,53 @@ export const WithoutAsteriskForRequiredFieldsAndNotRequired: Story = {
     expect(updatedNotRequiredMarkers).toHaveLength(3);
   },
 };
+
+export const DisplayComponentValidationError: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'doubleColumn',
+      validate: {required: false},
+    } satisfies AddressNLComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          address: {
+            postcode: '',
+            houseNumber: '',
+            houseLetter: '',
+            houseNumberAddition: '',
+            // optional properties depending on the features used
+            city: undefined,
+            streetName: undefined,
+            secretStreetCity: undefined,
+            autoPopulated: undefined,
+          } satisfies AddressData,
+        },
+      },
+      initialTouched: {
+        my: {
+          address: {
+            postcode: true,
+          },
+        },
+      },
+      initialErrors: {
+        my: {
+          address: 'User is not a zaakgerechtigde for property.',
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText('User is not a zaakgerechtigde for property.')).toBeVisible();
+  },
+};
