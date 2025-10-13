@@ -94,6 +94,7 @@ const TimeInputGroup: React.FC<TimeInputGroupProps> = ({
       }
     },
     // we deliberately exclude hour, minute from the dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value]
   );
 
