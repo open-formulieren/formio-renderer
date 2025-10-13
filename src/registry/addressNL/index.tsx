@@ -10,6 +10,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import type {RegistryEntry} from '@/registry/types';
 
 import './AddressNL.scss';
+import ValueDisplay from './ValueDisplay';
 import {SUB_FIELD_NAMES} from './constants';
 import {useDeriveAddress} from './deriveAddress';
 import isEmpty from './empty';
@@ -126,7 +127,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
 
 const AddressNLComponent: RegistryEntry<AddressNLComponentSchema> = {
   formField: FormioAddressNL,
-  // valueDisplay: ValueDisplay,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
   isEmpty,

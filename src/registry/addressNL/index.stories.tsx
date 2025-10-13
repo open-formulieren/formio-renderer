@@ -6,6 +6,7 @@ import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioAddressNL} from './';
+import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / custom / addressNL / presentation',
@@ -294,5 +295,67 @@ export const DisplayComponentValidationError: Story = {
     const canvas = within(canvasElement);
 
     expect(await canvas.findByText('User is not a zaakgerechtigde for property.')).toBeVisible();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: AddressNLComponentSchema;
+  value: AddressData;
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValueDisplayNoDeriveAddress: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'doubleColumn',
+      validate: {required: false},
+    } satisfies AddressNLComponentSchema,
+    value: {
+      postcode: '1043 GR',
+      houseNumber: '151',
+      houseLetter: 'Y',
+      houseNumberAddition: '2ZW',
+    } satisfies AddressData,
+  },
+};
+
+export const ValueDisplayWithDeriveAddress: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: true,
+      layout: 'doubleColumn',
+      validate: {required: false},
+    } satisfies AddressNLComponentSchema,
+    value: {
+      postcode: '1043 GR',
+      houseNumber: '151',
+      houseLetter: '',
+      houseNumberAddition: '',
+      streetName: 'Kingsfordweg',
+      city: 'Amsterdam',
+      autoPopulated: true,
+      secretStreetCity: 'foo',
+    } satisfies AddressData,
   },
 };

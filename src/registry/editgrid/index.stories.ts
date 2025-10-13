@@ -1,4 +1,5 @@
 import type {
+  AddressData,
   ColumnsComponentSchema,
   ContentComponentSchema,
   FieldsetComponentSchema,
@@ -247,6 +248,14 @@ export const DisplayComponentValues: Story = {
           multiple: true,
         },
         {
+          id: 'addressNL',
+          type: 'addressNL',
+          key: 'addressNL',
+          label: 'AddressNL',
+          layout: 'singleColumn',
+          deriveAddress: true,
+        },
+        {
           id: 'editgrid',
           type: 'editgrid',
           key: 'editgrid',
@@ -283,6 +292,14 @@ export const DisplayComponentValues: Story = {
             // special types
             bsnSingle: '000000000',
             bsnMultiple: ['000000000', '000000000'],
+            addressNL: {
+              postcode: '1043GR',
+              houseNumber: '151',
+              houseLetter: 'A',
+              houseNumberAddition: '9',
+              streetName: 'Kingsfordweg',
+              city: 'Amsterdam',
+            } satisfies AddressData,
             editgrid: [{nestedTextfield: 'recursion!'}, {nestedTextfield: "look, I'm displayed"}],
           },
         ],
