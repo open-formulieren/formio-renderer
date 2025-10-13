@@ -3,6 +3,15 @@
 @use '@/scss/bem';
 @use '@/scss/responsive';
 
+$modal-padding-block-start: var(--of-modal-padding-block-start, 40px);
+$modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
+$modal-padding-inline-start: var(--of-modal-padding-inline-start, 40px);
+$modal-padding-inline-end: var(--of-modal-padding-inline-end, 40px);
+
+// Take halve the modal padding, and turn it negative
+$modal-close-icon-offset-block-start: calc($modal-padding-block-start * -0.5);
+$modal-close-icon-offset-inline-end: calc($modal-padding-inline-end * -0.5);
+
 body:has(.openforms-modal[open]) {
   overflow: hidden;
 }
@@ -18,7 +27,10 @@ body:has(.openforms-modal[open]) {
   grid-template-areas:
     'body close'
     'body close';
-  padding: 40px;
+  padding-block-start: $modal-padding-block-start;
+  padding-block-end: $modal-padding-block-end;
+  padding-inline-start: $modal-padding-inline-start;
+  padding-inline-end: $modal-padding-inline-end;
 
   box-sizing: border-box;
   inline-size: 90dvw;
@@ -27,11 +39,16 @@ body:has(.openforms-modal[open]) {
   block-size: fit-content;
   max-block-size: 90dvh;
 
-  border: 1px solid #eee;
-  background-color: #fff;
-  box-shadow:
+  border-style: solid;
+  border-width: var(--of-modal-border-width, 1px);
+  border-color: var(--of-modal-border-color, #eee);
+
+  background-color: var(--of-modal-background-color, white);
+  box-shadow: var(
+    --of-modal-box-shadow,
     0 4px 8px rgba(0, 0, 0, 0.2),
-    0 6px 20px rgba(0, 0, 0, 0.2);
+    0 6px 20px rgba(0, 0, 0, 0.2)
+  );
 
   @include responsive.desktop {
     inline-size: 50dvw;
@@ -47,14 +64,27 @@ body:has(.openforms-modal[open]) {
   }
 
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--of-modal-overlay-background-color, rgba(255, 255, 255, 0.75));
     backdrop-filter: blur(1px);
   }
 
   @include bem.element('close') {
     position: relative;
-    top: -33px;
-    right: -34px;
+
+    $calculated-modal-close-icon-offset-block-start: calc(
+      $modal-close-icon-offset-block-start - var(--utrecht-button-padding-block-start) - var(
+          --_utrecht-button-border-width
+        )
+    );
+    inset-block-start: $calculated-modal-close-icon-offset-block-start;
+    inset-inline-end: calc(
+      $modal-close-icon-offset-inline-end - var(--utrecht-button-padding-inline-end) - var(
+          --_utrecht-button-border-width
+        )
+    );
+    // Also set bottom margin, to prevent button size from dictating the modal header
+    // spacing.
+    margin-block-end: $calculated-modal-close-icon-offset-block-start;
 
     grid-area: close;
     align-self: start;
