@@ -13,9 +13,19 @@ const formatTime = (timeValue: string): React.ReactNode => {
   if (!timeValue) return '-';
 
   // FormattedTime expects a Date object
+  let time = new Date(timeValue);
+
+  if (isNaN(Number(time))) {
+    const [hours, minutes, seconds] = timeValue.split(':');
+    time = new Date();
+    time.setHours(parseInt(hours));
+    time.setMinutes(parseInt(minutes));
+    time.setSeconds(parseInt(seconds));
+  }
+
   return (
     <FormattedTime
-      value={new Date(`2000-01-01T${timeValue}`)}
+      value={time}
       format="hh:mm:ss"
       hour="numeric"
       minute="numeric"
