@@ -8,8 +8,8 @@ test.each([
   [undefined, true],
   ['', true],
   // Non-empty state
-  ['00:10', false],
-  ['0:1', false],
+  ['00:10:00', false],
+  ['0:1:0', false],
 ])(
   'Timefield isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: undefined | string | string[], expected: boolean) => {

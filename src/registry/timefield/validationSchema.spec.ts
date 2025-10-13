@@ -48,18 +48,27 @@ describe('time component validation', () => {
     expect(success).toBe(false);
   });
 
-  test.each(['24:00', '23:60', '23:59', '1:1', '01:1', '01:01', '1:01', '01:1', 42, 12.34, null])(
-    'Invalid date: %s',
-    date => {
-      const schema = buildValidationSchema(BASE_COMPONENT);
+  test.each([
+    '24:00:00',
+    '23:60:00',
+    '23:59:60',
+    '1:1:1',
+    '01:1:1',
+    '01:01:1',
+    '1:01:01',
+    '01:1:01',
+    42,
+    12.34,
+    null,
+  ])('Invalid date: %s', date => {
+    const schema = buildValidationSchema(BASE_COMPONENT);
 
-      const {success} = schema.safeParse(date);
+    const {success} = schema.safeParse(date);
 
-      expect(success).toBe(false);
-    }
-  );
+    expect(success).toBe(false);
+  });
 
-  test.each(['23:59', '00:00'])('Valid time: %s', time => {
+  test.each(['23:59:59', '00:00:00'])('Valid date: %s', time => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
     const {success} = schema.safeParse(time);
