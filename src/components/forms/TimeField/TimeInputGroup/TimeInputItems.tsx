@@ -1,6 +1,6 @@
 import {InputGroupItem} from '@/components/forms/InputGroup';
 
-import type {TimePart} from '../types';
+import type {TimeInputPart} from '../types';
 import TimePartInput from './TimePartInput';
 
 export interface TimeInputItemsProps {
@@ -14,10 +14,6 @@ export interface TimeInputItemsProps {
    * Keep in mind that this is the JS date month, so January is '0'.
    */
   minute: string;
-  /**
-   * Year part of the date, entered by the user.
-   */
-  second: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isDisabled?: boolean;
@@ -27,7 +23,6 @@ export interface TimeInputItemsProps {
 const TimeInputItems: React.FC<TimeInputItemsProps> = ({
   hour,
   minute,
-  second,
   isDisabled,
   onChange,
   onBlur,
@@ -35,11 +30,10 @@ const TimeInputItems: React.FC<TimeInputItemsProps> = ({
 }) => {
   const commonProps = {isDisabled, onChange, onBlur, autoComplete};
 
-  const partsOrder: TimePart[] = ['hour', 'minute', 'second'];
-  const parts: Record<TimePart, React.ReactElement> = {
+  const partsOrder: TimeInputPart[] = ['hour', 'minute'];
+  const parts: Record<TimeInputPart, React.ReactElement> = {
     hour: <TimePartInput name="hour" value={hour} {...commonProps} />,
     minute: <TimePartInput name="minute" value={minute} {...commonProps} />,
-    second: <TimePartInput name="second" value={second} {...commonProps} />,
   };
 
   return (

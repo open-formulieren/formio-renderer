@@ -80,16 +80,15 @@ const TimeInputGroup: React.FC<TimeInputGroupProps> = ({
   // reflect it
   useEffect(
     () => {
-      // if an empty part leads to an invalid date, the value in Formik state is reset,
+      // if an empty part leads to an invalid time, the value in Formik state is reset,
       // but this may not clear the other parts if the user is still making changes.
-      const shouldIgnore = value === '' && (hour === '' || minute === '' || second === '');
+      const shouldIgnore = value === '' && (hour === '' || minute === '');
       const newValueParts = timeStringToParts(value);
 
       const hourInconsistent = parseInt(newValueParts.hour) !== parseInt(hour);
       const minuteInconsistent = parseInt(newValueParts.minute) !== parseInt(minute);
-      const secondInconsistent = parseInt(newValueParts.second) !== parseInt(second);
 
-      const isInconsistent = hourInconsistent || minuteInconsistent || secondInconsistent;
+      const isInconsistent = hourInconsistent || minuteInconsistent;
       if (isInconsistent && !shouldIgnore) {
         setTimeParts(newValueParts);
       }
@@ -107,11 +106,10 @@ const TimeInputGroup: React.FC<TimeInputGroupProps> = ({
     const newTimeParts = {hour, minute, second, [name]: value};
     setTimeParts(newTimeParts);
 
-    const hasAllParts =
-      newTimeParts.hour !== '' && newTimeParts.minute !== '' && newTimeParts.second != '';
+    const hasAllParts = newTimeParts.hour !== '' && newTimeParts.minute !== '';
 
     if (!hasAllParts) {
-      // as soon as one part is missing, treat as if the entire field was cleared
+      // as soon as hour or minute is missing, treat as if the entire field was cleared
       setValue('');
     } else {
       // otherwise we have all parts to construct a date, BUT it may be nonsense. It's
@@ -132,12 +130,11 @@ const TimeInputGroup: React.FC<TimeInputGroupProps> = ({
       <TimeInputItems
         hour={hour}
         minute={minute}
-        second={second}
         isDisabled={isDisabled}
         onChange={onPartChange}
         onBlur={async () => {
           setTouched(true);
-          if (hour && minute && second) {
+          if (hour && minute) {
             await validateField(name);
           }
         }}

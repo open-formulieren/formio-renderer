@@ -1,9 +1,8 @@
-import type {TimePart, TimePartValues} from './types';
+import type {TimeInputPart, TimePartValues} from './types';
 
 const RE_PARTS = {
   hour: '(?<hour>\\d{1,2})',
   minute: '(?<minute>\\d{1,2})',
-  second: '(?<second>\\d{1,2})',
 };
 
 /**
@@ -17,16 +16,16 @@ const RE_PARTS = {
 export const parseTime = (value: string): TimePartValues | null => {
   if (!value) return null;
 
-  const partsOrder: TimePart[] = ['hour', 'minute', 'second'];
+  const partsOrder: TimeInputPart[] = ['hour', 'minute'];
   const orderedParts = partsOrder.map(part => RE_PARTS[part]);
   const re = new RegExp(orderedParts.join(':')); // default ISO-8601 separator
   const match = value.match(re) as RegExpMatchArray & {groups: TimePartValues};
   if (!match) return null;
 
-  const [rawHour = '', rawMinute = '', rawSecond = ''] = value.split(':');
-  if (Number(rawHour) > 23 || Number(rawMinute) > 59 || Number(rawSecond) > 59) return null;
+  const [rawHour = '', rawMinute = ''] = value.split(':');
+  if (Number(rawHour) > 23 || Number(rawMinute) > 59) return null;
 
-  const parsed = partsToUnvalidatedISO8601(match.groups);
+  const parsed = partsToUnvalidatedISO8601({...match.groups, second: '00'});
   const [hour, minute, second] = parsed.split(':');
   return {hour, minute, second};
 };

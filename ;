@@ -46,7 +46,7 @@ export const Input: Story = {
     expect(fieldset).toHaveAccessibleDescription('');
 
     const inputs = canvas.getAllByRole<HTMLInputElement>('textbox');
-    expect(inputs).toHaveLength(2);
+    expect(inputs).toHaveLength(3);
     await expect(canvas.getByText('Test time field')).toBeVisible();
     await expect(canvas.getByText('Hour')).toBeVisible();
     await expect(canvas.getByText('Minute')).toBeVisible();
@@ -159,6 +159,7 @@ export const InputReflectsExternalUpdates: Story = {
     await step('Assert initial state', () => {
       expect(canvas.getByLabelText('Hour')).toHaveDisplayValue('');
       expect(canvas.getByLabelText('Minute')).toHaveDisplayValue('');
+      expect(canvas.getByLabelText('Second')).toHaveDisplayValue('');
     });
 
     await step('Change form field value from external trigger', async () => {
@@ -321,12 +322,53 @@ export const InputInvalidMinute: Story = {
 
     await userEvent.type(canvas.getByLabelText('Hour'), '23');
     await userEvent.type(canvas.getByLabelText('Minute'), '60');
+    await userEvent.type(canvas.getByLabelText('Second'), '59');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
     const onSubmit = parameters.formik.onSubmit;
     expect(onSubmit).toHaveBeenCalledWith({
-      test: '23:60:00',
+      test: '23:60:59',
+    });
+  },
+};
+
+export const InputInvalidSecond: Story = {
+  args: {
+    name: 'test',
+    label: 'Test time field',
+    isDisabled: false,
+    isRequired: true,
+  },
+  decorators: [
+    Story => (
+      <>
+        <Story />
+        <PrimaryActionButton type="submit" style={{marginBlockStart: '20px'}}>
+          Submit
+        </PrimaryActionButton>
+      </>
+    ),
+  ],
+  parameters: {
+    formik: {
+      initialValues: {test: ''},
+      onSubmit: fn(),
+    },
+  },
+
+  play: async ({canvasElement, parameters}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.type(canvas.getByLabelText('Hour'), '23');
+    await userEvent.type(canvas.getByLabelText('Minute'), '59');
+    await userEvent.type(canvas.getByLabelText('Second'), '60');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const onSubmit = parameters.formik.onSubmit;
+    expect(onSubmit).toHaveBeenCalledWith({
+      test: '23:59:60',
     });
   },
 };
@@ -360,12 +402,13 @@ export const WithoutLeadingZero: Story = {
 
     await userEvent.type(canvas.getByLabelText('Hour'), '2');
     await userEvent.type(canvas.getByLabelText('Minute'), '3');
+    await userEvent.type(canvas.getByLabelText('Second'), '3');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
     const onSubmit = parameters.formik.onSubmit;
     expect(onSubmit).toHaveBeenCalledWith({
-      test: '02:03:00',
+      test: '02:03:03',
     });
   },
 };
