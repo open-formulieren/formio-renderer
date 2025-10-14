@@ -11,6 +11,7 @@ import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './Checkbox.scss';
 
@@ -62,6 +63,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
   tooltip,
 }) => {
   const {validateField} = useFormikContext();
+  name = useFieldConfig(name);
+
   // the value should not be passed down to underlying checkbox
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [{value, ...props}, {error = '', touched}] = useField<boolean | undefined>({

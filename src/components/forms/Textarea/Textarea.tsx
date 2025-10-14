@@ -9,6 +9,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './Textarea.scss';
 
@@ -74,6 +75,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   showCharCount = false,
   ...extraProps
 }) => {
+  name = useFieldConfig(name);
   const {validateField} = useFormikContext();
   const [{value, ...props}, {error = '', touched}] = useField<string | undefined>(name);
   const id = useId();

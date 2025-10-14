@@ -7,6 +7,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './TextField.scss';
 
@@ -63,6 +64,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   tooltip,
   ...extraProps
 }) => {
+  name = useFieldConfig(name);
   const {validateField} = useFormikContext();
   const [{value, ...props}, {error = '', touched}] = useField<string | undefined>({
     name,

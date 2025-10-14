@@ -9,6 +9,7 @@ import InputContainer from '@/components/forms/InputContainer';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './NumberField.scss';
 
@@ -120,6 +121,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   fixedDecimalScale = false,
   ...extraProps
 }) => {
+  name = useFieldConfig(name);
   const {validateField} = useFormikContext();
   // Note that we have a custom onValueChange handler, so `value` and `onBlur` is the only relevant
   // field input props

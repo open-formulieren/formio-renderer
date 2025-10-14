@@ -7,6 +7,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import ReactSelectWrapper from './ReactSelectWrapper';
 
@@ -87,6 +88,7 @@ const Select: React.FC<SelectProps> = ({
   tooltip,
   noOptionSelectedValue = undefined,
 }) => {
+  name = useFieldConfig(name);
   const {validateField} = useFormikContext();
   const [{value}, {error = '', touched}, {setValue, setTouched}] = useField<
     string[] | string | undefined

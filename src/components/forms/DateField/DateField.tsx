@@ -4,6 +4,7 @@ import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
@@ -97,6 +98,7 @@ const DateField: React.FC<DateFieldProps> = ({
 }) => {
   const id = useId();
   const {getFieldMeta} = useFormikContext();
+  name = useFieldConfig(name);
   const {error = '', touched} = getFieldMeta(name);
 
   const isInvalid = touched && !!error;
