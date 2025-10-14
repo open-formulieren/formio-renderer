@@ -38,6 +38,8 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
       ref={modalRef}
       aria-labelledby={title ? id : undefined}
       onClose={closeModal}
+      // eslint-disable-next-line react/no-unknown-property
+      closedby="any"
     >
       {title && (
         <Heading1 id={id} className="openforms-modal__title">
