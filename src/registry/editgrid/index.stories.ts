@@ -530,3 +530,74 @@ export const NestedWithSimpleConditionals: Story = {
     });
   },
 };
+
+export const WithNestedRadio: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'parent',
+      label: 'Repeating group with nested radio',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Parent',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'textField1',
+          label: 'Textfield 1',
+          clearOnHide: false,
+        },
+        {
+          id: 'component3',
+          type: 'radio',
+          key: 'radio',
+          label: 'Radio',
+          openForms: {
+            translations: {},
+            dataSrc: 'manual',
+          },
+          values: [
+            {value: 'a', label: 'A'},
+            {value: 'b', label: 'B'},
+          ],
+          defaultValue: null,
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        parent: [],
+      },
+    },
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('add initial item', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      await userEvent.type(canvas.getByLabelText('Textfield 1'), 'foo');
+      await userEvent.click(canvas.getByRole('radio', {name: 'A'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+    });
+
+    await step('add second item', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      await userEvent.type(canvas.getByLabelText('Textfield 1'), 'bar');
+      await userEvent.click(canvas.getByRole('radio', {name: 'B'}));
+    });
+
+    await step('open item 1 edit mode', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+
+      const firstRadioA = canvas.getAllByRole('radio', {name: 'A'})[0];
+      const secondRadioB = canvas.getAllByRole('radio', {name: 'B'})[1];
+
+      expect(secondRadioB).toBeChecked();
+      expect(firstRadioA).toBeChecked();
+    });
+  },
+};
