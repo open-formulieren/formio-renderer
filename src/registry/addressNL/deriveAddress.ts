@@ -49,7 +49,6 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
       setFieldValue(`${key}.autoPopulated`, false);
       return;
     }
-    console.log('running effect...');
   }, [key, setFieldValue, skipAutoFill, postcode, houseNumber, enableManualEntry]);
 
   // if postcode/house number change, look up the address details again

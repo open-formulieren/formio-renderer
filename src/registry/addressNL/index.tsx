@@ -46,7 +46,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
 
   const {enableManualEntry} = useDeriveAddress(key, deriveAddress);
 
-  // derive the component touched state from the individual checkboxes that make up the
+  // derive the component touched state from the individual fields that make up the
   // component
   const touched = SUB_FIELD_NAMES.some(subFieldName => {
     const nestedFieldName = `${key}.${subFieldName}`;
@@ -61,7 +61,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
   const addressError: string | undefined = typeof error === 'string' ? error : undefined;
 
   const invalid = touched && !!addressError;
-  const errorMessageId = invalid && addressError ? `${id}-error-message` : undefined;
+  const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
 
   // An address as a whole is or is not required.
@@ -86,7 +86,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
           'openforms-addressnl--single-column': layout === 'singleColumn',
         }
       )}
-      aria-describedby={description ? descriptionid : undefined}
+      aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ') || undefined}
     >
       <legend
         className={clsx('openforms-fieldset__legend', {

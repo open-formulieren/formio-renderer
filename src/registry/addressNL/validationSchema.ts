@@ -7,7 +7,7 @@ import type {GetValidationSchema} from '@/registry/types';
 
 const DEFAULT_POSTCODE_PATTERN: PostcodeComponentSchema['validate']['pattern'] =
   '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$';
-export const DEFAULT_POSTCODE_REGEX = new RegExp(DEFAULT_POSTCODE_PATTERN);
+export const DEFAULT_POSTCODE_REGEX = new RegExp(DEFAULT_POSTCODE_PATTERN, 'i'); // case insensitive
 
 export const HOUSE_NUMBER_REGEX = /^\d{1,5}$/;
 
@@ -51,17 +51,16 @@ const buildPostcodeSchema = (
   isRequired: boolean,
   {pattern, message}: PostcodeOptions
 ): z.ZodFirstPartySchemaTypes => {
-  if (!message) {
-    message = intl.formatMessage(POSTCODE_INVALID_MESSAGE);
-  }
-
+  const defaultMessage = intl.formatMessage(POSTCODE_INVALID_MESSAGE);
   let postcodeSchema: z.ZodFirstPartySchemaTypes = z
     .string()
-    .regex(DEFAULT_POSTCODE_REGEX, {message});
+    .regex(DEFAULT_POSTCODE_REGEX, {message: defaultMessage});
   // add the custom pattern *on top of* the default pattern, which is always supposed to
   // be less strict than custom patterns
   if (pattern) {
-    postcodeSchema = postcodeSchema.regex(new RegExp(pattern), {message});
+    postcodeSchema = postcodeSchema.regex(new RegExp(pattern, 'i'), {
+      message: message || defaultMessage,
+    });
   }
   if (!isRequired) {
     postcodeSchema = postcodeSchema.optional();
@@ -107,15 +106,13 @@ const buildCitySchema = (
   isRequired: boolean,
   {pattern, message}: CityOptions
 ): z.ZodFirstPartySchemaTypes => {
-  if (!message) {
-    message = intl.formatMessage(CITY_INVALID_MESSAGE);
-  }
+  const defaultMessage = intl.formatMessage(CITY_INVALID_MESSAGE);
   let citySchema: z.ZodFirstPartySchemaTypes = z.string();
   if (pattern) {
-    citySchema = citySchema.regex(new RegExp(pattern), {message});
+    citySchema = citySchema.regex(new RegExp(pattern), {message: message || defaultMessage});
   }
   if (isRequired) {
-    citySchema = citySchema.min(1, {message});
+    citySchema = citySchema.min(1, {message: defaultMessage});
   } else {
     citySchema = citySchema.optional();
   }
