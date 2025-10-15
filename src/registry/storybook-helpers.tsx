@@ -1,4 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {StoryContext} from '@storybook/react-vite';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -9,7 +10,7 @@ export interface RenderArgs {
   onSubmit: FormioFormProps['onSubmit'];
 }
 
-export const renderComponentInForm = (args: RenderArgs) => (
+export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<unknown>) => (
   <div
     style={{
       display: 'flex',
@@ -22,6 +23,7 @@ export const renderComponentInForm = (args: RenderArgs) => (
       components={[args.componentDefinition]}
       id="formio-form"
       requiredFieldsWithAsterisk
+      componentParameters={context?.parameters?.formSettings?.componentParameters}
     />
     <PrimaryActionButton type="submit" form="formio-form" style={{alignSelf: 'flex-start'}}>
       Submit

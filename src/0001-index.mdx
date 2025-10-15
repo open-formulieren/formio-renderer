@@ -45,6 +45,9 @@ const MyComponent: React.FC = () => (
       onSubmit={values => console.log(values)}
       id="my-formio-form"
       requiredFieldsWithAsterisk
+      componentParameters={{
+        addressNL: {addressAutoComplete},
+      }}
     />
     <button type="submit" form="my-formio-form">
       Submit
@@ -97,46 +100,7 @@ Forms.
 
 ## Roadmap
 
-Implementing a formio render is ambitious and frankly, a daunting task. To keep the work manageable
-and gain experience and information as we go along, we have divided the work up in a number of
-phases to build a feature complete solution.
-
-1. **DONE** <s>Phase 1 - MVP renderer with a limited set of component types</s>
-   - Support textfield, email, radio, number and date components (vanilla formio)
-   - Support bsn and phone number components (Open Forms custom types)
-   - Support default/initial values
-   - Support barebones validation (email format, max length, required)
-   - Support nested data structures (keys with a <kbd>.</kbd> in them)
-   - Uses NL Design System components for styling, supports default Open Forms theme
-
-2. **DONE** <s>Phase 2 - Replace "Contact details" step form field rendering in
-   `@open-formulieren/sdk` with the `FormioForm` component from this library. This must be a drop-in
-   replacement.</s>
-
-3. **DONE** <s>Phase 3 - MVP edit grid, because repeating groups have many issues because they were
-   added quite late to the components, and they work very differently from other formio
-   components.</s>
-   - Implement a pure React base
-   - Replace the Appointments products step with the pure react variant
-   - Implement the Formio component using the pure React base
-
-4. **DONE** <s>Phase 4 - Support simple conditionals logic</s>
-   - Support conditionally displaying/hiding components based on submission data that updates as the
-     user fills out the form. Must have identical behaviour as the formio.js SDK referenence.
-   - Support the `clearOnHide` behaviour. We may have slightly different behaviour here to be
-     type-safe and possibly the Open Forms backend will have to be adapted.
-
-5. **TO VERIFY** Phase 5 - Remaining features to support the same feature set as our SDK currently
-   does.
-   - <s>Ensure that logic check results can (partially)</s>
-     <s>update form values (for calculated fields)</s>
-     done
-   - <s>Ensure that mutations of the formio configuration are honoured (from logic check)</s> done
-     (verify!)
-   - <s>
-       Ensure that changes in values (because of user input) are dispatched to the parent component
-     </s>
-     done
+See [Github](https://github.com/open-formulieren/open-forms/issues/5133)
 
 ## Design goals
 
@@ -179,3 +143,35 @@ The code base is structured so that:
   that component type is implemented (completely). They can be and are tested in isolation.
 - we build on top of `@open-formulieren/types` so that we only worry about the features that Open
   Forms provides/supports.
+
+## Design decisions
+
+Decisions made while ipmlementing the renderer.
+
+**Backend API interaction**
+
+While the renderer is (in practice) paired with the backend API of Open Forms, this connection is
+implicit and indirect. The [SDK](https://github.com/open-formulieren/open-forms-sdk) is responsible
+for the backend API interaction and is the caller of the renderer. The renderer is not allowed to
+directly consume API resources.
+
+Instead, we apply some form of "dependency injection" that's purely callback/configuration based,
+where the SDK provides handlers that the renderer expects.
+
+**Component-specific functionalities are shared through React context**
+
+Most components (Formio-component types) only need their local configuration, but some are more
+complex and require additional information, e.g.:
+
+- file upload components need an endpoint to upload to (and authentication details)
+- async backend validators need to call the endpoint during validation
+- `addressNL` needs to call the BAG-APIs to perform address lookups
+- `email` verification needs a verification flow and dedicated endpoints + state
+
+With a top-level API around the `FormioForm` and a `FormSettingsProvider` context, we expose a high
+level and a low level API for the SDK to pass this additional configuration.
+
+- Each component type in the `src/registry` owns the type definitions of the additional context.
+- Each component must handle the case where this configuration is _not_ available.
+- The configuration is tracked in the `FormSettings` context under the `componentParameters`
+  property, where the parameters are namespaced with each `component.type` key.

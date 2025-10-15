@@ -14,6 +14,11 @@ export interface LabelContentProps {
   type?: string;
 }
 
+/**
+ * A wrapper around label content, using the utrecht-form-label CSS class.
+ *
+ * @todo Implement non-label element alternative for usage inside fieldset legends.
+ */
 export const LabelContent: React.FC<LabelContentProps> = ({
   id,
   isDisabled = false,

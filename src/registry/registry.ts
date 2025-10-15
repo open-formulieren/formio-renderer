@@ -1,5 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 
+import AddressNL from './addressNL';
 import BSN from './bsn';
 import Checkbox from './checkbox';
 import Columns from './columns';
@@ -50,6 +51,7 @@ const REGISTRY: Registry = {
   bsn: BSN,
   cosign: Cosign,
   editgrid: EditGrid,
+  addressNL: AddressNL,
   // layout
   content: Content,
   columns: Columns,

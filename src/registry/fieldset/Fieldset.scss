@@ -9,9 +9,35 @@
 
   // fix for file upload overflowing, https://github.com/open-formulieren/open-forms/issues/1316
   min-inline-size: 100%; // instead of browser default of min-content
+  box-sizing: border-box;
 
   @include bem.modifier('no-header') {
     border-width: 0;
+  }
+
+  @include bem.modifier('invalid') {
+    --of-utrecht-form-field-background-color: var(
+      --utrecht-alert-error-background-color,
+      var(--of-alert-error-bg)
+    );
+    background-color: var(--of-utrecht-form-field-background-color);
+    padding-inline-end: var(--utrecht-form-field-invalid-padding-inline-start);
+    padding-block-start: var(--utrecht-form-field-invalid-padding-inline-start);
+    padding-block-end: var(--utrecht-form-field-invalid-padding-inline-start);
+
+    border-inline-start-color: var(
+      --utrecht-form-fieldset-invalid-border-inline-start-color,
+      var(--utrecht-form-field-invalid-border-inline-start-color)
+    );
+    border-inline-start-style: solid;
+    border-inline-start-width: var(
+      --utrecht-form-fieldset-invalid-border-inline-start-width,
+      var(--utrecht-form-field-invalid-border-inline-start-width)
+    );
+    padding-inline-start: var(
+      --utrecht-form-fieldset-invalid-padding-inline-start,
+      var(--utrecht-form-field-invalid-padding-inline-start)
+    );
   }
 
   @include bem.element('legend') {
@@ -37,6 +63,14 @@
       .openforms-tooltip {
         color: var(--utrecht-document-color, var(--utrecht-form-label-color));
       }
+    }
+  }
+}
+
+.openforms-theme {
+  .openforms-fieldset {
+    .utrecht-form-field-description {
+      --utrecht-space-around: 1;
     }
   }
 }
