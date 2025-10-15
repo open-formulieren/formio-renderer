@@ -1,4 +1,4 @@
-import {Heading1, SubtleButton} from '@utrecht/component-library-react';
+import {Heading2, SubtleButton, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {useEffect, useId, useRef} from 'react';
 import {useIntl} from 'react-intl';
 
@@ -49,9 +49,9 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
       closedby="any"
     >
       {title && (
-        <Heading1 id={id} className="openforms-modal__title">
+        <Heading2 id={id} className="openforms-modal__title">
           {title}
-        </Heading1>
+        </Heading2>
       )}
 
       <SubtleButton
@@ -63,7 +63,9 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
           defaultMessage: 'Close modal',
         })}
       >
-        <Icon icon="close" aria-hidden />
+        <UtrechtIcon>
+          <Icon icon="close" />
+        </UtrechtIcon>
       </SubtleButton>
 
       <div className="openforms-modal__body">{children}</div>
