@@ -1,13 +1,17 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {FormField, PrimaryActionButton} from '@utrecht/component-library-react';
-import {FieldArray, getIn, useFormikContext} from 'formik';
-import {useState} from 'react';
+import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
+import type {FormikErrors} from 'formik';
+import {useMemo, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {ValidationError} from 'zod-formik-adapter';
 
+import FieldConfigProvider from '@/components/FieldConfigProvider';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import Icon from '@/components/icons';
+import {useFieldConfig} from '@/hooks';
 import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridItem from './EditGridItem';
@@ -117,6 +121,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   addButtonLabel = '',
   ...props
 }: EditGridProps<T>) {
+  name = useFieldConfig(name);
   const {getFieldProps, errors, getFieldHelpers} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
   const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
@@ -132,19 +137,35 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           <div className="openforms-editgrid">
             {/* Render each item wrapped in an EditGridItem */}
             <ol className="openforms-editgrid__container">
-              {formikItems?.map((values, index) =>
-                props.enableIsolation ? (
-                  <EditGridItem<T>
+              {formikItems?.map((values, index) => {
+                if (!props.enableIsolation) {
+                  return (
+                    <EditGridItem<T>
+                      key={index}
+                      index={index}
+                      getBody={opts => props.getItemBody(values, index, opts)}
+                      heading={getItemHeading?.(values, index)}
+                      canRemove={canRemoveItem?.(values, index) ?? true}
+                      removeLabel={removeItemLabel}
+                      onRemove={() => arrayHelpers.remove(index)}
+                    />
+                  );
+                }
+
+                // complex case - if isolation needs to be enabled, set up a proper
+                // formik *and* browser namespace by applying prefixes to the data/name
+                // attributes.
+                return (
+                  <IsolatedEditGridItem<T>
                     key={index}
+                    name={name}
                     index={index}
-                    heading={getItemHeading?.(values, index)}
-                    getBody={opts => props.getItemBody(values, index, opts)}
-                    enableIsolation
-                    data={values}
-                    canEdit={props.canEditItem?.(values, index) ?? true}
-                    validate={props.validate ? props.validate.bind(null, index) : undefined}
+                    values={values}
                     errors={getIn(errors, `${name}.${index}`)}
-                    saveLabel={props.saveItemLabel}
+                    getItemHeading={getItemHeading}
+                    getItemBody={props.getItemBody}
+                    canEditItem={props.canEditItem}
+                    saveItemLabel={props.saveItemLabel}
                     onChange={(newValue: T) => {
                       arrayHelpers.replace(index, newValue);
                       // clear any (initial) errors for this item - since this callback
@@ -154,23 +175,14 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                       const {setError} = getFieldHelpers(`${name}.${index}`);
                       setError(undefined);
                     }}
-                    canRemove={canRemoveItem?.(values, index) ?? true}
-                    removeLabel={removeItemLabel}
+                    canRemoveItem={canRemoveItem}
+                    removeItemLabel={removeItemLabel}
                     onRemove={() => arrayHelpers.remove(index)}
+                    validate={props.validate}
                     initiallyExpanded={indexToAutoExpand === index}
                   />
-                ) : (
-                  <EditGridItem<T>
-                    key={index}
-                    index={index}
-                    getBody={opts => props.getItemBody(values, index, opts)}
-                    heading={getItemHeading?.(values, index)}
-                    canRemove={canRemoveItem?.(values, index) ?? true}
-                    removeLabel={removeItemLabel}
-                    onRemove={() => arrayHelpers.remove(index)}
-                  />
-                )
-              )}
+                );
+              })}
             </ol>
 
             {emptyItem && (
@@ -199,6 +211,126 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
       </FieldArray>
       <HelpText>{description}</HelpText>
     </FormField>
+  );
+}
+
+const isValidationError = (err: unknown): err is ValidationError => {
+  // instanceof ValidationError doesn't work because the prototype chain
+  // is not fully copied, may be due to zod-formik-adapter transpilation targets
+  if (typeof err !== 'object') return false;
+  if (!err || !('name' in err)) return false;
+  return err?.name === 'ValidationError';
+};
+
+/**
+ * The intrinsic item data is of type `T`, but due to name prefixing/data-namespacing,
+ * this data actually sits somewhere in an object key-value tree of arbitrary depth.
+ *
+ * Each level of namespacing increments the depth in the tree. The `WrappedItemData`
+ * models this shape.
+ */
+type WrappedItemData<T extends {[K in keyof T]: JSONValue} = JSONObject> = {
+  [k: string]: T | WrappedItemData<T>;
+};
+
+type IsolatedEditGridItemProps<T> = {
+  /**
+   * Name of 'form field' in the Formio form data structure. The rendered edit grid items
+   * are based off the value of this field.
+   */
+  name: string;
+  /**
+   * Index of the item being edited.
+   */
+  index: number;
+  /**
+   * Values of the single item at `index`.
+   */
+  values: T;
+  /**
+   * (Initial) errors for the item.
+   */
+  errors: FormikErrors<T> | undefined;
+  initiallyExpanded: boolean;
+  onChange: (newValue: T) => void;
+  onRemove: () => void;
+} & Pick<EditGridProps<T>, 'getItemHeading' | 'canRemoveItem' | 'removeItemLabel'> &
+  Pick<WithIsolation<T>, 'canEditItem' | 'saveItemLabel' | 'getItemBody' | 'validate'>;
+
+function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
+  name,
+  index,
+  values,
+  errors,
+  getItemHeading,
+  getItemBody,
+  canEditItem,
+  saveItemLabel,
+  onChange,
+  onRemove,
+  canRemoveItem,
+  removeItemLabel = '',
+  validate: validateCallback,
+  initiallyExpanded,
+}: IsolatedEditGridItemProps<T>) {
+  // complex case - if isolation needs to be enabled, set up a proper
+  // formik *and* browser namespace by applying prefixes to the data/name
+  // attributes.
+  const namePrefix = `${name}:${index}`;
+  const prefixedData: WrappedItemData<T> = useMemo(() => {
+    return setIn({}, namePrefix, values);
+  }, [namePrefix, values]);
+
+  // don't pass down the entire error state, but extract only the errors
+  // for this particular item. it's important that 'undefined' is returned
+  // if there are no 'outside' errors.
+  const prefixedErrors: FormikErrors<WrappedItemData<T>> | undefined = errors
+    ? setIn({}, namePrefix, errors)
+    : undefined;
+
+  let validate: ((values: WrappedItemData<T>) => Promise<void>) | undefined = undefined;
+  if (validateCallback) {
+    validate = async (values: WrappedItemData<T>): Promise<void> => {
+      // extract only the item values from the namespaced data and pass it
+      // to the validation callback, but make sure to put errors back in their
+      // appropriate namespace
+      const itemValues: T = getIn(values, namePrefix);
+
+      try {
+        await validateCallback(index, itemValues);
+      } catch (err: unknown) {
+        // only handle errors we know
+        if (!isValidationError(err)) throw err;
+        err.inner.forEach(problem => {
+          problem.path = `${namePrefix}.${problem.path}`;
+        });
+        throw err;
+      }
+    };
+  }
+
+  return (
+    <FieldConfigProvider key={index} namePrefix={namePrefix}>
+      <EditGridItem<WrappedItemData<T>>
+        index={index}
+        heading={getItemHeading?.(values, index)}
+        getBody={opts => getItemBody(values, index, opts)}
+        enableIsolation
+        data={prefixedData}
+        canEdit={canEditItem?.(values, index) ?? true}
+        validate={validate}
+        errors={prefixedErrors}
+        saveLabel={saveItemLabel}
+        onChange={(newValue: WrappedItemData<T>) => {
+          const itemValue: T = getIn(newValue, namePrefix);
+          onChange(itemValue);
+        }}
+        canRemove={canRemoveItem?.(values, index) ?? true}
+        removeLabel={removeItemLabel}
+        onRemove={onRemove}
+        initiallyExpanded={initiallyExpanded}
+      />
+    </FieldConfigProvider>
   );
 }
 

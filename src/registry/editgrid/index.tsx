@@ -1,5 +1,5 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
-import {replace, setIn, useFormikContext} from 'formik';
+import {getIn, replace, setIn, useFormikContext} from 'formik';
 import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
@@ -8,7 +8,7 @@ import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import {EditGrid as EditGridField} from '@/components/forms';
 import {getComponentsMap} from '@/formio';
-import {useFormSettings} from '@/hooks';
+import {useFieldConfig, useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {buildValidationSchema, useValidationSchemas} from '@/validationSchema';
@@ -33,6 +33,8 @@ const ParentValuesContext = createContext<ParentValuesContextType>({
   componentsMap: {},
 });
 ParentValuesContext.displayName = 'ParentValuesContext';
+
+type WrappedJSONObject = {[k: string]: JSONObject | WrappedJSONObject};
 
 export interface ItemBodyProps {
   index: number;
@@ -62,7 +64,15 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   expanded,
 }) => {
   const intl = useIntl();
-  const {values: itemValues} = useFormikContext<JSONObject>();
+  const {values} = useFormikContext<WrappedJSONObject>();
+
+  // ensure we peek deep inside the formik data skipping over any prefixes applied by
+  // the EditGridItem for the isolation-mode-editing. Note that prefix ends with a
+  // period character.
+  const rawNamePrefix = useFieldConfig('');
+  if (!rawNamePrefix.endsWith('.')) throw new Error('Unexpected name prefix');
+  const namePrefix = rawNamePrefix.slice(0, -1);
+  const itemValues: JSONObject = getIn(values, namePrefix);
 
   const componentsMap = useMemo(() => {
     const localComponentsMap: Record<string, AnyComponentSchema> = Object.fromEntries(
@@ -186,8 +196,15 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
 }) => {
-  const {values: parentValues, setFieldValue, getFieldProps} = useFormikContext<JSONObject>();
+  const {values, setFieldValue, getFieldProps} = useFormikContext<WrappedJSONObject>();
   const {value} = getFieldProps<JSONObject[]>(key);
+
+  // ensure we peek deep inside the formik data skipping over any prefixes applied by
+  // the EditGridItem for the isolation-mode-editing. Note that prefix ends with a
+  // period character.
+  const rawNamePrefix = useFieldConfig('');
+  const namePrefix = rawNamePrefix ? rawNamePrefix.slice(0, -1) : '';
+  const parentValues: JSONObject = getIn(values, namePrefix);
 
   const {
     keyPrefix,

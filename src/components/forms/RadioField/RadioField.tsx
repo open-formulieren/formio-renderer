@@ -7,6 +7,7 @@ import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './RadioField.scss';
 import RadioOption from './RadioOption';
@@ -67,6 +68,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   options = [],
   tooltip,
 }) => {
+  name = useFieldConfig(name);
   const [, {error = '', touched}] = useField({name, type: 'radio'});
   const id = useId();
 

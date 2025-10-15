@@ -20,4 +20,18 @@ const FormSettingsContext = React.createContext<FormSettings>({
 
 FormSettingsContext.displayName = 'FormSettingsContext';
 
-export {FormSettingsContext};
+export interface FieldConfig {
+  /**
+   * Optional prefix to add to the `name` attribute of a field, to ensure that scopes
+   * don't clash in the browser (e.g. radio fields in repeating groups).
+   */
+  namePrefix: string | undefined;
+}
+
+/**
+ * Context to tweak behaviour of individual form fields.
+ */
+const FieldConfigContext = React.createContext<FieldConfig>({namePrefix: ''});
+FieldConfigContext.displayName = 'FieldConfigContext';
+
+export {FormSettingsContext, FieldConfigContext};
