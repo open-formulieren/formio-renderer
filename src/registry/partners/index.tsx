@@ -4,6 +4,10 @@ import type {FormioComponentProps} from '@/components/FormioComponent';
 import Partners from '@/components/forms/Partners';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 
+import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
+import getInitialValues from './initialValues';
+
 export interface FormioPartnersFieldProps {
   componentDefinition: PartnersComponentSchema;
   renderNested: React.FC<FormioComponentProps>;
@@ -29,6 +33,9 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
 
 const PartnersFieldComponent: RegistryEntry<PartnersComponentSchema> = {
   formField: FormioPartnersField,
+  valueDisplay: ValueDisplay,
+  getInitialValues,
+  isEmpty,
 };
 
 export default PartnersFieldComponent;
