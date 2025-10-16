@@ -199,6 +199,11 @@
     "description": "Label for addressNL city read only result",
     "originalDefault": "City"
   },
+  "oxM3rx": {
+    "defaultMessage": "Close modal",
+    "description": "Modal close button title",
+    "originalDefault": "Close modal"
+  },
   "pHX3oF": {
     "defaultMessage": "House letter must be a single letter.",
     "description": "Validation error for addressNL.houseLetter field.",
