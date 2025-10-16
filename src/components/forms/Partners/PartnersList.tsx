@@ -1,8 +1,20 @@
 import type {PartnerDetails} from '@open-formulieren/types';
 import {DataList, DataListItem, DataListKey, DataListValue} from '@utrecht/component-library-react';
-import {FormattedMessage} from 'react-intl';
+import {FormattedDate, FormattedMessage} from 'react-intl';
 
 import PARTNER_COMPONENTS from './subFieldDefinitions';
+import type {PartnerComponentsKeys} from './types';
+
+const formatPartnerData = (
+  value: string,
+  partnerComponentKey: PartnerComponentsKeys
+): React.ReactNode => {
+  if (partnerComponentKey === 'dateOfBirth') {
+    return <FormattedDate value={value} dateStyle="long" />;
+  }
+
+  return value;
+};
 
 interface PartnersListProps {
   partners: PartnerDetails[];
@@ -28,7 +40,9 @@ const PartnersList: React.FC<PartnersListProps> = ({partners}) => {
                   <FormattedMessage {...label} />
                 </DataListKey>
                 <DataListValue>
-                  {partner[name] || (
+                  {partner[name] ? (
+                    formatPartnerData(partner[name], name)
+                  ) : (
                     <i>
                       <FormattedMessage
                         description="Emtpy field message"
