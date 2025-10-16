@@ -15,7 +15,7 @@ const PartnersList: React.FC<PartnersListProps> = ({partners}) => {
   }));
 
   return (
-    <>
+    <div className="openforms-partners-list">
       {partners.map((partner, index) => (
         <>
           {/* Divider between partners */}
@@ -23,7 +23,7 @@ const PartnersList: React.FC<PartnersListProps> = ({partners}) => {
 
           <DataList key={index}>
             {partnerFields.map(({name, label}) => (
-              <DataListItem key={name}>
+              <DataListItem key={`${index}-${name}`}>
                 <DataListKey>
                   <FormattedMessage {...label} />
                 </DataListKey>
@@ -42,7 +42,7 @@ const PartnersList: React.FC<PartnersListProps> = ({partners}) => {
           </DataList>
         </>
       ))}
-    </>
+    </div>
   );
 };
 
