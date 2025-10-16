@@ -1,4 +1,10 @@
 {
+  "++u88j": [
+    {
+      "type": 0,
+      "value": "Initials"
+    }
+  ],
   "+/hjpS": [
     {
       "type": 0,
@@ -77,6 +83,12 @@
       "value": "Previous year"
     }
   ],
+  "2WcGTa": [
+    {
+      "type": 0,
+      "value": "Add partner details"
+    }
+  ],
   "3C29X9": [
     {
       "options": {
@@ -119,6 +131,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "9UF9Z7": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "At/y3w": [
@@ -191,6 +209,12 @@
     {
       "type": 0,
       "value": "Street name"
+    }
+  ],
+  "DdFFUU": [
+    {
+      "type": 0,
+      "value": "Add partner"
     }
   ],
   "FfBWqF": [
@@ -315,10 +339,22 @@
       "value": "Next year"
     }
   ],
+  "TsK0c5": [
+    {
+      "type": 0,
+      "value": "Lastname"
+    }
+  ],
   "UONGQo": [
     {
       "type": 0,
       "value": "You must provide a house number."
+    }
+  ],
+  "Wb9r9X": [
+    {
+      "type": 0,
+      "value": "BSN"
     }
   ],
   "WpfP0s": [
@@ -357,16 +393,40 @@
       "value": "Add another"
     }
   ],
+  "e0GPZq": [
+    {
+      "type": 0,
+      "value": "Edit partner details"
+    }
+  ],
+  "f5iaCR": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
   "ht1O2Z": [
     {
       "type": 0,
       "value": "Invalid BSN"
     }
   ],
+  "hyJnt0": [
+    {
+      "type": 0,
+      "value": "Edit partner details"
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
       "value": "House number addition"
+    }
+  ],
+  "laWyvz": [
+    {
+      "type": 0,
+      "value": "Affixes"
     }
   ],
   "nfRRDu": [
@@ -435,6 +495,12 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "r5nl/U": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "rQ5vC9": [
