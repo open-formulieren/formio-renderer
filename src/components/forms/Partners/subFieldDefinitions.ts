@@ -34,48 +34,58 @@ export const FIELD_LABELS = defineMessages({
   },
 });
 
+export const PARTNER_BSN_COMPONENT = {
+  id: 'bsn',
+  type: 'bsn',
+  key: 'bsn' as const,
+  label: FIELD_LABELS.bsn,
+  validate: {required: true},
+  validateOn: 'blur',
+  inputMask: '999999999',
+} satisfies withLocalizedLabel<BsnComponentSchema>;
+
+export const PARTNER_INITIALS_COMPONENT = {
+  id: 'initials',
+  type: 'textfield',
+  key: 'initials' as const,
+  label: FIELD_LABELS.initials,
+  validate: {required: false},
+} satisfies withLocalizedLabel<TextFieldComponentSchema>;
+
+export const PARTNER_AFFIXES_COMPONENT = {
+  id: 'affixes',
+  type: 'textfield',
+  key: 'affixes' as const,
+  label: FIELD_LABELS.affixes,
+  validate: {required: false},
+} satisfies withLocalizedLabel<TextFieldComponentSchema>;
+
+export const PARTNER_LAST_NAME_COMPONENT = {
+  id: 'lastName',
+  type: 'textfield',
+  key: 'lastName' as const,
+  label: FIELD_LABELS.lastname,
+  validate: {required: true},
+} satisfies withLocalizedLabel<TextFieldComponentSchema>;
+
+export const PARTNER_DATE_OF_BIRTH_COMPONENT = {
+  id: 'dateOfBirth',
+  type: 'date',
+  key: 'dateOfBirth' as const,
+  label: FIELD_LABELS.dateOfBirth,
+  validate: {
+    required: true,
+    minDate: subYears(today, 120).toISOString(),
+    maxDate: subDays(today, 1).toISOString(),
+  },
+} satisfies withLocalizedLabel<DateComponentSchema>;
+
 const PARTNER_COMPONENTS = [
-  {
-    id: 'bsn',
-    type: 'bsn',
-    key: 'bsn' as const,
-    label: FIELD_LABELS.bsn,
-    validate: {required: true},
-    validateOn: 'blur',
-    inputMask: '999999999',
-  } satisfies withLocalizedLabel<BsnComponentSchema>,
-  {
-    id: 'initials',
-    type: 'textfield',
-    key: 'initials' as const,
-    label: FIELD_LABELS.initials,
-    validate: {required: false},
-  } satisfies withLocalizedLabel<TextFieldComponentSchema>,
-  {
-    id: 'affixes',
-    type: 'textfield',
-    key: 'affixes' as const,
-    label: FIELD_LABELS.affixes,
-    validate: {required: false},
-  } satisfies withLocalizedLabel<TextFieldComponentSchema>,
-  {
-    id: 'lastName',
-    type: 'textfield',
-    key: 'lastName' as const,
-    label: FIELD_LABELS.lastname,
-    validate: {required: true},
-  } satisfies withLocalizedLabel<TextFieldComponentSchema>,
-  {
-    id: 'dateOfBirth',
-    type: 'date',
-    key: 'dateOfBirth' as const,
-    label: FIELD_LABELS.dateOfBirth,
-    validate: {
-      required: true,
-      minDate: subYears(today, 120).toISOString(),
-      maxDate: subDays(today, 1).toISOString(),
-    },
-  } satisfies withLocalizedLabel<DateComponentSchema>,
+  PARTNER_BSN_COMPONENT,
+  PARTNER_INITIALS_COMPONENT,
+  PARTNER_AFFIXES_COMPONENT,
+  PARTNER_LAST_NAME_COMPONENT,
+  PARTNER_DATE_OF_BIRTH_COMPONENT,
 ];
 
 export default PARTNER_COMPONENTS;
