@@ -8,6 +8,7 @@ import Content from './content';
 import Cosign from './cosign';
 import Currency from './currency';
 import DateField from './date';
+import DateTimeField from './datetime';
 import EditGrid from './editgrid';
 import Email from './email';
 import Fieldset from './fieldset';
@@ -37,6 +38,7 @@ const REGISTRY: Registry = {
   textfield: TextField,
   email: Email,
   date: DateField,
+  datetime: DateTimeField,
   time: Time,
   phoneNumber: PhoneNumber,
   textarea: Textarea,
