@@ -96,6 +96,9 @@ body:has(.openforms-modal[open]) {
     opacity: 0.5;
     font-size: 150%;
 
+    // This button is only used to show an icon. With this the icon is centralized.
+    line-height: 1;
+
     &:focus {
       outline: revert;
     }

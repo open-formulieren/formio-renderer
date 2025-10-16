@@ -1,25 +1,27 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
-import {useState} from 'react';
+import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
+import {useArgs} from 'storybook/preview-api';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
-import type {ModalProps} from './Modal';
 import Modal from './Modal';
 
-const ModalWrapper: React.FC<ModalProps> = ({isOpen, closeModal, ...props}) => {
-  const [isModalOpen, setModalOpen] = useState<boolean>(isOpen ?? true);
-
-  // Mimic the "normal" closing behaviour, by updating the `isOpen` property.
-  const onClose = () => {
-    if (closeModal) {
-      closeModal();
-    }
-    setModalOpen(false);
-  };
+const withModalTrigger: Decorator = Story => {
+  const [{isOpen, closeModal, ...args}, updateArgs] = useArgs();
   return (
     <>
       <p>Text outside the modal dialog</p>
-      {!isModalOpen && <button onClick={() => setModalOpen(true)}>show modal</button>}
-      <Modal isOpen={isModalOpen} closeModal={onClose} {...props} />
+      {!isOpen && <button onClick={() => updateArgs({isOpen: true})}>show modal</button>}
+      <Story
+        args={{
+          ...args,
+          isOpen,
+          closeModal: () => {
+            // After closing the modal, update the story args
+            updateArgs({isOpen: false});
+            // Make sure to also call the initial defined callback
+            closeModal();
+          },
+        }}
+      />
     </>
   );
 };
@@ -46,7 +48,7 @@ export const WithoutTitle: Story = {
 };
 
 export const CloseModal: Story = {
-  render: args => <ModalWrapper {...args} />,
+  decorators: [withModalTrigger],
   play: async ({canvasElement, args, step}) => {
     const canvas = within(canvasElement);
 
