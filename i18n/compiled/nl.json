@@ -119,6 +119,12 @@
       "value": "Opties ophalen..."
     }
   ],
+  "6g4o2Y": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -181,6 +187,12 @@
     {
       "type": 0,
       "value": "Velden zonder antwoord"
+    }
+  ],
+  "GkuPAG": [
+    {
+      "type": 0,
+      "value": "HH"
     }
   ],
   "IhLYXK": [
@@ -397,10 +409,44 @@
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
     }
   ],
+  "sozLAH": [
+    {
+      "type": 0,
+      "value": "The datetime must consist of a date and a time stamp (24-hour format without seconds), separated by a space (e.g. 10/30/2025 12:34)."
+    }
+  ],
   "vCObuG": [
     {
       "type": 0,
       "value": "Dag"
+    }
+  ],
+  "vRrj+v": [
+    {
+      "type": 0,
+      "value": "The datetime must be later than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "xCY4Oh": [
+    {
+      "type": 0,
+      "value": "The datetime must be earlier than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "xHVrv5": [
