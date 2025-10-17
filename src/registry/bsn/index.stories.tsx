@@ -63,6 +63,66 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN field',
+      tooltip: 'Surprise!',
+      description: 'A description',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies BsnComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          bsn: ['111222333', '999888777'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN field',
+      tooltip: 'Surprise!',
+      description: 'A description',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          bsn: ['000000000', '123456789'],
+        },
+      },
+      initialErrors: {
+        my: {
+          bsn: [undefined, 'Not a valid BSN.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          bsn: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: BsnComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -130,6 +190,46 @@ export const ValidateBSN: ValidationStory = {
     await userEvent.type(bsnField, '123456789');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid BSN')).toBeVisible();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+    } satisfies BsnComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(4);
+
+    await userEvent.type(textboxes[0], '123'); // too short
+    await userEvent.type(textboxes[1], '1234567890'); // too long
+    await userEvent.type(textboxes[2], '123456789'); // not a valid BSN
+    await userEvent.type(textboxes[3], '123456782'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findAllByText('A BSN must be 9 digits')).toHaveLength(2);
     expect(await canvas.findByText('Invalid BSN')).toBeVisible();
   },
 };
