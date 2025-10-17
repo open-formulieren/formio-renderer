@@ -4,7 +4,7 @@ import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
@@ -72,6 +72,11 @@ interface DateFieldCommonProps {
    * How to autocomplete the field from the browser.
    */
   autoComplete?: string;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
 }
 
 export type DateFieldProps = DateFieldCommonProps & WidgetProps;
@@ -94,12 +99,14 @@ const DateField: React.FC<DateFieldProps> = ({
   description,
   tooltip,
   autoComplete,
+  isMultiValue = false,
   ...props
 }) => {
   const id = useId();
   const {getFieldMeta} = useFormikContext();
   name = useFieldConfig(name);
-  const {error = '', touched} = getFieldMeta(name);
+  const {touched} = getFieldMeta(name);
+  const error = useFieldError(name, isMultiValue);
 
   const isInvalid = touched && !!error;
   const errorMessageId = isInvalid ? `${id}-error-message` : undefined;
