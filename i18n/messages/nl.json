@@ -24,6 +24,11 @@
     "description": "Edit grid item default save button label",
     "originalDefault": "Save"
   },
+  "0tH+u2": {
+    "defaultMessage": "{label} {index}",
+    "description": "Multi-field individual item label at $index. The index variable here is 1-indexed.",
+    "originalDefault": "{label} {index}"
+  },
   "1TAtDi": {
     "defaultMessage": "{remainingCharCount, plural, one {Nog {remainingCharCount} karakter over.} other {Nog {remainingCharCount} karakters over.} }",
     "description": "Textarea character remaining count",
@@ -182,6 +187,11 @@
     "description": "Validation error for postcode.",
     "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
   },
+  "WzAGB4": {
+    "defaultMessage": "Add another",
+    "description": "Multi-field add button label text",
+    "originalDefault": "Add another"
+  },
   "abKEBH": {
     "defaultMessage": "Nee",
     "description": "'False' display",
@@ -256,6 +266,11 @@
     "defaultMessage": "{charCount, plural, one {{charCount} karakter} other {{charCount} karakters} }.",
     "description": "Textarea character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
+  },
+  "r0uvHk": {
+    "defaultMessage": "Remove ''{label} {index}'",
+    "description": "Accessible remove icon/button label for item at $index. The index variable here is 1-indexed.",
+    "originalDefault": "Remove ''{label} {index}'"
   },
   "rQ5vC9": {
     "defaultMessage": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB).",

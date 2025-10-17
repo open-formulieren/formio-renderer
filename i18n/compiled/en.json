@@ -37,6 +37,20 @@
       "value": "Save"
     }
   ],
+  "0tH+u2": [
+    {
+      "type": 1,
+      "value": "label"
+    },
+    {
+      "type": 0,
+      "value": " "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    }
+  ],
   "1TAtDi": [
     {
       "offset": 0,
@@ -361,6 +375,12 @@
       "value": "The submitted value does not match the postcode pattern: 1234 AB"
     }
   ],
+  "WzAGB4": [
+    {
+      "type": 0,
+      "value": "Add another"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -485,6 +505,28 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "r0uvHk": [
+    {
+      "type": 0,
+      "value": "Remove '"
+    },
+    {
+      "type": 1,
+      "value": "label"
+    },
+    {
+      "type": 0,
+      "value": " "
+    },
+    {
+      "type": 1,
+      "value": "index"
+    },
+    {
+      "type": 0,
+      "value": "'"
     }
   ],
   "rQ5vC9": [
