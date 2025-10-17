@@ -4,6 +4,7 @@ import {useId} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import TimeInputGroup from './TimeInputGroup';
 
@@ -56,6 +57,7 @@ const TimeField: React.FC<TimeFieldProps> = ({
   const id = useId();
   const {getFieldMeta} = useFormikContext();
   const {error = '', touched} = getFieldMeta(name);
+  name = useFieldConfig(name);
 
   const isInvalid = touched && !!error;
   const errorMessageId = isInvalid ? `${id}-error-message` : undefined;
