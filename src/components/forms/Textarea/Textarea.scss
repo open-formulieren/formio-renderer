@@ -1,6 +1,6 @@
-@use '@utrecht/components/form-field' as form-field;
-@use '@utrecht/components/paragraph' as paragraph;
-@use '@utrecht/components/textarea' as textarea;
+@use '@utrecht/form-field-css/src/index' as *;
+@use '@utrecht/paragraph-css/src/index' as *;
+@use '@utrecht/textarea-css/src/index' as *;
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
