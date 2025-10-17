@@ -1,6 +1,5 @@
 import {InputGroupItem} from '@/components/forms/InputGroup';
 
-import type {TimeInputPart} from '../types';
 import TimePartInput from './TimePartInput';
 
 export interface TimeInputItemsProps {
