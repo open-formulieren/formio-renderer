@@ -42,8 +42,7 @@ export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
 };
 
 /**
- * Try to parse the date parts into a valid date and return the ISO-8601 string. If the
- * date is not valid, returns `null`.
+ * Format date parts into an (unvalidated) ISO-8601 string.
  */
 export const partsToUnvalidatedISO8601 = (parts: DatePartValues): string => {
   const bits = [

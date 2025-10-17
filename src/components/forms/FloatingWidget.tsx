@@ -129,6 +129,7 @@ export interface FloatingWidgetProps {
   getFloatingProps: UseInteractionsReturn['getFloatingProps'];
   arrowRef: React.MutableRefObject<SVGSVGElement | null>;
   children: React.ReactNode;
+  returnFocus?: boolean;
 }
 
 const FloatingWidget: React.FC<FloatingWidgetProps> = ({
@@ -139,6 +140,7 @@ const FloatingWidget: React.FC<FloatingWidgetProps> = ({
   getFloatingProps,
   arrowRef,
   children,
+  returnFocus = true,
   ...restProps
 }) => {
   return (
@@ -147,7 +149,7 @@ const FloatingWidget: React.FC<FloatingWidgetProps> = ({
         context={context}
         modal={false}
         order={['reference', 'content']}
-        returnFocus
+        returnFocus={returnFocus}
         visuallyHiddenDismiss
       >
         <div

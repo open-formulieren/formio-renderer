@@ -111,6 +111,12 @@
       "value": "Loading..."
     }
   ],
+  "6g4o2Y": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -203,6 +209,12 @@
     {
       "type": 0,
       "value": "Empty fields"
+    }
+  ],
+  "GkuPAG": [
+    {
+      "type": 0,
+      "value": "HH"
     }
   ],
   "IhLYXK": [
@@ -449,10 +461,44 @@
       "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
     }
   ],
+  "sozLAH": [
+    {
+      "type": 0,
+      "value": "The datetime must consist of a date and a time stamp (24-hour format without seconds), separated by a space (e.g. 10/30/2025 12:34)."
+    }
+  ],
   "vCObuG": [
     {
       "type": 0,
       "value": "Day"
+    }
+  ],
+  "vRrj+v": [
+    {
+      "type": 0,
+      "value": "The datetime must be later than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "xCY4Oh": [
+    {
+      "type": 0,
+      "value": "The datetime must be earlier than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "xHVrv5": [
