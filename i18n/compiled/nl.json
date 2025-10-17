@@ -79,12 +79,6 @@
       "value": "remainingCharCount"
     }
   ],
-  "2/fIuh": [
-    {
-      "type": 0,
-      "value": "SS"
-    }
-  ],
   "2KKNKT": [
     {
       "type": 0,
@@ -233,12 +227,6 @@
       "value": "m"
     }
   ],
-  "MusEU7": [
-    {
-      "type": 0,
-      "value": "Seconde"
-    }
-  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -249,12 +237,6 @@
     {
       "type": 0,
       "value": "Huisnummer"
-    }
-  ],
-  "Pxbd/v": [
-    {
-      "type": 0,
-      "value": "HH"
     }
   ],
   "QPdaOi": [
@@ -311,12 +293,6 @@
     {
       "type": 0,
       "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
-    }
-  ],
-  "aKCkLp": [
-    {
-      "type": 0,
-      "value": "MM"
     }
   ],
   "abKEBH": [
@@ -449,12 +425,6 @@
       "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
     }
   ],
-  "rxk4HZ": [
-    {
-      "type": 0,
-      "value": "Minuut"
-    }
-  ],
   "sGwqUb": [
     {
       "type": 0,
@@ -465,12 +435,6 @@
     {
       "type": 0,
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
-    }
-  ],
-  "t8hAwH": [
-    {
-      "type": 0,
-      "value": "Uur"
     }
   ],
   "vCObuG": [

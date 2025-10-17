@@ -71,12 +71,6 @@
       "value": "remainingCharCount"
     }
   ],
-  "2/fIuh": [
-    {
-      "type": 0,
-      "value": "SS"
-    }
-  ],
   "2KKNKT": [
     {
       "type": 0,
@@ -251,12 +245,6 @@
       "value": "m"
     }
   ],
-  "MusEU7": [
-    {
-      "type": 0,
-      "value": "Second"
-    }
-  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -267,12 +255,6 @@
     {
       "type": 0,
       "value": "House number"
-    }
-  ],
-  "Pxbd/v": [
-    {
-      "type": 0,
-      "value": "HH"
     }
   ],
   "QPdaOi": [
@@ -359,12 +341,6 @@
     {
       "type": 0,
       "value": "The submitted value does not match the postcode pattern: 1234 AB"
-    }
-  ],
-  "aKCkLp": [
-    {
-      "type": 0,
-      "value": "MM"
     }
   ],
   "abKEBH": [
@@ -493,12 +469,6 @@
       "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
     }
   ],
-  "rxk4HZ": [
-    {
-      "type": 0,
-      "value": "Minute"
-    }
-  ],
   "sGwqUb": [
     {
       "type": 0,
@@ -509,12 +479,6 @@
     {
       "type": 0,
       "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
-    }
-  ],
-  "t8hAwH": [
-    {
-      "type": 0,
-      "value": "Hour"
     }
   ],
   "vCObuG": [

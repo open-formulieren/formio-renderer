@@ -29,11 +29,6 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
-  "2/fIuh": {
-    "defaultMessage": "SS",
-    "description": "Placeholder for second part of a time",
-    "originalDefault": "SS"
-  },
   "2KKNKT": {
     "defaultMessage": "Previous year",
     "description": "Calendar: previous year button title",
@@ -119,11 +114,6 @@
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
-  "MusEU7": {
-    "defaultMessage": "Second",
-    "description": "Time input group: second label",
-    "originalDefault": "Second"
-  },
   "Oc3efT": {
     "defaultMessage": "You must provide a city.",
     "description": "Validation error for required addressNL.city field.",
@@ -133,11 +123,6 @@
     "defaultMessage": "House number",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
-  },
-  "Pxbd/v": {
-    "defaultMessage": "HH",
-    "description": "Placeholder for hour part of a time",
-    "originalDefault": "HH"
   },
   "QPdaOi": {
     "defaultMessage": "No results found",
@@ -178,11 +163,6 @@
     "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
     "description": "Validation error for postcode.",
     "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
-  },
-  "aKCkLp": {
-    "defaultMessage": "MM",
-    "description": "Placeholder for minute part of a time",
-    "originalDefault": "MM"
   },
   "abKEBH": {
     "defaultMessage": "No",
@@ -259,11 +239,6 @@
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
-  "rxk4HZ": {
-    "defaultMessage": "Minute",
-    "description": "Time input group: minute label",
-    "originalDefault": "Minute"
-  },
   "sGwqUb": {
     "defaultMessage": "A BSN must be 9 digits",
     "description": "Validation error describing shape of BSN.",
@@ -273,11 +248,6 @@
     "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
-  },
-  "t8hAwH": {
-    "defaultMessage": "Hour",
-    "description": "Time input group: hour label",
-    "originalDefault": "Hour"
   },
   "vCObuG": {
     "defaultMessage": "Day",

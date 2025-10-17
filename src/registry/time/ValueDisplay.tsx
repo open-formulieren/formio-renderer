@@ -23,9 +23,7 @@ const formatTime = (timeValue: string): React.ReactNode => {
     time.setSeconds(parseInt(seconds));
   }
 
-  return (
-    <FormattedTime value={time} format="short" hour="numeric" minute="numeric" second="numeric" />
-  );
+  return <FormattedTime value={time} format="short" />;
 };
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({

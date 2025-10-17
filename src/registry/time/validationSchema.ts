@@ -1,5 +1,5 @@
 import type {TimeComponentSchema} from '@open-formulieren/types';
-import moment from 'moment';
+import {parse} from 'date-fns';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
@@ -37,9 +37,9 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
     .string()
     .time({message: intl.formatMessage(TIME_STRUCTURE_MESSAGE)})
     .superRefine((value, ctx) => {
-      const min = minTime ? moment(minTime, 'HH:mm') : null;
-      const max = maxTime ? moment(maxTime, 'HH:mm') : null;
-      const parsedValue = moment(value, 'HH:mm:ss');
+      const min = minTime ? parse(minTime, 'HH:mm', new Date()) : null;
+      const max = maxTime ? parse(maxTime, 'HH:mm', new Date()) : null;
+      const parsedValue = parse(value, 'HH:mm', new Date());
 
       // Case 1: only one boundary is given
       if (!min || !max) {
