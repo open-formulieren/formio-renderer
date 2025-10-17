@@ -1,5 +1,5 @@
 @use '@/scss/bem';
-@use '@utrecht/components/html-content';
+@use '@utrecht/html-content-css/src/index' as *;
 
 $formio-content-variants: ('error', 'warning', 'success', 'info');
 

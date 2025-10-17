@@ -1,7 +1,7 @@
-@use '@utrecht/components/form-field' as form-field;
-@use '@utrecht/components/form-fieldset' as form-fieldset;
-@use '@utrecht/components/textbox' as textbox;
-@use '@utrecht/components/radio-button' as radio-button;
+@use '@utrecht/form-field-css/src/index' as *;
+@use '@utrecht/form-fieldset-css/src/index' as *;
+@use '@utrecht/textbox-css/src/index' as *;
+@use '@utrecht/radio-button-css/src/index' as *;
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
