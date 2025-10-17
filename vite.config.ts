@@ -51,6 +51,7 @@ export default defineConfig(({mode}) => ({
     alias: {
       '@/components': resolve(__dirname, 'src/components'),
       '@/registry': resolve(__dirname, 'src/registry'),
+      '~@utrecht': resolve(__dirname, './node_modules/@utrecht'),
       '@/scss': resolve(__dirname, 'src/scss'),
     },
   },

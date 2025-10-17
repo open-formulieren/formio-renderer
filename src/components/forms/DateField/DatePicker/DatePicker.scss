@@ -1,5 +1,5 @@
-@use '@utrecht/components/button';
-@use '@utrecht/components/calendar';
+@use '@utrecht/button-css/src/index' as *;
+@use '@utrecht/calendar-css/src/index' as *;
 
 @use '@/scss/button-override';
 @use '@/scss/bem';

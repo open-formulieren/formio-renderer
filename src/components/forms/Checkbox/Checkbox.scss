@@ -1,5 +1,5 @@
-@use '@utrecht/components/form-field';
-@use '@utrecht/components/custom-checkbox';
+@use '@utrecht/form-field-css/src/index' as *;
+@use '@utrecht/custom-checkbox-css/src/index' as *;
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
