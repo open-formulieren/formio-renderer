@@ -6,7 +6,7 @@ import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
 
-import {FormioTimeField as TimeField} from './';
+import {TimeField} from './';
 import ValueDisplay from './ValueDisplay';
 
 export default {
@@ -100,11 +100,137 @@ export const ValidateRequired: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const timeField = canvas.getByLabelText('Hour');
+    const timeField = canvas.getByLabelText('A timefield');
     expect(timeField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const ValidateMinTime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        minTime: '09:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '8:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const expectedMesage = 'Time must be after 09:00';
+    expect(await canvas.findByText(expectedMesage)).toBeVisible();
+  },
+};
+
+export const ValidateMaxTime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        maxTime: '17:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '23:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const expectedMesage = 'Time must be before 17:00';
+    expect(await canvas.findByText(expectedMesage)).toBeVisible();
+  },
+};
+
+export const ValidateMinTimeMaxTime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        minTime: '09:00',
+        maxTime: '17:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '23:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const expectedMesage = 'Time must be in-between 09:00 and 17:00';
+    expect(await canvas.findByText(expectedMesage)).toBeVisible();
+  },
+};
+
+export const ValidateMinTimeMaxTimeNextDay: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        minTime: '09:00',
+        maxTime: '01:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '8:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const expectedMesage = 'Time must be in-between 09:00 and 01:00';
+    expect(await canvas.findByText(expectedMesage)).toBeVisible();
   },
 };
 
