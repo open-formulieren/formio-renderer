@@ -24,13 +24,7 @@ const formatTime = (timeValue: string): React.ReactNode => {
   }
 
   return (
-    <FormattedTime
-      value={time}
-      format="hh:mm:ss"
-      hour="numeric"
-      minute="numeric"
-      second="numeric"
-    />
+    <FormattedTime value={time} format="short" hour="numeric" minute="numeric" second="numeric" />
   );
 };
 
