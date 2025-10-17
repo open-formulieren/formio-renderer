@@ -177,6 +177,12 @@
       "value": "Straatnaam"
     }
   ],
+  "DZjLaH": [
+    {
+      "type": 0,
+      "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -391,12 +397,6 @@
     {
       "type": 0,
       "value": "Ongeldige invoer"
-    }
-  ],
-  "qFr3r5": [
-    {
-      "type": 0,
-      "value": "Tijd moet voldoen aan het formaat HH:MM:SS"
     }
   ],
   "qTqAIS": [

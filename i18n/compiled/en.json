@@ -199,6 +199,12 @@
       "value": "Street name"
     }
   ],
+  "DZjLaH": [
+    {
+      "type": 0,
+      "value": "Hour must be between 0-23 and minute between 0-59"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -435,12 +441,6 @@
     {
       "type": 0,
       "value": "Invalid input"
-    }
-  ],
-  "qFr3r5": [
-    {
-      "type": 0,
-      "value": "Time must conform format HH:MM:SS"
     }
   ],
   "qTqAIS": [
