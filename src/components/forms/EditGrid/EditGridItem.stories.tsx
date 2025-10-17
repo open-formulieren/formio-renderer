@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Paragraph} from '@utrecht/component-library-react';
-import '@utrecht/components/paragraph';
+import '@utrecht/paragraph-css/dist/index.css';
 import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
