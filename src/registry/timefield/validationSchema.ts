@@ -7,7 +7,7 @@ import type {GetValidationSchema} from '@/registry/types';
 
 const TIME_STRUCTURE_MESSAGE = defineMessage({
   description: 'Validation error describing shape of time format.',
-  defaultMessage: 'Time must conform format HH:MM:SS',
+  defaultMessage: 'Hour must be between 0-23 and minute between 0-59',
 });
 
 const TIME_MIN_MESSAGE = defineMessage({

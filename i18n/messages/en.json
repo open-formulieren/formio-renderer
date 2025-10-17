@@ -79,6 +79,11 @@
     "description": "Label for addressNL streetName read only result",
     "originalDefault": "Street name"
   },
+  "DZjLaH": {
+    "defaultMessage": "Hour must be between 0-23 and minute between 0-59",
+    "description": "Validation error describing shape of time format.",
+    "originalDefault": "Hour must be between 0-23 and minute between 0-59"
+  },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
     "description": "Tooltip icon label",
@@ -114,6 +119,11 @@
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
+  "MusEU7": {
+    "defaultMessage": "Second",
+    "description": "Time input group: second label",
+    "originalDefault": "Second"
+  },
   "Oc3efT": {
     "defaultMessage": "You must provide a city.",
     "description": "Validation error for required addressNL.city field.",
@@ -123,11 +133,6 @@
     "defaultMessage": "House number",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
-  },
-  "MusEU7": {
-    "defaultMessage": "Second",
-    "description": "Time input group: second label",
-    "originalDefault": "Second"
   },
   "Pxbd/v": {
     "defaultMessage": "HH",
@@ -184,6 +189,11 @@
     "description": "'False' display",
     "originalDefault": "No"
   },
+  "ampZcZ": {
+    "defaultMessage": "Time must be before {maxTime}",
+    "description": "Validation error describing the value is not before the maximum time.",
+    "originalDefault": "Time must be before {maxTime}"
+  },
   "bKPaUj": {
     "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
     "description": "Validation error for addressNL.houseNumber field.",
@@ -198,11 +208,6 @@
     "defaultMessage": "House letter",
     "description": "Label for addressNL houseLetter input",
     "originalDefault": "House letter"
-  },
-  "ampZcZ": {
-    "defaultMessage": "Time must be before {maxTime}",
-    "description": "Validation error describing the value is not before the maximum time.",
-    "originalDefault": "Time must be before {maxTime}"
   },
   "cKFCTI": {
     "defaultMessage": "Add another",
@@ -238,11 +243,6 @@
     "defaultMessage": "Invalid input",
     "description": "Invalid input validation error for date field",
     "originalDefault": "Invalid input"
-  },
-  "qFr3r5": {
-    "defaultMessage": "Time must conform format HH:MM:SS",
-    "description": "Validation error describing shape of time format.",
-    "originalDefault": "Time must conform format HH:MM:SS"
   },
   "qTqAIS": {
     "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
