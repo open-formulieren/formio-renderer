@@ -37,7 +37,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
     <FieldsetLegend
       className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
     >
-      <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
+      <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
         {label}
       </LabelContent>
       {tooltip && <Tooltip>{tooltip}</Tooltip>}

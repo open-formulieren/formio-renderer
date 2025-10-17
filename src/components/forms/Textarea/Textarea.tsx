@@ -9,7 +9,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import './Textarea.scss';
 
@@ -60,6 +60,11 @@ export interface TextareaProps {
    * Needed for `showCharCount` to calculate the remaining amount of characters.
    */
   maxLength?: number;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
 }
 
 const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
@@ -73,13 +78,15 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   tooltip,
   maxLength,
   showCharCount = false,
+  isMultiValue = false,
   ...extraProps
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
-  const [{value, ...props}, {error = '', touched}] = useField<string | undefined>(name);
+  const [{value, ...props}, {touched}] = useField<string | undefined>(name);
   const id = useId();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const error = useFieldError(name, isMultiValue);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;

@@ -3,11 +3,13 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
+type ItemSchema = z.ZodString | z.ZodOptional<z.ZodString>;
+
 const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = componentDefinition => {
-  const {key, validate = {}} = componentDefinition;
+  const {key, validate = {}, multiple} = componentDefinition;
   const {required, maxLength, pattern} = validate;
 
-  let schema: z.ZodString | z.ZodOptional<z.ZodString> = z.string();
+  let schema: ItemSchema | z.ZodArray<ItemSchema> = z.string();
   if (maxLength !== undefined) schema = schema.max(maxLength);
 
   if (pattern) {
@@ -22,6 +24,13 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = compo
     schema = schema.min(1);
   } else {
     schema = schema.optional();
+  }
+
+  if (multiple) {
+    schema = z.array(schema);
+    if (required) {
+      schema = schema.min(1);
+    }
   }
 
   return {[key]: schema};

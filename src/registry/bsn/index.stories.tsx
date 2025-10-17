@@ -63,6 +63,31 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN field',
+      tooltip: 'Surprise!',
+      description: 'A description',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies BsnComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          bsn: ['111222333', '999888777'],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: BsnComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
