@@ -78,3 +78,27 @@ describe('textfield component validation', () => {
     expect(success).toBe(valid);
   });
 });
+
+describe('textfield with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['non-empty'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+});
