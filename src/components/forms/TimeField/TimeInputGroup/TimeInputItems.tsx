@@ -28,18 +28,14 @@ const TimeInputItems: React.FC<TimeInputItemsProps> = ({
   autoComplete,
 }) => {
   const commonProps = {isDisabled, onChange, onBlur, autoComplete};
-
-  const partsOrder: TimeInputPart[] = ['hour', 'minute'];
-  const parts: Record<TimeInputPart, React.ReactElement> = {
-    hour: <TimePartInput name="hour" value={hour} {...commonProps} />,
-    minute: <TimePartInput name="minute" value={minute} {...commonProps} />,
-  };
-
   return (
     <>
-      {partsOrder.map(part => (
-        <InputGroupItem key={part}>{parts[part]}</InputGroupItem>
-      ))}
+      <InputGroupItem>
+        <TimePartInput name="hour" value={hour} {...commonProps} />
+      </InputGroupItem>
+      <InputGroupItem>
+        <TimePartInput name="minute" value={minute} {...commonProps} />
+      </InputGroupItem>
     </>
   );
 };
