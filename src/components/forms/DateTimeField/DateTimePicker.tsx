@@ -259,6 +259,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
         floatingStyles={floatingStyles}
         getFloatingProps={getFloatingProps}
         arrowRef={arrowRef}
+        returnFocus={false}
       >
         <DatePickerCalendar
           onCalendarClick={async selectedDate => {
