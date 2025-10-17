@@ -5,13 +5,12 @@ import TimePartInput from './TimePartInput';
 
 export interface TimeInputItemsProps {
   /**
-   * Day part of the date, entered by the user. We can't guarantee at the type level
-   * that it will be a number from 1-31.
+   * Hour part of the time, entered by the user. We can't guarantee at the type level
+   * that it will be a number from 0-23.
    */
   hour: string;
   /**
-   * Month part of the date, entered by the user.
-   * Keep in mind that this is the JS date month, so January is '0'.
+   * Minute part of the time, entered by the user.
    */
   minute: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
