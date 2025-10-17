@@ -575,3 +575,17 @@ export const EditGridPreviewWithOddConditionals: Story = {
     expect(canvas.queryByText('Not displayed 2')).not.toBeInTheDocument();
   },
 };
+
+export const WithMultiple: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Text field 1',
+        multiple: true,
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+};
