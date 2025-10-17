@@ -114,7 +114,9 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
       <FieldsetLegend
         className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
       >
-        <LabelContent isRequired={required}>{label}</LabelContent>
+        <LabelContent isRequired={required} noLabelTag>
+          {label}
+        </LabelContent>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </FieldsetLegend>
 
