@@ -12,6 +12,7 @@ export interface LabelContentProps {
   isDisabled?: boolean;
   isRequired?: boolean;
   type?: string;
+  noLabelTag?: boolean;
 }
 
 /**
@@ -24,17 +25,21 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   isDisabled = false,
   isRequired = false,
   type,
+  noLabelTag = false,
   children,
 }) => {
   const {requiredFieldsWithAsterisk} = useFormSettings();
 
   const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk;
 
+  const Component = noLabelTag ? 'span' : FormLabel;
+
   return (
-    <FormLabel
+    <Component
       htmlFor={id}
       disabled={isDisabled}
       className={clsx({
+        'utrecht-form-label': noLabelTag,
         'utrecht-form-label--openforms': true,
         'utrecht-form-label--openforms-required': isRequired && requiredFieldsWithAsterisk,
         [`utrecht-form-label--${type}`]: type,
@@ -51,7 +56,7 @@ export const LabelContent: React.FC<LabelContentProps> = ({
           addNotRequiredSuffix,
         }}
       />
-    </FormLabel>
+    </Component>
   );
 };
 
