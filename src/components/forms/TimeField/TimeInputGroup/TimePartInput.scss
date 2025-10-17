@@ -1,4 +1,5 @@
 @use '@/components/forms/TextField/TextField';
+
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
 
@@ -26,7 +27,7 @@
       var(--_of-utrecht-textbox-total-inline-padding) + 3ch + 2 *
         var(--_of-utrecht-textbox-border-width)
     );
-    width: var(
+    inline-size: var(
       --of-utrecht-textbox-openforms-time-hour-width,
       var(--_of-utrecht-textbox-openforms-time-hour-width)
     );
@@ -37,20 +38,9 @@
       var(--_of-utrecht-textbox-total-inline-padding) + 3ch + 2 *
         var(--_of-utrecht-textbox-border-width)
     );
-    width: var(
+    inline-size: var(
       --of-utrecht-textbox-openforms-time-minute-width,
       var(--_of-utrecht-textbox-openforms-time-minute-width)
-    );
-  }
-
-  @include bem.modifier('openforms-time-second') {
-    --_of-utrecht-textbox-openforms-time-second-width: calc(
-      var(--_of-utrecht-textbox-total-inline-padding) + 3ch + 2 *
-        var(--_of-utrecht-textbox-border-width)
-    );
-    width: var(
-      --of-utrecht-textbox-openforms-time-second-width,
-      var(--_of-utrecht-textbox-openforms-time-second-width)
     );
   }
 }
