@@ -9,7 +9,7 @@ import InputContainer from '@/components/forms/InputContainer';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import './NumberField.scss';
 
@@ -87,6 +87,11 @@ export interface NumberFieldProps {
    * passed to the decimalLimit property.
    */
   fixedDecimalScale?: boolean;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
 }
 
 export interface Separators {
@@ -119,15 +124,17 @@ const NumberField: React.FC<NumberFieldProps> = ({
   valueSuffix,
   useThousandSeparator = false,
   fixedDecimalScale = false,
+  isMultiValue = false,
   ...extraProps
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
   // Note that we have a custom onValueChange handler, so `value` and `onBlur` is the only relevant
   // field input props
-  const [{value, onBlur}, {error = '', touched}, {setValue}] = useField<number | null>(name);
+  const [{value, onBlur}, {touched}, {setValue}] = useField<number | null>(name);
   const {locale} = useIntl();
   const id = useId();
+  const error = useFieldError(name, isMultiValue);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
