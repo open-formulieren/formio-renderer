@@ -64,6 +64,64 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'my.time',
+      id: 'timefield',
+      label: 'timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies TimeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          time: ['08:15:00', '17:00'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'my.time',
+      id: 'timefield',
+      label: 'timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          time: ['08:15:00', '1234'],
+        },
+      },
+      initialErrors: {
+        my: {
+          time: [undefined, 'Not a valid time.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          time: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
