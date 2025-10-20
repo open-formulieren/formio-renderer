@@ -69,8 +69,8 @@ export const CloseModal: Story = {
 
       // The `closeModal` arg should have been called, and the modal should no-longer be
       // visible.
-      await expect(args.closeModal).toHaveBeenCalled();
-      waitFor(() => {
+      await waitFor(() => {
+        expect(args.closeModal).toHaveBeenCalled();
         expect(dialog).not.toBeVisible();
       });
     });
@@ -84,8 +84,10 @@ export const CloseModal: Story = {
 
       // The `closeModal` arg should have been called, and the modal should no-longer be
       // visible.
-      await expect(args.closeModal).toHaveBeenCalled();
-      expect(dialog).not.toBeVisible();
+      await waitFor(() => {
+        expect(args.closeModal).toHaveBeenCalled();
+        expect(dialog).not.toBeVisible();
+      });
     });
   },
 };

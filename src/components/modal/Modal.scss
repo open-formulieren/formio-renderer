@@ -9,7 +9,7 @@ $modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
 $modal-padding-inline-start: var(--of-modal-padding-inline-start, 40px);
 $modal-padding-inline-end: var(--of-modal-padding-inline-end, 40px);
 
-// Take halve the modal padding, and turn it negative
+// Take half the modal padding, and turn it negative
 $modal-close-icon-offset-block-start: calc($modal-padding-block-start * -0.5);
 $modal-close-icon-offset-inline-end: calc($modal-padding-inline-end * -0.5);
 
@@ -96,7 +96,7 @@ body:has(.openforms-modal[open]) {
     opacity: 0.5;
     font-size: 150%;
 
-    // This button is only used to show an icon. With this the icon is centralized.
+    // This button is only used to show an icon. With this the icon is centered.
     line-height: 1;
 
     &:focus {
