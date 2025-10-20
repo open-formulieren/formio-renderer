@@ -5,6 +5,8 @@ import type {Locale} from 'date-fns';
 import {useEffect, useState} from 'react';
 import {useIntl} from 'react-intl';
 
+import './DatePickerCalendar.scss';
+
 /**
  * Dynamically import the calendar locale.
  */

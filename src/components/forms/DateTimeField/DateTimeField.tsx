@@ -5,6 +5,7 @@ import {useEffect, useId, useState} from 'react';
 import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
+import DatePickerCalendar from '@/components/forms/DatePickerCalendar';
 import {FloatingWidget, useFloatingWidget} from '@/components/forms/FloatingWidget';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -13,8 +14,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
 import {useFieldConfig} from '@/hooks';
 
-import './DatePicker.scss';
-import DatePickerCalendar from './DatePickerCalendar';
+import './DateTimeField.scss';
 import {useDateLocaleMeta} from './hooks';
 import {PART_PLACEHOLDERS} from './messages';
 import {parseDateTime} from './utils';
@@ -282,6 +282,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
           name="time"
           onChange={onPartChange}
           value={time}
+          className="utrecht-textbox--openforms"
         />
       </FloatingWidget>
       <HelpText>{description}</HelpText>

@@ -5,6 +5,7 @@ import {useId} from 'react';
 import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
+import DatePickerCalendar from '@/components/forms/DatePickerCalendar';
 import {FloatingWidget, useFloatingWidget} from '@/components/forms/FloatingWidget';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -14,7 +15,6 @@ import {useDateLocaleMeta} from '../hooks';
 import {PART_PLACEHOLDERS} from '../messages';
 import {parseDate} from '../utils';
 import './DatePicker.scss';
-import DatePickerCalendar from './DatePickerCalendar';
 
 interface DatePickerProps {
   /**

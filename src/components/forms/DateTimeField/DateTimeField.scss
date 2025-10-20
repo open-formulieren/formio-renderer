@@ -1,13 +1,11 @@
+@use '@utrecht/components/form-field';
 @use '@utrecht/components/textbox';
 
 @use '@/scss/bem';
+@use '@/scss/form-field-override';
 
 .openforms-datepicker-textbox {
   position: relative;
-
-  .utrecht-textbox {
-    padding-right: 3em;
-  }
 
   @include bem.element('calendar-toggle') {
     position: absolute;
@@ -19,5 +17,11 @@
     display: flex;
     align-items: center;
     color: var(--of-color-fg-muted);
+  }
+}
+
+.utrecht-textbox {
+  @include bem.modifier('openforms') {
+    font-weight: var(--of-input-font-weight, normal);
   }
 }
