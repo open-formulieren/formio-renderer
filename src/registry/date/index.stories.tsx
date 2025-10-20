@@ -105,6 +105,50 @@ export const WithTooltipDatePicker: Story = {
   },
 };
 
+export const MultipleInputGroup: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      multiple: true,
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: ['2025-10-23', '2000-01-01'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleDatePicker: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      multiple: true,
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: ['2025-10-23', '2000-01-01'],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: DateComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -358,6 +402,72 @@ export const MinMaxValidationDatePicker: ValidationStory = {
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
     });
+  },
+};
+
+export const InvalidMultipleDateInputGroup: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      validate: {
+        required: false,
+      },
+      multiple: true,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const monthInput = canvas.getByLabelText('Month');
+    await userEvent.type(monthInput, '13');
+
+    const dayInput = canvas.getByLabelText('Day');
+    await userEvent.type(dayInput, '8');
+
+    const yearInput = canvas.getByLabelText('Year');
+    await userEvent.type(yearInput, '2000');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid input')).toBeVisible();
+
+    expect(monthInput).toHaveDisplayValue('13');
+    expect(dayInput).toHaveDisplayValue('8');
+    expect(yearInput).toHaveDisplayValue('2000');
+  },
+};
+
+export const InvalidMultipleDateDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      validate: {
+        required: false,
+      },
+      multiple: true,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = canvas.getByLabelText('Your date 1');
+    await userEvent.type(date, '13/32/2000');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Invalid input')).toBeVisible();
+
+    expect(date).toHaveDisplayValue('13/32/2000');
   },
 };
 
