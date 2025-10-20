@@ -193,6 +193,12 @@
       "value": "Street name"
     }
   ],
+  "DZjLaH": [
+    {
+      "type": 0,
+      "value": "Hour must be between 0-23 and minute between 0-59"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -203,6 +209,16 @@
     {
       "type": 0,
       "value": "Empty fields"
+    }
+  ],
+  "GThFIc": [
+    {
+      "type": 0,
+      "value": "Time must be after "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
     }
   ],
   "IhLYXK": [
@@ -333,6 +349,16 @@
       "value": "No"
     }
   ],
+  "ampZcZ": [
+    {
+      "type": 0,
+      "value": "Time must be before "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
+    }
+  ],
   "bKPaUj": [
     {
       "type": 0,
@@ -459,6 +485,24 @@
     {
       "type": 0,
       "value": "Day"
+    }
+  ],
+  "vMKP5p": [
+    {
+      "type": 0,
+      "value": "Time must be in-between "
+    },
+    {
+      "type": 1,
+      "value": "minTime"
+    },
+    {
+      "type": 0,
+      "value": " and "
+    },
+    {
+      "type": 1,
+      "value": "maxTime"
     }
   ],
   "xHVrv5": [

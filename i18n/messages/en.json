@@ -74,6 +74,11 @@
     "description": "Label for addressNL streetName read only result",
     "originalDefault": "Street name"
   },
+  "DZjLaH": {
+    "defaultMessage": "Hour must be between 0-23 and minute between 0-59",
+    "description": "Validation error describing shape of time format.",
+    "originalDefault": "Hour must be between 0-23 and minute between 0-59"
+  },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
     "description": "Tooltip icon label",
@@ -83,6 +88,11 @@
     "defaultMessage": "Empty fields",
     "description": "SoftRequiredErrors header",
     "originalDefault": "Empty fields"
+  },
+  "GThFIc": {
+    "defaultMessage": "Time must be after {minTime}",
+    "description": "Validation error describing the value is not after the minimum time.",
+    "originalDefault": "Time must be after {minTime}"
   },
   "IhLYXK": {
     "defaultMessage": "Toggle calendar",
@@ -158,6 +168,11 @@
     "defaultMessage": "No",
     "description": "'False' display",
     "originalDefault": "No"
+  },
+  "ampZcZ": {
+    "defaultMessage": "Time must be before {maxTime}",
+    "description": "Validation error describing the value is not before the maximum time.",
+    "originalDefault": "Time must be before {maxTime}"
   },
   "bKPaUj": {
     "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
@@ -238,6 +253,11 @@
     "defaultMessage": "Day",
     "description": "Date input group: day label",
     "originalDefault": "Day"
+  },
+  "vMKP5p": {
+    "defaultMessage": "Time must be in-between {minTime} and {maxTime}",
+    "description": "Validation error describing the value is not in-between the minimum and maximum time.",
+    "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
   "xHVrv5": {
     "defaultMessage": "The value must be {min} or greater.",
