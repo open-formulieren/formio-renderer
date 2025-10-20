@@ -461,7 +461,7 @@ export const InvalidMultipleDateDatePicker: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const date = canvas.getByLabelText('Your date 1');
+    const date = await canvas.findByLabelText('Your date 1');
     await userEvent.type(date, '13/32/2000');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));

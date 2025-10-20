@@ -112,3 +112,40 @@ describe('date component validation', () => {
     expect(success).toBe(valid);
   });
 });
+
+describe('date component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['2025-07-19'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('validates individual items', () => {
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(['2025-44-33']);
+
+    expect(success).toBe(false);
+  });
+});

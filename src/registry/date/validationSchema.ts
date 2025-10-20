@@ -14,7 +14,7 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate = {}, datePicker} = componentDefinition;
+  const {key, validate = {}, datePicker, multiple} = componentDefinition;
   const {required} = validate;
   // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
@@ -44,6 +44,13 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
   if (!required) {
     schema = z.union([schema, z.literal('')]).optional();
+  }
+
+  if (multiple) {
+    schema = z.array(schema);
+    if (required) {
+      schema = schema.min(1);
+    }
   }
 
   return {[key]: schema};
