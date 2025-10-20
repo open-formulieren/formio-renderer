@@ -10,6 +10,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   edit: 'edit',
   remove: 'trash-can',
   tooltip: 'question-circle',
+  close: 'xmark',
   warning: 'exclamation-triangle',
   calendar: 'calendar-days',
 };

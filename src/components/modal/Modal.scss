@@ -1,0 +1,121 @@
+@use '@utrecht/components/button';
+@use '@utrecht/components/heading-2';
+
+@use '@/scss/bem';
+@use '@/scss/responsive';
+
+$modal-padding-block-start: var(--of-modal-padding-block-start, 40px);
+$modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
+$modal-padding-inline-start: var(--of-modal-padding-inline-start, 40px);
+$modal-padding-inline-end: var(--of-modal-padding-inline-end, 40px);
+
+// Take half the modal padding, and turn it negative
+$modal-close-icon-offset-block-start: calc($modal-padding-block-start * -0.5);
+$modal-close-icon-offset-inline-end: calc($modal-padding-inline-end * -0.5);
+
+body:has(.openforms-modal[open]) {
+  overflow: hidden;
+}
+
+.openforms-modal {
+  &[open] {
+    display: grid;
+  }
+
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: auto 1fr;
+  grid-row-gap: 20px;
+  grid-template-areas:
+    'body close'
+    'body close';
+  padding-block-start: $modal-padding-block-start;
+  padding-block-end: $modal-padding-block-end;
+  padding-inline-start: $modal-padding-inline-start;
+  padding-inline-end: $modal-padding-inline-end;
+
+  box-sizing: border-box;
+  inline-size: 90dvw;
+
+  min-block-size: 20dvh;
+  block-size: fit-content;
+  max-block-size: 90dvh;
+
+  border-style: solid;
+  border-width: var(--of-modal-border-width, 1px);
+  border-color: var(--of-modal-border-color, #eee);
+
+  background-color: var(--of-modal-background-color, white);
+  box-shadow: var(
+    --of-modal-box-shadow,
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 6px 20px rgba(0, 0, 0, 0.2)
+  );
+
+  @include responsive.desktop {
+    inline-size: 50dvw;
+
+    min-block-size: 30dvh;
+    max-block-size: 50dvh;
+  }
+
+  &:has(.openforms-modal__title) {
+    grid-template-areas:
+      'title close'
+      'body body';
+  }
+
+  &::backdrop {
+    background-color: var(--of-modal-overlay-background-color, rgba(255, 255, 255, 0.75));
+    backdrop-filter: blur(1px);
+  }
+
+  @include bem.element('close') {
+    position: relative;
+
+    $calculated-modal-close-icon-offset-block-start: calc(
+      $modal-close-icon-offset-block-start - var(--utrecht-button-padding-block-start) - var(
+          --_utrecht-button-border-width
+        )
+    );
+    inset-block-start: $calculated-modal-close-icon-offset-block-start;
+    inset-inline-end: calc(
+      $modal-close-icon-offset-inline-end - var(--utrecht-button-padding-inline-end) - var(
+          --_utrecht-button-border-width
+        )
+    );
+    // Also set bottom margin, to prevent button size from dictating the modal header
+    // spacing.
+    margin-block-end: $calculated-modal-close-icon-offset-block-start;
+
+    grid-area: close;
+    align-self: start;
+    justify-self: end;
+    transition:
+      transform ease 0.1s,
+      opacity ease 0.1s;
+    opacity: 0.5;
+    font-size: 150%;
+
+    // This button is only used to show an icon. With this the icon is centered.
+    line-height: 1;
+
+    &:focus {
+      outline: revert;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 0.7;
+    }
+  }
+
+  @include bem.element('title') {
+    grid-area: title;
+    break-inside: avoid-column;
+  }
+
+  @include bem.element('body') {
+    grid-area: body;
+    overflow-y: auto;
+  }
+}

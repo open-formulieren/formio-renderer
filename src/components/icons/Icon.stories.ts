@@ -31,3 +31,15 @@ export const Remove: Story = {
     icon: 'remove',
   },
 };
+
+export const Tooltip: Story = {
+  args: {
+    icon: 'tooltip',
+  },
+};
+
+export const Close: Story = {
+  args: {
+    icon: 'close',
+  },
+};
