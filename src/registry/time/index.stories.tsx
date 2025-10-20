@@ -292,6 +292,45 @@ export const ValidateMinTimeMaxTimeNextDay: ValidationStory = {
   },
 };
 
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+        minTime: '09:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByLabelText(/A timefield \d/);
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], '8:00'); // too early
+    await userEvent.type(textboxes[2], '11:30'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Time must be after 09:00')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: TimeComponentSchema;
   value: string | string[];
