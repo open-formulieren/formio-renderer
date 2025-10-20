@@ -98,6 +98,60 @@ export const WithAutoComplete: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          email: ['info@example.com', 'dummy@example.com'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          email: ['info@example.com', 'example.com'],
+        },
+      },
+      initialErrors: {
+        my: {
+          email: [undefined, 'Not a valid email.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          email: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: EmailComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
