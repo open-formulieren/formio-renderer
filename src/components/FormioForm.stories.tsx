@@ -635,3 +635,38 @@ export const WithMultipleAndConditional: Story = {
     });
   },
 };
+
+export const WithMultipleAndDefaultValue: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Trigger',
+        multiple: true,
+        defaultValue: ['one', 'two'],
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial state', async () => {
+      const textboxes = await canvas.findAllByRole('textbox');
+      expect(textboxes).toHaveLength(2);
+      expect(textboxes[0]).toHaveDisplayValue('one');
+      expect(textboxes[1]).toHaveDisplayValue('two');
+    });
+
+    await step('Add another item', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      const textboxes = await canvas.findAllByRole('textbox');
+      expect(textboxes).toHaveLength(3);
+      expect(textboxes[0]).toHaveDisplayValue('one');
+      expect(textboxes[1]).toHaveDisplayValue('two');
+      expect(textboxes[2]).toHaveDisplayValue('');
+    });
+  },
+};
