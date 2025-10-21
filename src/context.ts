@@ -5,6 +5,7 @@ import type {AddressNLParameters} from './registry/addressNL/types';
 import type {CosignOldParameters} from './registry/cosignOld/types';
 import type {EmailParameters} from './registry/email/types';
 import type {FileParameters} from './registry/file/types';
+import type {MapParameters} from './registry/map/types';
 import type {ValidatePluginCallback} from './validationSchema';
 import {fallbackValidatePlugin} from './validationSchema';
 
@@ -26,6 +27,7 @@ export interface FormSettings {
     coSign?: CosignOldParameters;
     email?: EmailParameters;
     file?: FileParameters;
+    map?: MapParameters;
   };
   /**
    * Callback that implements the actual async 'plugin validator' behaviour.

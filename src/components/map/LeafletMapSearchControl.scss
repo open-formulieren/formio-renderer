@@ -1,0 +1,8 @@
+@use '@/scss/responsive';
+
+@include responsive.mobile-only {
+  // Making sure that the search input doesn't go over the other map controls.
+  .leaflet-control-geosearch > form > input {
+    min-width: 180px;
+  }
+}
