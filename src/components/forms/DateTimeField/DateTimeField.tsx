@@ -277,7 +277,10 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         <Textbox
           type="time"
           step="60" // Ensures no seconds are displayed
-          aria-label="time"
+          aria-label={formatMessage({
+            description: 'Datetime picker: accessible time input field label',
+            defaultMessage: 'Time',
+          })}
           name="time"
           onChange={onPartChange}
           value={time}

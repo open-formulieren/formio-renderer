@@ -143,7 +143,7 @@ export const SelectDateAndTimeInDateTimePicker: Story = {
     expect(date).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 
     // Pick a time
-    const time = canvas.getByLabelText('time');
+    const time = canvas.getByLabelText('Time');
     await userEvent.clear(time);
     await userEvent.type(time, '1052');
     expect(time).toHaveDisplayValue('10:52');
@@ -206,7 +206,7 @@ export const TypeDateManually: Story = {
     expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 
     // Ensure that the time is displayed
-    const time = await canvas.getByLabelText('time');
+    const time = await canvas.getByLabelText('Time');
     expect(time).toHaveValue('12:34');
 
     // Ensure that the datetime is formatted as an ISO-8601 string on submit
