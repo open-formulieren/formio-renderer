@@ -98,6 +98,60 @@ export const WithAutocomplete: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'my.phoneNumber',
+      label: 'A simple phone number',
+      inputMask: null,
+      multiple: true,
+    } satisfies PhoneNumberComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          phoneNumber: ['06-12345678', '123456789'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'my.phoneNumber',
+      label: 'A simple phone number',
+      inputMask: null,
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          phoneNumber: ['+316 123 456 78', 'aaa-1234'],
+        },
+      },
+      initialErrors: {
+        my: {
+          phoneNumber: [undefined, 'Not a valid phone number.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          phoneNumber: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: PhoneNumberComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
