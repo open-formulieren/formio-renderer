@@ -373,3 +373,28 @@ test('Item validation schema adapts to component visibility', async () => {
   expect(await screen.findByText('Invalid')).toBeVisible();
   expect(screen.queryAllByRole('button', {name: 'Save'})).toHaveLength(2);
 });
+
+test('defaultValue: null does not crash', async () => {
+  render(
+    <Form
+      components={[
+        {
+          id: 'editgrid',
+          type: 'editgrid',
+          key: 'editgrid',
+          label: 'Edit grid',
+          groupLabel: 'Item',
+          addAnother: 'Add item',
+          disableAddingRemovingRows: false,
+          components: [],
+          // @ts-expect-error type definitions and actual formio.js builder behaviour don't
+          // match!
+          defaultValue: null,
+        },
+      ]}
+      onSubmit={vi.fn()}
+    />
+  );
+
+  expect(screen.getByRole('button', {name: 'Add item'})).toBeVisible();
+});
