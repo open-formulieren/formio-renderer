@@ -147,6 +147,10 @@ export const MinMaxValidation: ValidationStory = {
       },
     } satisfies DateTimeComponentSchema,
   },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
   play: async ({canvasElement, step, args}) => {
     const canvas = within(canvasElement);
     const date = canvas.getByLabelText('Datetime');
@@ -157,7 +161,7 @@ export const MinMaxValidation: ValidationStory = {
 
       await userEvent.click(button);
       expect(
-        await canvas.findByText('The datetime must be later than or equal to 8-10-2025 12:00.')
+        await canvas.findByText('The datetime must be later than or equal to 8-10-2025, 12:00.')
       ).toBeVisible();
       expect(args.onSubmit).not.toHaveBeenCalled();
     });
@@ -168,7 +172,7 @@ export const MinMaxValidation: ValidationStory = {
 
       await userEvent.click(button);
       expect(await canvas.queryByText('Invalid input')).not.toBeInTheDocument();
-      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00'}});
+      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
     });
 
     await step('Date after date range', async () => {
@@ -177,10 +181,10 @@ export const MinMaxValidation: ValidationStory = {
 
       await userEvent.click(button);
       expect(
-        await canvas.queryByText('The datetime must be earlier than or equal to 10-10-2025 19:00.')
+        await canvas.queryByText('The datetime must be earlier than or equal to 10-10-2025, 19:00.')
       ).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
-      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00'}});
+      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
     });
   },
 };

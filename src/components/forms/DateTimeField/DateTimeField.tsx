@@ -174,10 +174,11 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       // If one part is missing, treat as if the entire field was cleared.
       setValue('');
     } else {
-      // If we have both parts, we can combine them into an ISO-8601 string. This is possible,
-      // because the date picker and time input return a date and time ISO-8601 string,
-      // respectively.
-      setValue(`${newDateParts.date}T${newDateParts.time}:00`);
+      // If we have both parts, we can combine them into an ISO-8601 string, and convert to a date
+      // object. This is possible, because the date picker and time input return a date and time
+      // ISO-8601 string, respectively.
+      const date_ = parseDateTime(`${newDateParts.date}T${newDateParts.time}:00`)!;
+      setValue(formatISO(date_!));
     }
   };
 
@@ -219,9 +220,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
             // If we were able to create a date object, format it to an ISO-8601 string and set it
             // as the field value. Otherwise, just set the entered value to the field directly.
             // It's up to the validation libraries to check it.
-            const newValue = date
-              ? formatISO(date, {representation: 'complete'}).slice(0, 19) // remove TZ info
-              : value;
+            const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
             await setValue(newValue);
             onBlur(event);
             await validateField(name);

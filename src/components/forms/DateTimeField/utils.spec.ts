@@ -1,3 +1,4 @@
+import {formatISO} from 'date-fns';
 import {describe, expect, test} from 'vitest';
 
 import type {DateTimePartValues} from './types';
@@ -49,6 +50,7 @@ describe('Parse datetime validation', () => {
   // ISO-8601 strings
   test.each([
     '2025-09-01T12:34:56',
+    '2025-09-01T12:34:56+02:00',
     '2025-9-01T12:34:56',
     '2025-09-1T12:34:56',
     '2025-9-1T12:34:56',
@@ -76,9 +78,9 @@ describe('Parse datetime validation', () => {
 
   test('Valid value with meta', () => {
     const meta = getDateLocaleMeta('en');
-    const result = parseDateTime('12/20/2000 12:45', meta);
-    // Note: Date takes a month index (0-11)
-    expect(result).toEqual(new Date(2000, 11, 20, 12, 45, 0));
+    const result = parseDateTime('9/20/2000 12:45', meta);
+    expect(result).not.toBeNull();
+    expect(formatISO(result!)).toEqual('2000-09-20T12:45:00+02:00');
   });
 
   test.each([

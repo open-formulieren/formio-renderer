@@ -105,6 +105,59 @@ export const LimitedRange: Story = {
   },
 };
 
+export const SelectDateAndTimeInDateTimePicker: Story = {
+  args: {
+    name: 'datetime',
+    label: 'Datetime',
+    isDisabled: false,
+    isRequired: false,
+  },
+  decorators: [
+    Story => (
+      <>
+        <Story />
+        <PrimaryActionButton type="submit" style={{marginBlockStart: '20px'}}>
+          Submit
+        </PrimaryActionButton>
+      </>
+    ),
+  ],
+  parameters: {
+    formik: {
+      initialValues: {datetime: '2025-10-20T12:34:00T+02:00'},
+      onSubmit: fn(),
+    },
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  play: async ({canvasElement, parameters}) => {
+    const canvas = within(canvasElement);
+
+    // Open the floating widget
+    const datetime = canvas.getByLabelText('Datetime');
+    await userEvent.click(datetime);
+
+    // Pick a date
+    const date = await canvas.findByRole('button', {name: 'woensdag 22 oktober 2025'});
+    await userEvent.click(date);
+    expect(date).toBeVisible();
+    expect(date).toHaveClass('utrecht-calendar__table-days-item-day--selected');
+
+    // Pick a time
+    const time = canvas.getByLabelText('time');
+    await userEvent.clear(time);
+    await userEvent.type(time, '1052');
+    expect(time).toHaveDisplayValue('10:52');
+
+    // Ensure the text input has the picked date and time
+    expect(datetime).toHaveDisplayValue('22-10-2025 10:52');
+
+    // Ensure that the date is formatted as an ISO-8601 string on submit
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    const onSubmit = parameters.formik.onSubmit;
+    expect(onSubmit).toHaveBeenCalledWith({datetime: '2025-10-22T10:52:00+02:00'});
+  },
+};
+
 export const TypeDateManually: Story = {
   args: {
     name: 'datetime',
@@ -126,6 +179,7 @@ export const TypeDateManually: Story = {
     formik: {
       onSubmit: fn(),
     },
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
   },
   play: async ({canvasElement, parameters}) => {
     const canvas = within(canvasElement);
@@ -158,7 +212,7 @@ export const TypeDateManually: Story = {
     // Ensure that the datetime is formatted as an ISO-8601 string on submit
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     const onSubmit = parameters.formik.onSubmit;
-    expect(onSubmit).toHaveBeenCalledWith({datetime: '2025-08-29T12:34:00'});
+    expect(onSubmit).toHaveBeenCalledWith({datetime: '2025-08-29T12:34:00+02:00'});
   },
 };
 

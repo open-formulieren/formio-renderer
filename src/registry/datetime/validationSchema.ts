@@ -31,37 +31,35 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
   // support in the form builder for choosing which widget to use - the min and max dates should be
   // moved to either the `validate` or `openForms` prop, probably.
-  const minDate = datePicker?.minDate;
-  const maxDate = datePicker?.maxDate;
+  // Note: setting a max and min date in the form builder sets a value without the seconds in the
+  // component definition (YYYY-MM-DDThh:mm). `parseISO` can deal with this.
+  const minDate = datePicker?.minDate ? parseISO(datePicker.minDate) : null;
+  const maxDate = datePicker?.maxDate ? parseISO(datePicker.maxDate) : null;
 
   let dateSchema = z.coerce.date();
   if (minDate) {
-    const minDateString = intl
-      .formatDate(minDate, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: false,
-      })
-      .replace(',', '');
-    dateSchema = dateSchema.min(parseISO(minDate), {
+    const minDateString = intl.formatDate(minDate, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+    });
+    dateSchema = dateSchema.min(minDate, {
       message: intl.formatMessage(DATETIME_LESS_THAN_MIN_DATE_MESSAGE, {min: minDateString}),
     });
   }
   if (maxDate) {
-    const maxDateString = intl
-      .formatDate(maxDate, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: false,
-      })
-      .replace(',', '');
-    dateSchema = dateSchema.max(parseISO(maxDate), {
+    const maxDateString = intl.formatDate(maxDate, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+    });
+    dateSchema = dateSchema.max(maxDate, {
       message: intl.formatMessage(DATETIME_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDateString}),
     });
   }

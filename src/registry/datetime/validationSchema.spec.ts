@@ -87,11 +87,12 @@ describe('datetime component validation', () => {
     expect(success).toBe(true);
   });
 
+  // Note: datetimes are set like this in the form builder
   test.each([
-    ['2024-01-01T00:00:00', true],
-    ['2025-10-08T12:50:00', true],
-    ['2025-10-08T12:52:00', false],
-    ['2030-07-21T00:00:00', false],
+    ['2024-01-01T00:00', true],
+    ['2025-10-08T12:50', true],
+    ['2025-10-08T12:52', false],
+    ['2030-07-21T00:00', false],
   ])('Minimum date: %s (valid: %s)', (minDate, valid) => {
     const component: DateTimeComponentSchema = {
       ...BASE_COMPONENT,

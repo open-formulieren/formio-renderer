@@ -18,28 +18,33 @@ export interface LocaleMeta {
 }
 
 /**
- * Parse a given string into a JS Date instance. The datetime is expected to be in ISO-8601
- * YYYY-MM-DDTHH:MM:SS format, or formatted according to the locale if the meta was passed. Note
- * that single digit months or days are zero-padded automatically, and passing a locale formatted
- * value without seconds is also a valid, e.g. 'D-M-YYYY HH:MM' (Dutch format).
+ * Parse a given string into a JS Date instance with timezone information (Amsterdam). The datetime
+ * is expected to be in ISO-8601 YYYY-MM-DDTHH:MM:SS format (optionally including timezone
+ * information), or formatted according to the locale if the meta was passed. Note that single digit
+ * months or days are zero-padded automatically, and passing a locale formatted
+ * value without seconds is also valid, e.g. '1-10-2025 11:22' (Dutch format).
  *
  * If no date could be parsed (either because it's incomplete, wrong format or just nonsensical),
  * returns `null`.
  *
  * Note: we assume that the formatted string has 24-hour time format, and includes a ':' time
- * separator
+ * separator.
  */
 export const parseDateTime = (value: string, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
 
+  const expectISO8601String = meta === undefined;
+  // Remove timezone information (only if string is ISO-8601)
+  if (expectISO8601String) value = value.slice(0, 19);
+
   // If the locale meta was passed, we try to parse it as a formatted string. Otherwise, parse as
   // ISO-8601 string.
-  const separator = meta === undefined ? 'T' : ' ';
+  const separator = expectISO8601String ? 'T' : ' ';
   const [date, time] = value.split(separator);
   const [hour, minute, second] = time ? time.split(':') : [];
 
   // Seconds may not be missing for an ISO-8601 string
-  if (!hour || !minute || (!second && meta === undefined)) return null;
+  if (!hour || !minute || (!second && expectISO8601String)) return null;
 
   const partsOrder = meta?.partsOrder ?? ['year', 'month', 'day']; // default ISO-8601 order
   const orderedParts = partsOrder.map(part => RE_PARTS[part]);
