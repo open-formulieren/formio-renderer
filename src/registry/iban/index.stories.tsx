@@ -61,6 +61,60 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'iban',
+      key: 'my.iban',
+      label: 'An IBAN field',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies IbanComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          iban: ['NL91 ABNA 0417 1643 00', 'NL91ABNA0417164300'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'iban',
+      key: 'my.iban',
+      label: 'An IBAN field',
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          iban: ['NL91ABNA0417164300', '1234'],
+        },
+      },
+      initialErrors: {
+        my: {
+          iban: [undefined, 'Not a valid IBAN.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          iban: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: IbanComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
