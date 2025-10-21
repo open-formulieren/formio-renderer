@@ -63,6 +63,62 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies LicensePlateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: ['12-34-56', 'auto'],
+        },
+      },
+      initialErrors: {
+        license: {
+          plate: [undefined, 'Not a valid Dutch license plate number.'],
+        },
+      },
+      initialTouched: {
+        license: {
+          plate: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: LicensePlateComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
