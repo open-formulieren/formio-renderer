@@ -16,6 +16,7 @@ import './index.scss';
 import getInitialValues from './initialValues';
 import {Affixes, BSN, DateOfBirth, Initials, LastName} from './subFields';
 import type {ManuallyAddedPartnerDetails} from './types';
+import getValidationSchema from './validationSchema';
 
 export interface FormioPartnersFieldProps {
   componentDefinition: PartnersComponentSchema;
@@ -95,6 +96,7 @@ const PartnersFieldComponent: RegistryEntry<PartnersComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   isEmpty,
+  getValidationSchema,
 };
 
 export default PartnersFieldComponent;
