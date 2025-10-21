@@ -68,6 +68,68 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies PostcodeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          postcode: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          postcode: ['1043 GR', 'ABCD 99'],
+        },
+      },
+      initialErrors: {
+        my: {
+          postcode: [undefined, 'Invalid Dutch postcode.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          postcode: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: PostcodeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
