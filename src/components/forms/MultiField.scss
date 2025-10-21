@@ -9,9 +9,6 @@
 @use '@/scss/sr-only.scss';
 
 .openforms-multifield {
-  // REMOVE BEFORE MERGE!
-  --of-multifield-remove-button-inset-block-start: var(--utrecht-textbox-border-width);
-
   padding: 0;
   margin: 0;
 
