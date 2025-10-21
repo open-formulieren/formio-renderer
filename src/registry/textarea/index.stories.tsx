@@ -307,6 +307,43 @@ export const PassesAllValidations: ValidationStory = {
   },
 };
 
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A textarea',
+      autoExpand: false,
+      validate: {
+        required: true,
+        pattern: '[a-zA-Z]+',
+      },
+      multiple: true,
+    } satisfies TextareaComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], '123 + 456'); // does not match pattern
+    await userEvent.type(textboxes[2], 'word'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Invalid')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: TextareaComponentSchema;
   value: string | string[];
