@@ -184,6 +184,44 @@ export const ValidateIBAN: ValidationStory = {
   },
 };
 
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'iban',
+      key: 'my.iban',
+      label: 'An IBAN field',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+    } satisfies IbanComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(4);
+
+    await userEvent.type(textboxes[1], 'NL90ABNA0417164300'); // wrong check digits
+    await userEvent.type(textboxes[2], 'NL91 ABNA 0417 1643 00'); // ok
+    await userEvent.type(textboxes[3], 'NL91ABNA0417164300'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Invalid IBAN')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: IbanComponentSchema;
   value: string | string[];
