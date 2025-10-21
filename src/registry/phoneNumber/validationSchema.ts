@@ -14,8 +14,7 @@ const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  // TODO: handle `multiple`
-  const {key, validate = {}} = componentDefinition;
+  const {key, validate = {}, multiple} = componentDefinition;
   const {required, pattern} = validate;
 
   // base phone number shape - a more narrow pattern can be specified in the form builder
@@ -35,6 +34,13 @@ const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
     schema = schema.min(1);
   } else {
     schema = schema.optional().or(z.literal(''));
+  }
+
+  if (multiple) {
+    schema = z.array(schema);
+    if (required) {
+      schema = schema.min(1);
+    }
   }
 
   return {[key]: schema};
