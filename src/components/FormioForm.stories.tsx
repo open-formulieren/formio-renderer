@@ -583,7 +583,7 @@ export const WithMultipleAndConditional: Story = {
         id: 'component1',
         type: 'textfield',
         key: 'nested.textfield',
-        label: 'Text field 1',
+        label: 'Trigger',
         multiple: true,
       } satisfies TextFieldComponentSchema,
       {
@@ -600,11 +600,38 @@ export const WithMultipleAndConditional: Story = {
       },
     ],
   },
-  play: async ({canvasElement}) => {
+  play: async ({canvasElement, args, step}) => {
     const canvas = within(canvasElement);
 
-    // start out with a single textbox for the text field
-    expect(await canvas.findAllByRole('textbox')).toHaveLength(1);
-    expect(canvas.queryByText('Conditionally displayed email')).not.toBeInTheDocument();
+    await step('Initial state', async () => {
+      // start out with a single textbox for the text field
+      expect(await canvas.findAllByRole('textbox')).toHaveLength(1);
+      expect(canvas.queryByLabelText('Conditionally displayed email')).not.toBeInTheDocument();
+    });
+
+    await step('Add data in first item', async () => {
+      const textinput1 = canvas.getByLabelText('Trigger 1');
+      await userEvent.type(textinput1, 'no show yet');
+      expect(canvas.queryByLabelText('Conditionally displayed email')).not.toBeInTheDocument();
+    });
+
+    await step('Trigger display', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      const textinput1 = canvas.getByLabelText('Trigger 2');
+      await userEvent.type(textinput1, 'show email');
+
+      const emailInput = await canvas.findByLabelText('Conditionally displayed email');
+      expect(emailInput).toBeVisible();
+      await userEvent.type(emailInput, 'info@example.com');
+    });
+
+    expect(await canvas.findAllByRole('textbox')).toHaveLength(3);
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      nested: {
+        textfield: ['no show yet', 'show email'],
+      },
+      email: 'info@example.com',
+    });
   },
 };
