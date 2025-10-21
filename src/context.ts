@@ -4,6 +4,7 @@ import React from 'react';
 import type {AddressNLParameters} from './registry/addressNL/types';
 import type {CosignOldParameters} from './registry/cosignOld/types';
 import type {FileParameters} from './registry/file/types';
+import type {MapParameters} from './registry/map/types';
 import type {ValidatePluginCallback} from './validationSchema';
 import {fallbackValidatePlugin} from './validationSchema';
 
@@ -24,6 +25,7 @@ export interface FormSettings {
     addressNL?: AddressNLParameters;
     coSign?: CosignOldParameters;
     file?: FileParameters;
+    map?: MapParameters;
   };
   /**
    * Callback that implements the actual async 'plugin validator' behaviour.
