@@ -131,6 +131,60 @@ export const WithAutoComplete: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      multiple: true,
+    } satisfies TextareaComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: ['lorem ipsum', 'dolor sed quiscat'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: ['Lorem Ipsum', 'single\nand multiline'],
+        },
+      },
+      initialErrors: {
+        my: {
+          textarea: [undefined, 'Watch your language!'],
+        },
+      },
+      initialTouched: {
+        my: {
+          textarea: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextareaComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
