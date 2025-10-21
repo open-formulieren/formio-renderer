@@ -576,7 +576,7 @@ export const EditGridPreviewWithOddConditionals: Story = {
   },
 };
 
-export const WithMultiple: Story = {
+export const WithMultipleAndConditional: Story = {
   args: {
     components: [
       {
@@ -586,6 +586,25 @@ export const WithMultiple: Story = {
         label: 'Text field 1',
         multiple: true,
       } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'email',
+        key: 'email',
+        label: 'Conditionally displayed email',
+        validateOn: 'blur',
+        conditional: {
+          show: true,
+          when: 'nested.textfield',
+          eq: 'show email',
+        },
+      },
     ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // start out with a single textbox for the text field
+    expect(await canvas.findAllByRole('textbox')).toHaveLength(1);
+    expect(canvas.queryByText('Conditionally displayed email')).not.toBeInTheDocument();
   },
 };

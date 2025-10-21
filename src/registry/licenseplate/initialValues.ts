@@ -12,6 +12,13 @@ const getInitialValues: GetInitialValues<LicensePlateComponentSchema, string | s
   if (defaultValue === undefined) {
     defaultValue = multiple ? [] : '';
   }
+
+  // ensure there's always at least one item to start with (matches Formio.js latest
+  // behaviour, where the last item in the default value cannot be removed.
+  if (multiple && defaultValue.length === 0) {
+    defaultValue = [''];
+  }
+
   return {[key]: defaultValue};
 };
 
