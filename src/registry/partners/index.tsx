@@ -11,7 +11,9 @@ import type {RegistryEntry} from '@/registry/types';
 
 import PartnersPreview from './PartnersPreview';
 import ValueDisplay from './ValueDisplay';
+import isEmpty from './empty';
 import './index.scss';
+import getInitialValues from './initialValues';
 import {Affixes, BSN, DateOfBirth, Initials, LastName} from './subFields';
 import type {ManuallyAddedPartnerDetails} from './types';
 
@@ -91,6 +93,8 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
 const PartnersFieldComponent: RegistryEntry<PartnersComponentSchema> = {
   formField: FormioPartnersField,
   valueDisplay: ValueDisplay,
+  getInitialValues,
+  isEmpty,
 };
 
 export default PartnersFieldComponent;
