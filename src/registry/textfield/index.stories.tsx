@@ -5,6 +5,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
+import type {ValidatePluginCallback} from '@/validationSchema';
 
 import {FormioTextField as TextField} from './';
 import ValueDisplay from './ValueDisplay';
@@ -149,6 +150,17 @@ const BaseValidationStory: ValidationStory = {
     formik: {
       disable: true,
     },
+    formSettings: {
+      validatePluginCallback: (async (plugin: string) => {
+        if (['mock1', 'mock2'].includes(plugin)) {
+          return {
+            valid: false,
+            messages: [`Does not pass ${plugin} plugin validation.`],
+          };
+        }
+        return {valid: true};
+      }) satisfies ValidatePluginCallback,
+    },
   },
 };
 
@@ -224,6 +236,35 @@ export const ValidatePattern: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Invalid')).toBeVisible();
+  },
+};
+
+export const ValidatePlugin: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      validate: {
+        plugins: ['mock1', 'mock2'],
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textField = canvas.getByLabelText('A textfield');
+    await userEvent.type(textField, 'ayeet');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findByText(
+        'Does not pass mock1 plugin validation. Does not pass mock2 plugin validation.'
+      )
+    ).toBeVisible();
   },
 };
 

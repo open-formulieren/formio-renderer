@@ -27,6 +27,17 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
     schema = schema.optional();
   }
 
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
+  }
+
   if (multiple) {
     schema = z.array(schema);
     if (required) {
