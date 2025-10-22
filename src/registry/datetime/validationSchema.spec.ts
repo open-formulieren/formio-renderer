@@ -122,3 +122,40 @@ describe('datetime component validation', () => {
     expect(success).toBe(valid);
   });
 });
+
+describe('datetime component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['2024-01-01T00:00:00'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('validates individual items', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(['2024-01-01T99:33:66']);
+
+    expect(success).toBe(false);
+  });
+});

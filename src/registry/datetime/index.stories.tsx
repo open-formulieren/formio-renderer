@@ -306,6 +306,36 @@ export const MinMaxValidationWithEnglishLocale: ValidationStory = {
   },
 };
 
+export const InvalidMultipleDateTime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      validate: {
+        required: false,
+      },
+      multiple: true,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = await canvas.findByLabelText('Datetime 1');
+    await userEvent.type(date, '13/32/2000 16:00 AM');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findByText(/The datetime must consist of a date and a time stamp/)
+    ).toBeVisible();
+
+    expect(date).toHaveDisplayValue('13/32/2000 16:00 AM');
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: DateTimeComponentSchema;
   value: string | string[];
