@@ -12,7 +12,7 @@ import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import './DateTimeField.scss';
 import {useDateLocaleMeta} from './hooks';
@@ -59,6 +59,11 @@ export interface DateTimeFieldProps {
    */
   maxDate?: Date;
   'aria-describedby'?: string;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
 }
 
 interface DateTimePartValues {
@@ -101,13 +106,14 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   minDate,
   maxDate,
   'aria-describedby': ariaDescribedBy,
+  isMultiValue = false,
 }) => {
   name = useFieldConfig(name);
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
-  const [{value, onBlur, onChange}, {error = '', touched}, {setTouched, setValue}] =
-    useField<string>(name);
+  const [{value, onBlur, onChange}, {touched}, {setTouched, setValue}] = useField<string>(name);
+  const error = useFieldError(name, isMultiValue);
   const {
     refs,
     floatingStyles,

@@ -60,6 +60,58 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: {
+          time: ['2025-10-22T16:00:00+02:00', '2025-11-22T07:07:00+00:00'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: {
+          time: ['2025-10-22T16:00:00+02:00', 'not-a-datetime'],
+        },
+      },
+      initialErrors: {
+        date: {
+          time: [undefined, 'Not a valid datetime.'],
+        },
+      },
+      initialTouched: {
+        date: {
+          time: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: DateTimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
