@@ -3,9 +3,12 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
-const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = componentDefinition => {
-  const {key, validate} = componentDefinition;
-  const required = validate?.required;
+const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = (
+  componentDefinition,
+  {validatePlugins}
+) => {
+  const {key, validate = {}} = componentDefinition;
+  const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z.string().email();
 
@@ -13,6 +16,17 @@ const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = compon
     schema = schema.min(1);
   } else {
     schema = schema.or(z.literal('')).optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   return {[key]: schema};

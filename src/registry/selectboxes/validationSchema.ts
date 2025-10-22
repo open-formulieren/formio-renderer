@@ -27,11 +27,11 @@ type ValidationSchema = ValuesObject | z.ZodUnion<[z.ZodOptional<ValuesObject>, 
 
 const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
   const {key, validate = {}, values: options} = componentDefinition;
-  const {required, minSelectedCount, maxSelectedCount} = validate;
+  const {required, minSelectedCount, maxSelectedCount, plugins = []} = validate;
 
   // all properties are required by default - this mirrors the explicit true/false
   // values for each checkbox in Formio
@@ -39,7 +39,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
     .object(Object.fromEntries(options.map(option => [option.value, z.boolean()])))
     .strict()
     // run additional validation based on the selected items
-    .superRefine((val, ctx) => {
+    .superRefine(async (val, ctx) => {
       const numChecked = Object.entries(val).filter(([, checked]) => checked).length;
       if (!required && numChecked === 0) return;
 
@@ -71,6 +71,16 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
           inclusive: true,
           message: intl.formatMessage(MAX_COUNT_MESSAGE, {maxSelectedCount}),
         });
+      }
+
+      if (plugins.length) {
+        const message = await validatePlugins(plugins, val);
+        if (message) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: message,
+          });
+        }
       }
     });
 

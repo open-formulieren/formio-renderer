@@ -28,10 +28,10 @@ const TIME_PERIOD_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
   const {key, validate = {}, multiple} = componentDefinition;
-  const {required, minTime, maxTime} = validate;
+  const {required, minTime, maxTime, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
@@ -82,6 +82,17 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
 
   if (!required) {
     schema = schema.or(z.literal('')).optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

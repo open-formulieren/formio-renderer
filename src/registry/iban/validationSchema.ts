@@ -20,16 +20,27 @@ const isValidIBAN = (value: string): boolean => {
 
 const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate, multiple} = componentDefinition;
-  const required = validate?.required;
+  const {key, validate = {}, multiple} = componentDefinition;
+  const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
     .refine(isValidIBAN, {message: intl.formatMessage(IBAN_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

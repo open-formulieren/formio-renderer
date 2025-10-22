@@ -146,10 +146,10 @@ const buildCitySchema = (
  */
 const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate, deriveAddress = false, openForms} = componentDefinition;
-  const required = Boolean(validate?.required);
+  const {key, validate = {}, deriveAddress = false, openForms} = componentDefinition;
+  const {required = false, plugins = []} = validate;
 
   const customPostcodePattern = openForms?.components?.postcode?.validate?.pattern;
   const customPostcodeMessage = openForms?.components?.postcode?.errors?.pattern;
@@ -187,7 +187,7 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
       streetName: streetNameSchema,
       city: citySchema,
     })
-    .superRefine((val, ctx) => {
+    .superRefine(async (val, ctx) => {
       const postcodeOrHouseNumberProvided = Boolean(val.postcode || val.houseNumber);
       // if any field is provided in a non-required component, the other field(s) must also
       // be provided
@@ -229,6 +229,16 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
             code: z.ZodIssueCode.custom,
             message: intl.formatMessage(CITY_INVALID_MESSAGE),
             path: ['city'],
+          });
+        }
+      }
+
+      if (plugins.length && val.postcode && val.houseNumber) {
+        const message = await validatePlugins(plugins, val);
+        if (message) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: message,
           });
         }
       }

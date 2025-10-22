@@ -16,12 +16,10 @@ const NUMBER_LESS_THAN_MIN_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate, currency} = componentDefinition;
-  const required = validate?.required;
-  const max = validate?.max;
-  const min = validate?.min;
+  const {key, validate = {}, currency} = componentDefinition;
+  const {required, min, max, plugins = []} = validate;
 
   const numberFormat = new Intl.NumberFormat(intl.locale, {style: 'currency', currency});
   const maxFormatted = max && numberFormat.format(max);
@@ -38,9 +36,22 @@ const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
     });
   if (!required) schema = schema.nullable().optional();
 
+  schema = z.preprocess(value => (value === null && required ? undefined : value), schema);
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
+  }
+
   // For numbers, a missing value is null, which doesn't trigger the required validation of zod,
   // so we set it to undefined manually
-  return {[key]: z.preprocess(value => (value === null && required ? undefined : value), schema)};
+  return {[key]: schema};
 };
 
 export default getValidationSchema;

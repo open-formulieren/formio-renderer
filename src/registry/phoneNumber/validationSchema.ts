@@ -12,10 +12,10 @@ const PHONE_NUMBER_INVALID_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
   componentDefinition,
-  {intl}
+  {intl, validatePlugins}
 ) => {
   const {key, validate = {}, multiple} = componentDefinition;
-  const {required, pattern} = validate;
+  const {required, pattern, plugins = []} = validate;
 
   // base phone number shape - a more narrow pattern can be specified in the form builder
   let schema: z.ZodFirstPartySchemaTypes = z
@@ -34,6 +34,17 @@ const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
     schema = schema.min(1);
   } else {
     schema = schema.optional().or(z.literal(''));
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

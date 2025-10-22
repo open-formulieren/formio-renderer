@@ -21,7 +21,8 @@ const buildValidationSchema = (component: AddressNLComponentSchema) => {
   const schemas = getValidationSchema(component, {
     intl,
     getRegistryEntry,
-    validatePlugins: async () => undefined,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
   });
   return schemas[component.key];
 };
@@ -33,19 +34,19 @@ describe('plain addressNL component validation', () => {
     999, // number
     true,
     false,
-  ])('does not accept invalid values (value: %s)', value => {
+  ])('does not accept invalid values (value: %s)', async value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
   });
 
-  test('not-required component accepts empty-ish object', () => {
+  test('not-required component accepts empty-ish object', async () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
     // optional/empty fields are turned into `undefined` by Formik
-    const {success} = schema.safeParse({
+    const {success} = await schema.safeParseAsync({
       postcode: undefined,
       houseNumber: undefined,
       houseLetter: undefined,
@@ -69,10 +70,10 @@ describe('plain addressNL component validation', () => {
     [{postcode: undefined, houseNumber: undefined}, false],
   ])(
     'required component requires postcode and house number (value: %s)',
-    (value: Partial<AddressData>, expected: boolean) => {
+    async (value: Partial<AddressData>, expected: boolean) => {
       const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: true}});
 
-      const {success} = schema.safeParse(value);
+      const {success} = await schema.safeParseAsync(value);
 
       expect(success).toBe(expected);
     }
@@ -84,10 +85,10 @@ describe('addressNL subfields validation', () => {
     {postcode: 'AAAA 12', houseNumber: '12'},
     {postcode: '123', houseNumber: '12'},
     {postcode: '123123 AB', houseNumber: '12'},
-  ])('postcode format (value %s)', value => {
+  ])('postcode format (value %s)', async value => {
     const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: false}});
 
-    const {success, error} = schema.safeParse(value);
+    const {success, error} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
     const message = error?.issues?.[0].message;
@@ -100,10 +101,10 @@ describe('addressNL subfields validation', () => {
     {postcode: '9999 AA', houseNumber: 'A'},
     {postcode: '9999 AA', houseNumber: 'c'},
     {postcode: '9999 AA', houseNumber: '999999'},
-  ])('house number format (value %s)', value => {
+  ])('house number format (value %s)', async value => {
     const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: false}});
 
-    const {success, error} = schema.safeParse(value);
+    const {success, error} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
     const message = error?.issues?.[0].message;
@@ -113,10 +114,10 @@ describe('addressNL subfields validation', () => {
   test.each([
     {postcode: '9999 AA', houseNumber: '9', houseLetter: '9'},
     {postcode: '9999 AA', houseNumber: '9', houseLetter: 'ZZ'},
-  ])('house letter format (value %s)', value => {
+  ])('house letter format (value %s)', async value => {
     const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: false}});
 
-    const {success, error} = schema.safeParse(value);
+    const {success, error} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
     const message = error?.issues?.[0].message;
@@ -126,10 +127,10 @@ describe('addressNL subfields validation', () => {
   test.each([
     {postcode: '9999 AA', houseNumber: '9', houseNumberAddition: 'AAAAA'},
     {postcode: '9999 AA', houseNumber: '9', houseNumberAddition: 'A-9'},
-  ])('house number addition format (value %s)', value => {
+  ])('house number addition format (value %s)', async value => {
     const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: false}});
 
-    const {success, error} = schema.safeParse(value);
+    const {success, error} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
     const message = error?.issues?.[0].message;
@@ -149,10 +150,10 @@ describe('addressNL with address auto-fill', () => {
     [{postcode: '9999 AA', houseNumber: '9', city: undefined, streetName: undefined}, false],
   ])(
     'city and street name are required fields in a required addressNL component (value %s)',
-    (value: Partial<AddressData>, expected: boolean) => {
+    async (value: Partial<AddressData>, expected: boolean) => {
       const schema = buildValidationSchema({..._BASE_COMPONENT, validate: {required: true}});
 
-      const {success} = schema.safeParse(value);
+      const {success} = await schema.safeParseAsync(value);
 
       expect(success).toBe(expected);
     }
@@ -167,13 +168,31 @@ describe('addressNL with address auto-fill', () => {
     [{postcode: '9999 AA', houseNumber: '9', city: undefined, streetName: undefined}, false],
   ])(
     'city and street name are required fields in a not-required addressNL component (value %s)',
-    (value: Partial<AddressData>, expected: boolean) => {
+    async (value: Partial<AddressData>, expected: boolean) => {
       // if postcode/house number are provided, then city and street name must also be provided
       const schema = buildValidationSchema({..._BASE_COMPONENT, validate: {required: false}});
 
-      const {success} = schema.safeParse(value);
+      const {success} = await schema.safeParseAsync(value);
 
       expect(success).toBe(expected);
     }
   );
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: AddressNLComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync({
+      postcode: '1043GR',
+      houseNumber: '151',
+    });
+
+    expect(success).toBe(valid);
+  });
 });
