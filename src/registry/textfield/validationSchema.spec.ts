@@ -82,6 +82,21 @@ describe('textfield component validation', () => {
 
     expect(success).toBe(valid);
   });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation', async (plugin: string, valid: boolean) => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('irrelevant');
+
+    expect(success).toBe(valid);
+  });
 });
 
 describe('textfield with multiple: true', () => {
