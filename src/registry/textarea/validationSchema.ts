@@ -3,9 +3,12 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
-const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = componentDefinition => {
+const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = (
+  componentDefinition,
+  {validatePlugins}
+) => {
   const {key, validate = {}, multiple} = componentDefinition;
-  const {required, maxLength, pattern} = validate;
+  const {required, maxLength, pattern, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z.string();
   if (maxLength !== undefined) schema = schema.max(maxLength);
@@ -22,6 +25,17 @@ const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = compon
     schema = schema.min(1);
   } else {
     schema = schema.optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

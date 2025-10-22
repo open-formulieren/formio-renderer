@@ -86,7 +86,7 @@ describe('textfield component validation', () => {
   test.each([
     ['ok', true],
     ['fail', false],
-  ])('supports async plugin validation', async (plugin: string, valid: boolean) => {
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
     const component: TextFieldComponentSchema = {
       ...BASE_COMPONENT,
       validate: {plugins: [plugin]},

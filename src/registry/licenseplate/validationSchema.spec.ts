@@ -23,7 +23,8 @@ const buildValidationSchema = (component: LicensePlateComponentSchema) => {
   const schemas = getValidationSchema(component, {
     intl,
     getRegistryEntry,
-    validatePlugins: async () => undefined,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
   });
   return schemas[component.key];
 };
@@ -58,6 +59,21 @@ describe('license plate component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(!required);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: LicensePlateComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('z-9-z');
+
+    expect(success).toBe(valid);
   });
 });
 

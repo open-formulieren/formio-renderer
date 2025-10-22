@@ -27,7 +27,8 @@ const buildValidationSchema = (component: TimeComponentSchema) => {
   const schemas = getValidationSchema(component, {
     intl,
     getRegistryEntry,
-    validatePlugins: async () => undefined,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
   });
   return schemas[component.key];
 };
@@ -138,6 +139,21 @@ describe('time component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(true);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: TimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('17:00');
+
+    expect(success).toBe(valid);
   });
 });
 
