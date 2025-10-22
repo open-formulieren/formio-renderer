@@ -7,7 +7,7 @@ import {ValidationError} from 'zod-formik-adapter';
 
 import type {GetRegistryEntry} from '@/registry/types';
 
-import type {JSONObject} from './types';
+import type {JSONObject, JSONValue} from './types';
 
 export type KeySchemaPair = [string, z.ZodFirstPartySchemaTypes];
 
@@ -166,4 +166,72 @@ export const useValidationSchemas = (schemas: Schema[]): UseValidationSchemas =>
     setSchema,
     validate: _validate,
   };
+};
+
+/**
+ * The result/outcome of a single plugin validation call.
+ *
+ * The result is either valid (i.e. the provided value is considered valid) or not
+ * valid and reports back validation error messages.
+ */
+export type PluginValidationResult =
+  | {
+      valid: true;
+      messages?: never;
+    }
+  | {
+      valid: false;
+      messages: string[];
+    };
+
+/**
+ * The interface for async plugin validation.
+ *
+ * Callers of the formio-renderer need to provide an implementation conforming to
+ * the specified call signature.
+ */
+export type ValidatePluginCallback = (
+  plugin: string,
+  value: JSONValue
+) => Promise<PluginValidationResult>;
+
+/**
+ * Fallback implementation in case no callback is provided. It will always fail
+ * validation to prevent accidentally letting through values that could possibly be
+ * blocked by the specified validation plugins, which would otherwise silently pass.
+ */
+export const fallbackValidatePlugin: ValidatePluginCallback = async () => ({
+  valid: false,
+  messages: ['No validatePluginCallback provided.'],
+});
+
+/**
+ * Call the specified validation plugins asynchronously with the provided field value.
+ *
+ * The value is considered valid as soon as one plugin considers it valid (OR-behaviour).
+ *
+ * @returns `undefined` if there are no validation issues, or a newline-separated string
+ * containing the validation error(s).
+ *
+ * @todo Cache validation result?
+ */
+export const validatePlugins = async (
+  validatePlugin: ValidatePluginCallback,
+  plugins: string[],
+  value: JSONValue | undefined
+): Promise<string | undefined> => {
+  // there's no point in validating empty (undefined, null, '') values, so skip that.
+  if (!value) return undefined;
+
+  const promises = plugins.map(plugin => validatePlugin(plugin, value));
+  const results = await Promise.all(promises);
+  const anyValid = results.some(result => result.valid);
+  if (anyValid) return undefined;
+
+  // Flatten the nested validation error message arrays into a list of strings and
+  // join them together using line breaks.
+  return results
+    .map(result => (result.valid ? [] : result.messages))
+    .flat(1)
+    .join('\n');
 };

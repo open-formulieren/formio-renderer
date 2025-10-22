@@ -2,6 +2,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 
 import {FormSettingsContext} from '@/context';
 import type {FormSettings} from '@/context';
+import {fallbackValidatePlugin} from '@/validationSchema';
 
 export interface FormSettingsProviderProps {
   /**
@@ -11,6 +12,7 @@ export interface FormSettingsProviderProps {
   requiredFieldsWithAsterisk?: boolean;
   components: AnyComponentSchema[];
   componentParameters?: FormSettings['componentParameters'];
+  validatePluginCallback?: FormSettings['validatePluginCallback'];
   children?: React.ReactNode;
 }
 
@@ -18,10 +20,11 @@ const FormSettingsProvider: React.FC<FormSettingsProviderProps> = ({
   requiredFieldsWithAsterisk,
   components,
   componentParameters,
+  validatePluginCallback = fallbackValidatePlugin,
   children,
 }) => (
   <FormSettingsContext.Provider
-    value={{requiredFieldsWithAsterisk, components, componentParameters}}
+    value={{requiredFieldsWithAsterisk, components, componentParameters, validatePluginCallback}}
   >
     {children}
   </FormSettingsContext.Provider>
