@@ -9,7 +9,12 @@ import type {FormSettings} from '@/context';
 import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
-import {buildValidationSchema, useValidationSchema} from '@/validationSchema';
+import {
+  buildValidationSchema,
+  fallbackValidatePlugin,
+  useValidationSchema,
+  validatePlugins,
+} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
@@ -84,6 +89,10 @@ export interface FormioFormProps {
    * Configuration necessary specific to certain Formio component types.
    */
   componentParameters?: FormSettings['componentParameters'];
+  /**
+   * Callback that implements the actual async 'plugin validator' behaviour.
+   */
+  validatePluginCallback?: FormSettings['validatePluginCallback'];
 }
 
 export type UpdateValues = JSONObjectWithUndefined;
@@ -120,6 +129,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
       children,
       requiredFieldsWithAsterisk,
       componentParameters,
+      validatePluginCallback = fallbackValidatePlugin,
     },
     ref
   ) => {
@@ -150,6 +160,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
         requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
         components={components}
         componentParameters={componentParameters}
+        validatePluginCallback={validatePluginCallback}
       >
         <Formik<JSONObject>
           initialValues={values}
@@ -172,6 +183,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
               components={components}
               ref={ref}
               onValidationSchemaChange={setSchema}
+              validatePluginCallback={validatePluginCallback}
             >
               {children}
             </InnerFormioForm>
@@ -219,13 +231,14 @@ const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> 
 
 export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'> & {
   onValidationSchemaChange: (schema: z.ZodSchema<JSONObject>) => void;
+  validatePluginCallback: Required<FormioFormProps>['validatePluginCallback'];
 };
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
-  ({components, id, onValidationSchemaChange, children}, ref) => {
+  ({components, validatePluginCallback, id, onValidationSchemaChange, children}, ref) => {
     const intl = useIntl();
     const {values, setValues, errors, setErrors, setTouched, initialValues} =
       useFormikContext<JSONObject>();

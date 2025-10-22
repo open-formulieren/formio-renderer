@@ -24,6 +24,7 @@ export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<u
       id="formio-form"
       requiredFieldsWithAsterisk
       componentParameters={context?.parameters?.formSettings?.componentParameters}
+      validatePluginCallback={context?.parameters?.formSettings?.validatePluginCallback}
     />
     <PrimaryActionButton type="submit" form="formio-form" style={{alignSelf: 'flex-start'}}>
       Submit
