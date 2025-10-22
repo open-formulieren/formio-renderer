@@ -27,12 +27,12 @@ test.each([
 );
 
 test.each([
-  [{year: '', month: '', day: '', hour: '', minute: '', second: ''}, '0000-00-00T::'],
+  [{year: '', month: '', day: '', hour: '', minute: '', second: ''}, '0000-00-00T00:00:00'],
   [
     {year: '2025', month: '13', day: '12', hour: '25', minute: '61', second: '61'},
     '2025-13-12T25:61:61',
   ],
-  [{year: '0', month: '0', day: '0', hour: '0', minute: '0', second: '0'}, '0000-00-00T0:0:0'],
+  [{year: '0', month: '0', day: '0', hour: '0', minute: '0', second: '0'}, '0000-00-00T00:00:00'],
   [
     {year: '20000', month: '100', day: '300', hour: '200', minute: '400', second: '500'},
     '20000-100-300T200:400:500',
@@ -48,16 +48,13 @@ test.each([
 
 describe('Parse datetime validation', () => {
   // ISO-8601 strings
-  test.each([
-    '2025-09-01T12:34:56',
-    '2025-09-01T12:34:56+02:00',
-    '2025-9-01T12:34:56',
-    '2025-09-1T12:34:56',
-    '2025-9-1T12:34:56',
-  ] satisfies string[])('Valid value: %s', (value: string) => {
-    const result = parseDateTime(value);
-    expect(result).not.toBeNull();
-  });
+  test.each(['2025-09-01T12:34:56', '2025-09-01T12:34:56+02:00'] satisfies string[])(
+    'Valid value: %s',
+    (value: string) => {
+      const result = parseDateTime(value);
+      expect(result).not.toBeNull();
+    }
+  );
 
   test.each([
     '20',
@@ -66,6 +63,9 @@ describe('Parse datetime validation', () => {
     '2000-12-32T12:34:56',
     '2000-12-31T12:34:61',
     '2000-12-31T12:34',
+    '2025-9-01T12:34:56',
+    '2025-09-1T12:34:56',
+    '2025-9-1T12:34:56',
     '2000-12-31T::',
     '20-12-2000 12:34:56',
     '12/20/2000 12:34:56',
@@ -76,11 +76,29 @@ describe('Parse datetime validation', () => {
     expect(result).toBeNull();
   });
 
-  test('Valid value with meta', () => {
+  test.each([
+    ['9/20/2000 11:45 PM', '2000-09-20T23:45:00+02:00'],
+    ['9/20/2000 11:45 AM', '2000-09-20T11:45:00+02:00'],
+    ['09/20/2000 11:45 AM', '2000-09-20T11:45:00+02:00'],
+    ['12/20/2000 11:45 PM', '2000-12-20T23:45:00+01:00'], // daylight time saving is not applied here
+    ['12/20/2000 11:45 AM', '2000-12-20T11:45:00+01:00'], // daylight time saving is not applied here
+  ])('Valid value with English meta', (value: string, expected: string) => {
     const meta = getDateLocaleMeta('en');
-    const result = parseDateTime('9/20/2000 12:45', meta);
+    const result = parseDateTime(value, meta);
     expect(result).not.toBeNull();
-    expect(formatISO(result!)).toEqual('2000-09-20T12:45:00+02:00');
+    expect(formatISO(result!)).toEqual(expected);
+  });
+
+  test.each([
+    ['20-9-2000 23:45', '2000-09-20T23:45:00+02:00'],
+    ['20-9-2000 11:45', '2000-09-20T11:45:00+02:00'],
+    ['20-12-2000 23:45', '2000-12-20T23:45:00+01:00'], // daylight time saving is not applied here
+    ['20-12-2000 11:45', '2000-12-20T11:45:00+01:00'], // daylight time saving is not applied here
+  ])('Valid value with Dutch meta', (value: string, expected: string) => {
+    const meta = getDateLocaleMeta('nl');
+    const result = parseDateTime(value, meta);
+    expect(result).not.toBeNull();
+    expect(formatISO(result!)).toEqual(expected);
   });
 
   test.each([
@@ -99,7 +117,10 @@ describe('Parse datetime validation', () => {
     '12/31/2000 12:3',
     '12/31/2000 12:61',
     '12/31/2000 25:34',
-  ] satisfies string[])('Invalid value with meta: %s', (value: string) => {
+    '12/31/2000 12:34', // no day period information
+    '12/31/2000 12:34 FM', // invalid period
+    '12/31/2000 15:34', // 24-hour format
+  ] satisfies string[])('Invalid value with English meta: %s', (value: string) => {
     const meta = getDateLocaleMeta('en');
     const result = parseDateTime(value, meta);
     expect(result).toBeNull();

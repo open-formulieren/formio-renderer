@@ -90,10 +90,6 @@ const dateObjectToParts = (datetime: Date | null): DateTimePartValues => {
  * Consists of a text input with a floating widget that toggles when focussing the field. This
  * floating widget contains a calendar where a date can be selected, and a time input where a
  * time can be selected. Suitable for nearby dates such as appointments.
- *
- * Note: currently we only support the 24-hour format for the time. If we want to support AM/PM
- * notation, we need to extend our custom parser to convert the textbox value to a (valid)
- * ISO-8601 string.
  */
 const DateTimeField: React.FC<DateTimeFieldProps> = ({
   name,
@@ -133,10 +129,13 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
     month: formatMessage(PART_PLACEHOLDERS.month),
     year: formatMessage(PART_PLACEHOLDERS.year),
   };
-  const datePlaceholder = dateLocaleMeta.partsOrder
+  const datePlaceholder = dateLocaleMeta.datePartsOrder
     .map(part => placeholderMap[part])
-    .join(dateLocaleMeta.separator);
-  const placeholder = `${datePlaceholder} ${formatMessage(PART_PLACEHOLDERS.hour)}:${formatMessage(PART_PLACEHOLDERS.minute)}`;
+    .join(dateLocaleMeta.dateSeparator);
+  let placeholder = `${datePlaceholder} ${formatMessage(PART_PLACEHOLDERS.hour)}${dateLocaleMeta.timeSeparator}${formatMessage(PART_PLACEHOLDERS.minute)}`;
+  if (!dateLocaleMeta.is24HourFormat) {
+    placeholder += ' [AM/PM]';
+  }
 
   // Value could be anything, but we only try to parse as an ISO-8601 string, because this is what
   // we set to the field on blur if the date was correctly parsed using the locale meta.
@@ -193,7 +192,6 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
           day: 'numeric',
           hour: 'numeric',
           minute: '2-digit',
-          hour12: false,
         }).replace(',', '')
       : value;
 

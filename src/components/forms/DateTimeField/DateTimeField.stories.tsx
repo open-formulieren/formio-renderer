@@ -75,7 +75,7 @@ export const EnglishLocale: Story = {
     const canvas = within(canvasElement);
 
     // Ensure we have a placeholder formatted according to the locale
-    const datetime = canvas.getByPlaceholderText('m/d/yyyy HH:MM');
+    const datetime = canvas.getByPlaceholderText('m/d/yyyy HH:MM [AM/PM]');
     expect(datetime).toBeInTheDocument();
   },
 };
@@ -213,6 +213,65 @@ export const TypeDateManually: Story = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     const onSubmit = parameters.formik.onSubmit;
     expect(onSubmit).toHaveBeenCalledWith({datetime: '2025-08-29T12:34:00+02:00'});
+  },
+};
+
+export const TypeDateManuallyEnglishLocale: Story = {
+  args: {
+    name: 'datetime',
+    label: 'Datetime',
+    isDisabled: false,
+    isRequired: false,
+  },
+  decorators: [
+    Story => (
+      <>
+        <Story />
+        <PrimaryActionButton type="submit" style={{marginBlockStart: '20px'}}>
+          Submit
+        </PrimaryActionButton>
+      </>
+    ),
+  ],
+  globals: {locale: 'en'},
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+    },
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  play: async ({canvasElement, parameters}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.queryByRole('dialog')).toBeNull();
+    const datetime = canvas.getByLabelText('Datetime');
+    await userEvent.type(datetime, '08/29/2025 12:34 AM');
+    expect(datetime).toHaveDisplayValue('08/29/2025 12:34 AM');
+
+    // Ensure formatting is applied on blur
+    datetime.blur();
+    await waitFor(() => {
+      expect(canvas.queryByRole('dialog')).toBeNull();
+    });
+    expect(datetime).toHaveDisplayValue('8/29/2025 12:34 AM');
+
+    // Ensure that the date is properly highlighted in the calendar
+    await userEvent.click(datetime);
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+    const selectedEventButton = await canvas.findByRole('button', {
+      name: 'Friday 29 August 2025',
+    });
+    expect(selectedEventButton).toBeVisible();
+    expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
+
+    // Ensure that the time is displayed
+    const time = await canvas.getByLabelText('Time');
+    expect(time).toHaveValue('00:34');
+
+    // Ensure that the datetime is formatted as an ISO-8601 string on submit
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    const onSubmit = parameters.formik.onSubmit;
+    expect(onSubmit).toHaveBeenCalledWith({datetime: '2025-08-29T00:34:00+02:00'});
   },
 };
 

@@ -7,8 +7,8 @@ import type {GetValidationSchema} from '@/registry/types';
 
 const DATETIME_INVALID_MESSAGE = defineMessage({
   description: 'Invalid input validation error for datetime field',
-  defaultMessage: `The datetime must consist of a date and a time stamp (24-hour format without
-  seconds), separated by a space (e.g. 10/30/2025 12:34).`,
+  defaultMessage: `The datetime must consist of a date and a time stamp, separated by a space
+  (e.g. 10/30/2025 5:34 PM).`,
 });
 
 const DATETIME_GREATER_THAN_MAX_DATE_MESSAGE = defineMessage({
@@ -44,7 +44,6 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-      hour12: false,
     });
     dateSchema = dateSchema.min(minDate, {
       message: intl.formatMessage(DATETIME_LESS_THAN_MIN_DATE_MESSAGE, {min: minDateString}),
@@ -57,7 +56,6 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-      hour12: false,
     });
     dateSchema = dateSchema.max(maxDate, {
       message: intl.formatMessage(DATETIME_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDateString}),

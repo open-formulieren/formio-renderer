@@ -189,6 +189,71 @@ export const MinMaxValidation: ValidationStory = {
   },
 };
 
+export const MinMaxValidationWithEnglishLocale: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      datePicker: {
+        minDate: '2025-10-08T12:00', // this is how the value is set in the form builder
+        maxDate: '2025-10-10T19:00',
+        showWeeks: false,
+        startingDay: 0,
+        initDate: '',
+        minMode: 'day',
+        maxMode: 'day',
+        yearRows: 0,
+        yearColumns: 0,
+      },
+    } satisfies DateTimeComponentSchema,
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  globals: {locale: 'en'},
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const date = canvas.getByLabelText('Datetime');
+    const button = canvas.getByRole('button', {name: 'Submit'});
+
+    await step('Date before date range', async () => {
+      await userEvent.type(date, '10/8/2025 11:50 AM');
+
+      await userEvent.click(button);
+      expect(
+        await canvas.findByText('The datetime must be later than or equal to 10/8/2025, 12:00 PM.')
+      ).toBeVisible();
+      expect(args.onSubmit).not.toHaveBeenCalled();
+    });
+
+    await step('Date between in date range', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '10/8/2025 3:00 PM');
+
+      await userEvent.click(button);
+      expect(await canvas.queryByText('Invalid input')).not.toBeInTheDocument();
+      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
+    });
+
+    await step('Date after date range', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '10/10/2025 9:00 PM');
+
+      await userEvent.click(button);
+      await expect(
+        canvas.queryByText('The datetime must be earlier than or equal to 10/10/2025, 7:00 PM.')
+      ).toBeVisible();
+      // Still should have only been called once with the valid date from the previous step
+      expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
+    });
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: DateTimeComponentSchema;
   value: string | string[];
