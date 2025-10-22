@@ -13,6 +13,12 @@
   padding-inline-end: var(--utrecht-form-field-invalid-padding-inline-start);
   padding-block-start: var(--utrecht-form-field-invalid-padding-inline-start);
   padding-block-end: var(--utrecht-form-field-invalid-padding-inline-start);
+
+  // multi-message validation errors are rendered with a newline character. Preserving
+  // newlines ensures that they're also visually separated.
+  // It would be better to use a list for this, but that's currently not possible with
+  // Zod/Formik.
+  white-space: preserve-breaks wrap;
 }
 
 // Extensions on NL DS components
