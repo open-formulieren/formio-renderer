@@ -119,6 +119,12 @@
       "value": "Opties ophalen..."
     }
   ],
+  "6g4o2Y": [
+    {
+      "type": 0,
+      "value": "MM"
+    }
+  ],
   "9SgPC6": [
     {
       "type": 0,
@@ -127,6 +133,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "AEnddx": [
+    {
+      "type": 0,
+      "value": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
     }
   ],
   "At/y3w": [
@@ -201,6 +213,12 @@
     {
       "type": 0,
       "value": " zijn."
+    }
+  ],
+  "GkuPAG": [
+    {
+      "type": 0,
+      "value": "HH"
     }
   ],
   "IhLYXK": [
@@ -351,6 +369,12 @@
       "value": "Huisnummertoevoeging"
     }
   ],
+  "nF6MTl": [
+    {
+      "type": 0,
+      "value": "Time"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
@@ -459,6 +483,34 @@
     {
       "type": 1,
       "value": "maxTime"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "vRrj+v": [
+    {
+      "type": 0,
+      "value": "The datetime must be later than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "xCY4Oh": [
+    {
+      "type": 0,
+      "value": "The datetime must be earlier than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "max"
     },
     {
       "type": 0,

@@ -44,10 +44,20 @@
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
   },
+  "6g4o2Y": {
+    "defaultMessage": "MM",
+    "description": "Placeholder for the minute part of the time",
+    "originalDefault": "MM"
+  },
   "9SgPC6": {
     "defaultMessage": "Remove item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
     "originalDefault": "Remove item {index}"
+  },
+  "AEnddx": {
+    "defaultMessage": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM).",
+    "description": "Invalid input validation error for datetime field",
+    "originalDefault": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
   },
   "At/y3w": {
     "defaultMessage": "Edit item {index}",
@@ -93,6 +103,11 @@
     "defaultMessage": "Time must be after {minTime}",
     "description": "Validation error describing the value is not after the minimum time.",
     "originalDefault": "Time must be after {minTime}"
+  },
+  "GkuPAG": {
+    "defaultMessage": "HH",
+    "description": "Placeholder for the hour part of the time",
+    "originalDefault": "HH"
   },
   "IhLYXK": {
     "defaultMessage": "Toggle calendar",
@@ -204,6 +219,11 @@
     "description": "Label for addressNL houseNumberAddition input",
     "originalDefault": "House number addition"
   },
+  "nF6MTl": {
+    "defaultMessage": "Time",
+    "description": "Datetime picker: accessible time input field label",
+    "originalDefault": "Time"
+  },
   "nfRRDu": {
     "defaultMessage": "yyyy",
     "description": "Placeholder for year part of a date",
@@ -258,6 +278,16 @@
     "defaultMessage": "Time must be in-between {minTime} and {maxTime}",
     "description": "Validation error describing the value is not in-between the minimum and maximum time.",
     "originalDefault": "Time must be in-between {minTime} and {maxTime}"
+  },
+  "vRrj+v": {
+    "defaultMessage": "The datetime must be later than or equal to {min}.",
+    "description": "Validation error for datetime less than minimum date.",
+    "originalDefault": "The datetime must be later than or equal to {min}."
+  },
+  "xCY4Oh": {
+    "defaultMessage": "The datetime must be earlier than or equal to {max}.",
+    "description": "Validation error for datetime greater than maximum date.",
+    "originalDefault": "The datetime must be earlier than or equal to {max}."
   },
   "xHVrv5": {
     "defaultMessage": "The value must be {min} or greater.",
