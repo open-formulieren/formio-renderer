@@ -5,6 +5,7 @@ import {useId} from 'react';
 import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
+import DatePickerCalendar from '@/components/forms/DatePickerCalendar';
 import {FloatingWidget, useFloatingWidget} from '@/components/forms/FloatingWidget';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -14,7 +15,6 @@ import {useDateLocaleMeta} from '../hooks';
 import {PART_PLACEHOLDERS} from '../messages';
 import {parseDate} from '../utils';
 import './DatePicker.scss';
-import DatePickerCalendar from './DatePickerCalendar';
 
 interface DatePickerProps {
   /**
@@ -58,11 +58,6 @@ interface DatePickerProps {
 
 /**
  * Implements a form field to select dates.
- *
- * The entered value is tracked and we attempt to parse it into a valid date. If it's a
- * valid date, the real field state is updated with the new value, otherwise the field
- * value is cleared. This means that the Formik state is either an empty string, or a
- * valid ISO-8601 date string.
  *
  * For accessibility reasons, there should always be a text field allowing users to
  * manually type in the date. However, when the field is focused, this toggles the
