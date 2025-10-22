@@ -1,5 +1,6 @@
 import type {PartnerDetails} from '@open-formulieren/types';
 import {DataList, DataListItem, DataListKey, DataListValue} from '@utrecht/component-library-react';
+import {Fragment} from 'react';
 import {FormattedDate, FormattedMessage} from 'react-intl';
 import type {MessageDescriptor} from 'react-intl';
 
@@ -26,11 +27,11 @@ const PartnersPreview: React.FC<PartnerPreviewProps> = ({partners}) => {
   return (
     <div className="openforms-partners-preview">
       {partners.map((partner, index) => (
-        <>
+        <Fragment key={index}>
           {/* Divider between partners */}
           {index > 0 && <hr />}
 
-          <DataList key={index} appearance="rows">
+          <DataList appearance="rows">
             {partnerFields.map(({name, label}) => (
               <DataListItem key={`${index}-${name}`}>
                 <DataListKey>
@@ -51,7 +52,7 @@ const PartnersPreview: React.FC<PartnerPreviewProps> = ({partners}) => {
               </DataListItem>
             ))}
           </DataList>
-        </>
+        </Fragment>
       ))}
     </div>
   );
