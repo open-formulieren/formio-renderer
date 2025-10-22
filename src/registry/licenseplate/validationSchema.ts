@@ -15,7 +15,7 @@ const LICENSE_PLATE_INVALID_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<LicensePlateComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;

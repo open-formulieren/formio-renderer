@@ -21,7 +21,11 @@ const BASE_COMPONENT: NumberComponentSchema = {
 };
 
 const buildValidationSchema = (component: NumberComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

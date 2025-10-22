@@ -12,7 +12,7 @@ const INVALID_INPUT_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate = {}, datePicker, multiple} = componentDefinition;
   const {required} = validate;

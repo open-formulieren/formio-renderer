@@ -20,7 +20,7 @@ const isValidIBAN = (value: string): boolean => {
 
 const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;

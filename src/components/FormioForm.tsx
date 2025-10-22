@@ -152,7 +152,11 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     values = deepMergeValues(initialValues, values);
 
     const {setSchema, validate} = useValidationSchema(
-      buildValidationSchema(components, intl, getRegistryEntry)
+      buildValidationSchema(components, {
+        intl,
+        getRegistryEntry,
+        validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+      })
     );
 
     return (
@@ -279,14 +283,22 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         componentsMap,
       });
 
-      const updatedValidationSchema = buildValidationSchema(
-        visibleComponents,
+      const updatedValidationSchema = buildValidationSchema(visibleComponents, {
         intl,
-        getRegistryEntry
-      );
+        getRegistryEntry,
+        validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+      });
       onValidationSchemaChange(updatedValidationSchema);
       return {visibleComponents, updatedValues};
-    }, [intl, onValidationSchemaChange, components, componentsMap, initialValues, values]);
+    }, [
+      intl,
+      validatePluginCallback,
+      onValidationSchemaChange,
+      components,
+      componentsMap,
+      initialValues,
+      values,
+    ]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
     // values. We can't call setValues directly, since updating state during render like

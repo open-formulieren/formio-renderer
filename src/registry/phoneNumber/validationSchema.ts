@@ -12,7 +12,7 @@ const PHONE_NUMBER_INVALID_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate = {}, multiple} = componentDefinition;
   const {required, pattern} = validate;

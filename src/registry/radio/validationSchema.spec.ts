@@ -27,7 +27,11 @@ const BASE_COMPONENT: RadioComponentSchema = {
 };
 
 const buildValidationSchema = (component: RadioComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

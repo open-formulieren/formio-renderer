@@ -1,11 +1,10 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 import {useCallback, useRef} from 'react';
-import type {IntlShape} from 'react-intl';
 import {z} from 'zod';
 import {ValidationError} from 'zod-formik-adapter';
 
-import type {GetRegistryEntry} from '@/registry/types';
+import type {GetValidationSchemaContext} from '@/registry/types';
 
 import type {JSONObject, JSONValue} from './types';
 
@@ -50,8 +49,7 @@ export const composeValidationSchemas = (pairs: KeySchemaPair[]): z.ZodObject<z.
  */
 export const buildValidationSchema = (
   components: AnyComponentSchema[],
-  intl: IntlShape,
-  getRegistryEntry: GetRegistryEntry
+  context: GetValidationSchemaContext
 ): z.ZodObject<z.ZodRawShape> => {
   // visit all components and ask them to produce their validation schema. Merge all that
   // into a single object and finally compose the deep zod validation schema.
@@ -59,9 +57,9 @@ export const buildValidationSchema = (
   // Note that we can directly convert this to a zod object, since keys may have dots
   // in them that creates levels of nesting.
   const allSchemas = components.reduce((acc: SchemaRecord, componentDefinition) => {
-    const getValidationSchema = getRegistryEntry(componentDefinition)?.getValidationSchema;
+    const getValidationSchema = context.getRegistryEntry(componentDefinition)?.getValidationSchema;
     if (getValidationSchema !== undefined) {
-      const schemaRecord = getValidationSchema(componentDefinition, intl, getRegistryEntry);
+      const schemaRecord = getValidationSchema(componentDefinition, context);
       acc = {...acc, ...schemaRecord};
     }
     return acc;

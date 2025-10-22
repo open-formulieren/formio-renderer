@@ -20,7 +20,11 @@ const BASE_COMPONENT: LicensePlateComponentSchema = {
 };
 
 const buildValidationSchema = (component: LicensePlateComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

@@ -22,7 +22,11 @@ const BASE_COMPONENT: CurrencyComponentSchema = {
 };
 
 const buildValidationSchema = (component: CurrencyComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

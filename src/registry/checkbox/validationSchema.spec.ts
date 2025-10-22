@@ -17,7 +17,11 @@ const BASE_COMPONENT: CheckboxComponentSchema = {
 };
 
 const buildValidationSchema = (component: CheckboxComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

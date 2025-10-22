@@ -28,7 +28,7 @@ const TIME_PERIOD_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate = {}, multiple} = componentDefinition;
   const {required, minTime, maxTime} = validate;

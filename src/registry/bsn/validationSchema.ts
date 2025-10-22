@@ -32,7 +32,7 @@ const isValidBsn = (value: string): boolean => {
 
 const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;

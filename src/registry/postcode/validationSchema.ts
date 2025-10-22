@@ -15,7 +15,7 @@ const POSTCODE_INVALID_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;
