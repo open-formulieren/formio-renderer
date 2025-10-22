@@ -16,7 +16,7 @@ const NUMBER_LESS_THAN_MIN_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate} = componentDefinition;
   const required = validate?.required;

@@ -146,7 +146,7 @@ const buildCitySchema = (
  */
 const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, deriveAddress = false, openForms} = componentDefinition;
   const required = Boolean(validate?.required);

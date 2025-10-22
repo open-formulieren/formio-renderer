@@ -6,7 +6,7 @@ import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
 
 const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;

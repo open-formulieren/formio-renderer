@@ -18,7 +18,11 @@ const BASE_COMPONENT: BsnComponentSchema = {
 };
 
 const buildValidationSchema = (component: BsnComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

@@ -16,7 +16,12 @@ const BASE_COMPONENT: TextFieldComponentSchema = {
 };
 
 const buildValidationSchema = (component: TextFieldComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 

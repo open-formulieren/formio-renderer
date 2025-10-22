@@ -17,7 +17,11 @@ const BASE_COMPONENT: IbanComponentSchema = {
 };
 
 const buildValidationSchema = (component: IbanComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

@@ -28,7 +28,11 @@ const BASE_DATEPICKER: DateComponentSchema['datePicker'] = {
 };
 
 const buildValidationSchema = (component: DateComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

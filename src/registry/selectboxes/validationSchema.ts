@@ -27,7 +27,7 @@ type ValidationSchema = ValuesObject | z.ZodUnion<[z.ZodOptional<ValuesObject>, 
 
 const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   assertManualValues(componentDefinition);
   const {key, validate = {}, values: options} = componentDefinition;

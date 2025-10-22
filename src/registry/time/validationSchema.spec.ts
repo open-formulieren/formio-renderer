@@ -24,7 +24,11 @@ const PERIOD_TIME_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '09:00', m
 const NEXT_DAY_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '15:00', maxTime: '09:00'}};
 
 const buildValidationSchema = (component: TimeComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

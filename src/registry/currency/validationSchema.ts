@@ -16,7 +16,7 @@ const NUMBER_LESS_THAN_MIN_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key, validate, currency} = componentDefinition;
   const required = validate?.required;

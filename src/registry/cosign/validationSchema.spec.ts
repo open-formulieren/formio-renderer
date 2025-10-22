@@ -17,7 +17,11 @@ const BASE_COMPONENT: CosignV2ComponentSchema = {
 };
 
 const buildValidationSchema = (component: CosignV2ComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 
