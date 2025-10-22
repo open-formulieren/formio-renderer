@@ -1,5 +1,61 @@
 # Changes
 
+## 0.11.0 (2025-??-??)
+
+Feature release.
+
+**Features**
+
+- [`#83`][#83] Implemented the `datetime` component type.
+- [`#110`][#110] Implemented the `time` component type.
+- [`#169`][#169] Added a modal component.
+- [`#111`][#111] Implemented the `addressNL` component type, including a number of quality-of-life
+  fixes that were previously not attainable:
+  - Fixed asterisk/suffix display for required/optional fields.
+  - Improved address derivation behaviour in combination with editable/readonly city/street fields.
+- [`#104`][#104] Implemented the `postcode` component type.
+- [`#119`][#119] Implemented the `partners` component type.
+- [`#43`][#43] Added support for `{multiple: true}` multi-value fields for components that support
+  it.
+  - Fixes `maxLength` validation errors being reported for the list of values rather than being
+    applied to the individual item ([`OF#5558`][OF#5558]).
+  - Fixes validation triggering too soon when a new item is added ([`OF#5308`][OF#5308]).
+  - Fixes multiple items being added on item add when `defaultValue` has more than 1 item
+    ([`OF#1342`][OF#1342]).
+- [`#76`][#76] Added support for async plugin validation for components that support it.
+
+**Bugfixes**
+
+- [`SDK#863`][SDK#863] Fixed crash when `editgrid.defaultValue` is set to `null`.
+- [`SDK#863`][SDK#863] Fixed validation errors not being displayed for `currency` and `number`.
+- [`SDK#863`][SDK#863] Fixed `selectboxes` labels displaying "not required" suffix when the required
+  fields are not marked with an asterisk.
+- Fixed potential accessibility issue by not using `label` tags inside fieldset `legend` elements.
+- [`#171`][#171] Fixed (radio) fields inside edit grid items not being isolated from each other.
+
+**Project maintenance**
+
+- Ensure the `sr-only` class is defined.
+- Mock the date/datetime in some stories for stable Chromatic snapshot behaviour.
+- Added ESLint and fixed linting errors.
+- Upgraded to NodeJS 24 (LTS).
+- Updated the package publishing to use Trusted Publishing.
+- Refactored i18n checks in CI to use reusable actions.
+
+[#83]: https://github.com/open-formulieren/formio-renderer/issues/83
+[SDK#863]: https://github.com/open-formulieren/open-forms-sdk/issues/863
+[#110]: https://github.com/open-formulieren/formio-renderer/issues/110
+[#169]: https://github.com/open-formulieren/formio-renderer/issues/169
+[#111]: https://github.com/open-formulieren/formio-renderer/issues/111
+[#171]: https://github.com/open-formulieren/formio-renderer/issues/171
+[#104]: https://github.com/open-formulieren/formio-renderer/issues/104
+[#43]: https://github.com/open-formulieren/formio-renderer/issues/43
+[OF#5558]: https://github.com/open-formulieren/open-forms/issues/5558
+[OF#5308]: https://github.com/open-formulieren/open-forms/issues/5308
+[OF#1342]: https://github.com/open-formulieren/open-forms/issues/1342
+[#76]: https://github.com/open-formulieren/formio-renderer/issues/76
+[#119]: https://github.com/open-formulieren/formio-renderer/issues/119
+
 ## 0.10.0 (2025-09-29)
 
 Small feature release.
