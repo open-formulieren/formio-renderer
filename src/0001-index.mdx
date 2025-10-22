@@ -17,6 +17,7 @@ There is one public component available - it renders a form given a Formio defin
 ```tsx
 import {FormioForm} from '@open-formulieren/formio-renderer';
 import '@open-formulieren/formio-renderer/formio-renderer.css';
+import type {ValidatePluginCallback} from '@open-formulieren/formio-renderer/validationSchema';
 import {IntlProvider} from 'react-intl';
 
 const FORMIO_FORM = {
@@ -36,6 +37,19 @@ const FORMIO_FORM = {
   ],
 };
 
+// Example callback
+const validatePluginCallback: ValidatePluginCallback = async (plugin: string, value: JSONValue) => {
+  if (plugin === 'mock') {
+    if (value === 'invalid') {
+      return {
+        valid: false,
+        messages: ['Error message 1.', 'Second error message.'],
+      };
+    }
+  }
+  return {valid: true};
+};
+
 const MyComponent: React.FC = () => (
   // there must be an outer IntlProvider - it's your responsibility to set this up properly
   <IntlProvider messages={{}} locale="nl" defaultLocale="nl">
@@ -48,6 +62,7 @@ const MyComponent: React.FC = () => (
       componentParameters={{
         addressNL: {addressAutoComplete},
       }}
+      validatePluginCallback={validatePluginCallback}
     />
     <button type="submit" form="my-formio-form">
       Submit
@@ -68,9 +83,14 @@ Formik-based forms without Formio requirements.
 
 ```tsx
 import {
+  Checkbox,
+  DateField,
   HelpText,
+  InputContainer,
   Label,
+  NumberField,
   RadioField,
+  SelectField,
   TextField,
   ValidationErrors,
 } from '@open-formulieren/formio-renderer';
