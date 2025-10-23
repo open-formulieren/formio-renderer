@@ -119,12 +119,12 @@ export const NoPartnersFound: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const addPartnerButton = canvas.getByRole('button', {name: 'Add partner'});
+    const addPartnerButton = canvas.getByRole('button', {name: 'Add partner details'});
     expect(addPartnerButton).toBeVisible();
   },
 };
 
-export const PartnerInForm: Story = {
+export const ManuallyAddedPartnerInForm: Story = {
   parameters: {
     formik: {
       initialValues: {
@@ -203,7 +203,7 @@ export const ValidateRequired: ValidationStory = {
     const canvas = within(canvasElement);
 
     // Add empty partner and show sub-form
-    await userEvent.click(canvas.getByRole('button', {name: 'Add partner'}));
+    await userEvent.click(canvas.getByRole('button', {name: 'Add partner details'}));
 
     // Submit empty partner data
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
@@ -221,7 +221,7 @@ export const ValidateInvalid: ValidationStory = {
     const canvas = within(canvasElement);
 
     // Add empty partner and show sub-form
-    await userEvent.click(canvas.getByRole('button', {name: 'Add partner'}));
+    await userEvent.click(canvas.getByRole('button', {name: 'Add partner details'}));
 
     await step('Submit invalid partner details', async () => {
       const bsnInput = canvas.getByLabelText('BSN');
@@ -264,7 +264,7 @@ export const ValidateValid: ValidationStory = {
     const canvas = within(canvasElement);
 
     // Add empty partner and show sub-form
-    await userEvent.click(canvas.getByRole('button', {name: 'Add partner'}));
+    await userEvent.click(canvas.getByRole('button', {name: 'Add partner details'}));
 
     const bsnInput = canvas.getByLabelText('BSN');
     const initialsInput = canvas.getByLabelText('Initials');
@@ -279,7 +279,7 @@ export const ValidateValid: ValidationStory = {
 
     await userEvent.type(initialsInput, 'J');
     await userEvent.type(affixesInput, 'de');
-    await userEvent.type(lastnameInput, 'fiets');
+    await userEvent.type(lastnameInput, 'Vries');
 
     // I don't think this test will still run after 120 years,
     // so lets hard code the date of birth.
@@ -289,7 +289,80 @@ export const ValidateValid: ValidationStory = {
 
     // Submit partner data
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(args.onSubmit).toHaveBeenCalled();
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      partners: [
+        {
+          bsn: '111222333',
+          initials: 'J',
+          affixes: 'de',
+          lastName: 'Vries',
+          dateOfBirth: '2025-10-21',
+          __addedManually: true,
+        },
+      ],
+    });
+  },
+};
+
+export const RemoveManuallyAddedPartner: ValidationStory = {
+  ...BaseValidationStory,
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+
+    await step('Add partner details manually', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add partner details'}));
+
+      const bsnInput = canvas.getByLabelText('BSN');
+      const lastnameInput = canvas.getByLabelText('Lastname');
+      const monthInput = canvas.getByLabelText('Month');
+      const dayInput = canvas.getByLabelText('Day');
+      const yearInput = canvas.getByLabelText('Year');
+
+      // A bsn value that passes the 11-test
+      await userEvent.type(bsnInput, '111222333');
+
+      await userEvent.type(lastnameInput, 'Vries');
+
+      // I don't think this test will still run after 120 years,
+      // so lets hard code the date of birth.
+      await userEvent.type(monthInput, '10');
+      await userEvent.type(dayInput, '21');
+      await userEvent.type(yearInput, '2025');
+    });
+
+    await step('Submit form before removal', async () => {
+      // When submitting the form, expect partners to contain partner data.
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        partners: [
+          {
+            bsn: '111222333',
+            initials: '',
+            affixes: '',
+            lastName: 'Vries',
+            dateOfBirth: '2025-10-21',
+            __addedManually: true,
+          },
+        ],
+      });
+    });
+
+    await step('Remove partner details', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Remove partner details'}));
+
+      // Expect the inputs to have been removed
+      const bsnInput = canvas.queryByLabelText('BSN');
+      expect(bsnInput).not.toBeInTheDocument();
+
+      // The 'add partner details' button is again shown
+      expect(canvas.getByRole('button', {name: 'Add partner details'})).toBeVisible();
+    });
+
+    await step('Submit form after removal', async () => {
+      // When submitting the form, expect partners to be empty
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(args.onSubmit).toHaveBeenCalledWith({partners: []});
+    });
   },
 };
 
