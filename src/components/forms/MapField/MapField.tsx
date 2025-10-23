@@ -235,8 +235,7 @@ const MapField: React.FC<MapFieldProps> = ({
           </>
         )*/}
         {coordinates && <MapView coordinates={coordinates} />}
-
-        {/**disabled && <DisabledMapControls />*/}
+        {isDisabled && <DisabledMapControls />}
 
         {mapContainerChild}
       </MapContainer>
@@ -361,6 +360,20 @@ const MapView: React.FC<MapViewProps> = ({coordinates = null}) => {
   }, [map, coordinates]);
 
   // rendering is done by leaflet, so just return null
+  return null;
+};
+
+const DisabledMapControls = () => {
+  const map = useMap();
+  useEffect(() => {
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+    map.tapHold?.disable();
+  }, [map]);
   return null;
 };
 
