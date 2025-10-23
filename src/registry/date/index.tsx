@@ -54,6 +54,9 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
           isMultiValue
         />
       )}
+      getAutoFocusQuerySelector={
+        widget === 'inputGroup' ? getInputGroupAutoFocusQuerySelector : undefined
+      }
     />
   ) : (
     <DateField
@@ -70,6 +73,9 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
     />
   );
 };
+
+const getInputGroupAutoFocusQuerySelector = (itemName: string): string =>
+  `[name="${itemName}"] .openforms-input-group input:first-of-type`;
 
 const DateComponent: RegistryEntry<DateComponentSchema> = {
   formField: FormioDate,

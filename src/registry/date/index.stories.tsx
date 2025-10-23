@@ -127,6 +127,37 @@ export const MultipleInputGroup: Story = {
   },
 };
 
+export const MultipleInputGroupAutofocus: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      multiple: true,
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: ['2025-10-23'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+    const secondItem = canvas.getByRole('group', {name: 'Your date 2'});
+    expect(secondItem).toBeVisible();
+    const monthInput = within(secondItem).getByLabelText('Month');
+    expect(monthInput).toHaveFocus();
+  },
+};
+
 export const MultipleDatePicker: Story = {
   args: {
     componentDefinition: {

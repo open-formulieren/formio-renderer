@@ -71,6 +71,17 @@ export interface MultiFieldProps<T extends MultiFieldValue> {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional callback invoked when a new item is added that should receive auto focus.
+   *
+   * If provided, you receive the Formik field name of the inserted item, e.g. `myField.3`.
+   * The return value must be a query selector that can be passed to `document.querySelector`,
+   * resolving to an (input) element to focus.
+   *
+   * You *should* provide a stable reference (with `useCallback`, if needed), but we
+   * have taken precautions in case you forget.
+   */
+  getAutoFocusQuerySelector?: (itemName: string) => string;
 }
 
 /**
@@ -102,12 +113,18 @@ function MultiField<T extends MultiFieldValue>({
   isDisabled,
   description,
   tooltip,
+  getAutoFocusQuerySelector,
 }: MultiFieldProps<T>) {
   const {getFieldProps, setFieldError, getFieldMeta, touched} = useFormikContext<JSONObject>();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
 
   const itemCount = formikItems?.length ?? 0;
-  const containerRef = useMultiFieldEffects(name, itemCount, newItemValue);
+  const containerRef = useMultiFieldEffects(
+    name,
+    itemCount,
+    newItemValue,
+    getAutoFocusQuerySelector
+  );
 
   const id = useId();
   const descriptionid = `${id}-description`;
@@ -209,6 +226,8 @@ function MultiField<T extends MultiFieldValue>({
 
 MultiField.displayName = 'MultiField';
 
+const defaultGetAutoFocusQuerySelector = (itemName: string): string => `[name="${itemName}"]`;
+
 /**
  * Perform side-effects related to multi fields.
  *
@@ -223,14 +242,19 @@ MultiField.displayName = 'MultiField';
  *
  * Unmounting the entire component (e.g. because the field is hidden and then displayed
  * again through logic) restarts this life-cycle.
+ *
+ * Optionally `getAutoFocusQuerySelector` can be provided to override the query selector
+ * to the input that should receive auto focus after adding an item.
  */
 const useMultiFieldEffects = (
   name: string,
   itemCount: number,
-  newItemValue: MultiFieldValue
+  newItemValue: MultiFieldValue,
+  getAutoFocusQuerySelector: (itemName: string) => string = defaultGetAutoFocusQuerySelector
 ): React.RefObject<HTMLDivElement> => {
   const {setFieldValue} = useFormikContext<JSONObject>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const getAutoFocusQuerySelectorRef = useRef(getAutoFocusQuerySelector);
 
   const itemCountRef = useRef<number>(itemCount);
   const autoInsert = useRef<{checked: boolean; skipFocus: boolean}>({
@@ -247,8 +271,15 @@ const useMultiFieldEffects = (
     }
   }, [itemCount, setFieldValue, name, newItemValue]);
 
+  // if a new, non-useCallback'd function is provided, prevent accidental effects from
+  // running because the dependency changed even though this shouldn't.
+  useEffect(() => {
+    getAutoFocusQuerySelectorRef.current = getAutoFocusQuerySelector;
+  }, [getAutoFocusQuerySelector]);
+
   // detect if a new item is added and auto-focus it
   useEffect(() => {
+    console.log('effect!');
     const prevItemCount = itemCountRef.current;
     if (itemCount !== prevItemCount) {
       itemCountRef.current = itemCount;
@@ -256,11 +287,10 @@ const useMultiFieldEffects = (
       // if there was an increase of one, an item was added -> auto focus it, unless it
       // was automatically inserted on first mount/render cycle.
       if (itemCount - prevItemCount === 1 && !autoInsert.current.skipFocus) {
-        const itemName = `${name}.${itemCount - 1}`;
         // we expect only a single element
-        const inputElement = containerRef.current?.querySelector<HTMLInputElement>(
-          `[name="${itemName}"]`
-        );
+        const getAutoFocusQuerySelector = getAutoFocusQuerySelectorRef.current;
+        const selector = getAutoFocusQuerySelector(`${name}.${itemCount - 1}`);
+        const inputElement = containerRef.current?.querySelector<HTMLInputElement>(selector);
         inputElement?.focus();
       }
     }

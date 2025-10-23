@@ -133,6 +133,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
       isDisabled={isDisabled}
       isInvalid={touched && !!error}
       aria-describedby={ariaDescribedBy}
+      name={name}
     >
       <DateInputItems
         year={year}

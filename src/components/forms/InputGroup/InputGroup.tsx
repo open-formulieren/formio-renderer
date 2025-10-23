@@ -16,6 +16,7 @@ export interface InputGroupProps {
   isRequired?: boolean;
   isInvalid?: boolean;
   'aria-describedby'?: string;
+  name?: string;
 }
 
 const InputGroup: React.FC<InputGroupProps> = ({
@@ -26,12 +27,14 @@ const InputGroup: React.FC<InputGroupProps> = ({
   isDisabled = false,
   isInvalid = false,
   'aria-describedby': ariaDescribedBy,
+  name,
 }) => (
   <Fieldset
     disabled={isDisabled}
     invalid={isInvalid}
     className="utrecht-form-fieldset--openforms"
     aria-describedby={ariaDescribedBy}
+    name={name}
     data-testid="inputgroup-container"
   >
     <FieldsetLegend
