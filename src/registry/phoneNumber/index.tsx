@@ -1,5 +1,6 @@
 import type {PhoneNumberComponentSchema} from '@open-formulieren/types';
 
+import MultiField from '@/components/forms/MultiField';
 import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
@@ -20,16 +21,39 @@ export interface PhoneNumberFieldProps {
  * @deprecated - ideally we should be able to use textfield with the appropriate
  * validators.
  */
-export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({
-  componentDefinition: {key, label, description, tooltip, placeholder, validate, autocomplete},
-}) => {
-  return (
+export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefinition}) => {
+  const {key, label, tooltip, description, validate, placeholder, autocomplete, disabled} =
+    componentDefinition;
+  const sharedProps: Pick<
+    React.ComponentProps<typeof TextField>,
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+  > = {
+    name: key,
+    label,
+    description,
+    tooltip,
+    isRequired: validate?.required,
+    isDisabled: disabled,
+  };
+  return componentDefinition.multiple ? (
+    <MultiField<string>
+      {...sharedProps}
+      newItemValue=""
+      renderField={({name, label}) => (
+        <TextField
+          name={name}
+          label={label}
+          placeholder={placeholder}
+          pattern="^[+0-9][\- 0-9]+$"
+          inputMode="tel"
+          autoComplete={autocomplete}
+          isMultiValue
+        />
+      )}
+    />
+  ) : (
     <TextField
-      name={key}
-      label={label}
-      description={description}
-      tooltip={tooltip}
-      isRequired={validate?.required}
+      {...sharedProps}
       placeholder={placeholder}
       pattern="^[+0-9][\- 0-9]+$"
       inputMode="tel"

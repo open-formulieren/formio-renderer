@@ -1,0 +1,32 @@
+import {ArgTypes, Canvas, Description, Meta} from '@storybook/addon-docs/blocks';
+
+import MultiField from './MultiField';
+import * as MultiFieldStories from './MultiField.stories';
+
+<Meta of={MultiFieldStories} />
+
+# MultiField
+
+<Description />
+
+## With text field child nodes
+
+**Non-empty values**
+
+<Canvas of={MultiFieldStories.WithValues} />
+
+**Tooltip and description**
+
+<Canvas of={MultiFieldStories.WithDescriptionAndTooltip} />
+
+**Validation error for item**
+
+<Canvas of={MultiFieldStories.ItemValidationError} />
+
+**Validation error for field as a whole**
+
+<Canvas of={MultiFieldStories.FieldValidationError} />
+
+## Props
+
+<ArgTypes />

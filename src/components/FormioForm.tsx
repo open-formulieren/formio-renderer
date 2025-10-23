@@ -191,7 +191,7 @@ const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> 
   const onChangeRef = useRef(onChange);
 
   // update the callback if it changes - since hooks run in a fixed order, the new reference
-  // will be update for the actual update
+  // will be updated for the actual update
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);

@@ -1,5 +1,6 @@
 import type {EmailComponentSchema} from '@open-formulieren/types';
 
+import MultiField from '@/components/forms/MultiField';
 import TextField from '@/components/forms/TextField';
 import type {RegistryEntry} from '@/registry/types';
 
@@ -12,17 +13,38 @@ export interface FormioEmailProps {
   componentDefinition: EmailComponentSchema;
 }
 
-export const FormioEmail: React.FC<FormioEmailProps> = ({
-  componentDefinition: {key, label, description, tooltip, placeholder, validate, autocomplete},
-}) => {
-  return (
+export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) => {
+  const {key, label, description, tooltip, placeholder, validate, autocomplete} =
+    componentDefinition;
+  const sharedProps: Pick<
+    React.ComponentProps<typeof TextField>,
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired'
+  > = {
+    name: key,
+    label,
+    description,
+    tooltip,
+    isRequired: validate?.required,
+  };
+  return componentDefinition.multiple ? (
+    <MultiField<string>
+      {...sharedProps}
+      newItemValue=""
+      renderField={({name, label}) => (
+        <TextField
+          name={name}
+          label={label}
+          type="email"
+          placeholder={placeholder}
+          autoComplete={autocomplete}
+          isMultiValue
+        />
+      )}
+    />
+  ) : (
     <TextField
-      name={key}
+      {...sharedProps}
       type="email"
-      label={label}
-      description={description}
-      tooltip={tooltip}
-      isRequired={validate?.required}
       placeholder={placeholder}
       autoComplete={autocomplete}
     />

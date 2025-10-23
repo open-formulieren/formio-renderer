@@ -60,6 +60,58 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: {
+          time: ['2025-10-22T16:00:00+02:00', '2025-11-22T07:07:00+00:00'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: {
+          time: ['2025-10-22T16:00:00+02:00', 'not-a-datetime'],
+        },
+      },
+      initialErrors: {
+        date: {
+          time: [undefined, 'Not a valid datetime.'],
+        },
+      },
+      initialTouched: {
+        date: {
+          time: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: DateTimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -251,6 +303,36 @@ export const MinMaxValidationWithEnglishLocale: ValidationStory = {
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
     });
+  },
+};
+
+export const InvalidMultipleDateTime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      validate: {
+        required: false,
+      },
+      multiple: true,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = await canvas.findByLabelText('Datetime 1');
+    await userEvent.type(date, '13/32/2000 16:00 AM');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findByText(/The datetime must consist of a date and a time stamp/)
+    ).toBeVisible();
+
+    expect(date).toHaveDisplayValue('13/32/2000 16:00 AM');
   },
 };
 

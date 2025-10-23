@@ -60,3 +60,41 @@ describe('email component validation', () => {
     expect(success).toBe(!required);
   });
 });
+
+describe('email component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['info@example.com'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: EmailComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('individual items are still validated', () => {
+    const component: EmailComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: false},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(['example.com']); // not a complete email
+
+    expect(success).toBe(false);
+  });
+});

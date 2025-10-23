@@ -1,6 +1,7 @@
 import type {TimeComponentSchema} from '@open-formulieren/types';
 
 import {TextField} from '@/components/forms';
+import MultiField from '@/components/forms/MultiField';
 import type {RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
@@ -12,16 +13,38 @@ export interface TimeFieldProps {
   componentDefinition: TimeComponentSchema;
 }
 
-export const TimeField: React.FC<TimeFieldProps> = ({
-  componentDefinition: {key, label, description, tooltip, validate},
-}) => {
-  return (
+export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
+  const {key, label, description, tooltip, validate, disabled} = componentDefinition;
+  const sharedProps: Pick<
+    React.ComponentProps<typeof TextField>,
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+  > = {
+    name: key,
+    label,
+    description,
+    tooltip,
+    isRequired: validate?.required,
+    isDisabled: disabled,
+  };
+  return componentDefinition.multiple ? (
+    <MultiField<string>
+      {...sharedProps}
+      newItemValue=""
+      renderField={({name, label}) => (
+        <TextField
+          name={name}
+          label={label}
+          min={validate?.minTime ?? undefined}
+          max={validate?.maxTime ?? undefined}
+          type="time"
+          step="60"
+          isMultiValue
+        />
+      )}
+    />
+  ) : (
     <TextField
-      name={key}
-      label={label}
-      tooltip={tooltip}
-      description={description}
-      isRequired={validate?.required}
+      {...sharedProps}
       min={validate?.minTime ?? undefined}
       max={validate?.maxTime ?? undefined}
       type="time"

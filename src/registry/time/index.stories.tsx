@@ -64,6 +64,64 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'my.time',
+      id: 'timefield',
+      label: 'timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies TimeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          time: ['08:15:00', '17:00'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'my.time',
+      id: 'timefield',
+      label: 'timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          time: ['08:15:00', '1234'],
+        },
+      },
+      initialErrors: {
+        my: {
+          time: [undefined, 'Not a valid time.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          time: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -231,6 +289,45 @@ export const ValidateMinTimeMaxTimeNextDay: ValidationStory = {
 
     const expectedMesage = 'Time must be in-between 09:00 and 01:00';
     expect(await canvas.findByText(expectedMesage)).toBeVisible();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+        minTime: '09:00',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByLabelText(/A timefield \d/);
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], '8:00'); // too early
+    await userEvent.type(textboxes[2], '11:30'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Time must be after 09:00')).toBeVisible();
   },
 };
 

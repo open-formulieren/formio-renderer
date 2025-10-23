@@ -1,5 +1,6 @@
 import type {TextareaComponentSchema} from '@open-formulieren/types';
 
+import MultiField from '@/components/forms/MultiField';
 import Textarea from '@/components/forms/Textarea';
 import type {RegistryEntry} from '@/registry/types';
 
@@ -12,8 +13,8 @@ export interface FormioTextareaProps {
   componentDefinition: TextareaComponentSchema;
 }
 
-export const FormioTextarea: React.FC<FormioTextareaProps> = ({
-  componentDefinition: {
+export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefinition}) => {
+  const {
     key,
     label,
     description,
@@ -23,15 +24,40 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({
     showCharCount,
     autocomplete,
     rows,
-  },
-}) => {
-  return (
+    disabled,
+  } = componentDefinition;
+  const sharedProps: Pick<
+    React.ComponentProps<typeof Textarea>,
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+  > = {
+    name: key,
+    label,
+    description,
+    tooltip,
+    isRequired: validate?.required,
+    isDisabled: disabled,
+  };
+
+  return componentDefinition.multiple ? (
+    <MultiField<string>
+      {...sharedProps}
+      newItemValue=""
+      renderField={({name, label}) => (
+        <Textarea
+          name={name}
+          label={label}
+          placeholder={placeholder}
+          showCharCount={showCharCount}
+          maxLength={validate?.maxLength}
+          autoComplete={autocomplete}
+          rows={rows}
+          isMultiValue
+        />
+      )}
+    />
+  ) : (
     <Textarea
-      name={key}
-      label={label}
-      tooltip={tooltip}
-      description={description}
-      isRequired={validate?.required}
+      {...sharedProps}
       placeholder={placeholder}
       showCharCount={showCharCount}
       maxLength={validate?.maxLength}

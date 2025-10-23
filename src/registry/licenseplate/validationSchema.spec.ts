@@ -56,3 +56,42 @@ describe('license plate component validation', () => {
     expect(success).toBe(!required);
   });
 });
+
+describe('licenseplate component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['AAA-AA-12'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: LicensePlateComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('individual items are still validated', () => {
+    const component: LicensePlateComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, required: false},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    // Spaces instead of hyphens
+    const {success} = schema.safeParse(['AB CD 12']);
+
+    expect(success).toBe(false);
+  });
+});

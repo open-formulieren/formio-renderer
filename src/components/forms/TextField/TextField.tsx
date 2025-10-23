@@ -7,7 +7,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import './TextField.scss';
 
@@ -46,6 +46,11 @@ export interface TextFieldProps {
    * Placeholder when no (default) value is available.
    */
   placeholder?: string;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
 }
 
 /**
@@ -62,14 +67,16 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   isDisabled = false,
   placeholder,
   tooltip,
+  isMultiValue = false,
   ...extraProps
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
-  const [{value, ...props}, {error = '', touched}] = useField<string | undefined>({
+  const [{value, ...props}, {touched}] = useField<string | undefined>({
     name,
     type: 'text',
   });
+  const error = useFieldError(name, isMultiValue);
   const id = useId();
 
   const invalid = touched && !!error;

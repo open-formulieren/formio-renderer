@@ -72,3 +72,41 @@ describe('phoneNumber component validation', () => {
     expect(success).toBe(valid);
   });
 });
+
+describe('phoneNumber component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['020-12345678'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('individual items are still validated', () => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: false},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(['letters not allowed']);
+
+    expect(success).toBe(false);
+  });
+});

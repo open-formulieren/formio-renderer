@@ -77,6 +77,65 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A simple textfield',
+      description: 'A description below the fields',
+      tooltip: 'Tooltip must still be rendered',
+      placeholder: 'Placeholders too!',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: ['item 1', 'item 2'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A simple textfield',
+      description: 'A description below the fields',
+      tooltip: 'Tooltip must still be rendered',
+      placeholder: 'Placeholders too!',
+      multiple: true,
+      validate: {maxLength: 3},
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: ['ok', 'too long'],
+        },
+      },
+      initialErrors: {
+        my: {
+          textfield: [undefined, 'The value must be maximum 3 characters long.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          textfield: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextFieldComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -192,6 +251,43 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: true,
+      validate: {
+        maxLength: 5,
+        pattern: '^yeet{1,3}$',
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[0], 'yeettt'); // too long
+    await userEvent.type(textboxes[1], 'ayeet'); // no pattern match
+    await userEvent.type(textboxes[2], 'yeett'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
+    expect(await canvas.findByText('Invalid')).toBeVisible();
   },
 };
 

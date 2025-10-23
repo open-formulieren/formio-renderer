@@ -98,6 +98,60 @@ export const WithAutoComplete: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          email: ['info@example.com', 'dummy@example.com'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          email: ['info@example.com', 'example.com'],
+        },
+      },
+      initialErrors: {
+        my: {
+          email: [undefined, 'Not a valid email.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          email: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: EmailComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -186,6 +240,42 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+    } satisfies EmailComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], 'example.com'); // only domain
+    await userEvent.type(textboxes[2], 'info@example.com'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Invalid email')).toBeVisible();
   },
 };
 

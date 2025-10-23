@@ -1,0 +1,54 @@
+@use '@utrecht/button-group-css';
+@use '@utrecht/components/button';
+@use '@utrecht/components/form-field';
+@use '@utrecht/components/form-fieldset';
+
+@use '@/scss/bem';
+@use '@/scss/button-override';
+@use '@/scss/form-field-override';
+@use '@/scss/sr-only.scss';
+
+.openforms-multifield {
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--of-multifield-gap, 8px);
+
+  @include bem.element('field') {
+    list-style-type: none;
+
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    column-gap: var(--of-multifield-field-column-gap, 2px);
+
+    max-inline-size: var(--of-multifield-field-max-inline-size, 100%);
+
+    .utrecht-form-field {
+      flex-grow: 1;
+    }
+
+    .utrecht-form-field__label {
+      @extend .sr-only;
+    }
+
+    // invalid state is reported for the fieldset/component as a whole, not for individual
+    // items
+    .utrecht-form-field.utrecht-form-field--invalid {
+      --utrecht-form-field-invalid-border-inline-start-width: 0;
+      --utrecht-form-field-invalid-padding-inline-start: 0;
+    }
+  }
+
+  @include bem.element('remove-button') {
+    position: relative;
+    inset-block-start: var(--of-multifield-remove-button-inset-block-start);
+  }
+}
+
+.openforms-multifield-container {
+  .openforms-multifield + .utrecht-button-group {
+    margin-block-start: var(--of-multifield-container-button-group-margin-block-start, 8px);
+  }
+}

@@ -131,6 +131,60 @@ export const WithAutoComplete: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      multiple: true,
+    } satisfies TextareaComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: ['lorem ipsum', 'dolor sed quiscat'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: ['Lorem Ipsum', 'single\nand multiline'],
+        },
+      },
+      initialErrors: {
+        my: {
+          textarea: [undefined, 'Watch your language!'],
+        },
+      },
+      initialTouched: {
+        my: {
+          textarea: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextareaComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -250,6 +304,43 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A textarea',
+      autoExpand: false,
+      validate: {
+        required: true,
+        pattern: '[a-zA-Z]+',
+      },
+      multiple: true,
+    } satisfies TextareaComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], '123 + 456'); // does not match pattern
+    await userEvent.type(textboxes[2], 'word'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Invalid')).toBeVisible();
   },
 };
 

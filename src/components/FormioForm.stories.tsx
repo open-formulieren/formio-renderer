@@ -575,3 +575,98 @@ export const EditGridPreviewWithOddConditionals: Story = {
     expect(canvas.queryByText('Not displayed 2')).not.toBeInTheDocument();
   },
 };
+
+export const WithMultipleAndConditional: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Trigger',
+        multiple: true,
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'email',
+        key: 'email',
+        label: 'Conditionally displayed email',
+        validateOn: 'blur',
+        conditional: {
+          show: true,
+          when: 'nested.textfield',
+          eq: 'show email',
+        },
+      },
+    ],
+  },
+  play: async ({canvasElement, args, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial state', async () => {
+      // start out with a single textbox for the text field
+      expect(await canvas.findAllByRole('textbox')).toHaveLength(1);
+      expect(canvas.queryByLabelText('Conditionally displayed email')).not.toBeInTheDocument();
+    });
+
+    await step('Add data in first item', async () => {
+      const textinput1 = canvas.getByLabelText('Trigger 1');
+      await userEvent.type(textinput1, 'no show yet');
+      expect(canvas.queryByLabelText('Conditionally displayed email')).not.toBeInTheDocument();
+    });
+
+    await step('Trigger display', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      const textinput1 = canvas.getByLabelText('Trigger 2');
+      await userEvent.type(textinput1, 'show email');
+
+      const emailInput = await canvas.findByLabelText('Conditionally displayed email');
+      expect(emailInput).toBeVisible();
+      await userEvent.type(emailInput, 'info@example.com');
+    });
+
+    expect(await canvas.findAllByRole('textbox')).toHaveLength(3);
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      nested: {
+        textfield: ['no show yet', 'show email'],
+      },
+      email: 'info@example.com',
+    });
+  },
+};
+
+export const WithMultipleAndDefaultValue: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'nested.textfield',
+        label: 'Trigger',
+        multiple: true,
+        defaultValue: ['one', 'two'],
+      } satisfies TextFieldComponentSchema,
+    ],
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial state', async () => {
+      const textboxes = await canvas.findAllByRole('textbox');
+      expect(textboxes).toHaveLength(2);
+      expect(textboxes[0]).toHaveDisplayValue('one');
+      expect(textboxes[1]).toHaveDisplayValue('two');
+    });
+
+    await step('Add another item', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      const textboxes = await canvas.findAllByRole('textbox');
+      expect(textboxes).toHaveLength(3);
+      expect(textboxes[0]).toHaveDisplayValue('one');
+      expect(textboxes[1]).toHaveDisplayValue('two');
+      expect(textboxes[2]).toHaveDisplayValue('');
+    });
+  },
+};

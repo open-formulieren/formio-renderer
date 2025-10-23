@@ -205,8 +205,6 @@ const {
     await step('textfield multiple=true', async () => {
       // Formio has multiple elements with the same ID, so we can't reliably look up
       // the textboxes
-      // TODO - implement multiple display in the renderer :-) it now looks silly in our
-      // own components
       expect(canvas.queryByText(`'item 1' not in textfield values`)).not.toBeInTheDocument();
     });
 

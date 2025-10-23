@@ -22,7 +22,7 @@ const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate} = componentDefinition;
+  const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;
 
   let schema: z.ZodFirstPartySchemaTypes = z
@@ -30,6 +30,13 @@ const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
     .refine(isValidIBAN, {message: intl.formatMessage(IBAN_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();
+  }
+
+  if (multiple) {
+    schema = z.array(schema);
+    if (required) {
+      schema = schema.min(1);
+    }
   }
 
   return {[key]: schema};

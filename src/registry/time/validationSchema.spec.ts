@@ -136,3 +136,41 @@ describe('time component validation', () => {
     expect(success).toBe(true);
   });
 });
+
+describe('time component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['13:52:00'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: TimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('individual items are still validated', () => {
+    const component: TimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: false},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(['99:60:62']);
+
+    expect(success).toBe(false);
+  });
+});

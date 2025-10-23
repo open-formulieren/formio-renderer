@@ -68,6 +68,68 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies PostcodeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          postcode: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          postcode: ['1043 GR', 'ABCD 99'],
+        },
+      },
+      initialErrors: {
+        my: {
+          postcode: [undefined, 'Invalid Dutch postcode.'],
+        },
+      },
+      initialTouched: {
+        my: {
+          postcode: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: PostcodeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -165,6 +227,46 @@ export const PassesAllValidations: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+        required: true,
+      },
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies PostcodeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], '1234'); // missing letters
+    await userEvent.type(textboxes[2], '1015CJ'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The submitted value does not match the postcode pattern: 1234 AB')
+    ).toBeVisible();
   },
 };
 

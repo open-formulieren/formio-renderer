@@ -79,3 +79,42 @@ describe('textarea component validation', () => {
     expect(success).toBe(valid);
   });
 });
+
+describe('textarea component with multiple: true', () => {
+  test.each([
+    [true, [], false],
+    [true, [''], false],
+    [true, [undefined], false],
+    [true, ['abcdef \n foo bar'], true],
+    [false, [], true],
+    [false, [''], true],
+    [false, [undefined], true],
+  ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
+    const component: TextareaComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test('individual items are still validated', () => {
+    const component: TextareaComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: false, pattern: '[0-9]+'},
+      multiple: true,
+      defaultValue: [],
+    };
+    const schema = buildValidationSchema(component);
+
+    // Spaces instead of hyphens
+    const {success} = schema.safeParse(['only dig1ts allowed']);
+
+    expect(success).toBe(false);
+  });
+});

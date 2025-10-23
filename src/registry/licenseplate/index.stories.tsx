@@ -63,6 +63,62 @@ export const WithTooltip: Story = {
   },
 };
 
+export const Multiple: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies LicensePlateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleWithItemErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      validateOn: 'blur',
+      multiple: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: ['12-34-56', 'auto'],
+        },
+      },
+      initialErrors: {
+        license: {
+          plate: [undefined, 'Not a valid Dutch license plate number.'],
+        },
+      },
+      initialTouched: {
+        license: {
+          plate: [true, true],
+        },
+      },
+    },
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: LicensePlateComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -156,6 +212,43 @@ export const PassesValidation: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(args.onSubmit).toHaveBeenCalled();
+  },
+};
+
+export const ValidationMultiple: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {
+        pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
+        required: true,
+      },
+      validateOn: 'blur',
+      multiple: true,
+    } satisfies LicensePlateComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[1], 'AAAA-9999'); // not a valid license plate
+    await userEvent.type(textboxes[2], '123-abc-def'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('Invalid Dutch license plate')).toBeVisible();
   },
 };
 

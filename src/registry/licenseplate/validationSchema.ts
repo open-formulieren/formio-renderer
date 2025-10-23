@@ -17,13 +17,20 @@ const getValidationSchema: GetValidationSchema<LicensePlateComponentSchema> = (
   componentDefinition,
   intl
 ) => {
-  const {key, validate} = componentDefinition;
+  const {key, validate, multiple} = componentDefinition;
   const required = validate?.required;
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
     .regex(LICENSE_PLATE_REGEX, {message: intl.formatMessage(LICENSE_PLATE_INVALID_MESSAGE)});
   if (!required) schema = schema.or(z.literal('')).optional();
+
+  if (multiple) {
+    schema = z.array(schema);
+    if (required) {
+      schema = schema.min(1);
+    }
+  }
 
   return {[key]: schema};
 };
