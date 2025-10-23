@@ -1,7 +1,6 @@
 import type {MapComponentSchema, MapValue} from '@open-formulieren/types';
 import {useField} from 'formik';
-import L from 'leaflet';
-import 'leaflet-draw';
+import * as L from 'leaflet';
 import {useEffect, useId, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import {FeatureGroup, MapContainer, TileLayer, useMap} from 'react-leaflet';
@@ -10,6 +9,7 @@ import {EditControl} from 'react-leaflet-draw';
 import HelpText from '../HelpText';
 import {LabelContent} from '../Label';
 import Tooltip from '../Tooltip';
+import {overloadLeafletDeleteControl} from './DeleteControl';
 import LayersControl from './LeafletMapLayersControl';
 import './MapField.scss';
 import NearestAddress from './NearestAddress';
@@ -119,6 +119,10 @@ const MapField: React.FC<MapFieldProps> = ({
   useEffect(() => {
     applyLeafletTranslations(intl);
   }, [intl]);
+
+  useEffect(() => {
+    overloadLeafletDeleteControl(featureGroupRef, intl);
+  }, [featureGroupRef, intl]);
 
   const onFeatureCreate = (event: L.DrawEvents.Created) => {
     updateGeoJsonGeometry(event.layer);
