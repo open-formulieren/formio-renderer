@@ -52,7 +52,7 @@ const StorybookLeafletMapExposer = () => {
 };
 
 export default {
-  title: 'Internal API / Forms / Map',
+  title: 'Internal API / Forms / MapField',
   component: MapField,
   decorators: [withMapLayout, withFormSettingsProvider, withFormik],
   render: StorybookLeafletMap,
@@ -71,7 +71,7 @@ export default {
 
 type Story = StoryObj<typeof StorybookLeafletMap>;
 
-export const MinimalConfiguration: Story = {
+export const Point: Story = {
   args: {
     name: 'map',
     label: 'Map',
@@ -83,6 +83,52 @@ export const MinimalConfiguration: Story = {
         map: {
           type: 'Point',
           coordinates: [5.291266, 52.1326332],
+        },
+      },
+    },
+  },
+};
+
+export const Polygon: Story = {
+  args: {
+    name: 'map',
+    label: 'Map',
+    description: 'Click the map to select a location',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        map: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [5.291266, 52.1326332],
+              [5.091266, 52.128332],
+              [5.591266, 52.48332],
+            ],
+          ],
+        },
+      },
+    },
+  },
+};
+
+export const LineString: Story = {
+  args: {
+    name: 'map',
+    label: 'Map',
+    description: 'Click the map to select a location',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        map: {
+          type: 'LineString',
+          coordinates: [
+            [4.7493255, 52.6405471],
+            [4.6493255, 52.4405471],
+            [4.5493255, 52.2405471],
+          ],
         },
       },
     },
