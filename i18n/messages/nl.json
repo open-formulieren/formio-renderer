@@ -29,10 +29,20 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "2HsmfN": {
+    "defaultMessage": "BSN",
+    "description": "Partners component: label for partners BSN",
+    "originalDefault": "BSN"
+  },
   "2KKNKT": {
     "defaultMessage": "Vorig jaar",
     "description": "Calendar: previous year button title",
     "originalDefault": "Previous year"
+  },
+  "33UD7T": {
+    "defaultMessage": "Affixes",
+    "description": "Partners component: label for partners affixes",
+    "originalDefault": "Affixes"
   },
   "3C29X9": {
     "defaultMessage": "{addNotRequiredSuffix, select, true {{label} (niet verplicht)} other {{label}} }",
@@ -53,6 +63,11 @@
     "defaultMessage": "Verwijder item {index}",
     "description": "Accessible remove icon/button label for item inside edit grid",
     "originalDefault": "Remove item {index}"
+  },
+  "9UF9Z7": {
+    "defaultMessage": "No information provided",
+    "description": "Emtpy field message",
+    "originalDefault": "No information provided"
   },
   "AEnddx": {
     "defaultMessage": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM).",
@@ -90,6 +105,11 @@
     "description": "Validation error describing shape of time format.",
     "originalDefault": "Hour must be between 0-23 and minute between 0-59"
   },
+  "E++Snm": {
+    "defaultMessage": "Date of birth must be within the last 120 years.",
+    "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
+    "originalDefault": "Date of birth must be within the last 120 years."
+  },
   "FfBWqF": {
     "defaultMessage": "Toon tooltip",
     "description": "Tooltip icon label",
@@ -114,6 +134,11 @@
     "defaultMessage": "Toon/verberg de kalender",
     "description": "Datepicker: accessible calendar toggle label",
     "originalDefault": "Toggle calendar"
+  },
+  "K+ha3D": {
+    "defaultMessage": "Initials",
+    "description": "Partners component: label for partners initials",
+    "originalDefault": "Initials"
   },
   "KWP1b9": {
     "defaultMessage": "Vorige maand",
@@ -172,6 +197,11 @@
     "description": "Calendar: next year button title",
     "originalDefault": "Next year"
   },
+  "Tmbth6": {
+    "defaultMessage": "The format of the date of birth is incorrect.",
+    "description": "Validation error for partners.dateOfBirth invalid format.",
+    "originalDefault": "The format of the date of birth is incorrect."
+  },
   "UONGQo": {
     "defaultMessage": "Huisnummer is verplicht.",
     "description": "Validation error when AddressNL.postcode is provided but not houseNumber",
@@ -181,6 +211,11 @@
     "defaultMessage": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB",
     "description": "Validation error for postcode.",
     "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
+  },
+  "ZZGmiU": {
+    "defaultMessage": "Invalid BSN.",
+    "description": "Validation error for partners.bsn that does not pass the 11-test.",
+    "originalDefault": "Invalid BSN."
   },
   "abKEBH": {
     "defaultMessage": "Nee",
@@ -197,6 +232,11 @@
     "description": "Validation error for addressNL.houseNumber field.",
     "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
   },
+  "bmnUq8": {
+    "defaultMessage": "Lastname",
+    "description": "Partners component: label for partners lastName",
+    "originalDefault": "Lastname"
+  },
   "bv/J3Y": {
     "defaultMessage": "Straatnaam is verplicht.",
     "description": "Validation error for required addressNL.streetName field.",
@@ -211,6 +251,11 @@
     "defaultMessage": "Nog één toevoegen",
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
+  },
+  "d3va37": {
+    "defaultMessage": "A BSN must be 9 digits.",
+    "description": "Validation error for partners.bsn that does not match the shape of BSN.",
+    "originalDefault": "A BSN must be 9 digits."
   },
   "ht1O2Z": {
     "defaultMessage": "Ongeldig BSN",
@@ -231,6 +276,11 @@
     "defaultMessage": "jjjj",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
+  },
+  "odKXcF": {
+    "defaultMessage": "You must provide a last name.",
+    "description": "Validation error for required partners.lastName field.",
+    "originalDefault": "You must provide a last name."
   },
   "osSl3z": {
     "defaultMessage": "Plaats",
@@ -272,6 +322,11 @@
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
+  "syyEii": {
+    "defaultMessage": "Date of birth",
+    "description": "Partners component: label for partners dateOfBirth",
+    "originalDefault": "Date of birth"
+  },
   "vCObuG": {
     "defaultMessage": "Dag",
     "description": "Date input group: day label",
@@ -287,6 +342,11 @@
     "description": "Validation error for datetime less than minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "wiPGoP": {
+    "defaultMessage": "Add partner details",
+    "description": "Partners component: 'add partner' button label",
+    "originalDefault": "Add partner details"
+  },
   "xCY4Oh": {
     "defaultMessage": "The datetime must be earlier than or equal to {max}.",
     "description": "Validation error for datetime greater than maximum date.",
@@ -301,6 +361,16 @@
     "defaultMessage": "Jaar",
     "description": "Date input group: year label",
     "originalDefault": "Year"
+  },
+  "ybTcqX": {
+    "defaultMessage": "Remove partner details",
+    "description": "Partners component: 'remove partner' button label",
+    "originalDefault": "Remove partner details"
+  },
+  "yjCrXX": {
+    "defaultMessage": "Date of birth cannot be in the future.",
+    "description": "Validation error for partners.dateOfBirth that is after the maximum date.",
+    "originalDefault": "Date of birth cannot be in the future."
   },
   "z+/GrY": {
     "defaultMessage": "Ongeldig Nederlands kenteken",

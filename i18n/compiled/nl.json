@@ -79,10 +79,22 @@
       "value": "remainingCharCount"
     }
   ],
+  "2HsmfN": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "2KKNKT": [
     {
       "type": 0,
       "value": "Vorig jaar"
+    }
+  ],
+  "33UD7T": [
+    {
+      "type": 0,
+      "value": "Affixes"
     }
   ],
   "3C29X9": [
@@ -133,6 +145,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "9UF9Z7": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "AEnddx": [
@@ -189,6 +207,12 @@
       "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
     }
   ],
+  "E++Snm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -225,6 +249,12 @@
     {
       "type": 0,
       "value": "Toon/verberg de kalender"
+    }
+  ],
+  "K+ha3D": [
+    {
+      "type": 0,
+      "value": "Initials"
     }
   ],
   "KWP1b9": [
@@ -301,6 +331,12 @@
       "value": "Volgend jaar"
     }
   ],
+  "Tmbth6": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
+    }
+  ],
   "UONGQo": [
     {
       "type": 0,
@@ -311,6 +347,12 @@
     {
       "type": 0,
       "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
+    }
+  ],
+  "ZZGmiU": [
+    {
+      "type": 0,
+      "value": "Invalid BSN."
     }
   ],
   "abKEBH": [
@@ -339,6 +381,12 @@
       "value": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456)."
     }
   ],
+  "bmnUq8": [
+    {
+      "type": 0,
+      "value": "Lastname"
+    }
+  ],
   "bv/J3Y": [
     {
       "type": 0,
@@ -355,6 +403,12 @@
     {
       "type": 0,
       "value": "Nog één toevoegen"
+    }
+  ],
+  "d3va37": [
+    {
+      "type": 0,
+      "value": "A BSN must be 9 digits."
     }
   ],
   "ht1O2Z": [
@@ -379,6 +433,12 @@
     {
       "type": 0,
       "value": "jjjj"
+    }
+  ],
+  "odKXcF": [
+    {
+      "type": 0,
+      "value": "You must provide a last name."
     }
   ],
   "osSl3z": [
@@ -461,6 +521,12 @@
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
     }
   ],
+  "syyEii": [
+    {
+      "type": 0,
+      "value": "Date of birth"
+    }
+  ],
   "vCObuG": [
     {
       "type": 0,
@@ -503,6 +569,12 @@
       "value": "."
     }
   ],
+  "wiPGoP": [
+    {
+      "type": 0,
+      "value": "Add partner details"
+    }
+  ],
   "xCY4Oh": [
     {
       "type": 0,
@@ -535,6 +607,18 @@
     {
       "type": 0,
       "value": "Jaar"
+    }
+  ],
+  "ybTcqX": [
+    {
+      "type": 0,
+      "value": "Remove partner details"
+    }
+  ],
+  "yjCrXX": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
     }
   ],
   "z+/GrY": [
