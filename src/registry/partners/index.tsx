@@ -55,6 +55,10 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
     ]);
   };
 
+  const removePartner = () => {
+    setFieldValue(key, []);
+  };
+
   return (
     <fieldset className="openforms-fieldset">
       <legend
@@ -74,6 +78,15 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
           <Affixes namePrefix={subFieldNamePrefix} />
           <LastName namePrefix={subFieldNamePrefix} />
           <DateOfBirth namePrefix={subFieldNamePrefix} />
+
+          <div>
+            <PrimaryActionButton hint="danger" onClick={() => removePartner()}>
+              <FormattedMessage
+                description="Partners component: 'remove partner' button label"
+                defaultMessage="Remove partner details"
+              />
+            </PrimaryActionButton>
+          </div>
         </FormFieldContainer>
       )}
 
@@ -81,7 +94,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
         <PrimaryActionButton onClick={() => addPartner()}>
           <FormattedMessage
             description="Partners component: 'add partner' button label"
-            defaultMessage="Add partner"
+            defaultMessage="Add partner details"
           />
         </PrimaryActionButton>
       )}
