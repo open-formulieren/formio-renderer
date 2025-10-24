@@ -11,6 +11,7 @@ import {LabelContent} from '../Label';
 import Tooltip from '../Tooltip';
 import {overloadLeafletDeleteControl} from './DeleteControl';
 import LayersControl from './LeafletMapLayersControl';
+import SearchControl, {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
 import './MapField.scss';
 import NearestAddress from './NearestAddress';
 import {DEFAULT_CENTER_COORDINATES, DEFAULT_INTERACTIONS, DEFAULT_ZOOM_LEVEL} from './constants';
@@ -134,6 +135,10 @@ const MapField: React.FC<MapFieldProps> = ({
     onGeoJsonGeometrySet?.(null);
   };
 
+  const onSearchMarkerSet = (event: GeoSearchShowLocationEvent) => {
+    updateGeoJsonGeometry(event.marker);
+  };
+
   const updateGeoJsonGeometry = (
     newFeatureLayer: L.Circle | L.CircleMarker | L.Marker | L.Polygon | L.Polyline
   ) => {
@@ -215,7 +220,7 @@ const MapField: React.FC<MapFieldProps> = ({
           </FeatureGroup>
         }
 
-        {/**!disabled && (
+        {!isDisabled && (
           <>
             <SearchControl
               onMarkerSet={onSearchMarkerSet}
@@ -231,9 +236,9 @@ const MapField: React.FC<MapFieldProps> = ({
                 notFoundMessage: intl.formatMessage(searchControlMessages.notFound),
               }}
             />
-            <LocationControl />
+            {/** <LocationControl />*/}
           </>
-        )*/}
+        )}
         {coordinates && <MapView coordinates={coordinates} />}
         {isDisabled && <DisabledMapControls />}
 
