@@ -332,6 +332,58 @@ export const ValidationMultiple: ValidationStory = {
   },
 };
 
+export const ValidationMultipleAndPlugin: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: true,
+      validate: {
+        maxLength: 10,
+        plugins: ['fail'],
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    formSettings: {
+      ...BaseValidationStory.parameters!.formSettings,
+      validatePluginCallback: (async (_, value: string) => {
+        if (value === 'fail-me') {
+          return {
+            valid: false,
+            messages: [`Failure requested.`],
+          };
+        }
+        return {valid: true};
+      }) satisfies ValidatePluginCallback,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[0], 'this value is too long'); // too long
+    await userEvent.type(textboxes[1], 'fail-me'); // plugin validator rejects
+    await userEvent.type(textboxes[2], 'okay'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('String must contain at most 10 character(s)')).toBeVisible();
+    expect(await canvas.findByText('Failure requested.')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: TextFieldComponentSchema;
   value: string | string[];
