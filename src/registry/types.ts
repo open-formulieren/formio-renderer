@@ -47,12 +47,31 @@ export interface ValueDisplayProps<S, V extends JSONValue | unknown = unknown> {
   value: V;
 }
 
+/**
+ * Additional context that may be required to perform the validation with Zod.
+ *
+ * This is the primary dependency-injection mechanism.
+ */
+export interface GetValidationSchemaContext {
+  /**
+   * react-intl context to be able to localize error messages.
+   */
+  intl: IntlShape;
+  /**
+   * Helper for component type lookups in the registry, to avoid circular imports.
+   */
+  getRegistryEntry: GetRegistryEntry;
+  /**
+   * Callback to run the async validation for provided/specified plugins on the provided value.
+   *
+   * If there are no validation errors, the return value is `undefined`.
+   */
+  validatePlugins: (plugins: string[], value: JSONValue | undefined) => Promise<string | undefined>;
+}
+
 export type GetValidationSchema<S> = (
   componentDefinition: S,
-  // intl object to localize error messages
-  intl: IntlShape,
-  // dependency injection to avoid circular imports
-  getRegistryEntry: GetRegistryEntry
+  context: GetValidationSchemaContext
 ) => Record<string, z.ZodFirstPartySchemaTypes>;
 
 export interface VisibilityContext {

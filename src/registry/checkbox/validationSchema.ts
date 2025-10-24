@@ -3,11 +3,14 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
-const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = componentDefinition => {
+const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = (
+  componentDefinition,
+  {validatePlugins}
+) => {
   const {key, validate = {}} = componentDefinition;
-  const {required} = validate;
+  const {required, plugins = []} = validate;
 
-  const schema: z.ZodEffects<z.ZodBoolean> = z.boolean().superRefine((val, ctx) => {
+  const schema: z.ZodEffects<z.ZodBoolean> = z.boolean().superRefine(async (val, ctx) => {
     if (required && !val) {
       // see open-forms-sdk `src/hooks/useZodErrorMap.jsx`
       ctx.addIssue({
@@ -16,6 +19,15 @@ const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = compon
         received: z.ZodParsedType.undefined,
         expected: z.ZodParsedType.boolean,
       });
+    }
+    if (plugins.length) {
+      const message = await validatePlugins(plugins, val);
+      if (message) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: message,
+        });
+      }
     }
   });
 

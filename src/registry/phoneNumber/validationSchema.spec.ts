@@ -17,7 +17,12 @@ const BASE_COMPONENT: PhoneNumberComponentSchema = {
 };
 
 const buildValidationSchema = (component: PhoneNumberComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
@@ -68,6 +73,21 @@ describe('phoneNumber component validation', () => {
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('06-123 456 78');
 
     expect(success).toBe(valid);
   });

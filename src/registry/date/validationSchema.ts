@@ -12,10 +12,10 @@ const INVALID_INPUT_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
-  intl
+  {intl, validatePlugins}
 ) => {
   const {key, validate = {}, datePicker, multiple} = componentDefinition;
-  const {required} = validate;
+  const {required, plugins = []} = validate;
   // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
   // support in the form builder for choosing which widget to use - the min and max dates should be
@@ -44,6 +44,17 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
   if (!required) {
     schema = z.union([schema, z.literal('')]).optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

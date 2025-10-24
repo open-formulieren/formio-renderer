@@ -11,7 +11,7 @@ import {getComponentsMap} from '@/formio';
 import {useFieldConfig, useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
-import {buildValidationSchema, useValidationSchemas} from '@/validationSchema';
+import {buildValidationSchema, useValidationSchemas, validatePlugins} from '@/validationSchema';
 import {extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
@@ -65,6 +65,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
 }) => {
   const intl = useIntl();
   const {values} = useFormikContext<WrappedJSONObject>();
+  const {validatePluginCallback} = useFormSettings();
 
   // ensure we peek deep inside the formik data skipping over any prefixes applied by
   // the EditGridItem for the isolation-mode-editing. Note that prefix ends with a
@@ -106,17 +107,18 @@ const ItemBody: React.FC<ItemBodyProps> = ({
         componentsMap,
       }
     );
-    const updatedValidationSchema = buildValidationSchema(
-      visibleComponents,
+    const updatedValidationSchema = buildValidationSchema(visibleComponents, {
       intl,
-      getRegistryEntry
-    );
+      getRegistryEntry,
+      validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+    });
     onValidationSchemaChange(index, updatedValidationSchema);
     return {visibleComponents, updatedItemValues};
   }, [
     intl,
     index,
     getRegistryEntry,
+    validatePluginCallback,
     onValidationSchemaChange,
     parentValues,
     parentKey,

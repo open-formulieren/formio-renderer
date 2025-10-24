@@ -15,15 +15,26 @@ const POSTCODE_INVALID_MESSAGE = defineMessage({
 
 const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   componentDefinition,
-  intl
+  {intl, validatePlugins}
 ) => {
   const {key, validate, multiple} = componentDefinition;
-  const required = validate?.required;
+  const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string()
     .regex(POSTCODE_REGEX, {message: intl.formatMessage(POSTCODE_INVALID_MESSAGE)});
   if (!required) schema = schema.or(z.literal('')).optional();
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
+  }
 
   if (multiple) {
     schema = z.array(schema);

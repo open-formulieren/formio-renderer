@@ -32,10 +32,10 @@ const isValidBsn = (value: string): boolean => {
 
 const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   componentDefinition,
-  intl
+  {intl, validatePlugins}
 ) => {
-  const {key, validate, multiple} = componentDefinition;
-  const required = validate?.required;
+  const {key, multiple, validate = {}} = componentDefinition;
+  const {required, plugins = []} = validate;
 
   // TODO: localize!
   let schema: z.ZodFirstPartySchemaTypes = z
@@ -45,6 +45,17 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
     .refine(isValidBsn, {message: intl.formatMessage(BSN_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   if (multiple) {

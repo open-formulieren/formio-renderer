@@ -17,7 +17,12 @@ const BASE_COMPONENT: TextareaComponentSchema = {
 };
 
 const buildValidationSchema = (component: TextareaComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
@@ -75,6 +80,21 @@ describe('textarea component validation', () => {
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse(value);
+
+    expect(success).toBe(valid);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: TextareaComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('irrelevant');
 
     expect(success).toBe(valid);
   });

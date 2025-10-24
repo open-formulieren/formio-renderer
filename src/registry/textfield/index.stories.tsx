@@ -5,6 +5,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
+import type {ValidatePluginCallback} from '@/validationSchema';
 
 import {FormioTextField as TextField} from './';
 import ValueDisplay from './ValueDisplay';
@@ -149,6 +150,17 @@ const BaseValidationStory: ValidationStory = {
     formik: {
       disable: true,
     },
+    formSettings: {
+      validatePluginCallback: (async (plugin: string) => {
+        if (['mock1', 'mock2'].includes(plugin)) {
+          return {
+            valid: false,
+            messages: [`Does not pass ${plugin} plugin validation.`],
+          };
+        }
+        return {valid: true};
+      }) satisfies ValidatePluginCallback,
+    },
   },
 };
 
@@ -227,6 +239,35 @@ export const ValidatePattern: ValidationStory = {
   },
 };
 
+export const ValidatePlugin: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      validate: {
+        plugins: ['mock1', 'mock2'],
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textField = canvas.getByLabelText('A textfield');
+    await userEvent.type(textField, 'ayeet');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findByText(
+        'Does not pass mock1 plugin validation. Does not pass mock2 plugin validation.'
+      )
+    ).toBeVisible();
+  },
+};
+
 export const PassesAllValidations: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -288,6 +329,58 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
     expect(await canvas.findByText('Invalid')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleAndPlugin: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: true,
+      validate: {
+        maxLength: 10,
+        plugins: ['fail'],
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    formSettings: {
+      ...BaseValidationStory.parameters!.formSettings,
+      validatePluginCallback: (async (_, value: string) => {
+        if (value === 'fail-me') {
+          return {
+            valid: false,
+            messages: [`Failure requested.`],
+          };
+        }
+        return {valid: true};
+      }) satisfies ValidatePluginCallback,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(3);
+
+    await userEvent.type(textboxes[0], 'this value is too long'); // too long
+    await userEvent.type(textboxes[1], 'fail-me'); // plugin validator rejects
+    await userEvent.type(textboxes[2], 'okay'); // ok
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('String must contain at most 10 character(s)')).toBeVisible();
+    expect(await canvas.findByText('Failure requested.')).toBeVisible();
   },
 };
 
