@@ -129,7 +129,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
-  // Note that we have a custom onValueChange handler, so `value` and `onBlur` is the only relevant
+  // Note that we have a custom onValueChange handler, so `value` and `onBlur` are the only relevant
   // field input props
   const [{value, onBlur}, {touched}, {setValue}] = useField<number | null>(name);
   const {locale} = useIntl();
@@ -158,6 +158,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
 
       <InputContainer prefix={prefix} suffix={suffix}>
         <NumericFormat
+          name={name}
           value={value}
           onBlur={async e => {
             onBlur(e);
