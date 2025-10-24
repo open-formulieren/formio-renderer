@@ -55,7 +55,7 @@ export const parseDateTime = (value: string, meta?: LocaleMeta): Date | null => 
   // Seconds can be missing
   if (!hour || !minute || meta.is24HourFormat == ['AM', 'PM'].includes(dayPeriod)) return null;
   if (!meta.is24HourFormat) {
-    const time12h = parse(`${hour}:${minute} ${dayPeriod}`, 'hh:mmm a', new Date());
+    const time12h = parse(`${hour}:${minute} ${dayPeriod}`, 'hh:mm a', new Date());
     hour = format(time12h, 'H');
   }
 

@@ -189,7 +189,6 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
 
   // If we have a date object, format it according to the locale (and remove comma) and use as the
   // textbox value. Otherwise, just use the field value directly.
-  // Note: cannot use `timeStyle: 'short'` here, because it will add AM/PM for English locale.
   const textboxValue =
     currentDateTime !== null
       ? formatDate(currentDateTime, {
