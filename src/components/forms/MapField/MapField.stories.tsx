@@ -3,6 +3,7 @@ import {useField} from 'formik';
 import type {Map as LMap} from 'leaflet';
 import {useEffect} from 'react';
 import {useMap} from 'react-leaflet';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
@@ -75,7 +76,13 @@ export const Point: Story = {
   args: {
     name: 'map',
     label: 'Map',
-    description: 'Click the map to select a location',
+    description: 'Click the map to set a point',
+    interactions: {
+      marker: true,
+      polygon: false,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
   },
   parameters: {
     formik: {
@@ -87,13 +94,55 @@ export const Point: Story = {
       },
     },
   },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await step('None of the interactions are shown', async () => {
+      const pin = canvas.queryByTitle('Marker');
+      const polygon = canvas.queryByTitle('Shape (polygon)');
+      const line = canvas.queryByTitle('Line');
+
+      expect(pin).not.toBeInTheDocument();
+      expect(polygon).not.toBeInTheDocument();
+      expect(line).not.toBeInTheDocument();
+    });
+
+    await step('Draw a marker', async () => {
+      // Because there is only one shape, we can draw without having to click the
+      // "draw marker" button.
+      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
+      await userEvent.click(map, {x: 100, y: 100});
+
+      // This 'button' is the placed marker on the map
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Point',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [expect.anything(), expect.anything()],
+      });
+    });
+  },
 };
 
 export const Polygon: Story = {
   args: {
     name: 'map',
     label: 'Map',
-    description: 'Click the map to select a location',
+    description: 'Click the map to create a polygon',
+    interactions: {
+      marker: false,
+      polygon: true,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
   },
   parameters: {
     formik: {
@@ -111,13 +160,52 @@ export const Polygon: Story = {
       },
     },
   },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await step('None of the interactions are shown', async () => {
+      const pin = canvas.queryByTitle('Marker');
+      const polygon = canvas.queryByTitle('Shape (polygon)');
+      const line = canvas.queryByTitle('Line');
+
+      expect(pin).not.toBeInTheDocument();
+      expect(polygon).not.toBeInTheDocument();
+      expect(line).not.toBeInTheDocument();
+    });
+
+    await step('Draw a polygon', async () => {
+      // Because there is only one shape, we can draw without having to click the
+      // "draw marker" button.
+      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
+      await userEvent.click(map, {x: 100, y: 100});
+
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Polygon',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [[[expect.anything(), expect.anything()]]],
+      });
+    });
+  },
 };
 
 export const LineString: Story = {
   args: {
     name: 'map',
     label: 'Map',
-    description: 'Click the map to select a location',
+    description: 'Click the map to create a line',
+    interactions: {
+      marker: true,
+      polygon: false,
+      polyline: true,
+    },
   },
   parameters: {
     formik: {
@@ -129,6 +217,52 @@ export const LineString: Story = {
             [4.6493255, 52.4405471],
             [4.5493255, 52.2405471],
           ],
+        },
+      },
+    },
+  },
+};
+
+export const MultipleInteractions: Story = {
+  args: {
+    name: 'map',
+    label: 'Multiple map',
+    description: 'Multiple interactions',
+    interactions: {
+      marker: true,
+      polygon: true,
+      polyline: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        map: {
+          type: 'LineString',
+          coordinates: [
+            [4.7493255, 52.6405471],
+            [4.6493255, 52.4405471],
+            [4.5493255, 52.2405471],
+          ],
+        },
+      },
+    },
+  },
+};
+
+export const DisabledMap: Story = {
+  args: {
+    name: 'map',
+    label: 'Disabled map',
+    description: 'No should not be able to edit me',
+    isDisabled: true,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        map: {
+          type: 'Point',
+          coordinates: [5.291266, 52.1326332],
         },
       },
     },
