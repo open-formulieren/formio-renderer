@@ -1,0 +1,8 @@
+@use 'microscope-sass/lib/bem';
+
+.openforms-map-address {
+  @include bem.element('description') {
+    display: inline;
+    font-style: normal;
+  }
+}

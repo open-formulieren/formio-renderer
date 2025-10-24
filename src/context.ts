@@ -2,6 +2,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import React from 'react';
 
 import type {AddressNLParameters} from './registry/addressNL/types';
+import type {MapParameters} from './registry/map/types';
 
 export interface FormSettings {
   /**
@@ -18,6 +19,7 @@ export interface FormSettings {
    */
   componentParameters?: {
     addressNL?: AddressNLParameters;
+    map?: MapParameters;
   };
 }
 
