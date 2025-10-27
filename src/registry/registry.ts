@@ -15,6 +15,7 @@ import Fieldset from './fieldset';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
 import Number from './number';
+import Partners from './partners';
 import PhoneNumber from './phoneNumber';
 import PostCode from './postcode';
 import RadioField from './radio';
@@ -56,6 +57,7 @@ const REGISTRY: Registry = {
   cosign: Cosign,
   editgrid: EditGrid,
   addressNL: AddressNL,
+  partners: Partners,
   // layout
   content: Content,
   columns: Columns,

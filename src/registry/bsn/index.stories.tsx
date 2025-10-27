@@ -190,7 +190,7 @@ export const ValidateBSN: ValidationStory = {
     await userEvent.type(bsnField, '123456789');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid BSN')).toBeVisible();
+    expect(await canvas.findByText('Invalid BSN.')).toBeVisible();
   },
 };
 
@@ -229,8 +229,8 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[3], '123456782'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findAllByText('A BSN must be 9 digits')).toHaveLength(2);
-    expect(await canvas.findByText('Invalid BSN')).toBeVisible();
+    expect(await canvas.findAllByText('A BSN must be 9 digits.')).toHaveLength(2);
+    expect(await canvas.findByText('Invalid BSN.')).toBeVisible();
   },
 };
 

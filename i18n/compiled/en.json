@@ -85,10 +85,22 @@
       "value": "remainingCharCount"
     }
   ],
+  "2HsmfN": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "2KKNKT": [
     {
       "type": 0,
       "value": "Previous year"
+    }
+  ],
+  "33UD7T": [
+    {
+      "type": 0,
+      "value": "Affixes"
     }
   ],
   "3C29X9": [
@@ -119,10 +131,22 @@
       "value": "addNotRequiredSuffix"
     }
   ],
+  "3DaLqN": [
+    {
+      "type": 0,
+      "value": "A BSN must be 9 digits."
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "646077": [
+    {
+      "type": 0,
+      "value": "Invalid BSN."
     }
   ],
   "6g4o2Y": [
@@ -139,6 +163,12 @@
     {
       "type": 1,
       "value": "index"
+    }
+  ],
+  "9UF9Z7": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "AEnddx": [
@@ -225,6 +255,12 @@
       "value": "Hour must be between 0-23 and minute between 0-59"
     }
   ],
+  "E++Snm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -257,6 +293,12 @@
     {
       "type": 0,
       "value": "Toggle calendar"
+    }
+  ],
+  "K+ha3D": [
+    {
+      "type": 0,
+      "value": "Initials"
     }
   ],
   "KWP1b9": [
@@ -363,6 +405,12 @@
       "value": "Next year"
     }
   ],
+  "Tmbth6": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
+    }
+  ],
   "UONGQo": [
     {
       "type": 0,
@@ -403,6 +451,12 @@
       "value": "House number must be a number with up to five digits (e.g. 456)."
     }
   ],
+  "bmnUq8": [
+    {
+      "type": 0,
+      "value": "Lastname"
+    }
+  ],
   "bv/J3Y": [
     {
       "type": 0,
@@ -421,12 +475,6 @@
       "value": "Add another"
     }
   ],
-  "ht1O2Z": [
-    {
-      "type": 0,
-      "value": "Invalid BSN"
-    }
-  ],
   "lVNV/d": [
     {
       "type": 0,
@@ -443,6 +491,12 @@
     {
       "type": 0,
       "value": "yyyy"
+    }
+  ],
+  "odKXcF": [
+    {
+      "type": 0,
+      "value": "You must provide a last name."
     }
   ],
   "osSl3z": [
@@ -535,16 +589,16 @@
       "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
     }
   ],
-  "sGwqUb": [
-    {
-      "type": 0,
-      "value": "A BSN must be 9 digits"
-    }
-  ],
   "sP3xMn": [
     {
       "type": 0,
       "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
+    }
+  ],
+  "syyEii": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "vCObuG": [
@@ -585,6 +639,12 @@
       "value": "."
     }
   ],
+  "wiPGoP": [
+    {
+      "type": 0,
+      "value": "Add partner details"
+    }
+  ],
   "xCY4Oh": [
     {
       "type": 0,
@@ -617,6 +677,18 @@
     {
       "type": 0,
       "value": "Year"
+    }
+  ],
+  "ybTcqX": [
+    {
+      "type": 0,
+      "value": "Remove partner details"
+    }
+  ],
+  "yjCrXX": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
     }
   ],
   "z+/GrY": [
