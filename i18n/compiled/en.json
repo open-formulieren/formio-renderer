@@ -475,10 +475,38 @@
       "value": "Add another"
     }
   ],
+  "d2SYc4": [
+    {
+      "type": 0,
+      "value": "The datetime must be later than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
       "value": "House number addition"
+    }
+  ],
+  "muPw1F": [
+    {
+      "type": 0,
+      "value": "The datetime must be earlier than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "nF6MTl": [
@@ -625,38 +653,10 @@
       "value": "maxTime"
     }
   ],
-  "vRrj+v": [
-    {
-      "type": 0,
-      "value": "The datetime must be later than or equal to "
-    },
-    {
-      "type": 1,
-      "value": "min"
-    },
-    {
-      "type": 0,
-      "value": "."
-    }
-  ],
   "wiPGoP": [
     {
       "type": 0,
       "value": "Add partner details"
-    }
-  ],
-  "xCY4Oh": [
-    {
-      "type": 0,
-      "value": "The datetime must be earlier than or equal to "
-    },
-    {
-      "type": 1,
-      "value": "max"
-    },
-    {
-      "type": 0,
-      "value": "."
     }
   ],
   "xHVrv5": [

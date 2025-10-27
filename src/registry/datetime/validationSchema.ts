@@ -12,12 +12,12 @@ const DATETIME_INVALID_MESSAGE = defineMessage({
 });
 
 const DATETIME_GREATER_THAN_MAX_DATE_MESSAGE = defineMessage({
-  description: 'Validation error for datetime greater than maximum date.',
+  description: 'Validation error for datetime less than or equal to maximum date.',
   defaultMessage: 'The datetime must be earlier than or equal to {max}.',
 });
 
 const DATETIME_LESS_THAN_MIN_DATE_MESSAGE = defineMessage({
-  description: 'Validation error for datetime less than minimum date.',
+  description: 'Validation error for datetime greater than or equal to minimum date.',
   defaultMessage: 'The datetime must be later than or equal to {min}.',
 });
 

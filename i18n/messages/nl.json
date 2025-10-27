@@ -27,6 +27,7 @@
   "0tH+u2": {
     "defaultMessage": "{label} {index}",
     "description": "Multi-field individual item label at $index. The index variable here is 1-indexed.",
+    "isTranslated": true,
     "originalDefault": "{label} {index}"
   },
   "1TAtDi": {
@@ -37,6 +38,7 @@
   "2HsmfN": {
     "defaultMessage": "BSN",
     "description": "Partners component: label for partners BSN",
+    "isTranslated": true,
     "originalDefault": "BSN"
   },
   "2KKNKT": {
@@ -45,7 +47,7 @@
     "originalDefault": "Previous year"
   },
   "33UD7T": {
-    "defaultMessage": "Affixes",
+    "defaultMessage": "Voorvoegsels",
     "description": "Partners component: label for partners affixes",
     "originalDefault": "Affixes"
   },
@@ -55,7 +57,7 @@
     "originalDefault": "{addNotRequiredSuffix, select, true {{label} (not required)} other {{label}} }"
   },
   "3DaLqN": {
-    "defaultMessage": "A BSN must be 9 digits.",
+    "defaultMessage": "Een BSN bestaat uit 9 cijfers.",
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits."
   },
@@ -65,12 +67,12 @@
     "originalDefault": "Loading..."
   },
   "646077": {
-    "defaultMessage": "Invalid BSN.",
+    "defaultMessage": "Ongeldig BSN.",
     "description": "Validation error for BSN that does not pass the 11-test.",
     "originalDefault": "Invalid BSN."
   },
   "6g4o2Y": {
-    "defaultMessage": "MM",
+    "defaultMessage": "mm",
     "description": "Placeholder for the minute part of the time",
     "originalDefault": "MM"
   },
@@ -80,12 +82,12 @@
     "originalDefault": "Remove item {index}"
   },
   "9UF9Z7": {
-    "defaultMessage": "No information provided",
+    "defaultMessage": "Geen informatie verstrekt.",
     "description": "Emtpy field message",
     "originalDefault": "No information provided"
   },
   "AEnddx": {
-    "defaultMessage": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM).",
+    "defaultMessage": "De datum en tijd moeten een datumdeel en een tijdsdeel hebben, gescheiden met een spatie (bijvoorbeeld 30-10-2025 17:34).",
     "description": "Invalid input validation error for datetime field",
     "originalDefault": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
   },
@@ -121,7 +123,7 @@
     "originalDefault": "Hour must be between 0-23 and minute between 0-59"
   },
   "E++Snm": {
-    "defaultMessage": "Date of birth must be within the last 120 years.",
+    "defaultMessage": "De geboortedatum mag hoogstens 120 jaar geleden zijn.",
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
   },
@@ -141,7 +143,7 @@
     "originalDefault": "Time must be after {minTime}"
   },
   "GkuPAG": {
-    "defaultMessage": "HH",
+    "defaultMessage": "uu",
     "description": "Placeholder for the hour part of the time",
     "originalDefault": "HH"
   },
@@ -151,7 +153,7 @@
     "originalDefault": "Toggle calendar"
   },
   "K+ha3D": {
-    "defaultMessage": "Initials",
+    "defaultMessage": "Voorletters",
     "description": "Partners component: label for partners initials",
     "originalDefault": "Initials"
   },
@@ -213,7 +215,7 @@
     "originalDefault": "Next year"
   },
   "Tmbth6": {
-    "defaultMessage": "The format of the date of birth is incorrect.",
+    "defaultMessage": "De geboortedatum heeft een ongeldig formaat.",
     "description": "Validation error for partners.dateOfBirth invalid format.",
     "originalDefault": "The format of the date of birth is incorrect."
   },
@@ -228,7 +230,7 @@
     "originalDefault": "The submitted value does not match the postcode pattern: 1234 AB"
   },
   "WzAGB4": {
-    "defaultMessage": "Add another",
+    "defaultMessage": "Nog één toevoegen",
     "description": "Multi-field add button label text",
     "originalDefault": "Add another"
   },
@@ -248,7 +250,7 @@
     "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
   },
   "bmnUq8": {
-    "defaultMessage": "Lastname",
+    "defaultMessage": "Achternaam",
     "description": "Partners component: label for partners lastName",
     "originalDefault": "Lastname"
   },
@@ -267,13 +269,23 @@
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
   },
+  "d2SYc4": {
+    "defaultMessage": "De datum en tijd moet gelijk aan of na {min} zijn.",
+    "description": "Validation error for datetime greater than or equal to minimum date.",
+    "originalDefault": "The datetime must be later than or equal to {min}."
+  },
   "lVNV/d": {
     "defaultMessage": "Huisnummertoevoeging",
     "description": "Label for addressNL houseNumberAddition input",
     "originalDefault": "House number addition"
   },
+  "muPw1F": {
+    "defaultMessage": "De datum en tijd moet gelijk aan of voor {max} zijn.",
+    "description": "Validation error for datetime less than or equal to maximum date.",
+    "originalDefault": "The datetime must be earlier than or equal to {max}."
+  },
   "nF6MTl": {
-    "defaultMessage": "Time",
+    "defaultMessage": "Tijdstip",
     "description": "Datetime picker: accessible time input field label",
     "originalDefault": "Time"
   },
@@ -283,7 +295,7 @@
     "originalDefault": "yyyy"
   },
   "odKXcF": {
-    "defaultMessage": "You must provide a last name.",
+    "defaultMessage": "Je moet een achternaam opgeven.",
     "description": "Validation error for required partners.lastName field.",
     "originalDefault": "You must provide a last name."
   },
@@ -293,7 +305,7 @@
     "originalDefault": "City"
   },
   "oxM3rx": {
-    "defaultMessage": "Close modal",
+    "defaultMessage": "Sluiten",
     "description": "Modal close button title",
     "originalDefault": "Close modal"
   },
@@ -313,7 +325,7 @@
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "r0uvHk": {
-    "defaultMessage": "Remove ''{label} {index}'",
+    "defaultMessage": "''{label} {index}' verwijderen",
     "description": "Accessible remove icon/button label for item at $index. The index variable here is 1-indexed.",
     "originalDefault": "Remove ''{label} {index}'"
   },
@@ -328,7 +340,7 @@
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
   "syyEii": {
-    "defaultMessage": "Date of birth",
+    "defaultMessage": "Geboortedatum",
     "description": "Partners component: label for partners dateOfBirth",
     "originalDefault": "Date of birth"
   },
@@ -342,20 +354,10 @@
     "description": "Validation error describing the value is not in-between the minimum and maximum time.",
     "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
-  "vRrj+v": {
-    "defaultMessage": "The datetime must be later than or equal to {min}.",
-    "description": "Validation error for datetime less than minimum date.",
-    "originalDefault": "The datetime must be later than or equal to {min}."
-  },
   "wiPGoP": {
-    "defaultMessage": "Add partner details",
+    "defaultMessage": "Partner toevoegen",
     "description": "Partners component: 'add partner' button label",
     "originalDefault": "Add partner details"
-  },
-  "xCY4Oh": {
-    "defaultMessage": "The datetime must be earlier than or equal to {max}.",
-    "description": "Validation error for datetime greater than maximum date.",
-    "originalDefault": "The datetime must be earlier than or equal to {max}."
   },
   "xHVrv5": {
     "defaultMessage": "De waarde moet {min} of groter zijn.",
@@ -368,12 +370,12 @@
     "originalDefault": "Year"
   },
   "ybTcqX": {
-    "defaultMessage": "Remove partner details",
+    "defaultMessage": "Partner verwijderen",
     "description": "Partners component: 'remove partner' button label",
     "originalDefault": "Remove partner details"
   },
   "yjCrXX": {
-    "defaultMessage": "Date of birth cannot be in the future.",
+    "defaultMessage": "De geboortedatum mag niet in de toekomst liggen.",
     "description": "Validation error for partners.dateOfBirth that is after the maximum date.",
     "originalDefault": "Date of birth cannot be in the future."
   },

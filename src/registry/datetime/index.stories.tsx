@@ -171,7 +171,9 @@ export const InvalidDateTime: ValidationStory = {
     await userEvent.type(date, '32-13-2025 12:34');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText(/The datetime must consist of a date/)).toBeVisible();
+    expect(
+      await canvas.findByText(/De datum en tijd moeten een datumdeel en een tijdsdeel hebben/)
+    ).toBeVisible();
 
     expect(date).toHaveDisplayValue('32-13-2025 12:34');
   },
@@ -213,7 +215,7 @@ export const MinMaxValidation: ValidationStory = {
 
       await userEvent.click(button);
       expect(
-        await canvas.findByText('The datetime must be later than or equal to 8-10-2025, 12:00.')
+        await canvas.findByText('De datum en tijd moet gelijk aan of na 8-10-2025, 12:00 zijn.')
       ).toBeVisible();
       expect(args.onSubmit).not.toHaveBeenCalled();
     });
@@ -233,7 +235,7 @@ export const MinMaxValidation: ValidationStory = {
 
       await userEvent.click(button);
       expect(
-        await canvas.queryByText('The datetime must be earlier than or equal to 10-10-2025, 19:00.')
+        await canvas.findByText('De datum en tijd moet gelijk aan of voor 10-10-2025, 19:00 zijn.')
       ).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
@@ -329,7 +331,7 @@ export const InvalidMultipleDateTime: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(
-      await canvas.findByText(/The datetime must consist of a date and a time stamp/)
+      await canvas.findByText(/De datum en tijd moeten een datumdeel en een tijdsdeel hebben/)
     ).toBeVisible();
 
     expect(date).toHaveDisplayValue('13/32/2000 16:00 AM');

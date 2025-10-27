@@ -264,10 +264,20 @@
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
   },
+  "d2SYc4": {
+    "defaultMessage": "The datetime must be later than or equal to {min}.",
+    "description": "Validation error for datetime greater than or equal to minimum date.",
+    "originalDefault": "The datetime must be later than or equal to {min}."
+  },
   "lVNV/d": {
     "defaultMessage": "House number addition",
     "description": "Label for addressNL houseNumberAddition input",
     "originalDefault": "House number addition"
+  },
+  "muPw1F": {
+    "defaultMessage": "The datetime must be earlier than or equal to {max}.",
+    "description": "Validation error for datetime less than or equal to maximum date.",
+    "originalDefault": "The datetime must be earlier than or equal to {max}."
   },
   "nF6MTl": {
     "defaultMessage": "Time",
@@ -339,20 +349,10 @@
     "description": "Validation error describing the value is not in-between the minimum and maximum time.",
     "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
-  "vRrj+v": {
-    "defaultMessage": "The datetime must be later than or equal to {min}.",
-    "description": "Validation error for datetime less than minimum date.",
-    "originalDefault": "The datetime must be later than or equal to {min}."
-  },
   "wiPGoP": {
     "defaultMessage": "Add partner details",
     "description": "Partners component: 'add partner' button label",
     "originalDefault": "Add partner details"
-  },
-  "xCY4Oh": {
-    "defaultMessage": "The datetime must be earlier than or equal to {max}.",
-    "description": "Validation error for datetime greater than maximum date.",
-    "originalDefault": "The datetime must be earlier than or equal to {max}."
   },
   "xHVrv5": {
     "defaultMessage": "The value must be {min} or greater.",

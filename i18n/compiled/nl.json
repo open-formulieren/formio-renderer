@@ -108,7 +108,7 @@
   "33UD7T": [
     {
       "type": 0,
-      "value": "Affixes"
+      "value": "Voorvoegsels"
     }
   ],
   "3C29X9": [
@@ -142,7 +142,7 @@
   "3DaLqN": [
     {
       "type": 0,
-      "value": "A BSN must be 9 digits."
+      "value": "Een BSN bestaat uit 9 cijfers."
     }
   ],
   "4IX8hk": [
@@ -154,13 +154,13 @@
   "646077": [
     {
       "type": 0,
-      "value": "Invalid BSN."
+      "value": "Ongeldig BSN."
     }
   ],
   "6g4o2Y": [
     {
       "type": 0,
-      "value": "MM"
+      "value": "mm"
     }
   ],
   "9SgPC6": [
@@ -176,13 +176,13 @@
   "9UF9Z7": [
     {
       "type": 0,
-      "value": "No information provided"
+      "value": "Geen informatie verstrekt."
     }
   ],
   "AEnddx": [
     {
       "type": 0,
-      "value": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
+      "value": "De datum en tijd moeten een datumdeel en een tijdsdeel hebben, gescheiden met een spatie (bijvoorbeeld 30-10-2025 17:34)."
     }
   ],
   "At/y3w": [
@@ -236,7 +236,7 @@
   "E++Snm": [
     {
       "type": 0,
-      "value": "Date of birth must be within the last 120 years."
+      "value": "De geboortedatum mag hoogstens 120 jaar geleden zijn."
     }
   ],
   "FfBWqF": [
@@ -268,7 +268,7 @@
   "GkuPAG": [
     {
       "type": 0,
-      "value": "HH"
+      "value": "uu"
     }
   ],
   "IhLYXK": [
@@ -280,7 +280,7 @@
   "K+ha3D": [
     {
       "type": 0,
-      "value": "Initials"
+      "value": "Voorletters"
     }
   ],
   "KWP1b9": [
@@ -360,7 +360,7 @@
   "Tmbth6": [
     {
       "type": 0,
-      "value": "The format of the date of birth is incorrect."
+      "value": "De geboortedatum heeft een ongeldig formaat."
     }
   ],
   "UONGQo": [
@@ -378,7 +378,7 @@
   "WzAGB4": [
     {
       "type": 0,
-      "value": "Add another"
+      "value": "Nog één toevoegen"
     }
   ],
   "abKEBH": [
@@ -410,7 +410,7 @@
   "bmnUq8": [
     {
       "type": 0,
-      "value": "Lastname"
+      "value": "Achternaam"
     }
   ],
   "bv/J3Y": [
@@ -431,16 +431,44 @@
       "value": "Nog één toevoegen"
     }
   ],
+  "d2SYc4": [
+    {
+      "type": 0,
+      "value": "De datum en tijd moet gelijk aan of na "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
       "value": "Huisnummertoevoeging"
     }
   ],
+  "muPw1F": [
+    {
+      "type": 0,
+      "value": "De datum en tijd moet gelijk aan of voor "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
+    }
+  ],
   "nF6MTl": [
     {
       "type": 0,
-      "value": "Time"
+      "value": "Tijdstip"
     }
   ],
   "nfRRDu": [
@@ -452,7 +480,7 @@
   "odKXcF": [
     {
       "type": 0,
-      "value": "You must provide a last name."
+      "value": "Je moet een achternaam opgeven."
     }
   ],
   "osSl3z": [
@@ -464,7 +492,7 @@
   "oxM3rx": [
     {
       "type": 0,
-      "value": "Close modal"
+      "value": "Sluiten"
     }
   ],
   "pHX3oF": [
@@ -520,7 +548,7 @@
   "r0uvHk": [
     {
       "type": 0,
-      "value": "Remove '"
+      "value": "'"
     },
     {
       "type": 1,
@@ -536,7 +564,7 @@
     },
     {
       "type": 0,
-      "value": "'"
+      "value": "' verwijderen"
     }
   ],
   "rQ5vC9": [
@@ -554,7 +582,7 @@
   "syyEii": [
     {
       "type": 0,
-      "value": "Date of birth"
+      "value": "Geboortedatum"
     }
   ],
   "vCObuG": [
@@ -585,38 +613,10 @@
       "value": "."
     }
   ],
-  "vRrj+v": [
-    {
-      "type": 0,
-      "value": "The datetime must be later than or equal to "
-    },
-    {
-      "type": 1,
-      "value": "min"
-    },
-    {
-      "type": 0,
-      "value": "."
-    }
-  ],
   "wiPGoP": [
     {
       "type": 0,
-      "value": "Add partner details"
-    }
-  ],
-  "xCY4Oh": [
-    {
-      "type": 0,
-      "value": "The datetime must be earlier than or equal to "
-    },
-    {
-      "type": 1,
-      "value": "max"
-    },
-    {
-      "type": 0,
-      "value": "."
+      "value": "Partner toevoegen"
     }
   ],
   "xHVrv5": [
@@ -642,13 +642,13 @@
   "ybTcqX": [
     {
       "type": 0,
-      "value": "Remove partner details"
+      "value": "Partner verwijderen"
     }
   ],
   "yjCrXX": [
     {
       "type": 0,
-      "value": "Date of birth cannot be in the future."
+      "value": "De geboortedatum mag niet in de toekomst liggen."
     }
   ],
   "z+/GrY": [
