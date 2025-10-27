@@ -30,60 +30,65 @@ const BASE_COMPONENT: SelectboxesComponentSchema = {
 };
 
 const buildValidationSchema = (component: SelectboxesComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
 describe('selectboxes component validation', () => {
-  test('accepts known values ', () => {
+  test('accepts known values ', async () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse({option1: true, option2: false});
+    const {success} = await schema.safeParseAsync({option1: true, option2: false});
 
     expect(success).toBe(true);
   });
 
-  test('rejects unknown key', () => {
+  test('rejects unknown key', async () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse({option1: true, option2: false, option3: true});
+    const {success} = await schema.safeParseAsync({option1: true, option2: false, option3: true});
 
     expect(success).toBe(false);
   });
 
   // see the backend validation reference in
   // `openforms.formio.components.vanilla.SelectBoxes.build_serializer_field`
-  test('rejects missing keys', () => {
+  test('rejects missing keys', async () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse({option1: true});
+    const {success} = await schema.safeParseAsync({option1: true});
 
     expect(success).toBe(false);
   });
 
   // formio reference has defaultValue: null but the submission value turns into an
   // empty string
-  test.each([null, undefined])('allows empty value if not required (value: %s)', value => {
+  test.each([null, undefined])('allows empty value if not required (value: %s)', async value => {
     const component: SelectboxesComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(true);
   });
 
-  test.each(['', null, undefined])('rejects empty value if required (value: %s)', value => {
+  test.each(['', null, undefined])('rejects empty value if required (value: %s)', async value => {
     const component: SelectboxesComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
   });
 });
 
 describe('selectboxes minimum selected count', () => {
-  test('field not required, none selected', () => {
+  test('field not required, none selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {
@@ -93,12 +98,12 @@ describe('selectboxes minimum selected count', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse({option1: false, option2: false});
+    const {success} = await schema.safeParseAsync({option1: false, option2: false});
 
     expect(success).toBe(true);
   });
 
-  test('field not required, one selected', () => {
+  test('field not required, one selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {
@@ -108,12 +113,12 @@ describe('selectboxes minimum selected count', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse({option1: true, option2: false});
+    const {success} = await schema.safeParseAsync({option1: true, option2: false});
 
     expect(success).toBe(false);
   });
 
-  test('field required, none selected', () => {
+  test('field required, none selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {
@@ -123,14 +128,14 @@ describe('selectboxes minimum selected count', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success, error} = schema.safeParse({option1: false, option2: false});
+    const {success, error} = await schema.safeParseAsync({option1: false, option2: false});
 
     expect(success).toBe(false);
     // TODO: use proper message with error map
     expect(error?.issues?.[0].message).toBe('Required');
   });
 
-  test('field required, one selected', () => {
+  test('field required, one selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {
@@ -140,7 +145,7 @@ describe('selectboxes minimum selected count', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success, error} = schema.safeParse({option1: false, option2: true});
+    const {success, error} = await schema.safeParseAsync({option1: false, option2: true});
 
     expect(success).toBe(false);
     expect(error?.issues?.[0].message).toBe('You must select at least 2 items.');
@@ -148,27 +153,42 @@ describe('selectboxes minimum selected count', () => {
 });
 
 describe('selectboxes maximum selected count', () => {
-  test('one selected', () => {
+  test('one selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {maxSelectedCount: 1},
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse({option1: true, option2: false});
+    const {success} = await schema.safeParseAsync({option1: true, option2: false});
 
     expect(success).toBe(true);
   });
 
-  test('two selected', () => {
+  test('two selected', async () => {
     const component: SelectboxesComponentSchema = {
       ...BASE_COMPONENT,
       validate: {maxSelectedCount: 1},
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse({option1: true, option2: true});
+    const {success} = await schema.safeParseAsync({option1: true, option2: true});
 
     expect(success).toBe(false);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: SelectboxesComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync({option1: true, option2: false});
+
+    expect(success).toBe(valid);
   });
 });

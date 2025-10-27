@@ -61,7 +61,7 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
  */
 const getValidationSchema: GetValidationSchema<PartnersComponentSchema> = (
   componentDefinition,
-  intl
+  {intl}
 ) => {
   const {key} = componentDefinition;
 

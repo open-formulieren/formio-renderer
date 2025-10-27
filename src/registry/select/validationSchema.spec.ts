@@ -30,46 +30,51 @@ const BASE_COMPONENT: SelectComponentSchema = {
 };
 
 const buildValidationSchema = (component: SelectComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
 describe('select component validation', () => {
-  test.each(['option1', 'option2'])('accepts known values (value: %s)', value => {
+  test.each(['option1', 'option2'])('accepts known values (value: %s)', async value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(true);
   });
 
-  test('rejects unknown value', () => {
+  test('rejects unknown value', async () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse('option42');
+    const {success} = await schema.safeParseAsync('option42');
 
     expect(success).toBe(false);
   });
 
-  test.each(['', undefined])('allows empty value if not required (value: %s)', value => {
+  test.each(['', undefined])('allows empty value if not required (value: %s)', async value => {
     const component: SelectComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(true);
   });
 
-  test.each(['', undefined])('rejects empty value if required (value: %s', value => {
+  test.each(['', undefined])('rejects empty value if required (value: %s', async value => {
     const component: SelectComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
   });
 
-  test('allows empty array for non-required multi-select', () => {
+  test('allows empty array for non-required multi-select', async () => {
     const component: SelectComponentSchema = {
       ...BASE_COMPONENT,
       defaultValue: [],
@@ -78,12 +83,12 @@ describe('select component validation', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse([]);
+    const {success} = await schema.safeParseAsync([]);
 
     expect(success).toBe(true);
   });
 
-  test('blocks empty array for required multi-select', () => {
+  test('blocks empty array for required multi-select', async () => {
     const component: SelectComponentSchema = {
       ...BASE_COMPONENT,
       defaultValue: [],
@@ -92,12 +97,12 @@ describe('select component validation', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse([]);
+    const {success} = await schema.safeParseAsync([]);
 
     expect(success).toBe(false);
   });
 
-  test('accepts size-1 array for required multi-select', () => {
+  test('accepts size-1 array for required multi-select', async () => {
     const component: SelectComponentSchema = {
       ...BASE_COMPONENT,
       defaultValue: [],
@@ -106,14 +111,14 @@ describe('select component validation', () => {
     };
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(['option2']);
+    const {success} = await schema.safeParseAsync(['option2']);
 
     expect(success).toBe(true);
   });
 
   test.each(['', 'invalid', 0])(
     'validates each member for multi-select against the options (value: %s)',
-    value => {
+    async value => {
       const component: SelectComponentSchema = {
         ...BASE_COMPONENT,
         defaultValue: [],
@@ -121,9 +126,24 @@ describe('select component validation', () => {
       };
       const schema = buildValidationSchema(component);
 
-      const {success} = schema.safeParse([value]);
+      const {success} = await schema.safeParseAsync([value]);
 
       expect(success).toBe(false);
     }
   );
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: SelectComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('option1');
+
+    expect(success).toBe(valid);
+  });
 });

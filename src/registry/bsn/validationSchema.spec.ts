@@ -18,7 +18,12 @@ const BASE_COMPONENT: BsnComponentSchema = {
 };
 
 const buildValidationSchema = (component: BsnComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
@@ -49,6 +54,21 @@ describe('bsn component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(!required);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: BsnComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('000000000');
+
+    expect(success).toBe(valid);
   });
 });
 

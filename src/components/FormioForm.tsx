@@ -9,7 +9,12 @@ import type {FormSettings} from '@/context';
 import {getComponentsMap, hasAnyConditionalLogicCycle} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject, JSONValue} from '@/types';
-import {buildValidationSchema, useValidationSchema} from '@/validationSchema';
+import {
+  buildValidationSchema,
+  fallbackValidatePlugin,
+  useValidationSchema,
+  validatePlugins,
+} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
@@ -84,6 +89,10 @@ export interface FormioFormProps {
    * Configuration necessary specific to certain Formio component types.
    */
   componentParameters?: FormSettings['componentParameters'];
+  /**
+   * Callback that implements the actual async 'plugin validator' behaviour.
+   */
+  validatePluginCallback?: FormSettings['validatePluginCallback'];
 }
 
 export type UpdateValues = JSONObjectWithUndefined;
@@ -120,6 +129,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
       children,
       requiredFieldsWithAsterisk,
       componentParameters,
+      validatePluginCallback = fallbackValidatePlugin,
     },
     ref
   ) => {
@@ -142,7 +152,11 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     values = deepMergeValues(initialValues, values);
 
     const {setSchema, validate} = useValidationSchema(
-      buildValidationSchema(components, intl, getRegistryEntry)
+      buildValidationSchema(components, {
+        intl,
+        getRegistryEntry,
+        validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+      })
     );
 
     return (
@@ -150,6 +164,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
         requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
         components={components}
         componentParameters={componentParameters}
+        validatePluginCallback={validatePluginCallback}
       >
         <Formik<JSONObject>
           initialValues={values}
@@ -172,6 +187,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
               components={components}
               ref={ref}
               onValidationSchemaChange={setSchema}
+              validatePluginCallback={validatePluginCallback}
             >
               {children}
             </InnerFormioForm>
@@ -219,13 +235,14 @@ const FormValuesObserver: React.FC<Required<Pick<FormioFormProps, 'onChange'>>> 
 
 export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | 'children'> & {
   onValidationSchemaChange: (schema: z.ZodSchema<JSONObject>) => void;
+  validatePluginCallback: Required<FormioFormProps>['validatePluginCallback'];
 };
 
 /**
  * The FormioForm component inner children, with access to the Formik state.
  */
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
-  ({components, id, onValidationSchemaChange, children}, ref) => {
+  ({components, validatePluginCallback, id, onValidationSchemaChange, children}, ref) => {
     const intl = useIntl();
     const {values, setValues, errors, setErrors, setTouched, initialValues} =
       useFormikContext<JSONObject>();
@@ -266,14 +283,22 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         componentsMap,
       });
 
-      const updatedValidationSchema = buildValidationSchema(
-        visibleComponents,
+      const updatedValidationSchema = buildValidationSchema(visibleComponents, {
         intl,
-        getRegistryEntry
-      );
+        getRegistryEntry,
+        validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+      });
       onValidationSchemaChange(updatedValidationSchema);
       return {visibleComponents, updatedValues};
-    }, [intl, onValidationSchemaChange, components, componentsMap, initialValues, values]);
+    }, [
+      intl,
+      validatePluginCallback,
+      onValidationSchemaChange,
+      components,
+      componentsMap,
+      initialValues,
+      values,
+    ]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
     // values. We can't call setValues directly, since updating state during render like

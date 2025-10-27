@@ -6,6 +6,14 @@ import * as FormioFormStories from './FormioForm.stories';
 
 # FormioForm
 
+**Quickly jump to**
+
+- [Subscribing to value changes](#subscribing-to-value-changes)
+- [Programmatically updating form values](#programmatically-updating-form-values)
+- [Programmatically setting form errors](#programmatically-setting-form-errors)
+- [Providing the `validatePluginCallback`](#providing-the-validateplugincallback)
+- [Props](#props)
+
 The `FormioForm` component is high level API of this package. Given a formio form definition (as a
 list of component definitions), it renders the form fields for it.
 
@@ -143,6 +151,36 @@ const FormStep: React.FC = () => {
   );
 };
 ```
+
+## Providing the `validatePluginCallback`
+
+Many of the Formio component types have been extended to support _plugin_-based backend validation -
+this is a mechanism where the backend implements the validation logic which can be called via an API
+endpoint. Each plugin has an `identifier`, which is a just a plain string.
+
+Components that call/render the `FormioForm` must provide the `validatePluginCallback` prop which
+implements the API endpoint interaction, e.g.:
+
+```ts
+const validatePluginCallback = async (plugin: string, value: JSONValue) => {
+  const body = {plugin, value};
+  const response = await window.fetch(
+    '/api/validate',{
+      method: 'POST',
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      body: JSON.stringify(body);
+    }
+  );
+  const responseData = await response.json();
+  return responseData.isValid
+    ? {valid: true}
+    : {valid: false, messages: [responseData.error]};
+};
+```
+
+The prop is optional - if you don't encounter components with non-empty `validate.plugins`, all will
+be fine, but there is a default fallback that fails _everything_ to prevent programming mistakes
+from silently allowing invalid values.
 
 ## Props
 

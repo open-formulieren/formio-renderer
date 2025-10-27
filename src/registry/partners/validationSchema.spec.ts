@@ -17,7 +17,11 @@ const BASE_COMPONENT: PartnersComponentSchema = {
 };
 
 const buildValidationSchema = (component: PartnersComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async () => undefined,
+  });
   return schemas[component.key];
 };
 

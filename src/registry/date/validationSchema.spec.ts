@@ -28,7 +28,12 @@ const BASE_DATEPICKER: DateComponentSchema['datePicker'] = {
 };
 
 const buildValidationSchema = (component: DateComponentSchema) => {
-  const schemas = getValidationSchema(component, intl, getRegistryEntry);
+  const schemas = getValidationSchema(component, {
+    intl,
+    getRegistryEntry,
+    validatePlugins: async (plugins: string[]) =>
+      plugins.includes('fail') ? 'not valid' : undefined,
+  });
   return schemas[component.key];
 };
 
@@ -108,6 +113,21 @@ describe('date component validation', () => {
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse('2025-02-11');
+
+    expect(success).toBe(valid);
+  });
+
+  test.each([
+    ['ok', true],
+    ['fail', false],
+  ])('supports async plugin validation (plugin: %s)', async (plugin: string, valid: boolean) => {
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {plugins: [plugin]},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = await schema.safeParseAsync('2012-09-21');
 
     expect(success).toBe(valid);
   });
