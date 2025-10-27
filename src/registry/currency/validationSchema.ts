@@ -36,8 +36,6 @@ const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
     });
   if (!required) schema = schema.nullable().optional();
 
-  schema = z.preprocess(value => (value === null && required ? undefined : value), schema);
-
   if (plugins.length) {
     schema = schema.superRefine(async (val, ctx) => {
       const message = await validatePlugins(plugins, val);
@@ -51,6 +49,8 @@ const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
 
   // For numbers, a missing value is null, which doesn't trigger the required validation of zod,
   // so we set it to undefined manually
+  schema = z.preprocess(value => (value === null && required ? undefined : value), schema);
+
   return {[key]: schema};
 };
 

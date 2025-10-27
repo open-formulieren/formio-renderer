@@ -155,7 +155,7 @@ const FormStep: React.FC = () => {
 ## Providing the `validatePluginCallback`
 
 Many of the Formio component types have been extended to support _plugin_-based backend validation -
-this is a mechanism were the backend implements the validation logic which can be called via an API
+this is a mechanism where the backend implements the validation logic which can be called via an API
 endpoint. Each plugin has an `identifier`, which is a just a plain string.
 
 Components that call/render the `FormioForm` must provide the `validatePluginCallback` prop which
@@ -178,9 +178,9 @@ const validatePluginCallback = async (plugin: string, value: JSONValue) => {
 };
 ```
 
-The prop is optional - if you don't encounter plugins with non-empty `validate.plugins`, all will be
-fine, but there is a default fallback that fails _everything_ to prevent programming mistakes from
-silently allowing invalid values.
+The prop is optional - if you don't encounter components with non-empty `validate.plugins`, all will
+be fine, but there is a default fallback that fails _everything_ to prevent programming mistakes
+from silently allowing invalid values.
 
 ## Props
 

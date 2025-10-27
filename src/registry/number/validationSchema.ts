@@ -30,8 +30,6 @@ const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
     schema = schema.gte(min, {message: intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min})});
   if (!required) schema = schema.nullable().optional();
 
-  schema = z.preprocess(value => (value === null && required ? undefined : value), schema);
-
   if (plugins.length) {
     schema = schema.superRefine(async (val, ctx) => {
       const message = await validatePlugins(plugins, val);
@@ -42,9 +40,10 @@ const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
       });
     });
   }
-
   // For numbers, a missing value is null, which doesn't trigger the required validation of zod,
   // so we set it to undefined manually
+  schema = z.preprocess(value => (value === null && required ? undefined : value), schema);
+
   return {[key]: schema};
 };
 
