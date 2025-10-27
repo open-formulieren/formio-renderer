@@ -3,7 +3,7 @@ import {expect, fn, userEvent, waitForElementToBeRemoved, within} from 'storyboo
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
-import {withFormik} from '@/sb-decorators';
+import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioSelectboxes} from './';
 import ValueDisplay from './ValueDisplay';
@@ -118,6 +118,45 @@ export const WithOptionDescriptions: Story = {
       defaultValue: {referenceLists: false, formVariable: false},
       ...extensionBoilerplate,
     } satisfies ManualSelectboxesValuesSchema,
+  },
+};
+
+export const NoAsterisks: Story = {
+  decorators: [withFormSettingsProvider],
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'Selecboxes choices',
+      values: [
+        {
+          value: 'reference.Lists',
+          label: 'Reference lists',
+        },
+        {
+          value: 'formVariable',
+          label: 'Form variable',
+        },
+      ],
+      defaultValue: {referenceLists: false, formVariable: false},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          selectboxes: {
+            'reference.Lists': false,
+            formVariable: true,
+          },
+        },
+      },
+    },
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
   },
 };
 

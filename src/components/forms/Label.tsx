@@ -13,6 +13,11 @@ export interface LabelContentProps {
   isRequired?: boolean;
   type?: string;
   noLabelTag?: boolean;
+  /**
+   * Sometimes the label should never get an asterisk or suffix for the required state,
+   * e.g. when the checkbox is part of a larger component (like selectboxes).
+   */
+  noOptionalSuffix?: boolean;
 }
 
 /**
@@ -26,11 +31,12 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   isRequired = false,
   type,
   noLabelTag = false,
+  noOptionalSuffix = false,
   children,
 }) => {
   const {requiredFieldsWithAsterisk} = useFormSettings();
 
-  const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk;
+  const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk && !noOptionalSuffix;
 
   const Component = noLabelTag ? 'span' : FormLabel;
 
