@@ -4,7 +4,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
-import {withFormik} from '@/sb-decorators';
+import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioCheckbox as Checkbox} from './';
 import ValueDisplay from './ValueDisplay';
@@ -78,6 +78,31 @@ export const WithDescription: Story = {
           checkbox: false,
         },
       },
+    },
+  },
+};
+
+export const NoAsterisks: Story = {
+  decorators: [withFormSettingsProvider],
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'checkbox',
+      key: 'my.checkbox',
+      label: 'A simple checkbox',
+      defaultValue: false,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          checkbox: true,
+        },
+      },
+    },
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
     },
   },
 };
