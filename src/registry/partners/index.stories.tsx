@@ -14,9 +14,6 @@ export default {
   title: 'Component registry / special / partners',
   component: FormioPartnersField,
   decorators: [withFormik],
-  globals: {
-    locale: 'en',
-  },
   args: {
     componentDefinition: {
       id: 'partners',
@@ -208,8 +205,8 @@ export const ValidateRequired: ValidationStory = {
     // Submit empty partner data
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
-    const errors = canvas.findAllByText('Required');
-    for (const error in errors) {
+    const errors = await canvas.findAllByText('Required');
+    for (const error of errors) {
       expect(error).toBeVisible();
     }
   },

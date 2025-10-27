@@ -11,6 +11,7 @@ import type {RegistryEntry} from '@/registry/types';
 
 import PartnersPreview from './PartnersPreview';
 import ValueDisplay from './ValueDisplay';
+import {EMPTY_PARTNER} from './constants';
 import isEmpty from './empty';
 import './index.scss';
 import getInitialValues from './initialValues';
@@ -42,23 +43,6 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
   // it must be the first and only partner.
   const subFieldNamePrefix = `${key}.0`;
 
-  const addPartner = () => {
-    setFieldValue(key, [
-      {
-        bsn: '',
-        initials: '',
-        affixes: '',
-        lastName: '',
-        dateOfBirth: '',
-        __addedManually: true,
-      } satisfies ManuallyAddedPartnerDetails,
-    ]);
-  };
-
-  const removePartner = () => {
-    setFieldValue(key, []);
-  };
-
   return (
     <fieldset className="openforms-fieldset">
       <legend
@@ -80,7 +64,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
           <DateOfBirth namePrefix={subFieldNamePrefix} />
 
           <div>
-            <PrimaryActionButton hint="danger" onClick={() => removePartner()}>
+            <PrimaryActionButton hint="danger" onClick={() => setFieldValue(key, [])}>
               <FormattedMessage
                 description="Partners component: 'remove partner' button label"
                 defaultMessage="Remove partner details"
@@ -91,7 +75,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
       )}
 
       {canAddPartner && (
-        <PrimaryActionButton onClick={() => addPartner()}>
+        <PrimaryActionButton onClick={() => setFieldValue(key, [EMPTY_PARTNER])}>
           <FormattedMessage
             description="Partners component: 'add partner' button label"
             defaultMessage="Add partner details"
