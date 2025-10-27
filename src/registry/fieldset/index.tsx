@@ -1,12 +1,11 @@
 import type {FieldsetComponentSchema} from '@open-formulieren/types';
-import {clsx} from 'clsx';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
+import Fieldset from '@/components/forms/Fieldset';
 import Tooltip from '@/components/forms/Tooltip';
 import type {RegistryEntry} from '@/registry/types';
 
-import './Fieldset.scss';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
 import applyVisibility from './visibility';
@@ -21,23 +20,23 @@ export const FormioFieldset: React.FC<FieldsetProps> = ({
   renderNested: FormioComponent,
 }) => {
   return (
-    <fieldset className={clsx('openforms-fieldset', {'openforms-fieldset--no-header': hideHeader})}>
-      {!hideHeader && (
-        <legend
-          className={clsx('openforms-fieldset__legend', {
-            'openforms-fieldset__legend--tooltip': !!tooltip,
-          })}
-        >
-          {label}
-          {tooltip && <Tooltip>{tooltip}</Tooltip>}
-        </legend>
-      )}
+    <Fieldset
+      header={
+        hideHeader ? undefined : (
+          <>
+            {label}
+            {tooltip && <Tooltip>{tooltip}</Tooltip>}
+          </>
+        )
+      }
+      hasTooltip={!!tooltip}
+    >
       <FormFieldContainer>
         {components.map(nestedDefinition => (
           <FormioComponent key={nestedDefinition.id} componentDefinition={nestedDefinition} />
         ))}
       </FormFieldContainer>
-    </fieldset>
+    </Fieldset>
   );
 };
 

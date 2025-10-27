@@ -4,6 +4,7 @@ import {getIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useId} from 'react';
 
+import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
@@ -76,27 +77,21 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
     showCityAndStreetFields && Boolean(isRequired || hasPostcode || hasHouseNumber);
 
   return (
-    <fieldset
-      className={clsx(
-        'openforms-fieldset',
-        invalid && 'openforms-fieldset--invalid',
-        'openforms-addressnl',
-        {
-          'openforms-addressnl--double-column': layout === 'doubleColumn',
-          'openforms-addressnl--single-column': layout === 'singleColumn',
-        }
-      )}
+    <Fieldset
+      header={
+        <>
+          {label}
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </>
+      }
+      isInvalid={invalid}
+      hasTooltip={!!tooltip}
+      className={clsx('openforms-addressnl', {
+        'openforms-addressnl--double-column': layout === 'doubleColumn',
+        'openforms-addressnl--single-column': layout === 'singleColumn',
+      })}
       aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ') || undefined}
     >
-      <legend
-        className={clsx('openforms-fieldset__legend', {
-          'openforms-fieldset__legend--tooltip': !!tooltip,
-        })}
-      >
-        {label}
-        {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </legend>
-
       <div className="openforms-addressnl__form-field-container">
         <PostCodeField namePrefix={key} isRequired={isRequired || hasHouseNumber} />
         <HouseNumberField namePrefix={key} isRequired={isRequired || hasPostcode} />
@@ -121,7 +116,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
       {touched && errorMessageId && addressError && (
         <ValidationErrors error={addressError} id={errorMessageId} />
       )}
-    </fieldset>
+    </Fieldset>
   );
 };
 
