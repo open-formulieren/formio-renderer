@@ -127,6 +127,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
           label={optionLabel}
           description={description}
           descriptionAsHelpText={false}
+          ignoreRequired
         />
       ))}
 

@@ -32,6 +32,11 @@ export interface CheckboxProps {
    */
   isRequired?: boolean;
   /**
+   * Sometimes the label should never get an asterisk or suffix for the required state,
+   * e.g. when the checkbox is part of a larger component (like selectboxes).
+   */
+  ignoreRequired?: boolean;
+  /**
    * Disabled fields get marked as such in an accessible manner.
    */
   isDisabled?: boolean;
@@ -60,6 +65,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   description = '',
   descriptionAsHelpText = true,
   isDisabled = false,
+  ignoreRequired = false,
   tooltip,
 }) => {
   const {validateField} = useFormikContext();
@@ -97,7 +103,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
           'utrecht-form-field__label--openforms-tooltip': !!tooltip,
         })}
       >
-        <LabelContent type="checkbox" id={id} isDisabled={isDisabled} isRequired={isRequired}>
+        <LabelContent
+          type="checkbox"
+          id={id}
+          isDisabled={isDisabled}
+          isRequired={isRequired}
+          noOptionalSuffix={ignoreRequired}
+        >
           {label}
         </LabelContent>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
