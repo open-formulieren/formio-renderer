@@ -2,7 +2,6 @@
 
 @use '@/scss/bem';
 @use '@/scss/responsive';
-@use '@/registry/fieldset/Fieldset.scss';
 
 .openforms-addressnl {
   @include bem.modifier('single-column') {

@@ -1,10 +1,10 @@
 import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
-import {clsx} from 'clsx';
 import {useFormikContext} from 'formik';
 import {FormattedMessage} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
+import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
 import type {RegistryEntry} from '@/registry/types';
@@ -13,7 +13,6 @@ import PartnersPreview from './PartnersPreview';
 import ValueDisplay from './ValueDisplay';
 import {EMPTY_PARTNER} from './constants';
 import isEmpty from './empty';
-import './index.scss';
 import getInitialValues from './initialValues';
 import {Affixes, BSN, DateOfBirth, Initials, LastName} from './subFields';
 import type {ManuallyAddedPartnerDetails} from './types';
@@ -44,16 +43,15 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
   const subFieldNamePrefix = `${key}.0`;
 
   return (
-    <fieldset className="openforms-fieldset">
-      <legend
-        className={clsx('openforms-fieldset__legend', {
-          'openforms-fieldset__legend--tooltip': !!tooltip,
-        })}
-      >
-        {label}
-        {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </legend>
-
+    <Fieldset
+      hasTooltip={!!tooltip}
+      header={
+        <>
+          {label}
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </>
+      }
+    >
       {showPartnersList && <PartnersPreview partners={partners} />}
       {canEditPartner && (
         <FormFieldContainer>
@@ -84,7 +82,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
       )}
 
       <HelpText>{description}</HelpText>
-    </fieldset>
+    </Fieldset>
   );
 };
 
