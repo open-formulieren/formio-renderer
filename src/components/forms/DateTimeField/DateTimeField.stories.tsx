@@ -49,7 +49,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     // Ensure we have a placeholder formatted according to the locale
-    const datetime = canvas.getByPlaceholderText('d-m-jjjj HH:MM');
+    const datetime = canvas.getByPlaceholderText('d-m-jjjj uu:mm');
     expect(datetime).toBeInTheDocument();
 
     // Ensure clicking the icon opens the calendar
@@ -143,7 +143,7 @@ export const SelectDateAndTimeInDateTimePicker: Story = {
     expect(date).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 
     // Pick a time
-    const time = canvas.getByLabelText('Time');
+    const time = await canvas.findByLabelText('Tijdstip');
     await userEvent.clear(time);
     await userEvent.type(time, '1052');
     expect(time).toHaveDisplayValue('10:52');
@@ -206,7 +206,7 @@ export const TypeDateManually: Story = {
     expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 
     // Ensure that the time is displayed
-    const time = await canvas.getByLabelText('Time');
+    const time = await canvas.findByLabelText('Tijdstip');
     expect(time).toHaveValue('12:34');
 
     // Ensure that the datetime is formatted as an ISO-8601 string on submit
@@ -265,7 +265,7 @@ export const TypeDateManuallyEnglishLocale: Story = {
     expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
 
     // Ensure that the time is displayed
-    const time = await canvas.getByLabelText('Time');
+    const time = await canvas.findByLabelText('Time');
     expect(time).toHaveValue('00:34');
 
     // Ensure that the datetime is formatted as an ISO-8601 string on submit
