@@ -8,7 +8,7 @@ export const FIELD_LABELS = defineMessages<keyof ChildDetails>({
   bsn: {description: 'Children component: label for children BSN', defaultMessage: 'BSN'},
   firstNames: {
     description: 'Children component: label for children firstNames',
-    defaultMessage: 'Firstnames',
+    defaultMessage: 'First names',
   },
   dateOfBirth: {
     description: 'Children component: label for children dateOfBirth',

@@ -1,8 +1,7 @@
 import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
-import {DataList, DataListItem, DataListKey, DataListValue} from '@utrecht/component-library-react';
 import {getIn, setIn, useFormikContext} from 'formik';
 import {useContext} from 'react';
-import {FormattedDate, useIntl} from 'react-intl';
+import {useIntl} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import {EditGrid as EditGridField} from '@/components/forms';
@@ -11,33 +10,12 @@ import ParentValuesContext from '@/registry/editgrid/ParentValuesContext';
 import type {RegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
 
+import ChildPreview from './ChildPreview';
+import ValueDisplay from './ValueDisplay';
 import {EMPTY_CHILD} from './constants';
+import getInitialValues from './initialValues';
 import {BSN, DateOfBirth, FirstNames} from './subFields';
 import type {ManuallyAddedChildDetails} from './types';
-
-interface ComponentDataListItemProps {
-  name: string;
-  label: string;
-  values: ChildDetails | ManuallyAddedChildDetails;
-  renderValue?: (value: string) => React.ReactNode;
-}
-
-const ComponentDataListItem: React.FC<ComponentDataListItemProps> = ({
-  name,
-  values,
-  label,
-  renderValue,
-}) => {
-  const componentValue = getIn(values, name);
-  return (
-    <DataListItem>
-      <DataListKey>{label}</DataListKey>
-      <DataListValue notranslate>
-        {renderValue ? renderValue(componentValue) : componentValue}
-      </DataListValue>
-    </DataListItem>
-  );
-};
 
 type WrappedJSONObject = {[k: string]: JSONObject | WrappedJSONObject};
 
@@ -49,7 +27,6 @@ export interface ItemBodyProps {
 }
 
 const ItemBody: React.FC<ItemBodyProps> = ({index, parentKey, parentValues, expanded}) => {
-  const intl = useIntl();
   const {values} = useFormikContext<(ChildDetails | ManuallyAddedChildDetails)[]>();
 
   const rawNamePrefix = useFieldConfig('');
@@ -63,38 +40,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({index, parentKey, parentValues, expa
   }
 
   if (!expanded) {
-    // @TODO reusable ItemPreview component?
-    return (
-      <DataList appearance="rows">
-        <ComponentDataListItem
-          name="bsn"
-          values={itemValues}
-          label={intl.formatMessage({
-            description: "Children component: child item body 'bsn' label",
-            defaultMessage: 'BSN',
-          })}
-        />
-        <ComponentDataListItem
-          name="firstNames"
-          values={itemValues}
-          label={intl.formatMessage({
-            description: "Children component: child item body 'firstNames' label",
-            defaultMessage: 'First names',
-          })}
-        />
-        <ComponentDataListItem
-          name="dateOfBirth"
-          values={itemValues}
-          label={intl.formatMessage({
-            description: "Children component: child item body 'dateOfBirth' label",
-            defaultMessage: 'Date of birth',
-          })}
-          renderValue={value =>
-            value ? <FormattedDate value={value} year="numeric" day="numeric" month="long" /> : '-'
-          }
-        />
-      </DataList>
-    );
+    return <ChildPreview childData={itemValues} />;
   }
 
   return (
@@ -172,6 +118,8 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 
 const ChildrenFieldComponent: RegistryEntry<ChildrenComponentSchema> = {
   formField: FormioChildrenField,
+  getInitialValues,
+  valueDisplay: ValueDisplay,
 };
 
 export default ChildrenFieldComponent;

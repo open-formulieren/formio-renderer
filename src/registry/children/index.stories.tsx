@@ -78,7 +78,7 @@ export const ManuallyAddChildren: Story = {
 
     await step('Add child', async () => {
       const bsnField = canvas.getByLabelText('BSN');
-      const firstNamesField = canvas.getByLabelText('Firstnames');
+      const firstNamesField = canvas.getByLabelText('First names');
       const monthField = canvas.getByLabelText('Month');
       const dayField = canvas.getByLabelText('Day');
       const yearField = canvas.getByLabelText('Year');
