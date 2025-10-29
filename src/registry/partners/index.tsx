@@ -1,6 +1,7 @@
 import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
+import {Fragment} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -9,7 +10,7 @@ import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
 import type {RegistryEntry} from '@/registry/types';
 
-import PartnersPreview from './PartnersPreview';
+import PartnerPreview from './PartnerPreview';
 import ValueDisplay from './ValueDisplay';
 import {EMPTY_PARTNER} from './constants';
 import isEmpty from './empty';
@@ -52,7 +53,16 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
         </>
       }
     >
-      {showPartnersList && <PartnersPreview partners={partners} />}
+      {showPartnersList && (
+        <>
+          {partners.map((partner, index) => (
+            <Fragment key={index}>
+              {index > 0 && <hr />}
+              <PartnerPreview partner={partner} />
+            </Fragment>
+          ))}
+        </>
+      )}
       {canEditPartner && (
         <FormFieldContainer>
           <BSN namePrefix={subFieldNamePrefix} />
