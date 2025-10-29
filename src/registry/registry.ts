@@ -3,6 +3,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import AddressNL from './addressNL';
 import BSN from './bsn';
 import Checkbox from './checkbox';
+import Children from './children';
 import Columns from './columns';
 import Content from './content';
 import Cosign from './cosign';
@@ -58,6 +59,7 @@ const REGISTRY: Registry = {
   editgrid: EditGrid,
   addressNL: AddressNL,
   partners: Partners,
+  children: Children,
   // layout
   content: Content,
   columns: Columns,

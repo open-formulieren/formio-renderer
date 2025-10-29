@@ -16,13 +16,9 @@ export const FIELD_LABELS = defineMessages<keyof ChildDetails>({
   },
 });
 
-interface BSNProps {
-  namePrefix: string;
-}
-
-export const BSN: React.FC<BSNProps> = ({namePrefix}) => (
+export const BSN: React.FC = () => (
   <TextField
-    name={`${namePrefix}.bsn`}
+    name="bsn"
     label={<FormattedMessage {...FIELD_LABELS.bsn} />}
     isRequired
     pattern="[0-9]{9}"
@@ -31,24 +27,17 @@ export const BSN: React.FC<BSNProps> = ({namePrefix}) => (
   />
 );
 
-interface FirstNamesProps {
-  namePrefix: string;
-}
-
-export const FirstNames: React.FC<FirstNamesProps> = ({namePrefix}) => (
+export const FirstNames: React.FC = () => (
   <TextField
-    name={`${namePrefix}.firstNames`}
+    name="firstNames"
+    isRequired
     label={<FormattedMessage {...FIELD_LABELS.firstNames} />}
   />
 );
 
-interface DateOfBirthProps {
-  namePrefix: string;
-}
-
-export const DateOfBirth: React.FC<DateOfBirthProps> = ({namePrefix}) => (
+export const DateOfBirth: React.FC = () => (
   <DateField
-    name={`${namePrefix}.dateOfBirth`}
+    name="dateOfBirth"
     label={<FormattedMessage {...FIELD_LABELS.dateOfBirth} />}
     isRequired
     widget="inputGroup"

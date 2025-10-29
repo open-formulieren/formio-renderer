@@ -1,6 +1,6 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
 import {getIn, replace, setIn, useFormikContext} from 'formik';
-import {createContext, useContext, useEffect, useMemo} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
 
@@ -16,23 +16,10 @@ import {extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
+import ParentValuesContext from './ParentValuesContext';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import applyVisibility from './visibility';
-
-// set up a context to track the parent values when dealing with nested edit grids
-interface ParentValuesContextType {
-  keyPrefix: string; // component keys from root to leaf, to track position in nested edit grids
-  values: JSONObject;
-  componentsMap: Record<string, AnyComponentSchema>;
-}
-
-const ParentValuesContext = createContext<ParentValuesContextType>({
-  keyPrefix: '',
-  values: {},
-  componentsMap: {},
-});
-ParentValuesContext.displayName = 'ParentValuesContext';
 
 type WrappedJSONObject = {[k: string]: JSONObject | WrappedJSONObject};
 
