@@ -12,7 +12,7 @@ export interface LoadingIndicatorProps {
   /**
    * Specify position. The default is `start`.`
    */
-  position: 'start' | 'center' | 'end';
+  position?: 'start' | 'center' | 'end';
   /**
    * Specify size variant.
    */

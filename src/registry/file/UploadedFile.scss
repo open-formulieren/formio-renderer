@@ -19,8 +19,8 @@
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-template-areas:
-    'name remove-button'
-    'metadata remove-button';
+    'name state'
+    'metadata state';
   row-gap: var(--of-uploaded-file-row-gap);
   column-gap: var(--of-uploaded-file-column-gap);
   padding-block-end: var(--of-uploaded-file-padding-block-end);
@@ -49,8 +49,13 @@
     color: var(--of-uploaded-file-metadata-color);
   }
 
-  @include bem.element('remove-button') {
-    grid-area: remove-button;
+  @include bem.element('state') {
+    grid-area: state;
+
+    &:has(.openforms-loading-indicator) {
+      padding-block-start: var(--openforms-uploaded-file-uploading-padding-block-start, 4px);
+      padding-inline-end: var(--openforms-uploaded-file-uploading-padding-inline-end, 12px);
+    }
   }
 
   @include bem.element('errors') {

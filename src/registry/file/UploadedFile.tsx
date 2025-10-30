@@ -3,6 +3,7 @@ import {clsx} from 'clsx';
 import {useId} from 'react';
 import {FormattedMessage, FormattedNumber, useIntl} from 'react-intl';
 
+import LoadingIndicator from '@/components/LoadingIndicator';
 import {ValidationErrors} from '@/components/forms';
 import Icon from '@/components/icons';
 
@@ -42,6 +43,15 @@ export interface UploadedFileProps {
    */
   size: number;
   /**
+   * Upload state.
+   *
+   * - `success` implies that the upload completed successfully
+   * - `pending` means the upload is in progress
+   * - `error` means something went wrong during the upload process and the user needs to
+   *   retry
+   */
+  state: 'success' | 'pending' | 'error';
+  /**
    * Error message(s) to display.
    */
   errors?: string[];
@@ -60,6 +70,7 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
   name,
   downloadUrl,
   size: sizeInBytes,
+  state,
   errors = [],
 }) => {
   const id = useId();
@@ -97,27 +108,11 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
         {extension ? ',' : undefined} <FormattedNumber value={size} style="unit" unit={unit} />)
       </div>
 
-      <div className="openforms-uploaded-file__remove-button">
-        <Button
-          appearance="subtle-button"
-          hint="danger"
-          onClick={() => alert('TODO')}
-          title={intl.formatMessage({
-            description: 'Button title to remove uploaded file',
-            defaultMessage: 'Remove',
-          })}
-        >
-          <UtrechtIcon>
-            <Icon icon="remove" />
-          </UtrechtIcon>
-          <span className="sr-only">
-            <FormattedMessage
-              description="Accessible remove icon/button label for uploaded file."
-              defaultMessage="Remove ''{fileName}'"
-              values={{fileName: name}}
-            />
-          </span>
-        </Button>
+      <div className="openforms-uploaded-file__state">
+        <UploadState
+          state={state}
+          removeButton={<RemoveButton fileName={name} onRemove={async () => alert('TODO')} />}
+        />
       </div>
 
       {errorMessageId && (
@@ -126,6 +121,68 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
         </div>
       )}
     </div>
+  );
+};
+
+interface UploadStateProps {
+  state: UploadedFileProps['state'];
+  removeButton: React.ReactNode;
+}
+
+const UploadState: React.FC<UploadStateProps> = ({state, removeButton}) => {
+  switch (state) {
+    case 'pending': {
+      return (
+        <LoadingIndicator
+          description={
+            <FormattedMessage
+              description="Pending file upload accessible description."
+              defaultMessage="Uploading..."
+            />
+          }
+          size="small"
+        />
+      );
+    }
+    case 'success':
+    case 'error': {
+      return removeButton;
+    }
+    default: {
+      const exhaustiveCheck: never = state;
+      throw new Error(`Unhandled state: ${exhaustiveCheck}`);
+    }
+  }
+};
+
+interface RemoveButtonProps {
+  fileName: string;
+  onRemove: (event: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
+}
+
+const RemoveButton: React.FC<RemoveButtonProps> = ({fileName, onRemove}) => {
+  const intl = useIntl();
+  return (
+    <Button
+      appearance="subtle-button"
+      hint="danger"
+      onClick={onRemove}
+      title={intl.formatMessage({
+        description: 'Button title to remove uploaded file',
+        defaultMessage: 'Remove',
+      })}
+    >
+      <UtrechtIcon>
+        <Icon icon="remove" />
+      </UtrechtIcon>
+      <span className="sr-only">
+        <FormattedMessage
+          description="Accessible remove icon/button label for uploaded file."
+          defaultMessage="Remove ''{fileName}'"
+          values={{fileName}}
+        />
+      </span>
+    </Button>
   );
 };
 

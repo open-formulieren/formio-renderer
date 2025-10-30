@@ -9,6 +9,7 @@ export default {
     name: 'image.png',
     downloadUrl: 'https://example.com',
     size: 2129,
+    state: 'success',
   },
 } satisfies Meta<typeof UploadedFile>;
 
@@ -40,6 +41,12 @@ export const LongFileName: Story = {
     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
     nisi ut aliquip ex ea commodo consequat.PDF`,
+  },
+};
+
+export const UploadInProgress: Story = {
+  args: {
+    state: 'pending',
   },
 };
 

@@ -70,7 +70,7 @@
   --of-file-upload-dropzone-padding-inline-start: 20px;
   --of-file-upload-dropzone-border-width: 2px;
   --of-file-upload-dropzone-border-style: dashed;
-  --of-file-upload-dropzone-border-color: fuchsia;
+  --of-file-upload-dropzone-border-color: var(--of-field-border-color);
   --of-openforms-file-upload-uploads-list-padding-block-end: 0;
   --of-openforms-file-upload-uploads-list-padding-block-start: 8px;
 }

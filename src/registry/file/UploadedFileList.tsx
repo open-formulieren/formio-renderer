@@ -19,6 +19,15 @@ export interface FileMeta {
    */
   size: number;
   /**
+   * Upload state.
+   *
+   * - `success` implies that the upload completed successfully
+   * - `pending` means the upload is in progress
+   * - `error` means something went wrong during the upload process and the user needs to
+   *   retry
+   */
+  state: 'success' | 'pending' | 'error';
+  /**
    * Error message(s) to display.
    */
   errors?: string[];

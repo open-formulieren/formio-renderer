@@ -82,6 +82,7 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
                   name: originalName,
                   downloadUrl: url,
                   size,
+                  state: 'success', // TODO!
                   errors: typeof thisFileErrors === 'string' ? [thisFileErrors] : undefined,
                 };
               })}
