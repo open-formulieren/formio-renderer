@@ -1,12 +1,12 @@
-import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 
 import ChildPreview from './ChildPreview';
-import type {ManuallyAddedChildDetails} from './types';
+import type {ExtendedChildDetails} from './types';
 
 export interface ValueDisplayProps {
   componentDefinition: ChildrenComponentSchema;
-  value: (ChildDetails | ManuallyAddedChildDetails)[];
+  value: ExtendedChildDetails[];
 }
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({value}) => {
@@ -14,7 +14,7 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({value}) => {
 
   return (
     <OrderedList>
-      {(value as ChildDetails[]).map((child, index) => (
+      {(value as ExtendedChildDetails[]).map((child, index) => (
         <OrderedListItem key={index}>
           <ChildPreview childData={child} />
         </OrderedListItem>

@@ -1,1 +1,14 @@
 @use '@utrecht/components/data-list';
+
+@use '@/scss/bem';
+
+.openforms-children-data-list {
+  @include bem.modifier('inline') {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    .utrecht-data-list__item {
+      margin-block-start: 0;
+    }
+  }
+}

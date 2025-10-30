@@ -659,3 +659,57 @@ export const WithNestedRadio: Story = {
     });
   },
 };
+
+export const WithNestedChildrenWithSelectionEnabled: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'parent',
+      label: 'Repeating group with nested children',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Parent',
+      components: [
+        {
+          id: 'component3',
+          type: 'children',
+          key: 'children',
+          label: 'Children',
+          enableSelection: true,
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        parent: [
+          {
+            children: [
+              {
+                bsn: '123456789',
+                firstNames: 'John Doe',
+                dateOfBirth: '2000-1-1',
+              },
+              {
+                bsn: '074303909',
+                firstNames: 'Jane Doe',
+                dateOfBirth: '1997-12-12',
+              },
+            ],
+          },
+          {
+            children: [
+              {
+                bsn: '122270113',
+                firstNames: 'James Doe',
+                dateOfBirth: '1993-6-22',
+                __addedManually: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+};

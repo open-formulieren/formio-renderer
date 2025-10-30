@@ -1,0 +1,9 @@
+@use '@/scss/bem';
+
+.openforms-children__item-body {
+  @include bem.modifier('with-selection') {
+    display: grid;
+    gap: 1em;
+    grid-template-columns: auto 1fr;
+  }
+}

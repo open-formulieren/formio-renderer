@@ -51,6 +51,37 @@ export const WithTooltipAndDescription: Story = {
   },
 };
 
+export const WithSelectionEnabled: Story = {
+  args: {
+    componentDefinition: {
+      id: 'children',
+      type: 'children',
+      key: 'children',
+      label: 'Children',
+      enableSelection: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        children: [
+          {
+            bsn: '123456789',
+            firstNames: 'John Doe',
+            dateOfBirth: '2000-1-1',
+          },
+          {
+            bsn: '074303909',
+            firstNames: 'Jane Doe',
+            dateOfBirth: '1997-12-12',
+            __addedManually: true,
+          },
+        ],
+      },
+    },
+  },
+};
+
 export const NoChildrenFound: Story = {
   parameters: {
     formik: {

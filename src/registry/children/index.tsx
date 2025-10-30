@@ -1,4 +1,6 @@
-import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
+import {Checkbox as UtrechtCheckbox} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
 import {getIn, setIn, useFormikContext} from 'formik';
 import {useContext} from 'react';
 import {useIntl} from 'react-intl';
@@ -13,36 +15,58 @@ import type {JSONObject} from '@/types';
 import ChildPreview from './ChildPreview';
 import ValueDisplay from './ValueDisplay';
 import {EMPTY_CHILD} from './constants';
+import './index.scss';
 import getInitialValues from './initialValues';
 import {BSN, DateOfBirth, FirstNames} from './subFields';
-import type {ManuallyAddedChildDetails} from './types';
+import type {ExtendedChildDetails} from './types';
 
 type WrappedJSONObject = {[k: string]: JSONObject | WrappedJSONObject};
 
 export interface ItemBodyProps {
-  index: number;
-  parentKey: string;
-  parentValues: {[K: string]: (ChildDetails | ManuallyAddedChildDetails)[]};
   expanded: boolean;
+  enableSelection: boolean;
 }
 
-const ItemBody: React.FC<ItemBodyProps> = ({index, parentKey, parentValues, expanded}) => {
-  const {values} = useFormikContext<(ChildDetails | ManuallyAddedChildDetails)[]>();
+const ItemBody: React.FC<ItemBodyProps> = ({expanded, enableSelection}) => {
+  const intl = useIntl();
+  const {values, setFieldValue} = useFormikContext<ExtendedChildDetails[]>();
 
   const rawNamePrefix = useFieldConfig('');
   if (!rawNamePrefix.endsWith('.')) throw new Error('Unexpected name prefix');
   const namePrefix = rawNamePrefix.slice(0, -1);
-  let itemValues: ChildDetails | ManuallyAddedChildDetails | undefined = getIn(values, namePrefix);
-
-  // If itemValues is undefined, we're dealing with an uneditable item.
-  if (!itemValues) {
-    itemValues = parentValues[parentKey][index];
-  }
+  const itemValues: ExtendedChildDetails = getIn(values, namePrefix);
 
   if (!expanded) {
-    return <ChildPreview childData={itemValues} />;
+    return (
+      <div
+        className={clsx('openforms-children__item-body', {
+          'openforms-children__item-body--with-selection': enableSelection,
+        })}
+      >
+        {enableSelection && (
+          <UtrechtCheckbox
+            name={`${namePrefix}.selected`}
+            aria-label={intl.formatMessage(
+              {
+                description: 'Children component: child select box aria label',
+                defaultMessage: '{firstname} should be included in the form submission',
+              },
+              {
+                firstname: itemValues.firstNames,
+              }
+            )}
+            checked={!!itemValues?.selected}
+            onChange={() => {
+              setFieldValue(`${namePrefix}.selected`, !itemValues?.selected);
+            }}
+          />
+        )}
+        <ChildPreview childData={itemValues} inline />
+      </div>
+    );
   }
 
+  // This can only be reached if the item is editable.
   return (
     <FormFieldContainer>
       <BSN />
@@ -57,7 +81,7 @@ export interface FormioChildrenFieldProps {
 }
 
 export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
-  componentDefinition: {key, label, description, tooltip, hideLabel},
+  componentDefinition: {key, label, description, tooltip, hideLabel, enableSelection},
 }) => {
   const {values} = useFormikContext<WrappedJSONObject>();
   const intl = useIntl();
@@ -73,27 +97,20 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   const parentScope = !isRoot ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
   const parentKey = !isRoot ? `${keyPrefix}.${key}` : key;
 
-  const children: (ChildDetails | ManuallyAddedChildDetails)[] = getIn(parentScope, parentKey);
-  const serverFetchedChildren = children.filter(
-    (child): child is ChildDetails => !('__addedManually' in child)
-  );
+  const children: ExtendedChildDetails[] = getIn(parentScope, parentKey);
+  const serverFetchedChildren = children.filter(child => !('__addedManually' in child));
   // If there are no server-fetched children, we can add children manually.
   const canAddChildrenManually = serverFetchedChildren.length === 0;
 
   return (
-    <EditGridField<ChildDetails | ManuallyAddedChildDetails>
+    <EditGridField<ExtendedChildDetails>
       name={key}
       label={hideLabel ? null : label}
       tooltip={tooltip}
       description={description}
       enableIsolation
-      getItemBody={(_, index, {expanded}) => (
-        <ItemBody
-          index={index}
-          parentKey={parentKey}
-          parentValues={parentScope}
-          expanded={expanded}
-        />
+      getItemBody={(_, __, {expanded}) => (
+        <ItemBody expanded={expanded} enableSelection={enableSelection} />
       )}
       emptyItem={canAddChildrenManually ? EMPTY_CHILD : undefined}
       canEditItem={item => '__addedManually' in item}
