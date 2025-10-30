@@ -1,4 +1,4 @@
-import type {NumberComponentSchema} from '@open-formulieren/types';
+import type {CurrencyComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
 import isEmpty from './empty';
@@ -14,11 +14,12 @@ test.each([
 ])(
   'Number isEmpty compares against defined number with 1 or more characters',
   (valueToTest: number | null | undefined, expected: boolean) => {
-    const component: NumberComponentSchema = {
-      type: 'number',
-      key: 'number',
+    const component: CurrencyComponentSchema = {
+      type: 'currency',
+      key: 'currency',
       id: 'number',
-      label: 'number',
+      label: 'Currency',
+      currency: 'EUR',
       allowNegative: true,
     };
 
