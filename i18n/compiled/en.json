@@ -177,6 +177,12 @@
       "value": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
     }
   ],
+  "ALpIwm": [
+    {
+      "type": 0,
+      "value": "The signature value must be a base64-encoded png."
+    }
+  ],
   "At/y3w": [
     {
       "type": 0,
@@ -261,6 +267,12 @@
       "value": "Date of birth must be within the last 120 years."
     }
   ],
+  "ErdIGO": [
+    {
+      "type": 0,
+      "value": "Clear signature"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -305,6 +317,12 @@
     {
       "type": 0,
       "value": "Previous month"
+    }
+  ],
+  "LaKfzC": [
+    {
+      "type": 0,
+      "value": "Signature"
     }
   ],
   "LsgvKh": [

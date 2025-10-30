@@ -89,6 +89,11 @@
     "description": "Invalid input validation error for datetime field",
     "originalDefault": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
   },
+  "ALpIwm": {
+    "defaultMessage": "The signature value must be a base64-encoded png.",
+    "description": "Validation error for signature",
+    "originalDefault": "The signature value must be a base64-encoded png."
+  },
   "At/y3w": {
     "defaultMessage": "Edit item {index}",
     "description": "Accessible edit icon/button label for item inside edit grid",
@@ -124,6 +129,11 @@
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
   },
+  "ErdIGO": {
+    "defaultMessage": "Clear signature",
+    "description": "Signature: accessible clear signature label",
+    "originalDefault": "Clear signature"
+  },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
     "description": "Tooltip icon label",
@@ -158,6 +168,11 @@
     "defaultMessage": "Previous month",
     "description": "Calendar: previous month button title",
     "originalDefault": "Previous month"
+  },
+  "LaKfzC": {
+    "defaultMessage": "Signature",
+    "description": "Signature value alt text",
+    "originalDefault": "Signature"
   },
   "LsgvKh": {
     "defaultMessage": "Postcode",
