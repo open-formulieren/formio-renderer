@@ -1,0 +1,132 @@
+import {Button, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
+import {useId} from 'react';
+import {FormattedMessage, FormattedNumber, useIntl} from 'react-intl';
+
+import {ValidationErrors} from '@/components/forms';
+import Icon from '@/components/icons';
+
+import './UploadedFile.scss';
+
+interface HumanFileSize {
+  size: number;
+  unit: 'byte' | 'kilobyte' | 'megabyte' | 'gigabyte' | 'terabyte';
+}
+
+/**
+ * Takes a file size in bytes and returns the appropriate human readable value + unit
+ * to use.
+ */
+const humanFileSize = (size: number): HumanFileSize => {
+  if (size === 0) {
+    return {size: 0, unit: 'byte'};
+  }
+  const index = Math.floor(Math.log(size) / Math.log(1024));
+  const newSize = parseFloat((size / Math.pow(1024, index)).toFixed(2));
+  const unit = (['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'] as const)[index];
+  return {size: newSize, unit};
+};
+
+export interface UploadedFileProps {
+  /**
+   * The file name as uploaded by the user, including the extension.
+   */
+  name: string;
+  /**
+   * URL/endpoint to the (temporary) file upload where the file content can be downloaded
+   * again.
+   */
+  downloadUrl: string;
+  /**
+   * File size, in bytes.
+   */
+  size: number;
+  /**
+   * Error message(s) to display.
+   */
+  errors?: string[];
+}
+
+/**
+ * Presentation of a file/attachment uploaded by an end user.
+ *
+ * The file name, type and size are displayed. Long file names are truncated with an ellipsis when
+ * they overflow. File sizes are displayed in a human-readable format like `14 kB` or `1.1 MB`.
+ *
+ * @todo Uploading state
+ * @todo Upload failed state
+ */
+const UploadedFile: React.FC<UploadedFileProps> = ({
+  name,
+  downloadUrl,
+  size: sizeInBytes,
+  errors = [],
+}) => {
+  const id = useId();
+  const intl = useIntl();
+  const {size, unit} = humanFileSize(sizeInBytes);
+  const extension = name.split('.').pop();
+  const hasError = errors.length > 0;
+  const errorMessageId = hasError ? `${id}-error-message` : undefined;
+  return (
+    <div
+      className={clsx('openforms-uploaded-file', hasError && 'openforms-uploaded-file--errors')}
+      // TODO: check if this is correctly picked up by screenreaders
+      aria-describedby={errorMessageId}
+    >
+      <div
+        className="openforms-uploaded-file__name"
+        aria-label={intl.formatMessage({
+          description: 'Accessible label for uploaded file name',
+          defaultMessage: 'File name',
+        })}
+      >
+        <a
+          className="utrecht-link utrecht-link--openforms"
+          href={downloadUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {name}
+        </a>
+      </div>
+
+      {/* FIXME: Labels only apply to interactive elements, which spans/divs are not. */}
+      <div className="openforms-uploaded-file__metadata">
+        ({extension?.toLowerCase()}
+        {extension ? ',' : undefined} <FormattedNumber value={size} style="unit" unit={unit} />)
+      </div>
+
+      <div className="openforms-uploaded-file__remove-button">
+        <Button
+          appearance="subtle-button"
+          hint="danger"
+          onClick={() => alert('TODO')}
+          title={intl.formatMessage({
+            description: 'Button title to remove uploaded file',
+            defaultMessage: 'Remove',
+          })}
+        >
+          <UtrechtIcon>
+            <Icon icon="remove" />
+          </UtrechtIcon>
+          <span className="sr-only">
+            <FormattedMessage
+              description="Accessible remove icon/button label for uploaded file."
+              defaultMessage="Remove ''{fileName}'"
+              values={{fileName: name}}
+            />
+          </span>
+        </Button>
+      </div>
+
+      {errorMessageId && (
+        <div className="openforms-uploaded-file__errors">
+          <ValidationErrors error={errors.join('\n')} id={errorMessageId} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UploadedFile;
