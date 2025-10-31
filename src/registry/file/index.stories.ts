@@ -1,10 +1,11 @@
-import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
+import type {FileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioFile} from './';
+import type {FormikFileUpload} from './types';
 
 // import ValueDisplay from './ValueDisplay';
 
@@ -65,7 +66,16 @@ export default {
   parameters: {
     formSettings: {
       componentParameters: {
-        // TODO - add mocks for upload endpoint in due time
+        file: {
+          upload: async () => {
+            const uuid = window.crypto.randomUUID();
+            return {
+              result: 'success',
+              url: `https://example.com/api/v2/uploads/${uuid}`,
+            };
+          },
+          destroy: async () => {},
+        },
       } satisfies FormSettings['componentParameters'],
     },
   },
@@ -88,7 +98,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -112,7 +122,7 @@ export const WithDescriptionAndTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -153,8 +163,9 @@ export const SingleFileUpload: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
     },
@@ -194,6 +205,7 @@ export const MultipleFilesUpload: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
             },
             {
               data: {
@@ -210,8 +222,53 @@ export const MultipleFilesUpload: Story = {
               storage: 'url',
               type: 'application/msword',
               url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
+              state: 'pending',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
+        },
+      },
+    },
+  },
+};
+
+export const WithRestrictions: Story = {
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      description: 'Click or drag a file to upload.',
+      maxNumberOfFiles: 3,
+      multiple: true,
+      fileMaxSize: '2 MB',
+    } satisfies FileComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          file: [
+            {
+              data: {
+                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+                form: '',
+                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.png',
+                size: 137000, // 137 kB
+                baseUrl: 'https://example.com/',
+                project: '',
+              },
+              name: '',
+              originalName: 'screenshot.png',
+              size: 137000, // 137 kB
+              storage: 'url',
+              type: 'application/png',
+              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
+            },
+          ] satisfies FormikFileUpload[],
         },
       },
     },
@@ -224,7 +281,7 @@ export const DisplayComponentValidationError: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {
@@ -263,8 +320,9 @@ export const DisplayFileValidationError: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'error',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {
