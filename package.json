@@ -120,6 +120,7 @@
     "dompurify": "^3.2.6",
     "formik": "^2.4.5",
     "ibantools": "^4.5.1",
+    "react-dropzone": "^14.3.8",
     "react-number-format": "^5.4.4",
     "react-signature-canvas": "^1.0.7",
     "zod": "^3.24.1",
