@@ -1,12 +1,8 @@
 @use '@utrecht/components/button';
 @use '@utrecht/components/form-field';
-@use '@utrecht/components/icon';
-@use '@utrecht/components/link';
-@use '@utrecht/components/paragraph';
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
-@use '@/scss/sr-only';
 
 /**
  * Styling and layout for the file upload as a whole, including the description, errors,

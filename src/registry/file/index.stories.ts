@@ -218,6 +218,49 @@ export const MultipleFilesUpload: Story = {
   },
 };
 
+export const WithRestrictions: Story = {
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      description: 'Click or drag a file to upload.',
+      maxNumberOfFiles: 3,
+      multiple: true,
+      fileMaxSize: '2 MB',
+    } satisfies FileComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          file: [
+            {
+              data: {
+                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+                form: '',
+                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.png',
+                size: 137000, // 137 kB
+                baseUrl: 'https://example.com/',
+                project: '',
+              },
+              name: '',
+              originalName: 'screenshot.png',
+              size: 137000, // 137 kB
+              storage: 'url',
+              type: 'application/png',
+              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+            },
+          ] satisfies FileUploadData[],
+        },
+      },
+    },
+  },
+};
+
 export const DisplayComponentValidationError: Story = {
   args: WithDescriptionAndTooltip.args,
   parameters: {
