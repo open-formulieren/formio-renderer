@@ -204,6 +204,11 @@
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
   },
+  "QAN3ua": {
+    "defaultMessage": "The file(s) are ready to drop.",
+    "description": "Accessible status indicator that the file can be dropped.",
+    "originalDefault": "The file(s) are ready to drop."
+  },
   "QPdaOi": {
     "defaultMessage": "No results found",
     "description": "Select 'no options' message",
@@ -303,6 +308,11 @@
     "defaultMessage": "Loading...",
     "description": "Loading content text",
     "originalDefault": "Loading..."
+  },
+  "iiVLgn": {
+    "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
+    "description": "Description/label for upload drop zone.",
+    "originalDefault": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>."
   },
   "lVNV/d": {
     "defaultMessage": "House number addition",
