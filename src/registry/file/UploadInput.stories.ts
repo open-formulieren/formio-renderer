@@ -19,7 +19,7 @@ export default {
   component: UploadInput,
   args: {
     inputId: 'file-upload',
-    onFileAdded: fn(),
+    onFilesAdded: fn(),
   },
 } satisfies Meta<typeof UploadInput>;
 

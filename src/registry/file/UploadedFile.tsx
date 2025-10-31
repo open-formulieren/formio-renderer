@@ -34,6 +34,10 @@ export interface UploadedFileProps {
    */
   state: 'success' | 'pending' | 'error';
   /**
+   * Callback to invoke when the user removes the file upload.
+   */
+  onRemove: () => Promise<void>;
+  /**
    * Error message(s) to display.
    */
   errors?: string[];
@@ -53,6 +57,7 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
   downloadUrl,
   size,
   state,
+  onRemove,
   errors = [],
 }) => {
   const id = useId();
@@ -92,7 +97,7 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
       <div className="openforms-uploaded-file__state">
         <UploadState
           state={state}
-          removeButton={<RemoveButton fileName={name} onRemove={async () => alert('TODO')} />}
+          removeButton={<RemoveButton fileName={name} onRemove={onRemove} />}
         />
       </div>
 

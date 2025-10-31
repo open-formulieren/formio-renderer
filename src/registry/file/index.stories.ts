@@ -1,10 +1,11 @@
-import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
+import type {FileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioFile} from './';
+import type {FormikFileUpload} from './types';
 
 // import ValueDisplay from './ValueDisplay';
 
@@ -67,9 +68,10 @@ export default {
       componentParameters: {
         file: {
           upload: async () => {
+            const uuid = window.crypto.randomUUID();
             return {
               result: 'success',
-              url: 'https://example.com/api/v2/uploads/9008b54c-e412-4e77-903b-533669e7bf4c',
+              url: `https://example.com/api/v2/uploads/${uuid}`,
             };
           },
           destroy: async () => {},
@@ -96,7 +98,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -120,7 +122,7 @@ export const WithDescriptionAndTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -161,8 +163,9 @@ export const SingleFileUpload: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
     },
@@ -202,6 +205,7 @@ export const MultipleFilesUpload: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
             },
             {
               data: {
@@ -218,8 +222,9 @@ export const MultipleFilesUpload: Story = {
               storage: 'url',
               type: 'application/msword',
               url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
+              state: 'pending',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
     },
@@ -261,8 +266,9 @@ export const WithRestrictions: Story = {
               storage: 'url',
               type: 'application/png',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'success',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
     },
@@ -275,7 +281,7 @@ export const DisplayComponentValidationError: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {
@@ -314,8 +320,9 @@ export const DisplayFileValidationError: Story = {
               storage: 'url',
               type: 'application/pdf',
               url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
+              state: 'error',
             },
-          ] satisfies FileUploadData[],
+          ] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {

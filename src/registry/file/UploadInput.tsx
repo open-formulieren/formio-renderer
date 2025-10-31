@@ -18,7 +18,7 @@ export interface UploadInputProps {
   /**
    * Callback for dropped/selected files, both for accepted and rejected files.
    */
-  onFileAdded: (file: File | FileRejection) => Promise<void>;
+  onFilesAdded: (files: (File | FileRejection)[]) => Promise<void>;
   /**
    * Additional aria-describedby ids, e.g. for field-level validation errors.
    */
@@ -40,6 +40,7 @@ export interface UploadInputProps {
    */
   maxFiles?: number;
   multiple?: boolean;
+  onBlur?: React.FocusEventHandler;
 }
 
 /**
@@ -47,12 +48,13 @@ export interface UploadInputProps {
  */
 const UploadInput: React.FC<UploadInputProps> = ({
   inputId,
-  onFileAdded,
+  onFilesAdded,
   accept,
   maxFiles = 0,
   maxSize = DEFAULT_MAX_SIZE,
   multiple = false,
   'aria-describedby': ariaDescribedBy,
+  onBlur,
 }) => {
   const [readyForDrop, setReadyForDrop] = useState(false);
   const descriptionId = `${inputId}-description`;
@@ -60,9 +62,9 @@ const UploadInput: React.FC<UploadInputProps> = ({
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const allFiles: (File | FileRejection)[] = [...fileRejections, ...acceptedFiles];
-      allFiles.forEach(fileOrRejection => onFileAdded(fileOrRejection));
+      onFilesAdded(allFiles);
     },
-    [onFileAdded]
+    [onFilesAdded]
   );
   const {getRootProps, getInputProps, isDragActive, isDragReject} = useDropzone({
     accept,
@@ -86,12 +88,14 @@ const UploadInput: React.FC<UploadInputProps> = ({
           isDragActive && 'openforms-upload-input--file-drag-over',
           isDragReject && 'openforms-upload-input--file-drag-reject'
         ),
+        onBlur: onBlur,
       })}
     >
       <input
         {...getInputProps({
           id: inputId,
           'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
+          onBlur: onBlur,
         })}
       />
       <Paragraph id={descriptionId}>

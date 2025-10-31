@@ -1,8 +1,8 @@
 import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
 import {FormField} from '@utrecht/component-library-react';
-import {useField} from 'formik';
-import type {FormikErrors} from 'formik';
-import {useCallback, useId} from 'react';
+import {FieldArray, useFormikContext} from 'formik';
+import type {ArrayHelpers, FormikErrors} from 'formik';
+import {useCallback, useEffect, useId, useRef} from 'react';
 import type {FileRejection} from 'react-dropzone';
 
 import HelpText from '@/components/forms/HelpText';
@@ -15,12 +15,35 @@ import type {RegistryEntry} from '@/registry/types';
 import './File.scss';
 import UploadInput from './UploadInput';
 import UploadedFileList from './UploadedFileList';
+import type {FormikFileUpload} from './types';
 
 export interface FormioFileProps {
   componentDefinition: FileComponentSchema;
 }
 
 export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => {
+  const {key: name} = componentDefinition;
+  return (
+    <FieldArray name={name}>
+      {arrayHelpers => (
+        <Inner componentDefinition={componentDefinition} arrayHelpers={arrayHelpers} />
+      )}
+    </FieldArray>
+  );
+};
+
+interface InnerProps {
+  componentDefinition: FileComponentSchema;
+  arrayHelpers: ArrayHelpers<FormikFileUpload[]>;
+}
+
+/**
+ * Child/body for `FieldArray` wrapper so we can use hooks.
+ */
+const Inner: React.FC<InnerProps> = ({
+  componentDefinition,
+  arrayHelpers: {push, replace, remove},
+}) => {
   const {
     key: name,
     label,
@@ -33,11 +56,9 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
     validate = {},
   } = componentDefinition;
   const {required: isRequired = false} = validate;
-  const [{value = []}, {touched, error: formikError}] = useField<FileUploadData[] | undefined>({
-    name,
-    type: 'file',
-  });
+  const {getFieldProps, getFieldMeta, getFieldHelpers} = useFormikContext();
   const id = useId();
+
   const {componentParameters} = useFormSettings();
   if (!componentParameters?.file) {
     throw new Error(
@@ -46,7 +67,98 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
     );
   }
 
+  const {value: uploads = []} = getFieldProps<FormikFileUpload[]>(name);
+  const {touched, error: formikError} = getFieldMeta<FormikFileUpload[]>(name);
+  const {setTouched} = getFieldHelpers<FormikFileUpload[]>(name);
+
   const {upload, destroy} = componentParameters.file;
+
+  // we must be guard against race conditions because we're dealing with a list of
+  // values, which may change in ordering and size while uploads are processing. Users
+  // can add additional uploads or remove uploads while an earlier upload is still
+  // processing, which messes with index-based access.
+  // So, we track the field value (array of uploads) as mutable ref which can be
+  // accessed by the callback to see the latest state.
+  const uploadsRef = useRef<FormikFileUpload[]>(uploads);
+  // update the ref every time the uploads change. Formik takes care of object identity.
+  useEffect(() => {
+    uploadsRef.current = uploads;
+  }, [uploads]);
+
+  const onFilesAdded = useCallback(
+    async (files: (File | FileRejection)[]) => {
+      if (!touched) setTouched(true);
+
+      for (const fileOrRejection of files) {
+        const isRejection = 'errors' in fileOrRejection;
+        const file = isRejection ? fileOrRejection.file : fileOrRejection;
+        const tempUrl = URL.createObjectURL(file);
+        const uniqueId = window.crypto.randomUUID();
+        const fileUpload: FormikFileUpload = {
+          // own client-side state tracking for UI updates
+          clientId: uniqueId,
+          state: isRejection ? 'error' : 'pending',
+          // server data
+          name: file.name,
+          originalName: file.name,
+          size: file.size,
+          storage: 'url',
+          type: file.type,
+          url: tempUrl,
+          data: {
+            url: tempUrl,
+            form: '',
+            name: file.name, // TODO: do we need to strip soft hyphens here or what?
+            size: file.size,
+            baseUrl: '-irrelevant-',
+            project: '',
+          },
+        };
+        // add it to the formik state, which updates the ref next render.
+        push(fileUpload);
+
+        // invoke async without awaiting for parallel processing
+        (async () => {
+          if ('errors' in file) {
+            // rejected by the upload input, don't even bother uploading
+            file;
+          } else {
+            // accepted by the upload input, let's send it to the backend for processing
+            const result = await upload(file);
+            const isSuccess = result.result === 'success';
+            if (isSuccess) URL.revokeObjectURL(tempUrl);
+
+            // find the upload in the latest state
+            const index = uploadsRef.current.findIndex(u => u.clientId === uniqueId);
+            // it may have been removed again already, clean up and ensure the temp file
+            // is deleted.
+            if (index === -1) {
+              if (result.result === 'success') destroy(result.url);
+              return;
+            }
+
+            const fileUpload = uploadsRef.current[index];
+            if (fileUpload.clientId !== uniqueId) {
+              throw new Error('Race condition in ref mutation!');
+            }
+            const updatedUpload: FormikFileUpload = {
+              ...fileUpload,
+              data: {
+                ...fileUpload.data,
+                url: isSuccess ? result.url : fileUpload.data.url,
+              },
+              state: result.result === 'failed' ? 'error' : result.result,
+              url: isSuccess ? result.url : fileUpload.url,
+            };
+            replace(index, updatedUpload);
+
+            // TODO: manage errors
+          }
+        })();
+      }
+    },
+    [upload, destroy, push, replace, touched, setTouched]
+  );
 
   // We can have individual file errors (because the intrinsic value type of the
   // component is FileUploadData[]), a string error for the component as a whole or even
@@ -66,13 +178,6 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
   const invalid = touched && Boolean(fieldError || fileErrors.length);
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
-  const onFileAdded = useCallback(
-    async (file: File | FileRejection) => {
-      console.log('Offered file', file);
-    },
-    [upload]
-  );
-
   return (
     <FormField type="file" invalid={invalid} className="utrecht-form-field--openforms">
       <Label
@@ -88,32 +193,57 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
           <HelpText>{description}</HelpText>
         </div>
 
-        {(!value.length || multiple) && (
+        {(!uploads.length || multiple) && (
           <UploadInput
             inputId={id}
-            onFileAdded={onFileAdded}
+            onFilesAdded={onFilesAdded}
             aria-describedby={errorMessageId}
             maxSize={fileMaxSize ? getSizeInBytes(fileMaxSize) : undefined}
             multiple={multiple}
             maxFiles={maxNumberOfFiles ?? 0}
             accept={Object.fromEntries(type.map(mimeType => [mimeType, [] satisfies string[]]))}
+            onBlur={() => {
+              if (!touched) setTouched(true);
+            }}
           />
         )}
 
-        {!!value.length && (
+        {!!uploads.length && (
           <div className="openforms-file-upload__uploads">
             <UploadedFileList
               multipleAllowed={multiple}
-              files={value.map(({url, originalName, size}, index) => {
-                const thisFileErrors = fileErrors[index];
-                return {
-                  name: originalName,
-                  downloadUrl: url,
-                  size,
-                  state: 'success', // TODO!
-                  errors: typeof thisFileErrors === 'string' ? [thisFileErrors] : undefined,
-                };
-              })}
+              files={uploads.map(
+                ({url, originalName, size, state = 'success', clientId}, index) => {
+                  const thisFileErrors = fileErrors[index];
+                  return {
+                    // fall back to the URL for persisted uploads
+                    uniqueId: clientId || url,
+                    name: originalName,
+                    downloadUrl: url,
+                    size,
+                    // the default success state applies to persisted uploads
+                    state,
+                    errors: typeof thisFileErrors === 'string' ? [thisFileErrors] : undefined,
+                  };
+                }
+              )}
+              onRemove={async (id: string) => {
+                // find the upload in the latest state - for persisted uploads, there is no
+                // such property and we can match on the API resource URL
+                // TODO verify this
+                const upload = uploadsRef.current.find(u => u.clientId === id || u.url === id);
+                if (!upload) return;
+                const index = uploadsRef.current.indexOf(upload);
+                remove(index);
+
+                const url = upload.url;
+                // clean up - if it's a blob URL, the upload was not persisted in the backend
+                if (url.startsWith('blob:')) {
+                  URL.revokeObjectURL(url);
+                } else {
+                  await destroy(url);
+                }
+              }}
             />
           </div>
         )}

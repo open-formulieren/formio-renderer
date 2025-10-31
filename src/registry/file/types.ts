@@ -1,3 +1,16 @@
+import type {FileUploadData} from '@open-formulieren/types';
+
+// Add internal client state to find/correlate items, but it's not relevant for the
+// backend.
+export interface FormikFileUpload extends FileUploadData {
+  /**
+   * Unique ID to manage/sync client side state. For persisted uploads, this property
+   * is absent.
+   */
+  clientId?: string;
+  state?: 'success' | 'pending' | 'error';
+}
+
 /**
  * The expected return value from a successful file upload to the server.
  */
