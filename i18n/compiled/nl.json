@@ -205,6 +205,12 @@
       "value": "De datum en tijd moeten een datumdeel en een tijdsdeel hebben, gescheiden met een spatie (bijvoorbeeld 30-10-2025 17:34)."
     }
   ],
+  "ALpIwm": [
+    {
+      "type": 0,
+      "value": "The signature value must be a base64-encoded png."
+    }
+  ],
   "At/y3w": [
     {
       "type": 0,
@@ -259,6 +265,12 @@
       "value": "De geboortedatum mag hoogstens 120 jaar geleden zijn."
     }
   ],
+  "ErdIGO": [
+    {
+      "type": 0,
+      "value": "Clear signature"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -307,6 +319,12 @@
     {
       "type": 0,
       "value": "Vorige maand"
+    }
+  ],
+  "LaKfzC": [
+    {
+      "type": 0,
+      "value": "Signature"
     }
   ],
   "LsgvKh": [

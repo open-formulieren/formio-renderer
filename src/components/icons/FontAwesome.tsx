@@ -13,6 +13,7 @@ const FA_MAP: Record<RendererIcon, string> = {
   close: 'xmark',
   warning: 'exclamation-triangle',
   calendar: 'calendar-days',
+  refresh: 'refresh',
 };
 
 interface FontAwesomeSolidIconProps {
