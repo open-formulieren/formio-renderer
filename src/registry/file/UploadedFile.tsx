@@ -1,32 +1,14 @@
 import {Button, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {useId} from 'react';
-import {FormattedMessage, FormattedNumber, useIntl} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
 
 import LoadingIndicator from '@/components/LoadingIndicator';
 import {ValidationErrors} from '@/components/forms';
 import Icon from '@/components/icons';
 
+import FileSize from './FileSize';
 import './UploadedFile.scss';
-
-interface HumanFileSize {
-  size: number;
-  unit: 'byte' | 'kilobyte' | 'megabyte' | 'gigabyte' | 'terabyte';
-}
-
-/**
- * Takes a file size in bytes and returns the appropriate human readable value + unit
- * to use.
- */
-const humanFileSize = (size: number): HumanFileSize => {
-  if (size === 0) {
-    return {size: 0, unit: 'byte'};
-  }
-  const index = Math.floor(Math.log(size) / Math.log(1024));
-  const newSize = parseFloat((size / Math.pow(1024, index)).toFixed(2));
-  const unit = (['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'] as const)[index];
-  return {size: newSize, unit};
-};
 
 export interface UploadedFileProps {
   /**
@@ -69,13 +51,12 @@ export interface UploadedFileProps {
 const UploadedFile: React.FC<UploadedFileProps> = ({
   name,
   downloadUrl,
-  size: sizeInBytes,
+  size,
   state,
   errors = [],
 }) => {
   const id = useId();
   const intl = useIntl();
-  const {size, unit} = humanFileSize(sizeInBytes);
   const extension = name.split('.').pop();
   const hasError = errors.length > 0;
   const errorMessageId = hasError ? `${id}-error-message` : undefined;
@@ -105,7 +86,7 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
       {/* FIXME: Labels only apply to interactive elements, which spans/divs are not. */}
       <div className="openforms-uploaded-file__metadata">
         ({extension?.toLowerCase()}
-        {extension ? ',' : undefined} <FormattedNumber value={size} style="unit" unit={unit} />)
+        {extension ? ',' : undefined} <FileSize size={size} />)
       </div>
 
       <div className="openforms-uploaded-file__state">
