@@ -2,13 +2,14 @@ import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types'
 import {FormField} from '@utrecht/component-library-react';
 import {useField} from 'formik';
 import type {FormikErrors} from 'formik';
-import {useId} from 'react';
+import {useCallback, useId} from 'react';
 import type {FileRejection} from 'react-dropzone';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFormSettings} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
 import './File.scss';
@@ -37,6 +38,15 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
     type: 'file',
   });
   const id = useId();
+  const {componentParameters} = useFormSettings();
+  if (!componentParameters?.file) {
+    throw new Error(
+      `The 'file' component can only be used if upload/destroy parameters are provided.
+      Check that the componentParameters are passed correctly in the FormioForm call.`
+    );
+  }
+
+  const {upload, destroy} = componentParameters.file;
 
   // We can have individual file errors (because the intrinsic value type of the
   // component is FileUploadData[]), a string error for the component as a whole or even
@@ -56,9 +66,12 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
   const invalid = touched && Boolean(fieldError || fileErrors.length);
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
-  const onFileAdded = async (file: File | FileRejection) => {
-    console.log('Offered file', file);
-  };
+  const onFileAdded = useCallback(
+    async (file: File | FileRejection) => {
+      console.log('Offered file', file);
+    },
+    [upload]
+  );
 
   return (
     <FormField type="file" invalid={invalid} className="utrecht-form-field--openforms">

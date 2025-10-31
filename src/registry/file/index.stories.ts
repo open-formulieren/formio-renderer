@@ -65,7 +65,15 @@ export default {
   parameters: {
     formSettings: {
       componentParameters: {
-        // TODO - add mocks for upload endpoint in due time
+        file: {
+          upload: async () => {
+            return {
+              result: 'success',
+              url: 'https://example.com/api/v2/uploads/9008b54c-e412-4e77-903b-533669e7bf4c',
+            };
+          },
+          destroy: async () => {},
+        },
       } satisfies FormSettings['componentParameters'],
     },
   },
