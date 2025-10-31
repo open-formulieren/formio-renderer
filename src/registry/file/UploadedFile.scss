@@ -1,0 +1,82 @@
+@use '@utrecht/components/button';
+@use '@utrecht/components/icon';
+@use '@utrecht/components/link';
+
+@use '@/scss/bem';
+
+/**
+ * A single uploaded file, providing information about the file and controls to delete
+ * it again.
+ *
+ * Inspiration was taken from https://github.com/nl-design-system/rijkshuisstijl-community/blob/9a27826ea4eb5c7d300cf41e4331274e1ffe06d1/packages/components-css/src/file/index.scss
+ * Rather than re-using this component as is, we decided to go with our own
+ * implementation because:
+ *
+ * - the file size is not properly localized (comma vs. period decimal separator)
+ * - the 'Verwijder' button label is hardcoded and not localized.
+ */
+.openforms-uploaded-file {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-template-areas:
+    'name state'
+    'metadata state';
+  row-gap: var(--of-uploaded-file-row-gap);
+  column-gap: var(--of-uploaded-file-column-gap);
+  padding-block-end: var(--of-uploaded-file-padding-block-end);
+  padding-block-start: var(--of-uploaded-file-padding-block-start);
+  padding-inline-end: var(--of-uploaded-file-padding-inline-end);
+  padding-inline-start: var(--of-uploaded-file-padding-inline-start);
+  border-width: var(--of-uploaded-file-border-width);
+  border-style: var(--of-uploaded-file-border-style);
+  border-color: var(--of-uploaded-file-border-color);
+  border-radius: var(--of-uploaded-file-border-radius);
+
+  @include bem.modifier('errors') {
+    --of-uploaded-file-border-color: var(--of-uploaded-file-errors-border-color);
+  }
+
+  @include bem.element('name') {
+    grid-area: name;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @include bem.element('metadata') {
+    grid-area: metadata;
+    color: var(--of-uploaded-file-metadata-color);
+  }
+
+  @include bem.element('state') {
+    grid-area: state;
+
+    &:has(.openforms-loading-indicator) {
+      padding-block-start: var(--openforms-uploaded-file-uploading-padding-block-start, 4px);
+      padding-inline-end: var(--openforms-uploaded-file-uploading-padding-inline-end, 12px);
+    }
+  }
+
+  @include bem.element('errors') {
+    // grid-area: errors;
+    // grid-column: 1 / -1; /* span full width */
+    white-space: preserve-breaks wrap;
+  }
+}
+
+// TODO: remove before merge!
+.openforms-theme {
+  --of-uploaded-file-row-gap: 8px;
+  --of-uploaded-file-column-gap: 8px;
+  --of-uploaded-file-padding-block-end: 8px;
+  --of-uploaded-file-padding-block-start: 8px;
+  --of-uploaded-file-padding-inline-end: 4px;
+  --of-uploaded-file-padding-inline-start: 16px;
+  --of-uploaded-file-border-width: 1px;
+  --of-uploaded-file-border-style: solid;
+  --of-uploaded-file-border-color: var(--of-color-border);
+  --of-uploaded-file-border-radius: 2px;
+  --of-uploaded-file-metadata-color: var(--of-color-fg-muted);
+  --of-uploaded-file-errors-border-color: var(--of-color-danger);
+}

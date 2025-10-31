@@ -30,6 +30,11 @@
     "isTranslated": true,
     "originalDefault": "{label} {index}"
   },
+  "1AgCMs": {
+    "defaultMessage": "Remove",
+    "description": "Button title to remove uploaded file",
+    "originalDefault": "Remove"
+  },
   "1TAtDi": {
     "defaultMessage": "{remainingCharCount, plural, one {Nog {remainingCharCount} karakter over.} other {Nog {remainingCharCount} karakters over.} }",
     "description": "Textarea character remaining count",
@@ -75,6 +80,11 @@
     "defaultMessage": "mm",
     "description": "Placeholder for the minute part of the time",
     "originalDefault": "MM"
+  },
+  "8uM5Vx": {
+    "defaultMessage": "Remove ''{fileName}'",
+    "description": "Accessible remove icon/button label for uploaded file.",
+    "originalDefault": "Remove ''{fileName}'"
   },
   "9SgPC6": {
     "defaultMessage": "Verwijder item {index}",
@@ -234,6 +244,11 @@
     "description": "Multi-field add button label text",
     "originalDefault": "Add another"
   },
+  "ZGuxfW": {
+    "defaultMessage": "File name",
+    "description": "Accessible label for uploaded file name",
+    "originalDefault": "File name"
+  },
   "abKEBH": {
     "defaultMessage": "Nee",
     "description": "'False' display",
@@ -274,6 +289,11 @@
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "eAmrdi": {
+    "defaultMessage": "Loading...",
+    "description": "Loading content text",
+    "originalDefault": "Loading..."
+  },
   "lVNV/d": {
     "defaultMessage": "Huisnummertoevoeging",
     "description": "Label for addressNL houseNumberAddition input",
@@ -293,6 +313,11 @@
     "defaultMessage": "jjjj",
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
+  },
+  "oCHirf": {
+    "defaultMessage": "Uploading...",
+    "description": "Pending file upload accessible description.",
+    "originalDefault": "Uploading..."
   },
   "odKXcF": {
     "defaultMessage": "Je moet een achternaam opgeven.",
@@ -358,6 +383,11 @@
     "defaultMessage": "Partner toevoegen",
     "description": "Partners component: 'add partner' button label",
     "originalDefault": "Add partner details"
+  },
+  "x/mWt2": {
+    "defaultMessage": "{single, select, true {Uploaded file} other {Uploaded files}}",
+    "description": "Accessible label for uploads list",
+    "originalDefault": "{single, select, true {Uploaded file} other {Uploaded files}}"
   },
   "xHVrv5": {
     "defaultMessage": "De waarde moet {min} of groter zijn.",

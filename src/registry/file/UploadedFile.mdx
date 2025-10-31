@@ -1,0 +1,78 @@
+import {ArgTypes, Canvas, Controls, Description, Meta} from '@storybook/addon-docs/blocks';
+
+import * as UploadedFileStories from './UploadedFile.stories';
+
+<Meta of={UploadedFileStories} />
+
+# `UploadedFile`
+
+The `UploadedFile` component is used to display the files that have been uploaded by the end user.
+
+It can display the upload status and for succesful uploads provides a control to remove the file
+again.
+
+The
+[RHC File input component](https://rijkshuisstijl-community.vercel.app/?path=/docs/rhc-fileinput--docs)
+documentation is worth reading too.
+
+## Component
+
+<Description />
+
+<ArgTypes />
+
+**File sizes display**
+
+<Canvas of={UploadedFileStories.BytesFileSize} />
+
+<Canvas of={UploadedFileStories.KBFileSize} />
+
+<Canvas of={UploadedFileStories.MBFileSize} />
+
+**Long file names**
+
+<Canvas of={UploadedFileStories.LongFileName} />
+
+**File-level errors**
+
+<Canvas of={UploadedFileStories.Errors} />
+
+## Styling/appearance
+
+The appearance can be controlled through design tokens in the `of.uploaded-file.*` namespace. You
+can control:
+
+- paddings
+- row and column gaps
+- border style, width, color and radius
+- metadata color
+
+## Design decisions / motivations
+
+**Relation to NL Design System**
+
+The [Github discussion](https://github.com/orgs/nl-design-system/discussions/347) for the `File`
+component was used as starting point. No suitable drop-in community plugins were found, which leads
+to us implementing it ourselves. The reasons to reject community plugins were:
+
+- No localization support, leading to wrong decimal separators and/or hardcoded "Verwijder" remove
+  button labels.
+- Layout that cannot be adapted to the requirements/themability requests from stakeholders.
+- Missing ability to pass the download link to the file name.
+
+After reaching out on the NL DS Slack, the RHC File upload component was the closest match to our
+requirements, so we mimick that for our own implementation.
+
+**Render file name as download link**
+
+While the design provided by a stakeholder does not include that, the legacy version (Formio.js
+uploads) does allow the user to download the file again that they uploaded. This may seem
+counterintuitive, but it allows users to double check that they uploaded the correct file.
+
+**Remove button icon vs. text**
+
+The design calls for a remove button with icon _and_ 'remove' text. For consistency reasons, we only
+display the icon at the time of writing, since in edit grids or multi field inputs we use either the
+button with label without icon, or the button with only icon.
+
+Of course, the label is present and exposed to screen readers, but visually hidden.

@@ -51,6 +51,12 @@
       "value": "index"
     }
   ],
+  "1AgCMs": [
+    {
+      "type": 0,
+      "value": "Remove"
+    }
+  ],
   "1TAtDi": [
     {
       "offset": 0,
@@ -161,6 +167,20 @@
     {
       "type": 0,
       "value": "mm"
+    }
+  ],
+  "8uM5Vx": [
+    {
+      "type": 0,
+      "value": "Remove '"
+    },
+    {
+      "type": 1,
+      "value": "fileName"
+    },
+    {
+      "type": 0,
+      "value": "'"
     }
   ],
   "9SgPC6": [
@@ -381,6 +401,12 @@
       "value": "Nog één toevoegen"
     }
   ],
+  "ZGuxfW": [
+    {
+      "type": 0,
+      "value": "File name"
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -445,6 +471,12 @@
       "value": " zijn."
     }
   ],
+  "eAmrdi": [
+    {
+      "type": 0,
+      "value": "Loading..."
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
@@ -475,6 +507,12 @@
     {
       "type": 0,
       "value": "jjjj"
+    }
+  ],
+  "oCHirf": [
+    {
+      "type": 0,
+      "value": "Uploading..."
     }
   ],
   "odKXcF": [
@@ -617,6 +655,30 @@
     {
       "type": 0,
       "value": "Partner toevoegen"
+    }
+  ],
+  "x/mWt2": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Uploaded files"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Uploaded file"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "single"
     }
   ],
   "xHVrv5": [

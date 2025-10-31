@@ -1,0 +1,72 @@
+@use '@/scss/bem';
+@use '@/scss/sr-only';
+
+@keyframes spin-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.openforms-loading-indicator {
+  display: flex;
+  align-items: center;
+
+  @include bem.element('spinner') {
+    border: var(--_of-loading-indicator-thickness) solid var(--_of-loading-indicator-bg-color);
+    border-top: var(--_of-loading-indicator-thickness) solid var(--_of-loading-indicator-fg-color);
+    border-radius: 50%;
+    block-size: var(--_of-loading-indicator-size);
+    inline-size: var(--_of-loading-indicator-size);
+    animation: spin-loader 1s linear infinite;
+  }
+
+  @include bem.modifier('pos-start') {
+    justify-content: start;
+  }
+
+  @include bem.modifier('pos-center') {
+    justify-content: center;
+  }
+
+  @include bem.modifier('pos-end') {
+    justify-content: end;
+  }
+
+  @include bem.modifier('size-normal') {
+    --_of-loading-indicator-size: var(--of-loading-indicator-size, 20px);
+    --_of-loading-indicator-thickness: var(--of-loading-indicator-thickness, 6px);
+  }
+
+  @include bem.modifier('size-small') {
+    --_of-loading-indicator-size: var(--of-loading-indicator-small-size, 15px);
+    --_of-loading-indicator-thickness: var(--of-loading-indicator-small-thickness, 4px);
+  }
+
+  @include bem.modifier('color-normal') {
+    --_of-loading-indicator-bg-color: var(
+      --of-loading-indicator-bg-color,
+      var(--of-color-secondary)
+    );
+    --_of-loading-indicator-fg-color: var(--of-loading-indicator-fg-color, var(--of-color-primary));
+  }
+
+  @include bem.modifier('color-muted') {
+    --_of-loading-indicator-bg-color: var(
+      --of-loading-indicator-muted-bg-color,
+      var(--utrecht-button-disabled-color)
+    );
+    --_of-loading-indicator-fg-color: var(
+      --of-loading-indicator-muted-fg-color,
+      var(--utrecht-button-disabled-background-color)
+    );
+  }
+
+  @include bem.modifier('no-animation') {
+    @include bem.element('spinner') {
+      animation: none;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+@use '@utrecht/components/button';
+@use '@utrecht/components/form-field';
+@use '@utrecht/components/icon';
+@use '@utrecht/components/link';
+@use '@utrecht/components/paragraph';
+
+@use '@/scss/bem';
+@use '@/scss/form-field-override';
+@use '@/scss/sr-only';
+
+/**
+ * Styling and layout for the file upload as a whole, including the description, errors,
+ * dropzone/upload button and list/ of the uploaded files.
+ *
+ * The layout is a grid layout so that design tokens can be used to change the position
+ * of elements.
+ */
+.openforms-file-upload {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: var(
+    --of-file-upload-grid-areas,
+    'dropzone' 'uploads' 'description' 'errors'
+  );
+  grid-row-gap: var(--of-file-upload-row-gap);
+
+  @include bem.element('description') {
+    grid-area: description;
+  }
+
+  @include bem.element('dropzone') {
+    grid-area: dropzone;
+    padding-block-end: var(--of-file-upload-dropzone-padding-block-end);
+    padding-block-start: var(--of-file-upload-dropzone-padding-block-start);
+    padding-inline-end: var(--of-file-upload-dropzone-padding-inline-end);
+    padding-inline-start: var(--of-file-upload-dropzone-padding-inline-start);
+    text-align: center;
+    border-width: var(--of-file-upload-dropzone-border-width);
+    border-style: var(--of-file-upload-dropzone-border-style);
+    border-color: var(--of-file-upload-dropzone-border-color);
+  }
+
+  @include bem.element('uploads') {
+    grid-area: uploads;
+    padding-block-end: var(--of-openforms-file-upload-uploads-list-padding-block-end);
+    padding-block-start: var(--of-openforms-file-upload-uploads-list-padding-block-start);
+  }
+
+  @include bem.element('uploads-list') {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--of-openforms-file-upload-uploads-list-row-gap);
+  }
+
+  @include bem.element('errors') {
+    grid-area: errors;
+  }
+}
+
+// TODO: remove before merge!
+.openforms-theme {
+  --of-file-upload-grid-areas: 'dropzone' 'uploads' 'description' 'errors';
+  --of-file-upload-row-gap: 0;
+  --of-file-upload-dropzone-padding-block-end: 20px;
+  --of-file-upload-dropzone-padding-block-start: 20px;
+  --of-file-upload-dropzone-padding-inline-end: 20px;
+  --of-file-upload-dropzone-padding-inline-start: 20px;
+  --of-file-upload-dropzone-border-width: 2px;
+  --of-file-upload-dropzone-border-style: dashed;
+  --of-file-upload-dropzone-border-color: var(--of-field-border-color);
+  --of-openforms-file-upload-uploads-list-padding-block-end: 0;
+  --of-openforms-file-upload-uploads-list-padding-block-start: 8px;
+}
