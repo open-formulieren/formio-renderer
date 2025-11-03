@@ -1,0 +1,25 @@
+@use '@utrecht/components/form-field';
+
+@use '@/scss/bem';
+@use '@/scss/form-field-override';
+
+.openforms-signature-footer {
+  padding: 0.1em;
+  text-align: center;
+  color: var(--of-signature-footer-color, var(--of-color-fg-muted));
+}
+
+.openforms-signature-refresh {
+  position: absolute;
+  padding: 0.2em;
+  font-size: 120%;
+  background: white;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    background: lightgray;
+  }
+}

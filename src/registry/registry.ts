@@ -21,6 +21,7 @@ import PostCode from './postcode';
 import RadioField from './radio';
 import Select from './select';
 import Selectboxes from './selectboxes';
+import Signature from './signature';
 import SoftRequiredErrors from './softRequiredErrors';
 import Textarea from './textarea';
 import TextField from './textfield';
@@ -54,6 +55,7 @@ const REGISTRY: Registry = {
   licenseplate: LicensePlate,
   postcode: PostCode,
   bsn: BSN,
+  signature: Signature,
   cosign: Cosign,
   editgrid: EditGrid,
   addressNL: AddressNL,

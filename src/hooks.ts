@@ -1,5 +1,5 @@
 import {getIn, useFormikContext} from 'formik';
-import {useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useRef, useState} from 'react';
 
 import {FieldConfigContext, FormSettingsContext} from './context';
 
@@ -82,4 +82,18 @@ export function useDebounce<T>(value: T, delay: number) {
     return () => clearTimeout(handler);
   }, [value, delay]);
   return debounced;
+}
+
+/**
+ * Debounce a callback
+ *
+ * @param delay Delay in milliseconds.
+ */
+export function useDebouncedCallback(callback: () => void, delay: number) {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  return useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(callback, delay);
+  }, [callback, delay]);
 }
