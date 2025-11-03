@@ -1,8 +1,10 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {getIn, useFormikContext} from 'formik';
 import {expect, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
+import {useFieldConfig} from '@/hooks';
 import {withFormik} from '@/sb-decorators';
 import {validate} from '@/validationSchema';
 
@@ -155,6 +157,49 @@ export const AddingItemInIsolationMode: Story = {
 
     const textfield = canvas.getByLabelText('My field (3)');
     expect(textfield).toHaveDisplayValue('new item');
+  },
+};
+
+const ItemBody: React.FC = () => {
+  const {values: formikValues} = useFormikContext();
+
+  const rawNamePrefix = useFieldConfig('');
+  if (!rawNamePrefix.endsWith('.')) throw new Error('Unexpected name prefix');
+  const namePrefix = rawNamePrefix.slice(0, -1);
+
+  const itemValues = getIn(formikValues, namePrefix);
+
+  return (
+    <p>
+      Formik data: <code>{JSON.stringify(itemValues)}</code>
+    </p>
+  );
+};
+
+export const NonEditableItemInIsolation: Story = {
+  args: {
+    enableIsolation: true,
+    getItemHeading: undefined,
+    getItemBody: () => <ItemBody />,
+    description: '',
+    emptyItem: undefined,
+    // The first item is uneditable, the second item is editable.
+    canEditItem: (_, index) => index === 1,
+    validate: () => Promise.resolve(),
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        items: [{myField: 'Item 1'}, {myField: 'Item 2'}],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Expect that both items can retrieve their data from the formik context.
+    await expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
+    await expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
   },
 };
 
