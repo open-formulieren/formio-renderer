@@ -10,7 +10,7 @@
  * way.
  */
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {fn} from 'storybook/test';
+import {expect, fn, within} from 'storybook/test';
 
 import UploadInput from './UploadInput';
 
@@ -39,6 +39,14 @@ export const AcceptMultiple: Story = {
   args: {
     multiple: true,
   },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fileInput = canvas.getByRole('button').querySelector('input')!;
+    expect(fileInput).toHaveAccessibleDescription(
+      'Drop, or click to select files to upload. The maximum size of a single file is 50 MB.'
+    );
+  },
 };
 
 export const AcceptMultipleWithLimit: Story = {
@@ -46,10 +54,26 @@ export const AcceptMultipleWithLimit: Story = {
     multiple: true,
     maxFiles: 5,
   },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fileInput = canvas.getByRole('button').querySelector('input')!;
+    expect(fileInput).toHaveAccessibleDescription(
+      'Drop, or click to select up to 5 files to upload. The maximum size of a single file is 50 MB.'
+    );
+  },
 };
 
 export const NonDefaultMaxSize: Story = {
   args: {
     maxSize: 1024 ** 2 * 3, // 3 MiB
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const fileInput = canvas.getByRole('button').querySelector('input')!;
+    expect(fileInput).toHaveAccessibleDescription(
+      'Drop, or click to select a file to upload. The maximum size of a single file is 3 MB.'
+    );
   },
 };
