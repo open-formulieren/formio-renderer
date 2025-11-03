@@ -1,0 +1,40 @@
+@use '@utrecht/components/paragraph';
+
+@use '@/scss/bem';
+@use '@/scss/sr-only';
+
+.openforms-upload-input {
+  display: block;
+  text-align: center;
+  cursor: pointer;
+
+  padding-block-end: var(--of-upload-input-padding-block-end);
+  padding-block-start: var(--of-upload-input-padding-block-start);
+  padding-inline-end: var(--of-upload-input-padding-inline-end);
+  padding-inline-start: var(--of-upload-input-padding-inline-start);
+
+  border-width: var(--of-upload-input-border-width);
+  border-style: var(--of-upload-input-border-style);
+  border-color: var(--_of-upload-input-border-color, var(--of-upload-input-border-color));
+
+  @include bem.modifier('file-drag-over') {
+    --_of-upload-input-border-color: var(--of-upload-input-drag-over-border-color);
+  }
+
+  @include bem.modifier('file-drag-reject') {
+    --_of-upload-input-border-color: var(--of-upload-input-drag-reject-border-color);
+  }
+}
+
+// Remove before release
+.openforms-theme {
+  --of-upload-input-padding-block-end: var(--of-file-upload-drop-area-padding);
+  --of-upload-input-padding-block-start: var(--of-file-upload-drop-area-padding);
+  --of-upload-input-padding-inline-end: var(--of-file-upload-drop-area-padding);
+  --of-upload-input-padding-inline-start: var(--of-file-upload-drop-area-padding);
+  --of-upload-input-border-width: 3px;
+  --of-upload-input-border-style: dashed;
+  --of-upload-input-border-color: var(--of-field-border-color);
+  --of-upload-input-drag-over-border-color: var(--of-color-primary);
+  --of-upload-input-drag-reject-border-color: var(--of-color-danger);
+}

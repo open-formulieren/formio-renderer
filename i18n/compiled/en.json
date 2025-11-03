@@ -369,6 +369,12 @@
       "value": "House number"
     }
   ],
+  "QAN3ua": [
+    {
+      "type": 0,
+      "value": "The file(s) are ready to drop."
+    }
+  ],
   "QPdaOi": [
     {
       "type": 0,
@@ -537,6 +543,70 @@
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "iiVLgn": [
+    {
+      "options": {
+        "false": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Drop, or click to select a file to upload."
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Drop, or click to select "
+            },
+            {
+              "options": {
+                "0": {
+                  "value": [
+                  ]
+                },
+                "other": {
+                  "value": [
+                    {
+                      "type": 0,
+                      "value": "up to "
+                    },
+                    {
+                      "type": 1,
+                      "value": "limit"
+                    }
+                  ]
+                }
+              },
+              "type": 5,
+              "value": "limit"
+            },
+            {
+              "type": 0,
+              "value": " files to upload."
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "multiple"
+    },
+    {
+      "type": 0,
+      "value": " The maximum size of a single file is "
+    },
+    {
+      "children": [
+      ],
+      "type": 8,
+      "value": "fileSize"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "lVNV/d": [
