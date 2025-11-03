@@ -124,7 +124,7 @@ export const SelectDateAndTimeInDateTimePicker: Story = {
   ],
   parameters: {
     formik: {
-      initialValues: {datetime: '2025-10-20T12:34:00T+02:00'},
+      initialValues: {datetime: '2025-10-20T12:34:00+02:00'},
       onSubmit: fn(),
     },
     chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
