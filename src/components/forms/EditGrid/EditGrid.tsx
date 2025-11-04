@@ -273,10 +273,15 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   validate: validateCallback,
   initiallyExpanded,
 }: IsolatedEditGridItemProps<T>) {
+  const isEditable = canEditItem?.(values, index) ?? true;
+
   // complex case - if isolation needs to be enabled, set up a proper
   // formik *and* browser namespace by applying prefixes to the data/name
   // attributes.
-  const namePrefix = `${name}:${index}`;
+  // Only if the item is editable, we need to use the namePrefix X:Y notation.
+  // For non-editable items, we don't render a scoped formik form, so X:Y won't be
+  // available. In this case we should use the globally available namePrefix X.Y
+  const namePrefix = isEditable ? `${name}:${index}` : `${name}.${index}`;
   const prefixedData: WrappedItemData<T> = useMemo(() => {
     return setIn({}, namePrefix, values);
   }, [namePrefix, values]);
@@ -317,7 +322,7 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
         getBody={opts => getItemBody(values, index, opts)}
         enableIsolation
         data={prefixedData}
-        canEdit={canEditItem?.(values, index) ?? true}
+        canEdit={isEditable}
         validate={validate}
         errors={prefixedErrors}
         saveLabel={saveItemLabel}
