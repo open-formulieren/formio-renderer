@@ -4,10 +4,12 @@ import {PrimaryActionButton} from '@utrecht/component-library-react';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import FormioForm from '@/components/FormioForm';
+import type {JSONObject} from '@/types';
 
 export interface RenderArgs {
   componentDefinition: AnyComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
+  values?: JSONObject;
 }
 
 export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<unknown>) => (
@@ -21,6 +23,7 @@ export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<u
     <FormioForm
       onSubmit={args.onSubmit}
       components={[args.componentDefinition]}
+      values={args.values}
       id="formio-form"
       requiredFieldsWithAsterisk
       componentParameters={context?.parameters?.formSettings?.componentParameters}
