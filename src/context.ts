@@ -2,6 +2,7 @@ import type {AnyComponentSchema} from '@open-formulieren/types';
 import React from 'react';
 
 import type {AddressNLParameters} from './registry/addressNL/types';
+import type {FileParameters} from './registry/file/types';
 import type {ValidatePluginCallback} from './validationSchema';
 import {fallbackValidatePlugin} from './validationSchema';
 
@@ -20,6 +21,7 @@ export interface FormSettings {
    */
   componentParameters?: {
     addressNL?: AddressNLParameters;
+    file?: FileParameters;
   };
   /**
    * Callback that implements the actual async 'plugin validator' behaviour.

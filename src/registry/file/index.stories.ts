@@ -1,10 +1,11 @@
-import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
+import type {FileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioFile} from './';
+import type {FormikFileUpload} from './types';
 
 // import ValueDisplay from './ValueDisplay';
 
@@ -65,7 +66,16 @@ export default {
   parameters: {
     formSettings: {
       componentParameters: {
-        // TODO - add mocks for upload endpoint in due time
+        file: {
+          upload: async () => {
+            const uuid = window.crypto.randomUUID();
+            return {
+              result: 'success',
+              url: `https://example.com/api/v2/uploads/${uuid}`,
+            };
+          },
+          destroy: async () => {},
+        },
       } satisfies FormSettings['componentParameters'],
     },
   },
@@ -88,7 +98,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -112,7 +122,7 @@ export const WithDescriptionAndTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -138,23 +148,13 @@ export const SingleFileUpload: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              state: 'success',
+            }),
+          ],
         },
       },
     },
@@ -179,39 +179,19 @@ export const MultipleFilesUpload: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
-                form: '',
-                name: '8ffc2b89-cc40-4da9-824d-da0042b52f05.doc',
-                size: 1024 * 1000 * 1000, // 1 MB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-2.doc',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'file-2.doc',
               size: 1024 * 1000 * 1000, // 1 MB
-              storage: 'url',
               type: 'application/msword',
-              url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
-            },
-          ] satisfies FileUploadData[],
+              state: 'pending',
+            }),
+          ],
         },
       },
     },
@@ -238,23 +218,13 @@ export const WithRestrictions: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.png',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'screenshot.png',
+            buildFile({
+              name: 'screenshot.png',
               size: 137000, // 137 kB
-              storage: 'url',
-              type: 'application/png',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              type: 'image/png',
+              state: 'success',
+            }),
+          ],
         },
       },
     },
@@ -267,7 +237,7 @@ export const DisplayComponentValidationError: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {
@@ -291,23 +261,13 @@ export const DisplayFileValidationError: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              state: 'error',
+            }),
+          ],
         },
       },
       initialTouched: {
@@ -320,6 +280,24 @@ export const DisplayFileValidationError: Story = {
           file: ['A virus was detected in this file.'],
         },
       },
+    },
+  },
+};
+
+export const SimulateBackendRejection: Story = {
+  ...MinimalConfiguration,
+  parameters: {
+    ...MinimalConfiguration.parameters,
+    formSettings: {
+      componentParameters: {
+        file: {
+          upload: async () => ({
+            result: 'failed',
+            errors: ['Simulated backend error.'],
+          }),
+          destroy: async () => {},
+        },
+      } satisfies FormSettings['componentParameters'],
     },
   },
 };
