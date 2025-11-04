@@ -1,0 +1,154 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+import * as FileStories from './index.stories';
+
+<Meta of={FileStories} name="Docs" />
+
+# `file` component
+
+The Formio `file` component provides a way for users to upload attachments that are submitted along
+with the form.
+
+## Interaction flow
+
+1. The user selects one or multiple files to upload, either by point-and-click or drag and drop from
+   their device to the dropzone.
+2. Client side valiation checks the file requirements, such as file type, file size and amount of
+   files being uploaded.
+3. Any file that is not valid is displayed with errors, files that are valid are upload to the
+   backend in a temporary file storage (out of scope for the renderer).
+4. The temporary file metadata (such as the API resource URL) is submitted as part of the form data,
+   so that the backend can resolve it and make the temporary file upload permanent.
+
+## Supported features
+
+Formio's file upload component has a big feature set, we only support a small subset:
+
+- Single vs multiple file uploads (`multiple` property).
+- Optionally specifying a maximum number of files (`maxNumberOfFiles` property).
+- Setting a file size limit for an individual file (`fileMaxSize` property).
+- Specifying which file types are allowed (based on MIME type, `file.type` property).
+
+## Accessibility
+
+We want to provide good support for assistive technology (AT) such as screenreaders.
+
+Notable accessibility features used are:
+
+- The upload element has a description that informs the user about the upload constraints like
+  number of files and maximum file size.
+- Proper label for the list with uploaded files.
+- There's an `aria-live` region that announces when a file has been dragged into the drop zone and
+  can be dropped.
+- Field validation errors are part of the accessible description.
+- The button to remove an upload refers to the filename affected in its label.
+
+However, we still need to validate that all of this works as intended.
+
+## Styling/appearance
+
+The file upload component is broken up in a number of lower level components, each can be styled
+with design tokens using the NL Design System principles.
+
+### `of-file-upload`
+
+The file upload component is the outermost component, encapsulating the whole upload behaviour. It
+manages the layout of the UI elements:
+
+- dropzone
+- description (help text)
+- uploads list
+- errors
+
+Design tokens values example:
+
+```json
+{
+  "of": {
+    "file-upload": {
+      "grid-areas": {"value": "'dropzone' 'uploads' 'description' 'errors'"},
+      "row-gap": {"value": 0},
+      "uploads": {
+        "padding-block-end": {"value": 0},
+        "padding-block-start": {"value": 0}
+      }
+    }
+  }
+}
+```
+
+### `of-uploaded-files-list`
+
+The container element for the list of uploaded files.
+
+Design tokens values example:
+
+```json
+{
+  "of": {
+    "uploaded-file-list": {
+      "row-gap": {"value": "8px"}
+    }
+  }
+}
+```
+
+### `of-upload-input`
+
+The UI element for the upload button and dropzone for drag and drop.
+
+Design tokens values example, with legacy design tokens:
+
+```json
+{
+  "of": {
+    "upload-input": {
+      "padding-block-end": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-block-start": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-inline-end": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-inline-start": {"value": "{of.file-upload.drop-area.padding}"},
+      "border-width": {"value": "3px"},
+      "border-style": {"value": "dashed"},
+      "border-color": {"value": "{of.color.border}"},
+      "drag-over": {
+        "border-color": {"value": "{of.color.primary}"}
+      },
+      "drag-reject": {
+        "border-color": {"value": "{of.color.danger}"}
+      }
+    }
+  }
+}
+```
+
+### `of-uploaded-file`
+
+The UI for a single uploaded file, providing a summary, remove control and possible file-level
+validation errors.
+
+Design tokens values example:
+
+```json
+{
+  "of": {
+    "uploaded-file": {
+      "row-gap": {"value": "8px"},
+      "column-gap": {"value": "8px"},
+      "padding-block-end": {"value": "8px"},
+      "padding-block-start": {"value": "8px"},
+      "padding-inline-end": {"value": "4px"},
+      "padding-inline-start": {"value": "16px"},
+      "border-width": {"value": "1px"},
+      "border-style": {"value": "solid"},
+      "border-color": {"value": "{of.color.border}"},
+      "border-radius": {"value": "2px"},
+      "metadata": {
+        "color": {"value": "{of.color.fg-muted}"}
+      },
+      "errors": {
+        "border-color": {"value": "{of.color.danger}"}
+      }
+    }
+  }
+}
+```

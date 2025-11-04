@@ -1,7 +1,7 @@
 .openforms-uploaded-files-list {
   display: flex;
   flex-direction: column;
-  row-gap: var(--of-openforms-uploaded-file-list-row-gap);
+  row-gap: var(--of-uploaded-file-list-row-gap);
 
   list-style: none;
   padding: 0;
@@ -10,5 +10,5 @@
 
 // TODO: remove before merge!
 .openforms-theme {
-  --of-openforms-uploaded-file-list-row-gap: 8px;
+  --of-uploaded-file-list-row-gap: 8px;
 }
