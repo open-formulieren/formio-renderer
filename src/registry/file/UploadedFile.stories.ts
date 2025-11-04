@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {fn} from 'storybook/test';
 
 import UploadedFile from './UploadedFile';
 
@@ -10,6 +11,7 @@ export default {
     downloadUrl: 'https://example.com',
     size: 2129,
     state: 'success',
+    onRemove: fn(),
   },
 } satisfies Meta<typeof UploadedFile>;
 

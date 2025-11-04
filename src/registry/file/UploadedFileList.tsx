@@ -6,6 +6,10 @@ import './UploadedFileList.scss';
 
 export interface FileMeta {
   /**
+   * Unique identifier to look up the file upload in the Formik state.
+   */
+  uniqueId: string;
+  /**
    * The file name as uploaded by the user, including the extension.
    */
   name: string;
@@ -35,13 +39,18 @@ export interface FileMeta {
 
 export interface UploadedFileListProps {
   files: FileMeta[];
+  onRemove: (id: string) => Promise<void>;
   multipleAllowed?: boolean;
 }
 
 /**
  * List of files uploaded by the user, with an accessible label.
  */
-const UploadedFileList: React.FC<UploadedFileListProps> = ({files, multipleAllowed = false}) => {
+const UploadedFileList: React.FC<UploadedFileListProps> = ({
+  files,
+  onRemove,
+  multipleAllowed = false,
+}) => {
   const id = useId();
   return (
     <>
@@ -55,8 +64,8 @@ const UploadedFileList: React.FC<UploadedFileListProps> = ({files, multipleAllow
 
       <ul className="openforms-uploaded-files-list" aria-labelledby={id}>
         {files.map(file => (
-          <li key={file.downloadUrl}>
-            <UploadedFile {...file} />
+          <li key={file.uniqueId}>
+            <UploadedFile {...file} onRemove={async () => await onRemove(file.uniqueId)} />
           </li>
         ))}
       </ul>
