@@ -12,6 +12,7 @@ import DateTimeField from './datetime';
 import EditGrid from './editgrid';
 import Email from './email';
 import Fieldset from './fieldset';
+import File from './file';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
 import Number from './number';
@@ -43,6 +44,7 @@ const REGISTRY: Registry = {
   datetime: DateTimeField,
   time: Time,
   phoneNumber: PhoneNumber,
+  file: File,
   textarea: Textarea,
   number: Number,
   checkbox: Checkbox,
