@@ -5,59 +5,10 @@ import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioFile} from './';
+import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
 
 // import ValueDisplay from './ValueDisplay';
-
-const FILE_COMPONENT_BOILERPLATE: Pick<
-  FileComponentSchema,
-  'webcam' | 'options' | 'storage' | 'url'
-> = {
-  webcam: false,
-  options: {
-    withCredentials: true,
-  },
-  storage: 'url',
-  url: 'https://example.com/ignored/upload/dummy',
-};
-
-type ExampleMimeType =
-  | 'application/pdf'
-  | 'application/msword'
-  | 'application/vnd.rar'
-  | 'application/zip'
-  | 'image/heic'
-  | 'image/jpeg'
-  | 'image/png'
-  | 'text/csv'
-  | 'text/plain';
-
-const MIME_TO_LABEL: Record<ExampleMimeType, string> = {
-  'application/pdf': '.pdf',
-  'application/msword': '.doc',
-  'application/vnd.rar': '.rar',
-  'application/zip': '.zip',
-  'image/heic': '.heic',
-  'image/jpeg': '.jpeg',
-  'image/png': '.png',
-  'text/csv': '.csv',
-  'text/plain': '.txt',
-};
-
-const getFileConfiguration = (
-  mimeTypes: ExampleMimeType[]
-): Pick<FileComponentSchema, 'file' | 'filePattern'> => {
-  const patternString = mimeTypes.join(',');
-  const labels = mimeTypes.map(mimeType => MIME_TO_LABEL[mimeType]);
-  return {
-    filePattern: patternString,
-    file: {
-      name: '', // used by the backend as a file name template
-      type: mimeTypes,
-      allowedTypesLabels: labels,
-    },
-  };
-};
 
 export default {
   title: 'Component registry / basic / file',
