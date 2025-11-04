@@ -14,6 +14,7 @@ import type {RegistryEntry} from '@/registry/types';
 import './File.scss';
 import UploadInput from './UploadInput';
 import UploadedFileList from './UploadedFileList';
+import {getSizeInBytes} from './utils';
 
 export interface FormioFileProps {
   componentDefinition: FileComponentSchema;
@@ -113,26 +114,6 @@ export const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => 
       </div>
     </FormField>
   );
-};
-
-// Reference: formio's file component translateScalars method, but without the weird
-// units that don't make sense for files...
-// Copied from https://github.com/open-formulieren/formio-builder/blob/e296210515949eae8bc2267af95a912c04b43aee/src/registry/file/edit-validation.ts
-const TRANSFORMATIONS = {
-  B: Math.pow(1024, 0),
-  KB: Math.pow(1024, 1),
-  MB: Math.pow(1024, 2),
-  GB: Math.pow(1024, 3),
-};
-
-const getSizeInBytes = (filesize: string): number | undefined => {
-  const match = /^(\d+)\s*(B|KB|MB|GB)?$/i.exec(filesize);
-  if (match === null) {
-    return undefined;
-  }
-  const size = parseInt(match[1], 10);
-  const unit = (match[2] || 'B').toUpperCase() as keyof typeof TRANSFORMATIONS;
-  return size * TRANSFORMATIONS[unit];
 };
 
 const FileComponent: RegistryEntry<FileComponentSchema> = {
