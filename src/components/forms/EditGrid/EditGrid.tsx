@@ -280,8 +280,8 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   // attributes.
   // Only if the item is editable, we need to use the namePrefix X:Y notation.
   // For non-editable items, we don't render a scoped formik form, so X:Y won't be
-  // available. In this case we should use the globally available namePrefix X[Y].
-  const namePrefix = isEditable ? `${name}:${index}` : `${name}[${index}]`;
+  // available. In this case we should use the globally available namePrefix X.Y
+  const namePrefix = isEditable ? `${name}:${index}` : `${name}.${index}`;
   const prefixedData: WrappedItemData<T> = useMemo(() => {
     return setIn({}, namePrefix, values);
   }, [namePrefix, values]);

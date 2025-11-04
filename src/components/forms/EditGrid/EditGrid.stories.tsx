@@ -185,7 +185,7 @@ export const NonEditableItemInIsolation: Story = {
     emptyItem: undefined,
     // The first item is uneditable, the second item is editable.
     canEditItem: (_, index) => index === 1,
-    validate: () => Promise.resolve(),
+    validate: async () => {},
   },
   parameters: {
     formik: {
