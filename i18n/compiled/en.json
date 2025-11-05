@@ -91,6 +91,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "1hdvgS": [
+    {
+      "type": 0,
+      "value": "Something went wrong while presenting the login option. Please contact the municipality."
+    }
+  ],
   "2/wgNH": [
     {
       "type": 0,
@@ -223,6 +229,16 @@
     {
       "type": 0,
       "value": "Next month"
+    }
+  ],
+  "AxDC+M": [
+    {
+      "type": 0,
+      "value": "Login with "
+    },
+    {
+      "type": 1,
+      "value": "provider"
     }
   ],
   "Bo6onH": [
@@ -761,6 +777,12 @@
       "value": "Close modal"
     }
   ],
+  "pErllF": [
+    {
+      "type": 0,
+      "value": "Something went wrong while presenting the login option. Please contact the municipality."
+    }
+  ],
   "pHX3oF": [
     {
       "type": 0,
@@ -771,6 +793,12 @@
     {
       "type": 0,
       "value": "Invalid input"
+    }
+  ],
+  "pzR8ui": [
+    {
+      "type": 0,
+      "value": "Something went wrong while processing the co-sign results. Please contact the municipality."
     }
   ],
   "qTqAIS": [
@@ -855,6 +883,12 @@
     {
       "type": 0,
       "value": "Date of birth"
+    }
+  ],
+  "tBQ8TL": [
+    {
+      "type": 0,
+      "value": "Not co-signed"
     }
   ],
   "vCObuG": [

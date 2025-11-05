@@ -40,6 +40,11 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "1hdvgS": {
+    "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
+    "description": "Co-sign auth option not available on form",
+    "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
+  },
   "2/wgNH": {
     "defaultMessage": "The file is too small.",
     "description": "File upload error message: file too small",
@@ -120,6 +125,11 @@
     "defaultMessage": "Volgende maand",
     "description": "Calendar: next month button title",
     "originalDefault": "Next month"
+  },
+  "AxDC+M": {
+    "defaultMessage": "Login with {provider}",
+    "description": "Login button label",
+    "originalDefault": "Login with {provider}"
   },
   "Bo6onH": {
     "defaultMessage": "Zorg dat dit veld {minSelectedCount} of meer opties aangevinkt heeft..",
@@ -389,6 +399,11 @@
     "description": "Modal close button title",
     "originalDefault": "Close modal"
   },
+  "pErllF": {
+    "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
+    "description": "Required co-sign callbacks not configured",
+    "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
+  },
   "pHX3oF": {
     "defaultMessage": "Huisletter moet één enkele letter zijn.",
     "description": "Validation error for addressNL.houseLetter field.",
@@ -398,6 +413,11 @@
     "defaultMessage": "Ongeldige invoer",
     "description": "Invalid input validation error for date field",
     "originalDefault": "Invalid input"
+  },
+  "pzR8ui": {
+    "defaultMessage": "Something went wrong while processing the co-sign results. Please contact the municipality.",
+    "description": "Co-sign auth option not available on form",
+    "originalDefault": "Something went wrong while processing the co-sign results. Please contact the municipality."
   },
   "qTqAIS": {
     "defaultMessage": "{charCount, plural, one {{charCount} karakter} other {{charCount} karakters} }.",
@@ -428,6 +448,11 @@
     "defaultMessage": "Geboortedatum",
     "description": "Partners component: label for partners dateOfBirth",
     "originalDefault": "Date of birth"
+  },
+  "tBQ8TL": {
+    "defaultMessage": "Not co-signed",
+    "description": "Not co-signed (summary) message",
+    "originalDefault": "Not co-signed"
   },
   "vCObuG": {
     "defaultMessage": "Dag",
