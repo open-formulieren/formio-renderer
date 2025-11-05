@@ -28,7 +28,7 @@
     grid-area: dropzone;
   }
 
-  &:has(.openforms-upload-input) {
+  &:has(.openforms-upload-input:not(.sr-only)) {
     --_of-file-upload-uploads-padding-block-start: var(
       --of-file-upload-with-dropzone-uploads-padding-block-start
     );

@@ -186,6 +186,50 @@ export const WithRestrictions: Story = {
   },
 };
 
+export const MaxFilesLimitReached: Story = {
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      description: 'Upload button/dropzone not shown if the file limit is reached',
+      maxNumberOfFiles: 3,
+      multiple: true,
+    } satisfies FileComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          file: [
+            buildFile({
+              name: 'screenshot1.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'screenshot2.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'screenshot3.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+          ],
+        },
+      },
+    },
+  },
+};
+
 export const DisplayComponentValidationError: Story = {
   args: WithDescriptionAndTooltip.args,
   parameters: {

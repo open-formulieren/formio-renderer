@@ -43,7 +43,7 @@ export interface UploadInputProps {
   maxFiles?: number;
   /**
    * The maximum number of files that can still be selected at once. Equal to or less
-   * than `maxFilesToSelect`, if set.
+   * than `maxFiles`, if set.
    *
    * @example If `maxFilesToSelect` is 5 and the user first selects 2 files, then
    *          `maxFilesToSelect` will be set to `3`.
@@ -61,7 +61,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
   onFilesAdded,
   accept,
   maxFiles,
-  maxFilesToSelect = 0,
+  maxFilesToSelect,
   maxSize = DEFAULT_MAX_SIZE,
   multiple = false,
   'aria-describedby': ariaDescribedBy,
@@ -69,6 +69,8 @@ const UploadInput: React.FC<UploadInputProps> = ({
 }) => {
   const [readyForDrop, setReadyForDrop] = useState(false);
   const descriptionId = `${inputId}-description`;
+
+  const limitReached = maxFilesToSelect !== undefined && maxFilesToSelect <= 0;
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -79,6 +81,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
   );
   const {getRootProps, getInputProps, isDragActive, isDragReject} = useDropzone({
     accept,
+    disabled: limitReached,
     maxFiles: maxFilesToSelect ?? 0,
     maxSize,
     multiple,
@@ -90,6 +93,21 @@ const UploadInput: React.FC<UploadInputProps> = ({
     },
     onDrop,
   });
+
+  const inputProps: React.ComponentProps<'input'> = getInputProps({
+    id: inputId,
+    'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
+    onBlur: onBlur,
+  });
+  if (limitReached) {
+    inputProps['aria-disabled'] = 'true';
+    // setting `disabled` removes the input from the accessible tree, breaking the
+    // description for screenreaders. Passing `disabled` in `useDropZone` does not
+    // prevent label/input clicks from opening the file picker, so we must override this
+    // here with a no-op onClick handler.
+    inputProps.onClick = e => e.preventDefault();
+  }
+
   return (
     <div
       {...getRootProps({
@@ -97,24 +115,27 @@ const UploadInput: React.FC<UploadInputProps> = ({
         className: clsx(
           'openforms-upload-input',
           isDragActive && 'openforms-upload-input--file-drag-over',
-          isDragReject && 'openforms-upload-input--file-drag-reject'
+          isDragReject && 'openforms-upload-input--file-drag-reject',
+          // if the file amount limit is reached, ensure we still display an accessible
+          // description, but visually hide the upload UI
+          limitReached && 'sr-only'
         ),
         onBlur: onBlur,
       })}
     >
-      <input
-        {...getInputProps({
-          id: inputId,
-          'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
-          onBlur: onBlur,
-        })}
-      />
+      <input {...inputProps} />
       <Paragraph id={descriptionId}>
-        {/* TODO: DH wants to get rid of the file size limit information - see if we can
-        make this configurable */}
-        <FormattedMessage
-          description="Description/label for upload drop zone."
-          defaultMessage={`{multiple, select,
+        {limitReached ? (
+          <FormattedMessage
+            description="Description for hidden upload button/dropzone because the file limit is reached."
+            defaultMessage="The maximum number of uploads is reached. You cannot upload additional files."
+          />
+        ) : (
+          /* TODO: DH wants to get rid of the file size limit information - see if we can
+          make this configurable */
+          <FormattedMessage
+            description="Description/label for upload drop zone."
+            defaultMessage={`{multiple, select,
             false {Drop, or click to select a file to upload.}
             other {Drop, or click to select {limit, select,
               0 {}
@@ -122,12 +143,13 @@ const UploadInput: React.FC<UploadInputProps> = ({
             } files to upload.}
           }
           The maximum size of a single file is <fileSize></fileSize>.`}
-          values={{
-            multiple,
-            limit: maxFiles ?? 0,
-            fileSize: () => <FileSize size={maxSize} />,
-          }}
-        />
+            values={{
+              multiple,
+              limit: maxFiles ?? 0,
+              fileSize: () => <FileSize size={maxSize} />,
+            }}
+          />
+        )}
       </Paragraph>
 
       <div role="status" aria-live="polite" className="sr-only">
