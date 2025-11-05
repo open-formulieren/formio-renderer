@@ -1,0 +1,11 @@
+@use '@utrecht/components/form-fieldset';
+
+@use '@/scss/bem';
+
+.openforms-customer-profile {
+  @include bem.element('form-field-container') {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--of-customer-profile-row-gap, var(--of-form-field-container-gap, 24px));
+  }
+}
