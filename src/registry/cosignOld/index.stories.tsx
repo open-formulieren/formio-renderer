@@ -74,7 +74,9 @@ export const MinimalConfiguration: Story = {
 
     expect(canvas.getByText('Cosign')).toBeVisible();
     expect(canvas.getByText('This is a description!')).toBeVisible();
-    expect(canvas.getByRole('link', {name: 'Login with DigiD'})).toBeVisible();
+    expect(
+      await canvas.findByRole('link', {name: 'Login with DigiD'}, {timeout: 2000})
+    ).toBeVisible();
   },
 };
 
@@ -127,7 +129,7 @@ export const AlreadyCosigned: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByText('Hans Worst')).toBeVisible();
+    expect(await canvas.findByText('Hans Worst', undefined, {timeout: 2000})).toBeVisible();
   },
 };
 
@@ -158,8 +160,10 @@ export const AlreadyCosignedWithoutRepresentation: Story = {
     const canvas = within(canvasElement);
 
     expect(
-      canvas.getByText(
-        'Something went wrong while processing the co-sign results. Please contact the municipality.'
+      await canvas.findByText(
+        'Something went wrong while processing the co-sign results. Please contact the municipality.',
+        undefined,
+        {timeout: 2000}
       )
     ).toBeVisible();
   },
@@ -190,8 +194,10 @@ export const LoginOptionsNotAvailable: Story = {
     const canvas = within(canvasElement);
 
     expect(
-      canvas.getByText(
-        'Something went wrong while presenting the login option. Please contact the municipality.'
+      await canvas.findByText(
+        'Something went wrong while presenting the login option. Please contact the municipality.',
+        undefined,
+        {timeout: 2000}
       )
     ).toBeVisible();
   },
@@ -217,8 +223,10 @@ export const RequiredCallbacksNotDefined: Story = {
     const canvas = within(canvasElement);
 
     expect(
-      canvas.getByText(
-        'Something went wrong while presenting the login option. Please contact the municipality.'
+      await canvas.findByText(
+        'Something went wrong while presenting the login option. Please contact the municipality.',
+        undefined,
+        {timeout: 2000}
       )
     ).toBeVisible();
   },
@@ -287,7 +295,7 @@ export const ValueDisplayCosigned: ValueDisplayStory = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByText('Hans Worst')).toBeVisible();
+    expect(await canvas.findByText('Hans Worst', undefined, {timeout: 2000})).toBeVisible();
   },
 };
 
@@ -315,6 +323,6 @@ export const ValueDisplayNotCosigned: ValueDisplayStory = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByText('Not co-signed')).toBeVisible();
+    expect(await canvas.findByText('Not co-signed', undefined, {timeout: 2000})).toBeVisible();
   },
 };
