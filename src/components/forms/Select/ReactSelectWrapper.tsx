@@ -104,7 +104,6 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
         },
       }}
       unstyled
-      components={{Input: Input<O>}}
       getOptionValue={opt => opt.value}
       isDisabled={isDisabled}
       loadingMessage={() => (
@@ -140,6 +139,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
         }
       }}
       {...props}
+      components={{Input: Input<O>, ...props.components}}
       value={value}
     />
   );

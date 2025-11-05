@@ -1,7 +1,8 @@
 import {FormField} from '@utrecht/component-library-react';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId} from 'react';
-import type {MultiValue, SingleValue} from 'react-select';
+import type {GroupBase, MultiValue, OptionProps, SingleValue} from 'react-select';
+import {components} from 'react-select';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -16,6 +17,15 @@ export interface Option {
   label: string;
   description?: string;
 }
+
+const OptionWithDescription: React.FC<OptionProps<Option>> = props => {
+  const {label, description} = props.data;
+  return (
+    <components.Option<Option, boolean, GroupBase<Option>> {...props}>
+      {label} {description && `(${description})`}
+    </components.Option>
+  );
+};
 
 export interface SelectProps {
   /**
@@ -71,6 +81,10 @@ export interface SelectProps {
    * is to use `undefined` to remove the value from the Formik state entirely.
    */
   noOptionSelectedValue?: undefined | '';
+  /**
+   * Whether to show the option description in the select dropdown.
+   */
+  showDescriptionInOption?: boolean;
 }
 
 const EMPTY_MULTI_SELECT_VALUE: string[] = [];
@@ -87,6 +101,7 @@ const Select: React.FC<SelectProps> = ({
   description,
   tooltip,
   noOptionSelectedValue = undefined,
+  showDescriptionInOption = false,
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
@@ -162,6 +177,9 @@ const Select: React.FC<SelectProps> = ({
           // for the upstream code
           await setTouched(true);
           await validateField(name);
+        }}
+        components={{
+          ...(showDescriptionInOption ? {Option: OptionWithDescription} : undefined),
         }}
         aria-describedby={errorMessageId}
         aria-invalid={invalid ? invalid : undefined}

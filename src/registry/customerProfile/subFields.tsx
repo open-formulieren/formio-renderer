@@ -61,6 +61,7 @@ export const EmailField: React.FC<EmailFieldProps> = ({
         name={`${namePrefix}.email`}
         label={<FormattedMessage {...FIELD_LABELS.email} />}
         options={options}
+        showDescriptionInOption
       />
     );
   }
@@ -99,6 +100,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({
         name={`${namePrefix}.phoneNumber`}
         label={<FormattedMessage {...FIELD_LABELS.phoneNumber} />}
         options={options}
+        showDescriptionInOption
       />
     );
   }
