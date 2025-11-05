@@ -9,6 +9,7 @@ import Content from './content';
 import Cosign from './cosign';
 import CosignOld from './cosignOld';
 import Currency from './currency';
+import CustomerProfile from './customerProfile';
 import DateField from './date';
 import DateTimeField from './datetime';
 import EditGrid from './editgrid';
@@ -67,6 +68,7 @@ const REGISTRY: Registry = {
   addressNL: AddressNL,
   partners: Partners,
   children: Children,
+  customerProfile: CustomerProfile,
   // layout
   content: Content,
   columns: Columns,
