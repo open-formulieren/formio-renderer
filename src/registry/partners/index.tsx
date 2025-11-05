@@ -1,5 +1,5 @@
 import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
-import {PrimaryActionButton} from '@utrecht/component-library-react';
+import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {FormattedMessage} from 'react-intl';
 
@@ -73,12 +73,12 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
       )}
 
       {canAddPartner && (
-        <PrimaryActionButton onClick={() => setFieldValue(key, [EMPTY_PARTNER])}>
+        <SecondaryActionButton onClick={() => setFieldValue(key, [EMPTY_PARTNER])}>
           <FormattedMessage
             description="Partners component: 'add partner' button label"
             defaultMessage="Add partner details"
           />
-        </PrimaryActionButton>
+        </SecondaryActionButton>
       )}
 
       <HelpText>{description}</HelpText>
