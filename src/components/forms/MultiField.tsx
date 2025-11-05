@@ -3,7 +3,7 @@ import {
   Button,
   Fieldset,
   FieldsetLegend,
-  PrimaryActionButton,
+  SecondaryActionButton,
   Icon as UtrechtIcon,
 } from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
@@ -206,13 +206,13 @@ function MultiField<T extends MultiFieldValue>({
               ))}
             </ol>
             <ButtonGroup>
-              <PrimaryActionButton type="button" onClick={() => arrayHelpers.push(newItemValue)}>
+              <SecondaryActionButton type="button" onClick={() => arrayHelpers.push(newItemValue)}>
                 <Icon icon="add" />
                 <FormattedMessage
                   description="Multi-field add button label text"
                   defaultMessage="Add another"
                 />
-              </PrimaryActionButton>
+              </SecondaryActionButton>
             </ButtonGroup>
           </>
         )}

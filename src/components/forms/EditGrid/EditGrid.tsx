@@ -1,5 +1,5 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {FormField, PrimaryActionButton} from '@utrecht/component-library-react';
+import {FormField, SecondaryActionButton} from '@utrecht/component-library-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useMemo, useState} from 'react';
@@ -187,7 +187,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
 
             {emptyItem && (
               <ButtonGroup>
-                <PrimaryActionButton
+                <SecondaryActionButton
                   type="button"
                   onClick={() => {
                     if (formikItems) {
@@ -203,7 +203,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                       defaultMessage="Add another"
                     />
                   )}
-                </PrimaryActionButton>
+                </SecondaryActionButton>
               </ButtonGroup>
             )}
           </div>
