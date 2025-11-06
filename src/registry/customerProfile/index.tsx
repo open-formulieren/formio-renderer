@@ -4,11 +4,12 @@ import {useId} from 'react';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
-import {useDigitalAddresses} from '@/registry/customerProfile/digitalAddresses';
 import type {RegistryEntry} from '@/registry/types';
 
 import './CustomerProfile.scss';
+import {useDigitalAddresses} from './digitalAddresses';
 import {DigitalAddressFields} from './subFields';
+import getValidationSchema from './validationSchema';
 
 export interface FormioCustomerProfileProps {
   componentDefinition: CustomerProfileComponentSchema;
@@ -57,6 +58,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
 
 const CustomerProfileComponent: RegistryEntry<CustomerProfileComponentSchema> = {
   formField: FormioCustomerProfile,
+  getValidationSchema,
 };
 
 export default CustomerProfileComponent;
