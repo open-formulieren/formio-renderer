@@ -54,7 +54,7 @@
   "1AgCMs": [
     {
       "type": 0,
-      "value": "Remove"
+      "value": "Verwijderen"
     }
   ],
   "1TAtDi": [
@@ -102,13 +102,13 @@
   "1hdvgS": [
     {
       "type": 0,
-      "value": "Something went wrong while presenting the login option. Please contact the municipality."
+      "value": "Er ging iets fout bij het presenteren van de inlogopties. Neem alstublieft contact met ons op."
     }
   ],
   "2/wgNH": [
     {
       "type": 0,
-      "value": "The file is too small."
+      "value": "Het bestand is te klein."
     }
   ],
   "2HsmfN": [
@@ -184,7 +184,7 @@
   "8uM5Vx": [
     {
       "type": 0,
-      "value": "Remove '"
+      "value": "Verwijder '"
     },
     {
       "type": 1,
@@ -220,7 +220,7 @@
   "ALpIwm": [
     {
       "type": 0,
-      "value": "The signature value must be a base64-encoded png."
+      "value": "De handtekening moet een base64-geëncodeerde PNG-afbeelding zijn."
     }
   ],
   "At/y3w": [
@@ -242,7 +242,7 @@
   "AxDC+M": [
     {
       "type": 0,
-      "value": "Login with "
+      "value": "Inloggen met "
     },
     {
       "type": 1,
@@ -290,7 +290,7 @@
   "ErdIGO": [
     {
       "type": 0,
-      "value": "Clear signature"
+      "value": "Wis handtekening"
     }
   ],
   "FfBWqF": [
@@ -328,7 +328,7 @@
   "HoCa81": [
     {
       "type": 0,
-      "value": "Too many files uploaded. You can upload "
+      "value": "Te veel bestanden toegevoegd. Het "
     },
     {
       "offset": 0,
@@ -337,7 +337,7 @@
           "value": [
             {
               "type": 0,
-              "value": "one file."
+              "value": "mag er hoogstens 1 zijn"
             }
           ]
         },
@@ -345,7 +345,7 @@
           "value": [
             {
               "type": 0,
-              "value": "up to "
+              "value": "mogen er hoogstens "
             },
             {
               "type": 1,
@@ -353,7 +353,7 @@
             },
             {
               "type": 0,
-              "value": " files"
+              "value": " zijn"
             }
           ]
         }
@@ -388,7 +388,7 @@
   "LaKfzC": [
     {
       "type": 0,
-      "value": "Signature"
+      "value": "Handtekening"
     }
   ],
   "LsgvKh": [
@@ -418,7 +418,7 @@
   "QAN3ua": [
     {
       "type": 0,
-      "value": "The file(s) are ready to drop."
+      "value": "Je kan het/de bestand(en) loslaten."
     }
   ],
   "QPdaOi": [
@@ -442,7 +442,7 @@
   "Rba7CV": [
     {
       "type": 0,
-      "value": "The maximum number of uploads is reached. You cannot upload additional files."
+      "value": "De limiet van het aantal bestanden is bereikt. Je kan geen extra bestanden toevoegen."
     }
   ],
   "TZb5ph": [
@@ -498,7 +498,7 @@
   "ZGuxfW": [
     {
       "type": 0,
-      "value": "File name"
+      "value": "Bestandsnaam"
     }
   ],
   "abKEBH": [
@@ -554,7 +554,7 @@
   "cnQt6v": [
     {
       "type": 0,
-      "value": "The uploaded file type is not an allowed type. It must be "
+      "value": "Het toegevoegde bestand is niet van een toegestaan type. Het moet "
     },
     {
       "type": 1,
@@ -562,7 +562,7 @@
     },
     {
       "type": 0,
-      "value": "."
+      "value": " zijn."
     }
   ],
   "d2SYc4": [
@@ -582,7 +582,7 @@
   "eAmrdi": [
     {
       "type": 0,
-      "value": "Loading..."
+      "value": "Laden..."
     }
   ],
   "iiVLgn": [
@@ -592,7 +592,7 @@
           "value": [
             {
               "type": 0,
-              "value": "Drop, or click to select a file to upload."
+              "value": "Sleep een bestand of klik om een bestand te selecteren."
             }
           ]
         },
@@ -600,7 +600,7 @@
           "value": [
             {
               "type": 0,
-              "value": "Drop, or click to select "
+              "value": "Sleep bestanden of klik om "
             },
             {
               "options": {
@@ -612,7 +612,7 @@
                   "value": [
                     {
                       "type": 0,
-                      "value": "up to "
+                      "value": "tot "
                     },
                     {
                       "type": 1,
@@ -626,7 +626,7 @@
             },
             {
               "type": 0,
-              "value": " files to upload."
+              "value": " bestanden toe te voegen."
             }
           ]
         }
@@ -636,7 +636,7 @@
     },
     {
       "type": 0,
-      "value": " The maximum size of a single file is "
+      "value": " Een betsand mag hoogstens "
     },
     {
       "children": [
@@ -646,7 +646,7 @@
     },
     {
       "type": 0,
-      "value": "."
+      "value": " groot zijn."
     }
   ],
   "j1VL+H": [
@@ -656,7 +656,7 @@
     },
     {
       "type": 0,
-      "value": " or "
+      "value": " of "
     },
     {
       "type": 1,
@@ -666,7 +666,7 @@
   "jqQOW0": [
     {
       "type": 0,
-      "value": "The file must be smaller than "
+      "value": "Het bestand moet "
     },
     {
       "type": 1,
@@ -674,7 +674,7 @@
     },
     {
       "type": 0,
-      "value": "."
+      "value": " of kleiner zijn."
     }
   ],
   "lVNV/d": [
@@ -712,7 +712,7 @@
   "oCHirf": [
     {
       "type": 0,
-      "value": "Uploading..."
+      "value": "Uploaden..."
     }
   ],
   "odKXcF": [
@@ -736,7 +736,7 @@
   "pErllF": [
     {
       "type": 0,
-      "value": "Something went wrong while presenting the login option. Please contact the municipality."
+      "value": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op."
     }
   ],
   "pHX3oF": [
@@ -754,7 +754,7 @@
   "pzR8ui": [
     {
       "type": 0,
-      "value": "Something went wrong while processing the co-sign results. Please contact the municipality."
+      "value": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op."
     }
   ],
   "qTqAIS": [
@@ -826,7 +826,7 @@
   "re7vQZ": [
     {
       "type": 0,
-      "value": "The upload must be completed before you can continue."
+      "value": "De upload moet klaar zijn voor je door kan gaan."
     }
   ],
   "sP3xMn": [
@@ -844,7 +844,7 @@
   "tBQ8TL": [
     {
       "type": 0,
-      "value": "Not co-signed"
+      "value": "Niet medeondertekend"
     }
   ],
   "vCObuG": [
@@ -888,7 +888,7 @@
           "value": [
             {
               "type": 0,
-              "value": "Uploaded files"
+              "value": "Toegevoegde bestanden"
             }
           ]
         },
@@ -896,7 +896,7 @@
           "value": [
             {
               "type": 0,
-              "value": "Uploaded file"
+              "value": "Toegevoegd bestand"
             }
           ]
         }
@@ -928,7 +928,7 @@
   "ySaVSL": [
     {
       "type": 0,
-      "value": "The file upload (meta) data is not consistent."
+      "value": "De bestandsuploadgegevens komen niet overeen."
     }
   ],
   "ybTcqX": [
