@@ -14,6 +14,7 @@ import './File.scss';
 import UploadInput from './UploadInput';
 import UploadedFileList from './UploadedFileList';
 import type {FileMeta} from './UploadedFileList';
+import isEmpty from './empty';
 import {useFileUploads} from './hooks';
 import type {FormikFileUpload} from './types';
 import {getSizeInBytes} from './utils';
@@ -198,7 +199,7 @@ const FileComponent: RegistryEntry<FileComponentSchema> = {
   // valueDisplay: ValueDisplay,
   // getInitialValues,
   getValidationSchema,
-  // isEmpty,
+  isEmpty,
 };
 
 export default FileComponent;
