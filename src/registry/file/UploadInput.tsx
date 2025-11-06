@@ -7,8 +7,7 @@ import {FormattedMessage} from 'react-intl';
 
 import FileSize from './FileSize';
 import './UploadInput.scss';
-
-const DEFAULT_MAX_SIZE: number = 1024 ** 2 * 50; // 50 MiB
+import {DEFAULT_MAX_SIZE} from './constants';
 
 export interface UploadInputProps {
   /**
@@ -18,7 +17,7 @@ export interface UploadInputProps {
   /**
    * Callback for dropped/selected files, both for accepted and rejected files.
    */
-  onFileAdded: (file: File | FileRejection) => Promise<void>;
+  onFilesAdded: (files: (File | FileRejection)[]) => Promise<void>;
   /**
    * Additional aria-describedby ids, e.g. for field-level validation errors.
    */
@@ -36,10 +35,22 @@ export interface UploadInputProps {
    */
   accept?: Accept;
   /**
-   * Maximum number of files allowed at once. Set to `0` for no limit (the default).
+   * Maximum number of files accepted by the field. Set to `undefined` for no limit (the default).
+   *
+   * This is the upper limit for the `maxFilesToSelect` value - `maxFilesToSelect` is
+   * equal to * `maxFiles - currentAmountOfUploads`.
    */
   maxFiles?: number;
+  /**
+   * The maximum number of files that can still be selected at once. Equal to or less
+   * than `maxFiles`, if set.
+   *
+   * @example If `maxFilesToSelect` is 5 and the user first selects 2 files, then
+   *          `maxFilesToSelect` will be set to `3`.
+   */
+  maxFilesToSelect?: number;
   multiple?: boolean;
+  onBlur?: React.FocusEventHandler;
 }
 
 /**
@@ -47,26 +58,31 @@ export interface UploadInputProps {
  */
 const UploadInput: React.FC<UploadInputProps> = ({
   inputId,
-  onFileAdded,
+  onFilesAdded,
   accept,
-  maxFiles = 0,
+  maxFiles,
+  maxFilesToSelect,
   maxSize = DEFAULT_MAX_SIZE,
   multiple = false,
   'aria-describedby': ariaDescribedBy,
+  onBlur,
 }) => {
   const [readyForDrop, setReadyForDrop] = useState(false);
   const descriptionId = `${inputId}-description`;
 
+  const limitReached = maxFilesToSelect !== undefined && maxFilesToSelect <= 0;
+
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const allFiles: (File | FileRejection)[] = [...fileRejections, ...acceptedFiles];
-      allFiles.forEach(fileOrRejection => onFileAdded(fileOrRejection));
+      onFilesAdded(allFiles);
     },
-    [onFileAdded]
+    [onFilesAdded]
   );
   const {getRootProps, getInputProps, isDragActive, isDragReject} = useDropzone({
     accept,
-    maxFiles,
+    disabled: limitReached,
+    maxFiles: maxFilesToSelect ?? 0,
     maxSize,
     multiple,
     onDragEnter: () => {
@@ -77,6 +93,21 @@ const UploadInput: React.FC<UploadInputProps> = ({
     },
     onDrop,
   });
+
+  const inputProps: React.ComponentProps<'input'> = getInputProps({
+    id: inputId,
+    'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
+    onBlur: onBlur,
+  });
+  if (limitReached) {
+    inputProps['aria-disabled'] = 'true';
+    // setting `disabled` removes the input from the accessible tree, breaking the
+    // description for screenreaders. Passing `disabled` in `useDropZone` does not
+    // prevent label/input clicks from opening the file picker, so we must override this
+    // here with a no-op onClick handler.
+    inputProps.onClick = e => e.preventDefault();
+  }
+
   return (
     <div
       {...getRootProps({
@@ -84,22 +115,27 @@ const UploadInput: React.FC<UploadInputProps> = ({
         className: clsx(
           'openforms-upload-input',
           isDragActive && 'openforms-upload-input--file-drag-over',
-          isDragReject && 'openforms-upload-input--file-drag-reject'
+          isDragReject && 'openforms-upload-input--file-drag-reject',
+          // if the file amount limit is reached, ensure we still display an accessible
+          // description, but visually hide the upload UI
+          limitReached && 'sr-only'
         ),
+        onBlur: onBlur,
       })}
     >
-      <input
-        {...getInputProps({
-          id: inputId,
-          'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
-        })}
-      />
+      <input {...inputProps} />
       <Paragraph id={descriptionId}>
-        {/* TODO: DH wants to get rid of the file size limit information - see if we can
-        make this configurable */}
-        <FormattedMessage
-          description="Description/label for upload drop zone."
-          defaultMessage={`{multiple, select,
+        {limitReached ? (
+          <FormattedMessage
+            description="Description for hidden upload button/dropzone because the file limit is reached."
+            defaultMessage="The maximum number of uploads is reached. You cannot upload additional files."
+          />
+        ) : (
+          /* TODO: DH wants to get rid of the file size limit information - see if we can
+          make this configurable */
+          <FormattedMessage
+            description="Description/label for upload drop zone."
+            defaultMessage={`{multiple, select,
             false {Drop, or click to select a file to upload.}
             other {Drop, or click to select {limit, select,
               0 {}
@@ -107,12 +143,13 @@ const UploadInput: React.FC<UploadInputProps> = ({
             } files to upload.}
           }
           The maximum size of a single file is <fileSize></fileSize>.`}
-          values={{
-            multiple,
-            limit: maxFiles,
-            fileSize: () => <FileSize size={maxSize} />,
-          }}
-        />
+            values={{
+              multiple,
+              limit: maxFiles ?? 0,
+              fileSize: () => <FileSize size={maxSize} />,
+            }}
+          />
+        )}
       </Paragraph>
 
       <div role="status" aria-live="polite" className="sr-only">

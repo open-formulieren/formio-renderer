@@ -99,6 +99,12 @@
       "value": "remainingCharCount"
     }
   ],
+  "2/wgNH": [
+    {
+      "type": 0,
+      "value": "The file is too small."
+    }
+  ],
   "2HsmfN": [
     {
       "type": 0,
@@ -303,6 +309,48 @@
       "value": "uu"
     }
   ],
+  "HoCa81": [
+    {
+      "type": 0,
+      "value": "Too many files uploaded. You can upload "
+    },
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "one file."
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "up to "
+            },
+            {
+              "type": 1,
+              "value": "maxNumberOfFiles"
+            },
+            {
+              "type": 0,
+              "value": " files"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "maxNumberOfFiles"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "IhLYXK": [
     {
       "type": 0,
@@ -373,6 +421,12 @@
     {
       "type": 0,
       "value": "Maand"
+    }
+  ],
+  "Rba7CV": [
+    {
+      "type": 0,
+      "value": "The maximum number of uploads is reached. You cannot upload additional files."
     }
   ],
   "TZb5ph": [
@@ -481,6 +535,20 @@
       "value": "Nog één toevoegen"
     }
   ],
+  "cnQt6v": [
+    {
+      "type": 0,
+      "value": "The uploaded file type is not an allowed type. It must be "
+    },
+    {
+      "type": 1,
+      "value": "allowedTypes"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "d2SYc4": [
     {
       "type": 0,
@@ -559,6 +627,34 @@
       ],
       "type": 8,
       "value": "fileSize"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "j1VL+H": [
+    {
+      "type": 1,
+      "value": "fileTypes"
+    },
+    {
+      "type": 0,
+      "value": " or "
+    },
+    {
+      "type": 1,
+      "value": "lastOption"
+    }
+  ],
+  "jqQOW0": [
+    {
+      "type": 0,
+      "value": "The file must be smaller than "
+    },
+    {
+      "type": 1,
+      "value": "fileMaxSize"
     },
     {
       "type": 0,
@@ -699,6 +795,12 @@
       "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
     }
   ],
+  "re7vQZ": [
+    {
+      "type": 0,
+      "value": "The upload must be completed before you can continue."
+    }
+  ],
   "sP3xMn": [
     {
       "type": 0,
@@ -787,6 +889,12 @@
     {
       "type": 0,
       "value": "Jaar"
+    }
+  ],
+  "ySaVSL": [
+    {
+      "type": 0,
+      "value": "The file upload (meta) data is not consistent."
     }
   ],
   "ybTcqX": [

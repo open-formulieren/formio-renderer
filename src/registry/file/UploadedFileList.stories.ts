@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, within} from 'storybook/test';
+import {expect, fn, within} from 'storybook/test';
 
 import UploadedFileList from './UploadedFileList';
 
@@ -9,6 +9,7 @@ export default {
   args: {
     files: [],
     multipleAllowed: false,
+    onRemove: fn(),
   },
 } satisfies Meta<typeof UploadedFileList>;
 
@@ -18,6 +19,7 @@ export const SingleFile: Story = {
   args: {
     files: [
       {
+        uniqueId: 'e891c99d-09dd-4cc4-849b-b33b61e55720',
         name: 'document.pdf',
         size: 12345,
         downloadUrl: 'https://example.com/document.pdf',
@@ -40,6 +42,7 @@ export const MultipleFiles: Story = {
   args: {
     files: [
       {
+        uniqueId: 'cdf7679a-f04f-4820-ac2d-cbcf0559bc32',
         name: 'document.pdf',
         size: 12345,
         downloadUrl: 'https://example.com/document.pdf',
@@ -47,6 +50,7 @@ export const MultipleFiles: Story = {
         errors: ['PDF not allowed.'],
       },
       {
+        uniqueId: 'd509a862-09e9-4ff7-905a-40738a835bfa',
         name: 'image.jpeg',
         size: 412000,
         downloadUrl: 'https://example.com/image.jpeg',

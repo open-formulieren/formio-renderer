@@ -1,62 +1,18 @@
-import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
+import type {FileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, fn, userEvent, within} from 'storybook/test';
 
+import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
+import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import type {JSONObject} from '@/types';
 
 import {FormioFile} from './';
+import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
+import type {FormikFileUpload} from './types';
 
 // import ValueDisplay from './ValueDisplay';
-
-const FILE_COMPONENT_BOILERPLATE: Pick<
-  FileComponentSchema,
-  'webcam' | 'options' | 'storage' | 'url'
-> = {
-  webcam: false,
-  options: {
-    withCredentials: true,
-  },
-  storage: 'url',
-  url: 'https://example.com/ignored/upload/dummy',
-};
-
-type ExampleMimeType =
-  | 'application/pdf'
-  | 'application/msword'
-  | 'application/vnd.rar'
-  | 'application/zip'
-  | 'image/heic'
-  | 'image/jpeg'
-  | 'image/png'
-  | 'text/csv'
-  | 'text/plain';
-
-const MIME_TO_LABEL: Record<ExampleMimeType, string> = {
-  'application/pdf': '.pdf',
-  'application/msword': '.doc',
-  'application/vnd.rar': '.rar',
-  'application/zip': '.zip',
-  'image/heic': '.heic',
-  'image/jpeg': '.jpeg',
-  'image/png': '.png',
-  'text/csv': '.csv',
-  'text/plain': '.txt',
-};
-
-const getFileConfiguration = (
-  mimeTypes: ExampleMimeType[]
-): Pick<FileComponentSchema, 'file' | 'filePattern'> => {
-  const patternString = mimeTypes.join(',');
-  const labels = mimeTypes.map(mimeType => MIME_TO_LABEL[mimeType]);
-  return {
-    filePattern: patternString,
-    file: {
-      name: '', // used by the backend as a file name template
-      type: mimeTypes,
-      allowedTypesLabels: labels,
-    },
-  };
-};
 
 export default {
   title: 'Component registry / basic / file',
@@ -65,7 +21,16 @@ export default {
   parameters: {
     formSettings: {
       componentParameters: {
-        // TODO - add mocks for upload endpoint in due time
+        file: {
+          upload: async () => {
+            const uuid = window.crypto.randomUUID();
+            return {
+              result: 'success',
+              url: `https://example.com/api/v2/uploads/${uuid}`,
+            };
+          },
+          destroy: async () => {},
+        },
       } satisfies FormSettings['componentParameters'],
     },
   },
@@ -88,7 +53,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -112,7 +77,7 @@ export const WithDescriptionAndTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
     },
@@ -138,23 +103,13 @@ export const SingleFileUpload: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              state: 'success',
+            }),
+          ],
         },
       },
     },
@@ -179,39 +134,19 @@ export const MultipleFilesUpload: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
-                form: '',
-                name: '8ffc2b89-cc40-4da9-824d-da0042b52f05.doc',
-                size: 1024 * 1000 * 1000, // 1 MB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-2.doc',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'file-2.doc',
               size: 1024 * 1000 * 1000, // 1 MB
-              storage: 'url',
               type: 'application/msword',
-              url: 'https://example.com/temporary-file-uploads/8ffc2b89-cc40-4da9-824d-da0042b52f05',
-            },
-          ] satisfies FileUploadData[],
+              state: 'pending',
+            }),
+          ],
         },
       },
     },
@@ -238,23 +173,57 @@ export const WithRestrictions: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.png',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'screenshot.png',
+            buildFile({
+              name: 'screenshot.png',
               size: 137000, // 137 kB
-              storage: 'url',
-              type: 'application/png',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              type: 'image/png',
+              state: 'success',
+            }),
+          ],
+        },
+      },
+    },
+  },
+};
+
+export const MaxFilesLimitReached: Story = {
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      description: 'Upload button/dropzone not shown if the file limit is reached',
+      maxNumberOfFiles: 3,
+      multiple: true,
+    } satisfies FileComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          file: [
+            buildFile({
+              name: 'screenshot1.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'screenshot2.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+            buildFile({
+              name: 'screenshot3.png',
+              size: 137000, // 137 kB
+              type: 'image/png',
+              state: 'success',
+            }),
+          ],
         },
       },
     },
@@ -267,7 +236,7 @@ export const DisplayComponentValidationError: Story = {
     formik: {
       initialValues: {
         my: {
-          file: [] satisfies FileUploadData[],
+          file: [] satisfies FormikFileUpload[],
         },
       },
       initialTouched: {
@@ -291,23 +260,13 @@ export const DisplayFileValidationError: Story = {
       initialValues: {
         my: {
           file: [
-            {
-              data: {
-                url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-                form: '',
-                name: 'cfc5de78-c451-4bef-af22-4bf0e0768f57.pdf',
-                size: 137000, // 137 kB
-                baseUrl: 'https://example.com/',
-                project: '',
-              },
-              name: '',
-              originalName: 'file-1.pdf',
+            buildFile({
+              name: 'file-1.pdf',
               size: 137000, // 137 kB
-              storage: 'url',
               type: 'application/pdf',
-              url: 'https://example.com/temporary-file-uploads/cfc5de78-c451-4bef-af22-4bf0e0768f57',
-            },
-          ] satisfies FileUploadData[],
+              state: 'error',
+            }),
+          ],
         },
       },
       initialTouched: {
@@ -321,5 +280,178 @@ export const DisplayFileValidationError: Story = {
         },
       },
     },
+  },
+};
+
+export const SimulateBackendRejection: Story = {
+  ...MinimalConfiguration,
+  parameters: {
+    ...MinimalConfiguration.parameters,
+    formSettings: {
+      componentParameters: {
+        file: {
+          upload: async () => ({
+            result: 'failed',
+            errors: ['Simulated backend error.'],
+          }),
+          destroy: async () => {},
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+};
+
+interface ValidationStoryArgs {
+  componentDefinition: FileComponentSchema;
+  onSubmit: FormioFormProps['onSubmit'];
+  values?: JSONObject;
+}
+
+type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+/**
+ * Base story for validation tests/interactions.
+ *
+ * Any file ending with the `.docx` extension is rejected by the "backend", other files
+ * have a success state.
+ */
+const BaseValidationStory: ValidationStory = {
+  render: renderComponentInForm,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+    formSettings: {
+      componentParameters: {
+        file: {
+          upload: async (file: File) => {
+            if (file.name.toLowerCase().endsWith('.docx')) {
+              return {
+                result: 'failed',
+                errors: ['Backend blocks .docx files.'],
+              };
+            }
+            return {
+              result: 'success',
+              url: `https://example.com/api/v2/uploads/${window.crypto.randomUUID()}`,
+            };
+          },
+          destroy: async () => {},
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+};
+
+export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration([
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: true,
+      maxNumberOfFiles: 2,
+      fileMaxSize: '3 kB',
+    } satisfies FileComponentSchema,
+    values: {
+      my: {
+        file: [
+          buildFile({
+            name: 'file-1.pdf',
+            size: 1024 * 2,
+            type: 'application/pdf',
+            state: 'success',
+          }),
+          buildFile({
+            name: 'file-2.pdf',
+            size: 1024 * 1,
+            type: 'application/pdf',
+            state: 'success',
+          }),
+          buildFile({
+            name: 'file-3.docx',
+            size: 1024 * 2.1,
+            type: 'application/pdf',
+            state: undefined,
+          }),
+          buildFile({name: 'file-4.docx', size: 1024 * 4, type: 'application/pdf', state: 'error'}),
+        ] as unknown as JSONObject[],
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByRole('link', {name: 'file-1.pdf'})).toBeVisible();
+    expect(canvas.getByRole('link', {name: 'file-2.pdf'})).toBeVisible();
+    expect(canvas.getByRole('link', {name: 'file-3.docx'})).toBeVisible();
+    expect(canvas.getByRole('link', {name: 'file-4.docx'})).toBeVisible();
+
+    // Initially, there are file-level validation errors, these get displayed before the
+    // field-level errors.
+    await step('Trigger errors for initial values', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(await canvas.findByText(/The file must be smaller than 3 kB./)).toBeVisible();
+    });
+
+    await step('Remove file with individual error(s) reveals field-level errors', async () => {
+      const removeButton = canvas.getByRole('button', {name: `Remove 'file-4.docx'`});
+      await userEvent.click(removeButton);
+
+      // validation should be triggered and we see the field-level error
+      expect(
+        await canvas.findByText('Too many files uploaded. You can upload up to 2 files.')
+      ).toBeVisible();
+    });
+  },
+};
+
+export const ValidateNoPendingOrErroredUploads: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration([
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: true,
+    } satisfies FileComponentSchema,
+    values: {
+      my: {
+        file: [
+          buildFile({
+            name: 'file-1.pdf',
+            size: 1024 ** 1,
+            type: 'application/pdf',
+            state: 'pending',
+          }),
+          buildFile({name: 'file-2.pdf', size: 1024 ** 1, type: 'application/pdf', state: 'error'}),
+        ] as unknown as JSONObject[],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findAllByText('The upload must be completed before you can continue.')
+    ).toHaveLength(2);
   },
 };

@@ -83,6 +83,7 @@ export default defineConfig(({mode}) => ({
         'src/**/*.d.ts',
         'src/**/*.stories.{ts,tsx}',
         'src/reference/utils.tsx',
+        'src/registry/file/test-utils.ts',
         ...coverageConfigDefaults.exclude,
       ],
       reporter: ['text', 'cobertura', 'html'],

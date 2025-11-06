@@ -4,3 +4,4 @@ flag_management: {}
 
 ignore:
   - "src/reference/utils.tsx"
+  - "src/registry/file/test-utils.ts"

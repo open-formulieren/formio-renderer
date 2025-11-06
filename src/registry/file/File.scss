@@ -24,34 +24,26 @@
     grid-area: description;
   }
 
-  @include bem.element('dropzone') {
+  .openforms-upload-input {
     grid-area: dropzone;
+  }
+
+  &:has(.openforms-upload-input:not(.sr-only)) {
+    --_of-file-upload-uploads-padding-block-start: var(
+      --of-file-upload-with-dropzone-uploads-padding-block-start
+    );
   }
 
   @include bem.element('uploads') {
     grid-area: uploads;
-    padding-block-end: var(--of-openforms-file-upload-uploads-list-padding-block-end);
-    padding-block-start: var(--of-openforms-file-upload-uploads-list-padding-block-start);
-  }
-
-  @include bem.element('uploads-list') {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    row-gap: var(--of-openforms-file-upload-uploads-list-row-gap);
+    padding-block-end: var(--of-file-upload-uploads-padding-block-end);
+    padding-block-start: var(
+      --_of-file-upload-uploads-padding-block-start,
+      var(--of-file-upload-uploads-padding-block-start)
+    );
   }
 
   @include bem.element('errors') {
     grid-area: errors;
   }
-}
-
-// TODO: remove before merge!
-.openforms-theme {
-  --of-file-upload-grid-areas: 'dropzone' 'uploads' 'description' 'errors';
-  --of-file-upload-row-gap: 0;
-  --of-openforms-file-upload-uploads-list-padding-block-end: 0;
-  --of-openforms-file-upload-uploads-list-padding-block-start: 8px;
 }

@@ -40,6 +40,11 @@
     "description": "Textarea character remaining count",
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
+  "2/wgNH": {
+    "defaultMessage": "The file is too small.",
+    "description": "File upload error message: file too small",
+    "originalDefault": "The file is too small."
+  },
   "2HsmfN": {
     "defaultMessage": "BSN",
     "description": "Partners component: label for partners BSN",
@@ -167,6 +172,11 @@
     "description": "Placeholder for the hour part of the time",
     "originalDefault": "HH"
   },
+  "HoCa81": {
+    "defaultMessage": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }.",
+    "description": "File upload error message: too many files",
+    "originalDefault": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }."
+  },
   "IhLYXK": {
     "defaultMessage": "Toon/verberg de kalender",
     "description": "Datepicker: accessible calendar toggle label",
@@ -228,6 +238,11 @@
     "defaultMessage": "Maand",
     "description": "Date input group: month label",
     "originalDefault": "Month"
+  },
+  "Rba7CV": {
+    "defaultMessage": "The maximum number of uploads is reached. You cannot upload additional files.",
+    "description": "Description for hidden upload button/dropzone because the file limit is reached.",
+    "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
   },
   "TZb5ph": {
     "defaultMessage": "Zorg dat dit veld {maxSelectedCount} of minder opties aagevinkt heeft.",
@@ -304,6 +319,11 @@
     "description": "Edit grid add button, default label text",
     "originalDefault": "Add another"
   },
+  "cnQt6v": {
+    "defaultMessage": "The uploaded file type is not an allowed type. It must be {allowedTypes}.",
+    "description": "File upload error message: invalid file type",
+    "originalDefault": "The uploaded file type is not an allowed type. It must be {allowedTypes}."
+  },
   "d2SYc4": {
     "defaultMessage": "De datum en tijd moet gelijk aan of na {min} zijn.",
     "description": "Validation error for datetime greater than or equal to minimum date.",
@@ -318,6 +338,16 @@
     "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
     "description": "Description/label for upload drop zone.",
     "originalDefault": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>."
+  },
+  "j1VL+H": {
+    "defaultMessage": "{fileTypes} or {lastOption}",
+    "description": "Human readable description of allowed file types/extensions.",
+    "originalDefault": "{fileTypes} or {lastOption}"
+  },
+  "jqQOW0": {
+    "defaultMessage": "The file must be smaller than {fileMaxSize}.",
+    "description": "File upload error message: file too large",
+    "originalDefault": "The file must be smaller than {fileMaxSize}."
   },
   "lVNV/d": {
     "defaultMessage": "Huisnummertoevoeging",
@@ -384,6 +414,11 @@
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
+  "re7vQZ": {
+    "defaultMessage": "The upload must be completed before you can continue.",
+    "description": "File upload error message: only successful uploads can be submitted message.",
+    "originalDefault": "The upload must be completed before you can continue."
+  },
   "sP3xMn": {
     "defaultMessage": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78.",
     "description": "Validation error for phone number format.",
@@ -423,6 +458,11 @@
     "defaultMessage": "Jaar",
     "description": "Date input group: year label",
     "originalDefault": "Year"
+  },
+  "ySaVSL": {
+    "defaultMessage": "The file upload (meta) data is not consistent.",
+    "description": "File upload schema validation: parent/child checks fail message",
+    "originalDefault": "The file upload (meta) data is not consistent."
   },
   "ybTcqX": {
     "defaultMessage": "Partner verwijderen",
