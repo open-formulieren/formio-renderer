@@ -14,6 +14,7 @@ import './File.scss';
 import UploadInput from './UploadInput';
 import UploadedFileList from './UploadedFileList';
 import type {FileMeta} from './UploadedFileList';
+import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import {useFileUploads} from './hooks';
 import getInitialValues from './initialValues';
@@ -197,7 +198,7 @@ const formikFileUploadToFileMeta = (
 
 const FileComponent: RegistryEntry<FileComponentSchema> = {
   formField: FormioFile,
-  // valueDisplay: ValueDisplay,
+  valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
   isEmpty,
