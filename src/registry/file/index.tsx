@@ -87,6 +87,11 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
     touched && Boolean(fieldError || fileErrors.length || Object.keys(localUploadErrors).length);
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
+  console.log(localUploadErrors, maxNumberOfFiles);
+  const maxFilesToSelect = maxNumberOfFiles
+    ? Math.max(maxNumberOfFiles - uploads.length, 0)
+    : undefined;
+
   return (
     <FormField type="file" invalid={invalid} className="utrecht-form-field--openforms">
       <Label
@@ -108,11 +113,9 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
             onFilesAdded={onFilesAdded}
             aria-describedby={errorMessageId}
             maxSize={fileMaxSize ? getSizeInBytes(fileMaxSize) : undefined}
-            multiple={multiple}
+            multiple={multiple && (maxFilesToSelect === undefined || maxFilesToSelect > 1)}
             maxFiles={maxNumberOfFiles ?? undefined}
-            maxFilesToSelect={
-              maxNumberOfFiles ? Math.max(maxNumberOfFiles - uploads.length, 0) : undefined
-            }
+            maxFilesToSelect={maxFilesToSelect}
             accept={Object.fromEntries(type.map(mimeType => [mimeType, [] satisfies string[]]))}
             onBlur={() => {
               if (!touched) setTouched(true);
