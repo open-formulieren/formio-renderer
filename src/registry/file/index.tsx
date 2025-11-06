@@ -16,6 +16,7 @@ import UploadedFileList from './UploadedFileList';
 import type {FileMeta} from './UploadedFileList';
 import isEmpty from './empty';
 import {useFileUploads} from './hooks';
+import getInitialValues from './initialValues';
 import type {FormikFileUpload} from './types';
 import {getSizeInBytes} from './utils';
 import getValidationSchema from './validationSchema';
@@ -197,7 +198,7 @@ const formikFileUploadToFileMeta = (
 const FileComponent: RegistryEntry<FileComponentSchema> = {
   formField: FormioFile,
   // valueDisplay: ValueDisplay,
-  // getInitialValues,
+  getInitialValues,
   getValidationSchema,
   isEmpty,
 };
