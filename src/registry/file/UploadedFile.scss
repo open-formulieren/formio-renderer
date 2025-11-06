@@ -64,19 +64,3 @@
     white-space: preserve-breaks wrap;
   }
 }
-
-// TODO: remove before merge!
-.openforms-theme {
-  --of-uploaded-file-row-gap: 8px;
-  --of-uploaded-file-column-gap: 8px;
-  --of-uploaded-file-padding-block-end: 8px;
-  --of-uploaded-file-padding-block-start: 8px;
-  --of-uploaded-file-padding-inline-end: 4px;
-  --of-uploaded-file-padding-inline-start: 16px;
-  --of-uploaded-file-border-width: 1px;
-  --of-uploaded-file-border-style: solid;
-  --of-uploaded-file-border-color: var(--of-color-border);
-  --of-uploaded-file-border-radius: 2px;
-  --of-uploaded-file-metadata-color: var(--of-color-fg-muted);
-  --of-uploaded-file-errors-border-color: var(--of-color-danger);
-}

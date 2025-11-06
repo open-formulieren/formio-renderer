@@ -47,12 +47,3 @@
     grid-area: errors;
   }
 }
-
-// TODO: remove before merge!
-.openforms-theme {
-  --of-file-upload-grid-areas: 'dropzone' 'uploads' 'description' 'errors';
-  --of-file-upload-row-gap: 0;
-  --of-file-upload-uploads-padding-block-end: 0;
-  --of-file-upload-uploads-padding-block-start: 0;
-  --of-file-upload-with-dropzone-uploads-padding-block-start: 8px;
-}

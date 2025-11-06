@@ -25,16 +25,3 @@
     --_of-upload-input-border-color: var(--of-upload-input-drag-reject-border-color);
   }
 }
-
-// Remove before release
-.openforms-theme {
-  --of-upload-input-padding-block-end: var(--of-file-upload-drop-area-padding);
-  --of-upload-input-padding-block-start: var(--of-file-upload-drop-area-padding);
-  --of-upload-input-padding-inline-end: var(--of-file-upload-drop-area-padding);
-  --of-upload-input-padding-inline-start: var(--of-file-upload-drop-area-padding);
-  --of-upload-input-border-width: 3px;
-  --of-upload-input-border-style: dashed;
-  --of-upload-input-border-color: var(--of-field-border-color);
-  --of-upload-input-drag-over-border-color: var(--of-color-primary);
-  --of-upload-input-drag-reject-border-color: var(--of-color-danger);
-}
