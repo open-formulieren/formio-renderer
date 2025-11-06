@@ -1,5 +1,28 @@
 # Changes
 
+## 0.12.0 (2025-11-06)
+
+Feature release.
+
+**Features**
+
+- [`#107`][#107] Implemented the `signature` component type.
+- [`OF#5548`][OF#5308] Changed appearance of "Add another button" to be less prominent in the
+  `Editgrid` and `MultiField` components.
+- [`#97`][#97] Implemented the `coSign` (v1/legacy) component type.
+- [`#99`][#99] Implemented the `file` component type.
+
+**Bugfixes**
+
+- [`#122`][#122] Fixed an issue with item data not being available in isolation mode in edit grids.
+- Fixed missing check implementation for currency and number component emptiness.
+
+[#99]: https://github.com/open-formulieren/formio-renderer/issues/99
+[OF#5548]: https://github.com/open-formulieren/open-forms/issues/5548
+[#122]: https://github.com/open-formulieren/formio-renderer/issues/122
+[#97]: https://github.com/open-formulieren/formio-renderer/issues/97
+[#107]: https://github.com/open-formulieren/formio-renderer/issues/107
+
 ## 0.11.0 (2025-10-27)
 
 Feature release.
