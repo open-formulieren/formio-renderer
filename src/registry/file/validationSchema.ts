@@ -15,7 +15,7 @@ const FILE_TOO_LARGE_ERROR = defineMessage({
   defaultMessage: 'The file must be smaller than {fileMaxSize}.',
 });
 
-const TOO_MANY_FILES_ERROR = defineMessage({
+export const TOO_MANY_FILES_ERROR = defineMessage({
   description: 'File upload error message: too many files',
   defaultMessage: `Too many files uploaded. You can upload {maxNumberOfFiles, plural,
       one {one file.}

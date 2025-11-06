@@ -2,14 +2,14 @@ import type {FileComponentSchema} from '@open-formulieren/types';
 import {useFormikContext} from 'formik';
 import type {ArrayHelpers, FieldHelperProps} from 'formik';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import type {FileRejection} from 'react-dropzone';
+import {ErrorCode, type FileRejection} from 'react-dropzone';
 import {useIntl} from 'react-intl';
 import type {IntlShape} from 'react-intl';
 
 import {useFormSettings} from '@/hooks';
 
 import type {FileParameters, FormikFileUpload} from './types';
-import {transformReactDropzoneErrors} from './validationSchema';
+import {TOO_MANY_FILES_ERROR, transformReactDropzoneErrors} from './validationSchema';
 
 type FileArrayHelpers = ArrayHelpers<FormikFileUpload[]>;
 
@@ -54,7 +54,7 @@ export const useFileUploads = (
   const intl = useIntl();
   const {upload, destroy} = useFileComponentParameters();
   const [touched, setTouched] = useTouchedState(name);
-  const {validateField} = useFormikContext();
+  const {validateField, setFieldError} = useFormikContext();
 
   // get access to the latest Formik state for the field.
   const uploadsRef = useUploadsRef(name);
@@ -68,6 +68,9 @@ export const useFileUploads = (
   const onFilesAdded = useCallback(
     async (files: (File | FileRejection)[]) => {
       if (!touched) setTouched(true);
+      // clear any errors, in case a previous interaction set them
+      setFieldError(componentDefinition.key, undefined);
+
       const context: HandleUploadContext = {
         intl,
         uploadsRef,
@@ -75,6 +78,27 @@ export const useFileUploads = (
         upload,
         destroy,
       };
+
+      // eagerly check if we have files with errors for "too many files" - we want to
+      // prevent adding these to the Formik state because clearing/updating the error
+      // when files are removed and/or automatically retrying the upload is too complex.
+      // This way, we can display a field-level validation error that too many files are
+      // offered, while resolving the problem as a user results in a re-validation run
+      // which clears the error again.
+      const maxNumFilesExceeded = files.some(fileOrRejection => {
+        const isRejection = 'errors' in fileOrRejection;
+        if (!isRejection) return false;
+        return fileOrRejection.errors.some(err => err.code === ErrorCode.TooManyFiles);
+      });
+      // add error and abort early
+      if (maxNumFilesExceeded) {
+        const error = intl.formatMessage(TOO_MANY_FILES_ERROR, {
+          maxNumberOfFiles: componentDefinition.maxNumberOfFiles,
+        });
+        setFieldError(componentDefinition.key, error);
+        return;
+      }
+
       for (const fileOrRejection of files) {
         handleUpload(
           fileOrRejection,
@@ -86,7 +110,18 @@ export const useFileUploads = (
         );
       }
     },
-    [uploadsRef, intl, upload, destroy, push, replace, componentDefinition, touched, setTouched]
+    [
+      uploadsRef,
+      intl,
+      upload,
+      destroy,
+      push,
+      replace,
+      setFieldError,
+      componentDefinition,
+      touched,
+      setTouched,
+    ]
   );
 
   const onFileRemove = async (uniqueId: string): Promise<void> => {

@@ -1,9 +1,10 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {FieldArray, Formik} from 'formik';
+import {ErrorMessage, FieldArray, Formik} from 'formik';
 import type {ArrayHelpers} from 'formik';
-import {ErrorCode, type FileRejection} from 'react-dropzone';
+import {ErrorCode} from 'react-dropzone';
+import type {FileRejection, FileWithPath} from 'react-dropzone';
 import {IntlProvider} from 'react-intl';
 import {afterAll, afterEach, beforeAll, beforeEach, expect, test, vi} from 'vitest';
 
@@ -67,7 +68,12 @@ const TestComponentContainer: React.FC<TestComponentContainerProps> = ({
         components={[componentDefinition]}
         componentParameters={{file: parameters}}
       >
-        <Formik<{[k: string]: FormikFileUpload[]}> onSubmit={vi.fn()} initialValues={{[name]: []}}>
+        <Formik<{[k: string]: FormikFileUpload[]}>
+          onSubmit={vi.fn()}
+          initialValues={{[name]: []}}
+          validateOnBlur={false}
+          validateOnChange={false}
+        >
           {({values}) => (
             <FieldArray name={name}>
               {arrayHelpers => (
@@ -110,6 +116,20 @@ const TestComponent: React.FC<TestComponentProps> = ({
         Simulate upload
       </button>
 
+      <button
+        type="button"
+        onClick={() =>
+          onFilesAdded(
+            simulatedUploads.map(f => ({
+              file: f as FileWithPath,
+              errors: [{code: ErrorCode.TooManyFiles, message: ''}],
+            }))
+          )
+        }
+      >
+        Simulate TooManyFiles
+      </button>
+
       <ul aria-label="uploads">
         {uploads.map((upload, index) => (
           <li key={upload.clientId || upload.url} data-state={upload.state}>
@@ -126,6 +146,8 @@ const TestComponent: React.FC<TestComponentProps> = ({
           <span key={index}>{error}</span>
         ))}
       </div>
+
+      <div data-testid="field-error">{<ErrorMessage name={componentDefinition.key} />}</div>
     </>
   );
 };
@@ -272,7 +294,7 @@ test('process file rejection eagerly', async () => {
       {code: ErrorCode.FileInvalidType, message: '-ignored-'},
       {code: ErrorCode.FileTooLarge, message: '-ignored-'},
       {code: ErrorCode.FileTooSmall, message: '-ignored-'},
-      {code: ErrorCode.TooManyFiles, message: '-ignored-'},
+      // ErrorCode.TooManyFiles is special cased, see the next test
       {code: 'arbitrary', message: 'Not ignored.'},
     ],
   };
@@ -298,8 +320,46 @@ test('process file rejection eagerly', async () => {
   ).toBeVisible();
   expect(screen.getByText(/The file must be smaller than 1 MB\./)).toBeVisible();
   expect(screen.getByText(/The file is too small\./)).toBeVisible();
-  expect(
-    screen.getByText(/Too many files uploaded\. You can upload up to 3 files\./)
-  ).toBeVisible();
   expect(screen.getByText(/Not ignored\./)).toBeVisible();
+});
+
+test('too-many-files uploaded error clear on new attepts', async () => {
+  vi.useFakeTimers();
+  const user = userEvent.setup({
+    // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
+    advanceTimers: vi.advanceTimersByTime,
+  });
+  const uploads: File[] = [
+    new File(['dummy'], 'dummy1.pdf', {type: 'application/pdf'}),
+    new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
+    new File(['dummy'], 'dummy3.pdf', {type: 'application/pdf'}),
+  ];
+
+  render(
+    <TestComponentContainer
+      componentDefinition={{
+        ...BASE_COMPONENT,
+        multiple: true,
+        maxNumberOfFiles: 2,
+      }}
+      simulatedUploads={uploads}
+    />
+  );
+
+  expect(screen.getByTestId('field-error')).toHaveTextContent('');
+
+  // uploading too many files triggers client-side rejection.
+  await user.click(screen.getByRole('button', {name: 'Simulate TooManyFiles'}));
+  // nothing is added to the file upload list in the UI
+  expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+  // the validation error is set and displayed
+  expect(screen.getByTestId('field-error')).toHaveTextContent(/Too many files uploaded\./);
+
+  // uploading files without client-side rejection clears the error.
+  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
+  await vi.advanceTimersByTimeAsync(200);
+  await waitFor(() => {
+    expect(screen.queryAllByRole('listitem')).toHaveLength(3);
+    expect(screen.getByTestId('field-error')).toBeEmptyDOMElement();
+  });
 });

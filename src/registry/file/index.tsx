@@ -87,7 +87,6 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
     touched && Boolean(fieldError || fileErrors.length || Object.keys(localUploadErrors).length);
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
-  console.log(localUploadErrors, maxNumberOfFiles);
   const maxFilesToSelect = maxNumberOfFiles
     ? Math.max(maxNumberOfFiles - uploads.length, 0)
     : undefined;
