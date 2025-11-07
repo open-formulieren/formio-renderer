@@ -8,11 +8,10 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import type {JSONObject} from '@/types';
 
-import {FormioFile} from './';
+import FormioFile from './File';
+import ValueDisplay from './ValueDisplay';
 import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
-
-// import ValueDisplay from './ValueDisplay';
 
 export default {
   title: 'Component registry / basic / file',
@@ -391,7 +390,7 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByRole('link', {name: 'file-1.pdf'})).toBeVisible();
+    expect(await canvas.findByRole('link', {name: 'file-1.pdf'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-2.pdf'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-3.docx'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-4.docx'})).toBeVisible();
@@ -453,5 +452,101 @@ export const ValidateNoPendingOrErroredUploads: ValidationStory = {
     expect(
       await canvas.findAllByText('The upload must be completed before you can continue.')
     ).toHaveLength(2);
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: FileComponentSchema;
+  value: FormikFileUpload[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration([
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: false,
+    } satisfies FileComponentSchema,
+    value: [
+      buildFile({
+        name: 'my-single-upload.doc',
+        type: 'application/msword',
+        size: 123,
+        state: undefined,
+      }),
+    ],
+  },
+};
+
+export const MultiValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration([
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: true,
+    } satisfies FileComponentSchema,
+    value: [
+      buildFile({
+        name: 'attachment one with $pecial character<s>.doc',
+        type: 'application/msword',
+        size: 123,
+        state: undefined,
+        omitClientState: true,
+      }),
+      buildFile({
+        name: 'I made a PDF.png',
+        type: 'image/png',
+        size: 123,
+        state: 'success',
+      }),
+    ],
+  },
+};
+
+export const EmptyValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration([
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+    } satisfies FileComponentSchema,
+    value: [],
   },
 };
