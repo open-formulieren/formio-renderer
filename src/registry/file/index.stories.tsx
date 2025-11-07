@@ -8,7 +8,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import type {JSONObject} from '@/types';
 
-import {FormioFile} from './';
+import FormioFile from './File';
 import ValueDisplay from './ValueDisplay';
 import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
@@ -390,7 +390,7 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
 
-    expect(canvas.getByRole('link', {name: 'file-1.pdf'})).toBeVisible();
+    expect(await canvas.findByRole('link', {name: 'file-1.pdf'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-2.pdf'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-3.docx'})).toBeVisible();
     expect(canvas.getByRole('link', {name: 'file-4.docx'})).toBeVisible();
