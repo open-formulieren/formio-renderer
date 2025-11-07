@@ -31,7 +31,7 @@
     "originalDefault": "{label} {index}"
   },
   "1AgCMs": {
-    "defaultMessage": "Remove",
+    "defaultMessage": "Verwijderen",
     "description": "Button title to remove uploaded file",
     "originalDefault": "Remove"
   },
@@ -41,12 +41,12 @@
     "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
   "1hdvgS": {
-    "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
+    "defaultMessage": "Er ging iets fout bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
   },
   "2/wgNH": {
-    "defaultMessage": "The file is too small.",
+    "defaultMessage": "Het bestand is te klein.",
     "description": "File upload error message: file too small",
     "originalDefault": "The file is too small."
   },
@@ -92,7 +92,7 @@
     "originalDefault": "MM"
   },
   "8uM5Vx": {
-    "defaultMessage": "Remove ''{fileName}'",
+    "defaultMessage": "Verwijder ''{fileName}'",
     "description": "Accessible remove icon/button label for uploaded file.",
     "originalDefault": "Remove ''{fileName}'"
   },
@@ -112,7 +112,7 @@
     "originalDefault": "The datetime must consist of a date and a time stamp, separated by a space (e.g. 10/30/2025 5:34 PM)."
   },
   "ALpIwm": {
-    "defaultMessage": "The signature value must be a base64-encoded png.",
+    "defaultMessage": "De handtekening moet een base64-geëncodeerde PNG-afbeelding zijn.",
     "description": "Validation error for signature",
     "originalDefault": "The signature value must be a base64-encoded png."
   },
@@ -127,7 +127,7 @@
     "originalDefault": "Next month"
   },
   "AxDC+M": {
-    "defaultMessage": "Login with {provider}",
+    "defaultMessage": "Inloggen met {provider}",
     "description": "Login button label",
     "originalDefault": "Login with {provider}"
   },
@@ -158,7 +158,7 @@
     "originalDefault": "Date of birth must be within the last 120 years."
   },
   "ErdIGO": {
-    "defaultMessage": "Clear signature",
+    "defaultMessage": "Wis handtekening",
     "description": "Signature: accessible clear signature label",
     "originalDefault": "Clear signature"
   },
@@ -183,7 +183,7 @@
     "originalDefault": "HH"
   },
   "HoCa81": {
-    "defaultMessage": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }.",
+    "defaultMessage": "Te veel bestanden toegevoegd. Het {maxNumberOfFiles, plural, one {mag er hoogstens 1 zijn} other {mogen er hoogstens {maxNumberOfFiles} zijn}}.",
     "description": "File upload error message: too many files",
     "originalDefault": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }."
   },
@@ -203,7 +203,7 @@
     "originalDefault": "Previous month"
   },
   "LaKfzC": {
-    "defaultMessage": "Signature",
+    "defaultMessage": "Handtekening",
     "description": "Signature value alt text",
     "originalDefault": "Signature"
   },
@@ -230,7 +230,7 @@
     "originalDefault": "House number"
   },
   "QAN3ua": {
-    "defaultMessage": "The file(s) are ready to drop.",
+    "defaultMessage": "Je kan het/de bestand(en) loslaten.",
     "description": "Accessible status indicator that the file can be dropped.",
     "originalDefault": "The file(s) are ready to drop."
   },
@@ -250,7 +250,7 @@
     "originalDefault": "Month"
   },
   "Rba7CV": {
-    "defaultMessage": "The maximum number of uploads is reached. You cannot upload additional files.",
+    "defaultMessage": "De limiet van het aantal bestanden is bereikt. Je kan geen extra bestanden toevoegen.",
     "description": "Description for hidden upload button/dropzone because the file limit is reached.",
     "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
   },
@@ -290,7 +290,7 @@
     "originalDefault": "Add another"
   },
   "ZGuxfW": {
-    "defaultMessage": "File name",
+    "defaultMessage": "Bestandsnaam",
     "description": "Accessible label for uploaded file name",
     "originalDefault": "File name"
   },
@@ -330,7 +330,7 @@
     "originalDefault": "Add another"
   },
   "cnQt6v": {
-    "defaultMessage": "The uploaded file type is not an allowed type. It must be {allowedTypes}.",
+    "defaultMessage": "Het toegevoegde bestand is niet van een toegestaan type. Het moet {allowedTypes} zijn.",
     "description": "File upload error message: invalid file type",
     "originalDefault": "The uploaded file type is not an allowed type. It must be {allowedTypes}."
   },
@@ -340,22 +340,22 @@
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
   "eAmrdi": {
-    "defaultMessage": "Loading...",
+    "defaultMessage": "Laden...",
     "description": "Loading content text",
     "originalDefault": "Loading..."
   },
   "iiVLgn": {
-    "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
+    "defaultMessage": "{multiple, select, false {Sleep een bestand of klik om een bestand te selecteren.} other {Sleep bestanden of klik om {limit, select, 0 {} other {tot {limit}} } bestanden toe te voegen.} } Een betsand mag hoogstens <fileSize></fileSize> groot zijn.",
     "description": "Description/label for upload drop zone.",
     "originalDefault": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>."
   },
   "j1VL+H": {
-    "defaultMessage": "{fileTypes} or {lastOption}",
+    "defaultMessage": "{fileTypes} of {lastOption}",
     "description": "Human readable description of allowed file types/extensions.",
     "originalDefault": "{fileTypes} or {lastOption}"
   },
   "jqQOW0": {
-    "defaultMessage": "The file must be smaller than {fileMaxSize}.",
+    "defaultMessage": "Het bestand moet {fileMaxSize} of kleiner zijn.",
     "description": "File upload error message: file too large",
     "originalDefault": "The file must be smaller than {fileMaxSize}."
   },
@@ -380,7 +380,7 @@
     "originalDefault": "yyyy"
   },
   "oCHirf": {
-    "defaultMessage": "Uploading...",
+    "defaultMessage": "Uploaden...",
     "description": "Pending file upload accessible description.",
     "originalDefault": "Uploading..."
   },
@@ -400,7 +400,7 @@
     "originalDefault": "Close modal"
   },
   "pErllF": {
-    "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
+    "defaultMessage": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Required co-sign callbacks not configured",
     "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
   },
@@ -415,7 +415,7 @@
     "originalDefault": "Invalid input"
   },
   "pzR8ui": {
-    "defaultMessage": "Something went wrong while processing the co-sign results. Please contact the municipality.",
+    "defaultMessage": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while processing the co-sign results. Please contact the municipality."
   },
@@ -435,7 +435,7 @@
     "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
   "re7vQZ": {
-    "defaultMessage": "The upload must be completed before you can continue.",
+    "defaultMessage": "De upload moet klaar zijn voor je door kan gaan.",
     "description": "File upload error message: only successful uploads can be submitted message.",
     "originalDefault": "The upload must be completed before you can continue."
   },
@@ -450,7 +450,7 @@
     "originalDefault": "Date of birth"
   },
   "tBQ8TL": {
-    "defaultMessage": "Not co-signed",
+    "defaultMessage": "Niet medeondertekend",
     "description": "Not co-signed (summary) message",
     "originalDefault": "Not co-signed"
   },
@@ -470,7 +470,7 @@
     "originalDefault": "Add partner details"
   },
   "x/mWt2": {
-    "defaultMessage": "{single, select, true {Uploaded file} other {Uploaded files}}",
+    "defaultMessage": "{single, select, true {Toegevoegd bestand} other {Toegevoegde bestanden}}",
     "description": "Accessible label for uploads list",
     "originalDefault": "{single, select, true {Uploaded file} other {Uploaded files}}"
   },
@@ -485,7 +485,7 @@
     "originalDefault": "Year"
   },
   "ySaVSL": {
-    "defaultMessage": "The file upload (meta) data is not consistent.",
+    "defaultMessage": "De bestandsuploadgegevens komen niet overeen.",
     "description": "File upload schema validation: parent/child checks fail message",
     "originalDefault": "The file upload (meta) data is not consistent."
   },
