@@ -1,4 +1,5 @@
 import {Heading2, SubtleButton, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
 import {useEffect, useId, useRef} from 'react';
 import {useIntl} from 'react-intl';
 
@@ -11,9 +12,10 @@ export interface ModalProps {
   title?: React.ReactNode;
   closeModal: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, children}) => {
+const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, children, className}) => {
   const id = useId();
   const intl = useIntl();
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -34,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
 
   return (
     <dialog
-      className="openforms-modal"
+      className={clsx('openforms-modal', className)}
       ref={modalRef}
       aria-labelledby={title ? id : undefined}
       onClose={closeModal}
