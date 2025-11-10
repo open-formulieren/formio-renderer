@@ -14,7 +14,7 @@ export default {
       type: 'children',
       key: 'children',
       label: 'Children',
-      enableSelection: true,
+      enableSelection: false,
     },
   },
 } satisfies Meta<typeof FormioChildrenField>;
@@ -32,6 +32,43 @@ export const MinimalConfiguration: Story = {
             dateOfBirth: '2000-1-1',
           },
         ],
+      },
+    },
+  },
+};
+
+export const WithTooltipAndDescription: Story = {
+  args: {
+    componentDefinition: {
+      id: 'children',
+      type: 'children',
+      key: 'children',
+      label: 'Children',
+      enableSelection: false,
+      tooltip: 'Surprise!',
+      description: 'Description as help text',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        children: [
+          {
+            bsn: '123456789',
+            firstNames: 'John Doe',
+            dateOfBirth: '2000-1-1',
+          },
+        ],
+      },
+    },
+  },
+};
+
+export const NoChildrenFound: Story = {
+  parameters: {
+    formik: {
+      initialValues: {
+        children: [],
       },
     },
   },
