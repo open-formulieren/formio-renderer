@@ -9,6 +9,7 @@ import type {RegistryEntry} from '@/registry/types';
 
 import './CustomerProfile.scss';
 import {useDigitalAddresses} from './digitalAddresses';
+import isEmpty from './empty';
 import {DigitalAddressFields} from './subFields';
 import getValidationSchema from './validationSchema';
 
@@ -61,6 +62,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
 const CustomerProfileComponent: RegistryEntry<CustomerProfileComponentSchema> = {
   formField: FormioCustomerProfile,
   getValidationSchema,
+  isEmpty,
 };
 
 export default CustomerProfileComponent;
