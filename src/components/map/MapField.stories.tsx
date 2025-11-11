@@ -307,3 +307,54 @@ export const SearchInput: Story = {
     });
   },
 };
+
+export const WithAerialPhotoBackground: Story = {
+  args: {
+    name: 'map',
+    label: 'Map',
+    interactions: {
+      marker: false,
+      polygon: true,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
+    tileLayerUrl:
+      'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:28992/{z}/{x}/{y}.png',
+  },
+};
+
+export const WithOverlays: Story = {
+  args: {
+    name: 'map',
+    label: 'Map',
+    interactions: {
+      marker: false,
+      polygon: true,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
+    overlays: [
+      {
+        uuid: 'f20448c3-a8cb-471c-bfcc-78a6c22d0ae6',
+        url: 'https://service.pdok.nl/bzk/bro-grondwaterspiegeldiepte/wms/v2_0?request=getCapabilities&service=WMS',
+        label: 'Grondwaterspiegeldiepte layer',
+        type: 'wms',
+        layers: ['bro-grondwaterspiegeldieptemetingen-GHG'],
+      },
+      {
+        uuid: '931f18f0-cedc-453b-a2d5-a2c1ff9df523',
+        url: 'https://service.pdok.nl/lv/bag/wms/v2_0?request=getCapabilities&service=WMS',
+        label: 'BAG Pand and Verblijfsobject layer',
+        type: 'wms',
+        layers: ['pand', 'verblijfsobject'],
+      },
+      {
+        uuid: '4a76c09a-2ae3-4c17-8b40-ade45cb86a0e',
+        url: 'https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS',
+        label: 'Unsupported WFS layer',
+        type: 'wfs',
+        layers: ['pand'],
+      },
+    ],
+  },
+};
