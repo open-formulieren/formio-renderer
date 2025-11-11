@@ -30,7 +30,7 @@ const FIRST_NAMES_REQUIRED_MESSAGE = defineMessage({
 
 const DUPLICATE_BSN_VALUES_MESSAGE = defineMessage({
   description: 'Validation error for duplicate children.bsn values.',
-  defaultMessage: 'There already is a child with this BSN.',
+  defaultMessage: 'Multiple children share the same BSN number.',
 });
 
 const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
@@ -88,15 +88,15 @@ const getValidationSchema: GetValidationSchema<ChildrenComponentSchema> = (
       }, []);
 
       if (duplicateBsnIndexes.length) {
-        duplicateBsnIndexes.forEach(({index}) => {
+        duplicateBsnIndexes.forEach(() => {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: intl.formatMessage(DUPLICATE_BSN_VALUES_MESSAGE),
-            path: [index, 'bsn'],
           });
         });
       }
-    });
+    })
+    .optional();
 
   return {[key]: childrenSchema};
 };
