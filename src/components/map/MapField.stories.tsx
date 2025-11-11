@@ -237,6 +237,67 @@ export const DisabledMap: Story = {
   },
 };
 
+export const DeleteButton: Story = {
+  args: {
+    name: 'map',
+    label: 'Delete button',
+    description: 'Click the delete button to remove the current shape',
+    interactions: {
+      marker: true,
+      polygon: false,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        map: {
+          type: 'Point',
+          coordinates: [5.291266, 52.1326332],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    // Sanity check, the `args.geoJsonGeometry` is shown in the map component.
+    expect(await within(map).findByRole('button', {name: 'Marker'})).toBeVisible();
+
+    // The delete button is shown in the map, and is enabled.
+    const deleteButton = await within(map).findByRole('link', {name: 'Remove shapes'});
+    expect(deleteButton).toBeVisible();
+    expect(deleteButton).toBeEnabled();
+
+    await step('delete marker', async () => {
+      // Automatically resolve the confirmation message
+      window.confirm = () => true;
+      await userEvent.click(deleteButton);
+
+      // The value "null" is used to clear the map user data.
+      expect(args.onGeoJsonGeometrySet).toHaveBeenCalledWith(null);
+    });
+
+    await step('Check that no marker is visible and delete button is disabled', async () => {
+      // Expect marker to no-longer be visible.
+      await waitFor(async () => {
+        const marker = await within(map).queryByRole('button', {name: 'Marker'});
+        expect(marker).toBeNull();
+      });
+
+      expect(deleteButton).toHaveAttribute('title', 'No shapes to remove');
+      expect(deleteButton).toHaveClass('leaflet-disabled');
+    });
+  },
+};
+
 export const SearchInput: Story = {
   args: {
     name: 'map',
