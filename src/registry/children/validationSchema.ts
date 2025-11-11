@@ -1,0 +1,105 @@
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
+import {isValid, parseISO, subDays, subYears} from 'date-fns';
+import {defineMessage} from 'react-intl';
+import type {IntlShape} from 'react-intl';
+import {z} from 'zod';
+
+import type {GetValidationSchema} from '@/registry/types';
+import type {JSONObject} from '@/types';
+import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
+
+const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
+  description: 'Validation error for children.dateOfBirth that is after the minimum date.',
+  defaultMessage: 'Date of birth must be within the last 120 years.',
+});
+
+const DATE_OF_BIRTH_MAX_DATE_MESSAGE = defineMessage({
+  description: 'Validation error for children.dateOfBirth that is after the maximum date.',
+  defaultMessage: 'Date of birth cannot be in the future.',
+});
+
+const DATE_OF_BIRTH_INVALID_MESSAGE = defineMessage({
+  description: 'Validation error for children.dateOfBirth invalid format.',
+  defaultMessage: 'The format of the date of birth is incorrect.',
+});
+
+const FIRST_NAMES_REQUIRED_MESSAGE = defineMessage({
+  description: 'Validation error for required children.firstNames field.',
+  defaultMessage: 'You must provide a first name.',
+});
+
+const DUPLICATE_BSN_VALUES_MESSAGE = defineMessage({
+  description: 'Validation error for duplicate children.bsn values.',
+  defaultMessage: 'There already is a child with this BSN.',
+});
+
+const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
+  const today = new Date();
+
+  const minDate = subYears(today, 120);
+  const maxDate = subDays(today, 1);
+
+  const dateSchema = z.coerce
+    .date()
+    .min(minDate, {message: intl.formatMessage(DATE_OF_BIRTH_MIN_DATE_MESSAGE)})
+    .max(maxDate, {message: intl.formatMessage(DATE_OF_BIRTH_MAX_DATE_MESSAGE)});
+
+  return z
+    .string()
+    .refine(
+      value => {
+        const parsed = parseISO(value);
+        return isValid(parsed);
+      },
+      {message: intl.formatMessage(DATE_OF_BIRTH_INVALID_MESSAGE)}
+    )
+    .pipe(dateSchema);
+};
+
+const buildChildSchema = (intl: IntlShape): z.ZodSchema<JSONObject> => {
+  return z.object({
+    bsn: buildBsnValidationSchema(intl),
+    firstNames: z.string().min(1, {message: intl.formatMessage(FIRST_NAMES_REQUIRED_MESSAGE)}),
+    dateOfBirth: buildDateOfBirthSchema(intl),
+    selected: z.boolean().optional(),
+    // __addedManually must either be true or undefined.
+    __addedManually: z.literal<boolean>(true).optional(),
+    // __id must be a string or undefined.
+    __id: z.string().optional(),
+  });
+};
+
+const getValidationSchema: GetValidationSchema<ChildrenComponentSchema> = (
+  componentDefinition,
+  {intl}
+) => {
+  const {key} = componentDefinition;
+
+  // Define children schema
+  const childrenSchema: z.ZodFirstPartySchemaTypes = z
+    .array(buildChildSchema(intl))
+    .superRefine(async (val, ctx) => {
+      // Check for duplicate bsn's
+      const duplicateBsnIndexes = val.reduce<{index: number}[]>((carry, value, index) => {
+        if (val.findIndex(c => c.bsn === value.bsn) !== index) {
+          carry.push({index});
+        }
+        return carry;
+      }, []);
+
+      if (duplicateBsnIndexes.length) {
+        duplicateBsnIndexes.forEach(({index}) => {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: intl.formatMessage(DUPLICATE_BSN_VALUES_MESSAGE),
+            path: [index, 'bsn'],
+          });
+        });
+      }
+    });
+
+  return {[key]: childrenSchema};
+};
+
+export default getValidationSchema;
+export {buildChildSchema};
