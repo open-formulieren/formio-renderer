@@ -1,12 +1,16 @@
-import {RequestResult} from 'leaflet-geosearch/dist/providers/amapProvider.js';
 import AbstractProvider, {
-  EndpointArgument,
-  ParseArgument,
-  ProviderOptions,
-  SearchResult,
-} from 'leaflet-geosearch/dist/providers/provider.js';
+  type ParseArgument,
+  type ProviderOptions,
+  type SearchResult,
+} from 'leaflet-geosearch/src/providers/provider.js';
 
 interface MockSearchResult {
+  label: string;
+  x: number;
+  y: number;
+}
+
+interface MockRequestSearchResult {
   label: string;
   // The address coordinates in WGS 84 coordinate system
   latLng: {
@@ -20,35 +24,29 @@ interface MockSearchResult {
   };
 }
 
-declare type MockProviderOptions = {
-  mockResults: MockSearchResult[];
-} & ProviderOptions;
+export default class MockProvider extends AbstractProvider {
+  mockResults: MockRequestSearchResult[];
 
-// TODO: use this in the storybook tests to test search functionality
-export default class MockProvider extends AbstractProvider<MockSearchResult[], MockSearchResult> {
-  mockResults: MockSearchResult[];
-
-  constructor(options?: MockProviderOptions) {
+  constructor(options?: ProviderOptions) {
     super(options);
-
-    const {mockResults} = options;
-    this.mockResults = mockResults;
+    this.mockResults = [];
   }
 
-  endpoint = ({query}: EndpointArgument): string => {
-    const params = typeof query === 'string' ? {q: query} : query;
-    return this.getUrl('example.com', params);
-  };
+  endpoint(): string {
+    return 'https://example.com';
+  }
 
-  parse = (response: ParseArgument<RequestResult>): SearchResult<MockSearchResult>[] => {
-    return response.map(location => ({
+  parse(response: ParseArgument<MockRequestSearchResult[]>): SearchResult<MockSearchResult>[] {
+    return response.data.map(location => ({
       label: location.label,
       x: location.latLng.lng,
       y: location.latLng.lat,
+      raw: {label: location.label, x: location.latLng.lng, y: location.latLng.lat},
+      bounds: null,
     }));
-  };
+  }
 
-  async search(): Promise<SearchResult[]> {
+  async search(): Promise<SearchResult<MockSearchResult>[]> {
     return this.parse({data: this.mockResults});
   }
 }
