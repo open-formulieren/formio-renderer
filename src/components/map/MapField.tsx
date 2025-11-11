@@ -15,6 +15,7 @@ import SearchControl, {GeoSearchShowLocationEvent} from './LeafletMapSearchContr
 import './MapField.scss';
 import NearestAddress from './NearestAddress';
 import {DEFAULT_CENTER_COORDINATES, DEFAULT_INTERACTIONS, DEFAULT_ZOOM_LEVEL} from './constants';
+import {overloadLeafletDrawPolylineControl} from './drawPolylineControl';
 import {CRS_RD, TILE_LAYER_RD, initialize} from './init';
 import {
   applyLeafletTranslations,
@@ -124,6 +125,10 @@ const MapField: React.FC<MapFieldProps> = ({
   useEffect(() => {
     overloadLeafletDeleteControl(featureGroupRef, intl);
   }, [featureGroupRef, intl]);
+
+  useEffect(() => {
+    overloadLeafletDrawPolylineControl();
+  }, []);
 
   const onFeatureCreate = (event: L.DrawEvents.Created) => {
     updateGeoJsonGeometry(event.layer);
