@@ -1,11 +1,10 @@
-import type {ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
 import {isValid, parseISO, subDays, subYears} from 'date-fns';
 import {defineMessage} from 'react-intl';
 import type {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import type {JSONObject} from '@/types';
 import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
 
 const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
@@ -30,7 +29,8 @@ const FIRST_NAMES_REQUIRED_MESSAGE = defineMessage({
 
 const DUPLICATE_BSN_VALUES_MESSAGE = defineMessage({
   description: 'Validation error for duplicate children.bsn values.',
-  defaultMessage: 'There already is a child with this BSN.',
+  defaultMessage:
+    'The BSN number {bsn} is used for multiple children. Each child must have a unique BSN number.',
 });
 
 const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
@@ -56,7 +56,7 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
     .pipe(dateSchema);
 };
 
-const buildChildSchema = (intl: IntlShape): z.ZodSchema<JSONObject> => {
+const buildChildSchema = (intl: IntlShape): z.ZodSchema => {
   return z.object({
     bsn: buildBsnValidationSchema(intl),
     firstNames: z.string().min(1, {message: intl.formatMessage(FIRST_NAMES_REQUIRED_MESSAGE)}),
@@ -78,25 +78,25 @@ const getValidationSchema: GetValidationSchema<ChildrenComponentSchema> = (
   // Define children schema
   const childrenSchema: z.ZodFirstPartySchemaTypes = z
     .array(buildChildSchema(intl))
-    .superRefine(async (val, ctx) => {
+    .superRefine(async (val: ChildDetails[], ctx) => {
       // Check for duplicate bsn's
-      const duplicateBsnIndexes = val.reduce<{index: number}[]>((carry, value, index) => {
+      const duplicateBsns = val.reduce<string[]>((carry, value, index) => {
         if (val.findIndex(c => c.bsn === value.bsn) !== index) {
-          carry.push({index});
+          carry.push(value.bsn);
         }
         return carry;
       }, []);
 
-      if (duplicateBsnIndexes.length) {
-        duplicateBsnIndexes.forEach(({index}) => {
+      if (duplicateBsns.length) {
+        duplicateBsns.forEach(bsn => {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(DUPLICATE_BSN_VALUES_MESSAGE),
-            path: [index, 'bsn'],
+            message: intl.formatMessage(DUPLICATE_BSN_VALUES_MESSAGE, {bsn}),
           });
         });
       }
-    });
+    })
+    .optional();
 
   return {[key]: childrenSchema};
 };

@@ -1,5 +1,6 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import {SecondaryActionButton} from '@utrecht/component-library-react';
+import type {FormikErrors} from 'formik';
 import {FieldArray, useFormikContext} from 'formik';
 import {useId, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
@@ -7,13 +8,16 @@ import {FormattedMessage} from 'react-intl';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
 import ChildModal from './ChildModal';
 import ChildrenTable from './ChildrenTable';
-import {EMPTY_CHILD} from './constants';
+import ValueDisplay from './ValueDisplay';
+import {EMPTY_CHILD, SUB_FIELD_NAMES} from './constants';
 import isEmpty from './empty';
+import getInitialValues from './initialValues';
 import type {ExtendedChildDetails} from './types';
 import getValidationSchema from './validationSchema';
 
@@ -26,11 +30,22 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 }) => {
   const id = useId();
   key = useFieldConfig(key);
-  const {getFieldProps} = useFormikContext();
+  const {getFieldProps, getFieldMeta, setFieldTouched} = useFormikContext();
+  const {touched, error: formikError} = getFieldMeta<ExtendedChildDetails[]>(key);
   const {value: children} = getFieldProps<ExtendedChildDetails[]>(key);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [childToEdit, setChildToEdit] = useState<ExtendedChildDetails | undefined>();
 
+  const error = formikError as unknown as
+    | undefined
+    | string
+    | (string | FormikErrors<ExtendedChildDetails>)[];
+
+  // check if there's an error for the field *itself*
+  const fieldError = typeof error === 'string' && error;
+
+  const invalid = touched && !!fieldError;
+  const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionId = description ? `${id}-description` : undefined;
 
   const serverFetchedChildren = children.filter(child => !('__addedManually' in child));
@@ -47,6 +62,13 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
     setIsModalOpen(false);
   };
 
+  const markChildAsTouched = (childIndex: number) => {
+    // Mark the subfields of the child as touched
+    SUB_FIELD_NAMES.forEach(field => {
+      setFieldTouched(`${key}.${childIndex}.${field}`, true);
+    });
+  };
+
   return (
     <Fieldset
       header={
@@ -55,8 +77,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
           {tooltip && <Tooltip>{tooltip}</Tooltip>}
         </>
       }
+      isInvalid={invalid}
       hasTooltip={!!tooltip}
-      aria-describedby={descriptionId || undefined}
+      aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ') || undefined}
     >
       <FieldArray name={key} validateOnChange={false}>
         {arrayHelpers => (
@@ -77,21 +100,22 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                 data={childToEdit}
                 onChange={newChild => {
                   const isNew = newChild.__id === undefined;
-                  // Add new child data to form
+                  let childIndex;
+
                   if (isNew) {
+                    // The current children.length will be the index of the new child
+                    childIndex = children.length;
                     arrayHelpers.push({
                       ...newChild,
                       __id: crypto.randomUUID(),
                       selected: enableSelection ? false : undefined,
                     });
-                    closeModal();
-                    return;
+                  } else {
+                    childIndex = children.findIndex(child => child.__id === newChild.__id);
+                    arrayHelpers.replace(childIndex, newChild);
                   }
 
-                  // Update existing child data
-                  const childIndex = children.findIndex(child => child.__id === newChild.__id);
-                  arrayHelpers.replace(childIndex, newChild);
-
+                  markChildAsTouched(childIndex);
                   closeModal();
                 }}
               />
@@ -101,6 +125,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       </FieldArray>
 
       <HelpText id={descriptionId}>{description}</HelpText>
+      {invalid && errorMessageId && <ValidationErrors error={fieldError} id={errorMessageId} />}
 
       {canAddChildrenManually && (
         <SecondaryActionButton type="button" onClick={() => editChild(undefined)}>
@@ -116,7 +141,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 
 const ChildrenFieldComponent: RegistryEntry<ChildrenComponentSchema> = {
   formField: FormioChildrenField,
+  valueDisplay: ValueDisplay,
   getValidationSchema,
+  getInitialValues,
   isEmpty,
 };
 

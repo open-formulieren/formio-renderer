@@ -1,6 +1,7 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Form, Formik} from 'formik';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
+import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import {PrimaryActionButton} from '@/components/Button';
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -9,6 +10,7 @@ import Modal from '@/components/modal';
 import './ChildModal.scss';
 import {BSNField, DateOfBirthField, FirstNamesField} from './subFields';
 import type {ExtendedChildDetails} from './types';
+import {buildChildSchema} from './validationSchema';
 
 interface ChildModalProps {
   isOpen: boolean;
@@ -18,6 +20,7 @@ interface ChildModalProps {
 }
 
 const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChange}) => {
+  const intl = useIntl();
   return (
     <Modal
       isOpen={isOpen}
@@ -41,11 +44,8 @@ const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChan
         enableReinitialize
         validateOnChange={false}
         validateOnBlur={false}
-        // @TODO
-        // validationSchema={undefined}
-        onSubmit={async values => {
-          onChange(values);
-        }}
+        validationSchema={toFormikValidationSchema(buildChildSchema(intl))}
+        onSubmit={values => onChange(values)}
       >
         <Form>
           <FormFieldContainer>
