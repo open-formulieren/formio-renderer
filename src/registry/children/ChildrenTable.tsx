@@ -12,6 +12,7 @@ import {FormattedDate, FormattedMessage, useIntl} from 'react-intl';
 
 import Icon from '@/components/icons';
 
+import BareCheckbox from './BareCheckbox';
 import './ChildrenTable.scss';
 import type {ExtendedChildDetails} from './types';
 
@@ -85,16 +86,26 @@ const EmptyMessage: React.FC = () => (
 );
 
 export interface ChildrenTableProps {
+  name: string;
   values: ExtendedChildDetails[];
+  enableSelection?: boolean;
   editChild: (child: ExtendedChildDetails | undefined) => void;
   removeChild: (childIndex: number) => void;
 }
 
-const ChildrenTable: React.FC<ChildrenTableProps> = ({values, editChild, removeChild}) => {
+const ChildrenTable: React.FC<ChildrenTableProps> = ({
+  name,
+  values,
+  enableSelection,
+  editChild,
+  removeChild,
+}) => {
+  const intl = useIntl();
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          {enableSelection && <TableHeaderCell scope="col" />}
           <TableHeaderCell scope="col">
             <FormattedMessage
               description="Children component: children table 'bsn' header"
@@ -118,6 +129,24 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({values, editChild, removeC
       <TableBody>
         {values.map((child, index) => (
           <TableRow key={child.__id || index}>
+            {enableSelection && (
+              <TableCell>
+                <BareCheckbox
+                  name={`${name}.${index}.selected`}
+                  aria-label={intl.formatMessage(
+                    {
+                      description: "Children component: child 'selected' aria label",
+                      defaultMessage: 'Include {firstname}?',
+                    },
+                    {
+                      firstname: child.firstNames,
+                    }
+                  )}
+                  onChange={() => {}}
+                />
+              </TableCell>
+            )}
+
             <TableCell>{child.bsn || <EmptyMessage />}</TableCell>
             <TableCell>{child.firstNames || <EmptyMessage />}</TableCell>
             <TableCell>

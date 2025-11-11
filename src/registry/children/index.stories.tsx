@@ -90,6 +90,72 @@ export const WithMissingChildInformation: Story = {
   },
 };
 
+export const WithSelectionEnabled: Story = {
+  args: {
+    componentDefinition: {
+      id: 'children',
+      type: 'children',
+      key: 'children',
+      label: 'Children',
+      enableSelection: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        children: [
+          {
+            bsn: '123456789',
+            firstNames: 'John',
+            dateOfBirth: '2000-1-1',
+          },
+          {
+            bsn: '074303909',
+            firstNames: 'Jane',
+            dateOfBirth: '1997-12-12',
+            selected: false,
+          },
+          {
+            bsn: '111222333',
+            firstNames: 'Jimmy',
+            dateOfBirth: '1995-4-3',
+            __addedManually: true,
+            __id: 'e47a2ed6-1f28-46c0-b6b9-bdb6d6d1dffd',
+            selected: true,
+          },
+        ],
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Validate initial state', () => {
+      const johnCheckbox = canvas.getByRole('checkbox', {name: 'Include John?'});
+      const janeCheckbox = canvas.getByRole('checkbox', {name: 'Include Jane?'});
+      const jimmyCheckbox = canvas.getByRole('checkbox', {name: 'Include Jimmy?'});
+
+      // All "select child" checkboxes should be visible
+      expect(johnCheckbox).toBeVisible();
+      expect(janeCheckbox).toBeVisible();
+      expect(jimmyCheckbox).toBeVisible();
+
+      // Only the selected child should be checked
+      expect(johnCheckbox).not.toBeChecked();
+      expect(janeCheckbox).not.toBeChecked();
+      expect(jimmyCheckbox).toBeChecked();
+    });
+
+    await step('Check the "include Jane" checkbox', async () => {
+      const checkbox = canvas.getByRole('checkbox', {name: 'Include Jane?'});
+      expect(checkbox).not.toBeChecked();
+
+      await userEvent.click(checkbox);
+      expect(checkbox).toBeChecked();
+    });
+  },
+};
+
 export const NoChildrenFound: Story = {
   parameters: {
     formik: {

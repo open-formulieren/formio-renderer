@@ -61,7 +61,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
           <>
             {children.length > 0 && (
               <ChildrenTable
+                name={key}
                 values={children}
+                enableSelection={enableSelection}
                 editChild={editChild}
                 removeChild={childIndex => arrayHelpers.remove(childIndex)}
               />
