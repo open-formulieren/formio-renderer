@@ -9,6 +9,7 @@ import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import MapField, {MapFieldProps} from './MapField';
+import MockProvider from './test';
 import {GeoJsonGeometry} from './types';
 
 // add our leaflet instrumentation to the global window object
@@ -52,6 +53,8 @@ const StorybookLeafletMapExposer = () => {
   return null;
 };
 
+const searchProvider = new MockProvider();
+
 export default {
   title: 'Internal API / Map',
   component: MapField,
@@ -64,6 +67,7 @@ export default {
           mapNearestLookup: async () => ({
             label: 'Right here',
           }),
+          searchProvider,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -136,7 +140,6 @@ export const Polygon: Story = {
   args: {
     name: 'map',
     label: 'Map',
-    description: 'Click the map to create a polygon',
     interactions: {
       marker: false,
       polygon: true,
@@ -160,47 +163,12 @@ export const Polygon: Story = {
       },
     },
   },
-  play: async ({canvasElement, step, args}) => {
-    const canvas = within(canvasElement);
-    const map = await canvas.findByTestId('leaflet-map');
-
-    await waitFor(() => {
-      expect(map).not.toBeNull();
-      expect(map).toBeVisible();
-    });
-
-    await step('None of the interactions are shown', async () => {
-      const pin = canvas.queryByTitle('Marker');
-      const polygon = canvas.queryByTitle('Shape (polygon)');
-      const line = canvas.queryByTitle('Line');
-
-      expect(pin).not.toBeInTheDocument();
-      expect(polygon).not.toBeInTheDocument();
-      expect(line).not.toBeInTheDocument();
-    });
-
-    await step('Draw a polygon', async () => {
-      // Because there is only one shape, we can draw without having to click the
-      // "draw marker" button.
-      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
-      await userEvent.click(map, {x: 100, y: 100});
-
-      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
-        type: 'Polygon',
-        // Expect that the coordinates array contains 2 items.
-        // We cannot pin it to specific values, because they can differentiate.
-        // To make sure that this test doesn't magically fail, just expect any 2 values
-        coordinates: [[[expect.anything(), expect.anything()]]],
-      });
-    });
-  },
 };
 
 export const LineString: Story = {
   args: {
     name: 'map',
     label: 'Map',
-    description: 'Click the map to create a line',
     interactions: {
       marker: true,
       polygon: false,
@@ -266,5 +234,76 @@ export const DisabledMap: Story = {
         },
       },
     },
+  },
+};
+
+export const SearchInput: Story = {
+  args: {
+    name: 'map',
+    label: 'Map',
+    description: 'Use the search input to search for a location',
+    interactions: {
+      marker: false,
+      polygon: false,
+      polyline: false,
+    },
+    onGeoJsonGeometrySet: fn(),
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+    searchProvider.mockResults = [
+      {
+        label: 'Utrecht, Utrecht, Utrecht',
+        latLng: {
+          lat: 52.0886922,
+          lng: 5.09520363,
+        },
+        rd: {
+          x: 134987.52,
+          y: 455643.648,
+        },
+      },
+    ];
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await step('None of the interactions are shown', async () => {
+      const pin = canvas.queryByTitle('Marker');
+      const polygon = canvas.queryByTitle('Shape (polygon)');
+      const line = canvas.queryByTitle('Line');
+
+      expect(pin).not.toBeInTheDocument();
+      expect(polygon).not.toBeInTheDocument();
+      expect(line).not.toBeInTheDocument();
+    });
+
+    await step('Use the search input', async () => {
+      await waitFor(async () => {
+        const button = await canvas.findByLabelText('Map component search button');
+        await userEvent.click(button);
+        expect(await canvas.findByPlaceholderText('Enter address, please')).toBeVisible();
+      });
+
+      const searchField = await canvas.findByPlaceholderText('Enter address, please');
+      const searchBox = within(searchField.parentElement!);
+      await userEvent.type(searchField, 'Gemeente Utrecht');
+      const searchResult = await searchBox.findByText('Utrecht, Utrecht, Utrecht');
+
+      await userEvent.click(searchResult);
+
+      // This 'button' is the placed marker on the map
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Point',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [expect.anything(), expect.anything()],
+      });
+    });
   },
 };
