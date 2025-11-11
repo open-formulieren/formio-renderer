@@ -1,12 +1,14 @@
 import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {Formik, useFormikContext} from 'formik';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
+import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import Modal from '@/components/modal';
 
 import {BSNField, DateOfBirthField, FirstNamesField} from './subFields';
 import type {ExtendedChildDetails} from './types';
+import {buildChildSchema} from './validationSchema';
 
 const ChildModalSaveButton = () => {
   const {submitForm} = useFormikContext<unknown>();
@@ -34,6 +36,7 @@ interface ChildModalProps {
 }
 
 const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChange}) => {
+  const intl = useIntl();
   return (
     <Modal
       isOpen={isOpen}
@@ -57,11 +60,8 @@ const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChan
         enableReinitialize
         validateOnChange={false}
         validateOnBlur={false}
-        // @TODO
-        // validationSchema={undefined}
-        onSubmit={async values => {
-          onChange(values);
-        }}
+        validationSchema={toFormikValidationSchema(buildChildSchema(intl))}
+        onSubmit={values => onChange(values)}
       >
         <FormFieldContainer>
           <BSNField />

@@ -29,10 +29,10 @@ const buildValidationSchema = (component: ChildrenComponentSchema) => {
 const today = new Date();
 
 describe('Plain children validation', () => {
-  test('accepts zero child details', async () => {
+  test.each([undefined, []])('accepts zero child details', async value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = await schema.safeParseAsync([]);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(true);
   });

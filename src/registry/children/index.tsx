@@ -1,19 +1,22 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import {SecondaryActionButton} from '@utrecht/component-library-react';
-import {FieldArray, useFormikContext} from 'formik';
+import type {FormikErrors} from 'formik';
+import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useId, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 import type {RegistryEntry} from '@/registry/types';
 
 import ChildModal from './ChildModal';
 import ChildrenTable from './ChildTable';
-import {EMPTY_CHILD} from './constants';
+import {EMPTY_CHILD, SUB_FIELD_NAMES} from './constants';
 import isEmpty from './empty';
-import type {ExtendedChildDetails} from './types';
+import getInitialValues from './initialValues';
+import type {ExtendedChildDetails, FormValues} from './types';
 import getValidationSchema from './validationSchema';
 
 export interface FormioChildrenFieldProps {
@@ -24,11 +27,24 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   componentDefinition: {key, label, description, tooltip, enableSelection},
 }) => {
   const id = useId();
-  const {getFieldProps} = useFormikContext();
+  const {getFieldProps, setFieldTouched, errors, touched} = useFormikContext();
   const {value: children} = getFieldProps<ExtendedChildDetails[]>(key);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [childToEdit, setChildToEdit] = useState<ExtendedChildDetails | undefined>();
 
+  const error: FormikErrors<FormValues>[string] | string = getIn(errors, key);
+
+  // check if there's an error for the children field *itself* rather than one of the
+  // subkeys
+  const childrenError: string | undefined = typeof error === 'string' ? error : undefined;
+
+  const itemsTouched: ExtendedChildDetails[] | undefined = getIn(touched, key, undefined);
+  const anyItemTouched = (itemsTouched ?? []).some(t => {
+    return SUB_FIELD_NAMES.some(field => !!t[field]);
+  });
+
+  const invalid = anyItemTouched && !!childrenError;
+  const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionId = description ? `${id}-description` : undefined;
 
   const serverFetchedChildren = children.filter(child => !('__addedManually' in child));
@@ -45,6 +61,13 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
     setIsModalOpen(false);
   };
 
+  const markChildAsTouched = (childIndex: number) => {
+    // Mark the subfields of the child as touched
+    SUB_FIELD_NAMES.forEach(field => {
+      setFieldTouched(`${key}.${childIndex}.${field}`, true);
+    });
+  };
+
   return (
     <Fieldset
       header={
@@ -53,8 +76,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
           {tooltip && <Tooltip>{tooltip}</Tooltip>}
         </>
       }
+      isInvalid={invalid}
       hasTooltip={!!tooltip}
-      aria-describedby={descriptionId || undefined}
+      aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ') || undefined}
     >
       <FieldArray name={key} validateOnChange={false}>
         {arrayHelpers => (
@@ -79,21 +103,22 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                     data={childToEdit}
                     onChange={newChild => {
                       const isNew = newChild.__id === undefined;
-                      // Add new child data to form
+                      let childIndex;
+
                       if (isNew) {
+                        // The current children.length will be the index of the new child
+                        childIndex = children.length;
                         arrayHelpers.push({
                           ...newChild,
                           __id: crypto.randomUUID(),
                           selected: enableSelection ? false : undefined,
                         });
-                        closeModal();
-                        return;
+                      } else {
+                        childIndex = children.findIndex(child => child.__id === newChild.__id);
+                        arrayHelpers.replace(childIndex, newChild);
                       }
 
-                      // Update existing child data
-                      const childIndex = children.findIndex(child => child.__id === newChild.__id);
-                      arrayHelpers.replace(childIndex, newChild);
-
+                      markChildAsTouched(childIndex);
                       closeModal();
                     }}
                   />
@@ -112,6 +137,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       </FieldArray>
 
       <HelpText id={descriptionId}>{description}</HelpText>
+      {anyItemTouched && errorMessageId && childrenError && (
+        <ValidationErrors error={childrenError} id={errorMessageId} />
+      )}
     </Fieldset>
   );
 };
@@ -119,6 +147,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 const ChildrenFieldComponent: RegistryEntry<ChildrenComponentSchema> = {
   formField: FormioChildrenField,
   getValidationSchema,
+  getInitialValues,
   isEmpty,
 };
 
