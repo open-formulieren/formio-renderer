@@ -13,6 +13,12 @@
       "value": " or less."
     }
   ],
+  "+MVbpZ": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
   "+xOWBM": [
     {
       "type": 0,
@@ -29,6 +35,12 @@
     {
       "type": 0,
       "value": "House number addition must be up to four letters and digits."
+    }
+  ],
+  "07h5b8": [
+    {
+      "type": 0,
+      "value": "You must provide a first name."
     }
   ],
   "0EdUXi": [
@@ -155,6 +167,12 @@
       "value": "A BSN must be 9 digits."
     }
   ],
+  "3beumC": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
@@ -185,6 +203,12 @@
     {
       "type": 0,
       "value": "'"
+    }
+  ],
+  "94ZHpN": [
+    {
+      "type": 0,
+      "value": "BSN"
     }
   ],
   "9SgPC6": [
@@ -285,6 +309,12 @@
       "value": "."
     }
   ],
+  "BxPJLU": [
+    {
+      "type": 0,
+      "value": "First names"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -297,16 +327,38 @@
       "value": "Street name"
     }
   ],
+  "DGjM+p": [
+    {
+      "type": 0,
+      "value": "Firstnames"
+    }
+  ],
   "DZjLaH": [
     {
       "type": 0,
       "value": "Hour must be between 0-23 and minute between 0-59"
     }
   ],
+  "DcLzdm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
+    }
+  ],
   "E++Snm": [
     {
       "type": 0,
       "value": "Date of birth must be within the last 120 years."
+    }
+  ],
+  "EY2m90": [
+    {
+      "type": 1,
+      "value": "firstname"
+    },
+    {
+      "type": 0,
+      "value": " should be included in the form submission"
     }
   ],
   "ErdIGO": [
@@ -341,6 +393,16 @@
     {
       "type": 0,
       "value": "HH"
+    }
+  ],
+  "HReyNj": [
+    {
+      "type": 0,
+      "value": "Edit child with BSN: "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
     }
   ],
   "HoCa81": [
@@ -421,6 +483,12 @@
       "value": "m"
     }
   ],
+  "MrlKEu": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -431,6 +499,12 @@
     {
       "type": 0,
       "value": "House number"
+    }
+  ],
+  "PzBahf": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "QAN3ua": [
@@ -461,6 +535,12 @@
     {
       "type": 0,
       "value": "The maximum number of uploads is reached. You cannot upload additional files."
+    }
+  ],
+  "S5ydMY": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
     }
   ],
   "TZb5ph": [
@@ -571,6 +651,12 @@
       "value": "House number must be a number with up to five digits (e.g. 456)."
     }
   ],
+  "bWCsg7": [
+    {
+      "type": 0,
+      "value": "Multiple children share the same BSN number."
+    }
+  ],
   "bmnUq8": [
     {
       "type": 0,
@@ -627,6 +713,24 @@
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "fwMwqD": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "h7JS6y": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
+  "hPHLdv": [
+    {
+      "type": 0,
+      "value": "Edit child"
     }
   ],
   "iiVLgn": [
@@ -861,6 +965,12 @@
       "value": "'"
     }
   ],
+  "r6qiY/": [
+    {
+      "type": 0,
+      "value": "Date of birth"
+    }
+  ],
   "rQ5vC9": [
     {
       "type": 0,
@@ -957,6 +1067,16 @@
     {
       "type": 0,
       "value": " or greater."
+    }
+  ],
+  "y0O+eF": [
+    {
+      "type": 0,
+      "value": "Delete child with BSN: "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
     }
   ],
   "yKo62N": [
