@@ -7,6 +7,7 @@ import {useMap} from 'react-leaflet';
 
 import {useFormSettings} from '@/hooks';
 
+import './LeafletMapSearchControl.scss';
 import {searchControlMessages} from './translations';
 
 type SearchControlOptions = {
