@@ -1,6 +1,6 @@
 import type {Control, LeafletEvent, Marker} from 'leaflet';
 import {GeoSearchControl} from 'leaflet-geosearch';
-import {Provider} from 'leaflet-geosearch/dist/providers/index.js';
+import type {Provider} from 'leaflet-geosearch/dist/providers/index.js';
 import {useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import {useMap} from 'react-leaflet';
@@ -47,8 +47,6 @@ const SearchControl: React.FC<SearchControlProps> = ({onMarkerSet, options}) => 
   const formSettings = useFormSettings();
   const searchProvider = formSettings?.componentParameters?.map?.searchProvider;
 
-  if (!searchProvider) return null;
-
   const {
     showMarker,
     showPopup,
@@ -64,6 +62,8 @@ const SearchControl: React.FC<SearchControlProps> = ({onMarkerSet, options}) => 
   const buttonLabel = intl.formatMessage(searchControlMessages.buttonLabel);
 
   useEffect(() => {
+    if (!searchProvider) return () => null;
+
     // Leaflet-geosearch isn't very typescript friendly...
     const searchControl = new (GeoSearchControl as unknown as GeoSearchControlConstructor)({
       provider: searchProvider,
