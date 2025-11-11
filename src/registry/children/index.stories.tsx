@@ -1,12 +1,15 @@
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, within} from 'storybook/test';
 
 import {withFormik} from '@/sb-decorators';
 
+import ValueDisplay from './ValueDisplay';
 import {FormioChildrenField} from './index';
+import type {ExtendedChildDetails} from './types';
 
 export default {
-  title: 'Component registry / special / children',
+  title: 'Component registry / special / children / presentation',
   component: FormioChildrenField,
   decorators: [withFormik],
   args: {
@@ -331,9 +334,9 @@ export const EditingChildDetails: Story = {
 
     await step('Expect that child data has been updated', async () => {
       // The old child data is not visible
-      expect(await canvas.queryByText('111222333')).not.toBeInTheDocument();
-      expect(await canvas.queryByText('John Doe')).not.toBeInTheDocument();
-      expect(await canvas.queryByText('January 1, 2000')).not.toBeInTheDocument();
+      expect(canvas.queryByText('111222333')).not.toBeInTheDocument();
+      expect(canvas.queryByText('John Doe')).not.toBeInTheDocument();
+      expect(canvas.queryByText('January 1, 2000')).not.toBeInTheDocument();
 
       // The new child data is visible
       expect(canvas.getByText('272525108')).toBeVisible();
@@ -372,8 +375,163 @@ export const DeletingChildDetails: Story = {
     await userEvent.click(deleteChildButton);
 
     // Check that the child is no longer visible
-    expect(await canvas.queryByText('111222333')).not.toBeInTheDocument();
-    expect(await canvas.queryByText('John Doe')).not.toBeInTheDocument();
-    expect(await canvas.queryByText('January 1, 2000')).not.toBeInTheDocument();
+    expect(canvas.queryByText('111222333')).not.toBeInTheDocument();
+    expect(canvas.queryByText('John Doe')).not.toBeInTheDocument();
+    expect(canvas.queryByText('January 1, 2000')).not.toBeInTheDocument();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: ChildrenComponentSchema;
+  value: ExtendedChildDetails[];
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  args: {
+    componentDefinition: {
+      type: 'children',
+      key: 'children',
+      id: 'children',
+      label: 'Children',
+      enableSelection: false,
+    } satisfies ChildrenComponentSchema,
+  },
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: [
+      {
+        bsn: '111222333',
+        firstNames: 'Joe B',
+        dateOfBirth: '1980-5-20',
+      },
+    ] satisfies ExtendedChildDetails[],
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    const terms = canvas.getAllByRole('term');
+    const definitions = canvas.getAllByRole('definition');
+
+    expect(terms).toHaveLength(3);
+    expect(definitions).toHaveLength(3);
+
+    // Unfortunately, we cannot link the terms and definitions to each other.
+    // So we have to relay on the correctness of the order.
+    step('check term and definition values', () => {
+      expect(terms[0]).toHaveTextContent('BSN');
+      expect(definitions[0]).toHaveTextContent('111222333');
+
+      expect(terms[1]).toHaveTextContent('Firstnames');
+      expect(definitions[1]).toHaveTextContent('Joe B');
+
+      expect(terms[2]).toHaveTextContent('Date of birth');
+      expect(definitions[2]).toHaveTextContent('May 20, 1980');
+    });
+  },
+};
+
+export const MultipleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: [
+      {
+        bsn: '111222333',
+        firstNames: 'Joe B',
+        dateOfBirth: '1980-5-20',
+      },
+      {
+        bsn: '923456788',
+        firstNames: 'Tom Sawyer',
+        dateOfBirth: '1988-7-14',
+      },
+    ] satisfies ExtendedChildDetails[],
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    const terms = canvas.getAllByRole('term');
+    const definitions = canvas.getAllByRole('definition');
+
+    expect(terms).toHaveLength(6);
+    expect(definitions).toHaveLength(6);
+
+    // The order of the terms is validated in the previous test.
+    // Let's focus on the actual children details.
+    step('check term and definition values', () => {
+      // Child 1
+      expect(definitions[0]).toHaveTextContent('111222333');
+      expect(definitions[1]).toHaveTextContent('Joe B');
+      expect(definitions[2]).toHaveTextContent('May 20, 1980');
+
+      // Child 2
+      expect(definitions[3]).toHaveTextContent('923456788');
+      expect(definitions[4]).toHaveTextContent('Tom Sawyer');
+      expect(definitions[5]).toHaveTextContent('July 14, 1988');
+    });
+  },
+};
+
+export const SelectedChildrenValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      type: 'children',
+      key: 'children',
+      id: 'children',
+      label: 'Children',
+      enableSelection: true,
+    } satisfies ChildrenComponentSchema,
+    value: [
+      // Missing selected property
+      {
+        bsn: '123456789',
+        firstNames: 'Joe C (Unselected)',
+        dateOfBirth: '1984-2-13',
+      },
+      // Unselected child
+      {
+        bsn: '111222333',
+        firstNames: 'Joe B (Unselected)',
+        dateOfBirth: '1980-5-20',
+        selected: false,
+      },
+      // Selected child
+      {
+        bsn: '923456788',
+        firstNames: 'Tom Sawyer (Selected)',
+        dateOfBirth: '1988-7-14',
+        selected: true,
+      },
+    ] satisfies ExtendedChildDetails[],
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    const terms = canvas.getAllByRole('term');
+    const definitions = canvas.getAllByRole('definition');
+
+    expect(terms).toHaveLength(3);
+    expect(definitions).toHaveLength(3);
+
+    // The unselected children are not displayed.
+    expect(canvas.queryByText('Unselected')).not.toBeInTheDocument();
+
+    // Expect that the details of the selected child are displayed.
+    step('check definition values', () => {
+      expect(definitions[0]).toHaveTextContent('923456788');
+      expect(definitions[1]).toHaveTextContent('Tom Sawyer (Selected)');
+      expect(definitions[2]).toHaveTextContent('July 14, 1988');
+    });
   },
 };
