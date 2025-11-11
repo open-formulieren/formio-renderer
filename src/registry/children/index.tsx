@@ -60,8 +60,12 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
             {children.length > 0 && (
               <ChildrenTable
                 values={children}
+                enableSelection={enableSelection}
                 editChild={editChild}
                 removeChild={childIndex => arrayHelpers.remove(childIndex)}
+                selectChild={(childIndex, child) =>
+                  arrayHelpers.replace(childIndex, {...child, selected: !child.selected})
+                }
               />
             )}
             {canAddChildrenManually && childToEdit && (

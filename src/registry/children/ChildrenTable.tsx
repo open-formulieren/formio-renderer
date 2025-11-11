@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableHeaderCell,
   TableRow,
+  Checkbox as UtrechtCheckbox,
   Icon as UtrechtIcon,
 } from '@utrecht/component-library-react';
 import {FormattedDate, FormattedMessage, useIntl} from 'react-intl';
@@ -74,15 +75,25 @@ const EmptyMessage: React.FC = () => (
 
 export interface ChildrenTableProps {
   values: ExtendedChildDetails[];
+  enableSelection?: boolean;
   editChild: (child: ExtendedChildDetails | undefined) => void;
   removeChild: (childIndex: number) => void;
+  selectChild: (childIndex: number, child: ExtendedChildDetails) => void;
 }
 
-const ChildrenTable: React.FC<ChildrenTableProps> = ({values, editChild, removeChild}) => {
+const ChildrenTable: React.FC<ChildrenTableProps> = ({
+  values,
+  enableSelection,
+  editChild,
+  removeChild,
+  selectChild,
+}) => {
+  const intl = useIntl();
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          {enableSelection && <TableHeaderCell scope="col" />}
           <TableHeaderCell scope="col">
             <FormattedMessage
               description="Children component: children table 'bsn' header"
@@ -106,6 +117,25 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({values, editChild, removeC
       <TableBody>
         {values.map((child, index) => (
           <TableRow key={child.__id || index}>
+            {enableSelection && (
+              <TableCell>
+                <UtrechtCheckbox
+                  name="selected"
+                  aria-label={intl.formatMessage(
+                    {
+                      description: "Children component: child 'selected' aria label",
+                      defaultMessage: '{firstname} should be included in the form submission',
+                    },
+                    {
+                      firstname: child.firstNames,
+                    }
+                  )}
+                  checked={child.selected}
+                  onChange={() => selectChild(index, child)}
+                />
+              </TableCell>
+            )}
+
             <TableCell>{child.bsn || <EmptyMessage />}</TableCell>
             <TableCell>{child.firstNames || <EmptyMessage />}</TableCell>
             <TableCell>
