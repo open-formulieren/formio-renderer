@@ -53,7 +53,7 @@ const StorybookLeafletMapExposer = () => {
 };
 
 export default {
-  title: 'Internal API / Forms / MapField',
+  title: 'Internal API / Map',
   component: MapField,
   decorators: [withMapLayout, withFormSettingsProvider, withFormik],
   render: StorybookLeafletMap,

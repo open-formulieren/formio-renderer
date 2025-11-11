@@ -6,9 +6,9 @@ import {useIntl} from 'react-intl';
 import {FeatureGroup, MapContainer, TileLayer, useMap} from 'react-leaflet';
 import {EditControl} from 'react-leaflet-draw';
 
-import HelpText from '../HelpText';
-import {LabelContent} from '../Label';
-import Tooltip from '../Tooltip';
+import {HelpText} from '../forms';
+import {LabelContent} from '../forms/Label';
+import Tooltip from '../forms/Tooltip';
 import {overloadLeafletDeleteControl} from './DeleteControl';
 import LayersControl from './LeafletMapLayersControl';
 import SearchControl, {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
