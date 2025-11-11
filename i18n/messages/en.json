@@ -4,6 +4,11 @@
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
+  "+MVbpZ": {
+    "defaultMessage": "Add child",
+    "description": "Children component modal: add child title",
+    "originalDefault": "Add child"
+  },
   "+xOWBM": {
     "defaultMessage": "Remove",
     "description": "Edit grid item default remove button label",
@@ -18,6 +23,11 @@
     "defaultMessage": "House number addition must be up to four letters and digits.",
     "description": "Validation error for addressNL.houseNumberAddition field.",
     "originalDefault": "House number addition must be up to four letters and digits."
+  },
+  "07h5b8": {
+    "defaultMessage": "You must provide a first name.",
+    "description": "Validation error for required children.firstNames field.",
+    "originalDefault": "You must provide a first name."
   },
   "0EdUXi": {
     "defaultMessage": "Save",
@@ -74,6 +84,11 @@
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits."
   },
+  "3beumC": {
+    "defaultMessage": "BSN",
+    "description": "Children component: label for children BSN",
+    "originalDefault": "BSN"
+  },
   "4IX8hk": {
     "defaultMessage": "Loading...",
     "description": "(Async) select options loading message",
@@ -93,6 +108,11 @@
     "defaultMessage": "Remove ''{fileName}'",
     "description": "Accessible remove icon/button label for uploaded file.",
     "originalDefault": "Remove ''{fileName}'"
+  },
+  "94ZHpN": {
+    "defaultMessage": "BSN",
+    "description": "Children component: children table 'bsn' header",
+    "originalDefault": "BSN"
   },
   "9SgPC6": {
     "defaultMessage": "Remove item {index}",
@@ -134,6 +154,11 @@
     "description": "Selectboxes minimum selected count error message",
     "originalDefault": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }."
   },
+  "BxPJLU": {
+    "defaultMessage": "First names",
+    "description": "Children component: children table 'firstNames' header",
+    "originalDefault": "First names"
+  },
   "DBTNgI": {
     "defaultMessage": "d",
     "description": "Placeholder for day part of a date",
@@ -144,15 +169,30 @@
     "description": "Label for addressNL streetName read only result",
     "originalDefault": "Street name"
   },
+  "DGjM+p": {
+    "defaultMessage": "Firstnames",
+    "description": "Children component: label for children firstNames",
+    "originalDefault": "Firstnames"
+  },
   "DZjLaH": {
     "defaultMessage": "Hour must be between 0-23 and minute between 0-59",
     "description": "Validation error describing shape of time format.",
     "originalDefault": "Hour must be between 0-23 and minute between 0-59"
   },
+  "DcLzdm": {
+    "defaultMessage": "Date of birth must be within the last 120 years.",
+    "description": "Validation error for children.dateOfBirth that is after the minimum date.",
+    "originalDefault": "Date of birth must be within the last 120 years."
+  },
   "E++Snm": {
     "defaultMessage": "Date of birth must be within the last 120 years.",
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
+  },
+  "EY2m90": {
+    "defaultMessage": "{firstname} should be included in the form submission",
+    "description": "Children component: child 'selected' aria label",
+    "originalDefault": "{firstname} should be included in the form submission"
   },
   "ErdIGO": {
     "defaultMessage": "Clear signature",
@@ -178,6 +218,11 @@
     "defaultMessage": "HH",
     "description": "Placeholder for the hour part of the time",
     "originalDefault": "HH"
+  },
+  "HReyNj": {
+    "defaultMessage": "Edit child with BSN: {bsn}",
+    "description": "Children component: children table 'edit child' accessible label",
+    "originalDefault": "Edit child with BSN: {bsn}"
   },
   "HoCa81": {
     "defaultMessage": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }.",
@@ -214,6 +259,11 @@
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
+  "MrlKEu": {
+    "defaultMessage": "Date of birth cannot be in the future.",
+    "description": "Validation error for children.dateOfBirth that is after the maximum date.",
+    "originalDefault": "Date of birth cannot be in the future."
+  },
   "Oc3efT": {
     "defaultMessage": "You must provide a city.",
     "description": "Validation error for required addressNL.city field.",
@@ -223,6 +273,11 @@
     "defaultMessage": "House number",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
+  },
+  "PzBahf": {
+    "defaultMessage": "Date of birth",
+    "description": "Children component: label for children dateOfBirth",
+    "originalDefault": "Date of birth"
   },
   "QAN3ua": {
     "defaultMessage": "The file(s) are ready to drop.",
@@ -248,6 +303,11 @@
     "defaultMessage": "The maximum number of uploads is reached. You cannot upload additional files.",
     "description": "Description for hidden upload button/dropzone because the file limit is reached.",
     "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
+  },
+  "S5ydMY": {
+    "defaultMessage": "The format of the date of birth is incorrect.",
+    "description": "Validation error for children.dateOfBirth invalid format.",
+    "originalDefault": "The format of the date of birth is incorrect."
   },
   "TZb5ph": {
     "defaultMessage": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }.",
@@ -304,6 +364,11 @@
     "description": "Validation error for addressNL.houseNumber field.",
     "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
   },
+  "bWCsg7": {
+    "defaultMessage": "Multiple children share the same BSN number.",
+    "description": "Validation error for duplicate children.bsn values.",
+    "originalDefault": "Multiple children share the same BSN number."
+  },
   "bmnUq8": {
     "defaultMessage": "Lastname",
     "description": "Partners component: label for partners lastName",
@@ -338,6 +403,21 @@
     "defaultMessage": "Loading...",
     "description": "Loading content text",
     "originalDefault": "Loading..."
+  },
+  "fwMwqD": {
+    "defaultMessage": "Save",
+    "description": "Children component modal: save button label",
+    "originalDefault": "Save"
+  },
+  "h7JS6y": {
+    "defaultMessage": "Add child",
+    "description": "Children component modal: add child button label",
+    "originalDefault": "Add child"
+  },
+  "hPHLdv": {
+    "defaultMessage": "Edit child",
+    "description": "Children component modal: edit child title",
+    "originalDefault": "Edit child"
   },
   "iiVLgn": {
     "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
@@ -424,6 +504,11 @@
     "description": "Accessible remove icon/button label for item at $index. The index variable here is 1-indexed.",
     "originalDefault": "Remove ''{label} {index}'"
   },
+  "r6qiY/": {
+    "defaultMessage": "Date of birth",
+    "description": "Children component: children table 'dateOfBirth' header",
+    "originalDefault": "Date of birth"
+  },
   "rQ5vC9": {
     "defaultMessage": "Postcode must be four digits followed by two letters (e.g. 1234 AB).",
     "description": "Validation error for addressNL.postcode that does not match the postcode regex.",
@@ -473,6 +558,11 @@
     "defaultMessage": "The value must be {min} or greater.",
     "description": "Validation error for number less than minimum value.",
     "originalDefault": "The value must be {min} or greater."
+  },
+  "y0O+eF": {
+    "defaultMessage": "Delete child with BSN: {bsn}",
+    "description": "Children component: children table 'delete child' accessible label",
+    "originalDefault": "Delete child with BSN: {bsn}"
   },
   "yKo62N": {
     "defaultMessage": "Year",

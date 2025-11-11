@@ -13,6 +13,12 @@
       "value": " of kleiner zijn."
     }
   ],
+  "+MVbpZ": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
   "+xOWBM": [
     {
       "type": 0,
@@ -29,6 +35,12 @@
     {
       "type": 0,
       "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
+    }
+  ],
+  "07h5b8": [
+    {
+      "type": 0,
+      "value": "You must provide a first name."
     }
   ],
   "0EdUXi": [
@@ -163,6 +175,12 @@
       "value": "Een BSN bestaat uit 9 cijfers."
     }
   ],
+  "3beumC": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
@@ -193,6 +211,12 @@
     {
       "type": 0,
       "value": "'"
+    }
+  ],
+  "94ZHpN": [
+    {
+      "type": 0,
+      "value": "BSN"
     }
   ],
   "9SgPC6": [
@@ -263,6 +287,12 @@
       "value": " of meer opties aangevinkt heeft.."
     }
   ],
+  "BxPJLU": [
+    {
+      "type": 0,
+      "value": "First names"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -275,16 +305,38 @@
       "value": "Straatnaam"
     }
   ],
+  "DGjM+p": [
+    {
+      "type": 0,
+      "value": "Firstnames"
+    }
+  ],
   "DZjLaH": [
     {
       "type": 0,
       "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
     }
   ],
+  "DcLzdm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
+    }
+  ],
   "E++Snm": [
     {
       "type": 0,
       "value": "De geboortedatum mag hoogstens 120 jaar geleden zijn."
+    }
+  ],
+  "EY2m90": [
+    {
+      "type": 1,
+      "value": "firstname"
+    },
+    {
+      "type": 0,
+      "value": " should be included in the form submission"
     }
   ],
   "ErdIGO": [
@@ -323,6 +375,16 @@
     {
       "type": 0,
       "value": "uu"
+    }
+  ],
+  "HReyNj": [
+    {
+      "type": 0,
+      "value": "Edit child with BSN: "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
     }
   ],
   "HoCa81": [
@@ -403,6 +465,12 @@
       "value": "m"
     }
   ],
+  "MrlKEu": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -413,6 +481,12 @@
     {
       "type": 0,
       "value": "Huisnummer"
+    }
+  ],
+  "PzBahf": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "QAN3ua": [
@@ -443,6 +517,12 @@
     {
       "type": 0,
       "value": "De limiet van het aantal bestanden is bereikt. Je kan geen extra bestanden toevoegen."
+    }
+  ],
+  "S5ydMY": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
     }
   ],
   "TZb5ph": [
@@ -527,6 +607,12 @@
       "value": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456)."
     }
   ],
+  "bWCsg7": [
+    {
+      "type": 0,
+      "value": "Multiple children share the same BSN number."
+    }
+  ],
   "bmnUq8": [
     {
       "type": 0,
@@ -583,6 +669,24 @@
     {
       "type": 0,
       "value": "Laden..."
+    }
+  ],
+  "fwMwqD": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "h7JS6y": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
+  "hPHLdv": [
+    {
+      "type": 0,
+      "value": "Edit child"
     }
   ],
   "iiVLgn": [
@@ -817,6 +921,12 @@
       "value": "' verwijderen"
     }
   ],
+  "r6qiY/": [
+    {
+      "type": 0,
+      "value": "Date of birth"
+    }
+  ],
   "rQ5vC9": [
     {
       "type": 0,
@@ -917,6 +1027,16 @@
     {
       "type": 0,
       "value": " of groter zijn."
+    }
+  ],
+  "y0O+eF": [
+    {
+      "type": 0,
+      "value": "Delete child with BSN: "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
     }
   ],
   "yKo62N": [
