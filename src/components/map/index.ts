@@ -1,3 +1,5 @@
-import MapField from './MapField';
+import {lazy} from 'react';
+
+const MapField = lazy(() => import('./MapField'));
 
 export default MapField;
