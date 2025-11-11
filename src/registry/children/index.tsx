@@ -13,7 +13,9 @@ import type {RegistryEntry} from '@/registry/types';
 import ChildModal from './ChildModal';
 import ChildrenTable from './ChildrenTable';
 import {EMPTY_CHILD} from './constants';
+import isEmpty from './empty';
 import type {ExtendedChildDetails} from './types';
+import getValidationSchema from './validationSchema';
 
 export interface FormioChildrenFieldProps {
   componentDefinition: ChildrenComponentSchema;
@@ -114,6 +116,8 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 
 const ChildrenFieldComponent: RegistryEntry<ChildrenComponentSchema> = {
   formField: FormioChildrenField,
+  getValidationSchema,
+  isEmpty,
 };
 
 export default ChildrenFieldComponent;
