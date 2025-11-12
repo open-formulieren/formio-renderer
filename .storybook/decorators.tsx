@@ -7,6 +7,7 @@ import {fn} from 'storybook/test';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
+import ModalContext from '@/components/modal/context';
 
 /**
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
@@ -101,3 +102,21 @@ export const withMockDate: Decorator = (Story, {parameters}) => {
     </ClockCleanup>
   );
 };
+
+/**
+ * Control the portal node for the modal component.
+ *
+ * By default, the modal is appended to the body, but this falls outside the Storybook
+ * 'canvas' and breaks queries in interaction tests. So this decorator sets up the
+ * storybook root as portal target node.
+ */
+export const withModal: Decorator = Story => (
+  <ModalContext.Provider
+    value={{
+      // only for storybook integration, do not use this in real apps!
+      parentSelector: () => document.getElementById('storybook-root')!,
+    }}
+  >
+    <Story />
+  </ModalContext.Provider>
+);
