@@ -1,22 +1,32 @@
 import {Heading2, SubtleButton, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {useEffect, useId, useRef} from 'react';
+import ReactDOM from 'react-dom';
 import {useIntl} from 'react-intl';
 
 import Icon from '@/components/icons';
 
 import './Modal.scss';
+import {useModalContext} from './hooks';
 
 export interface ModalProps {
   isOpen?: boolean;
   title?: React.ReactNode;
   closeModal: () => void;
   children: React.ReactNode;
+  noPortal?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, children}) => {
+const Modal: React.FC<ModalProps> = ({
+  isOpen = false,
+  title,
+  closeModal,
+  noPortal = false,
+  children,
+}) => {
   const id = useId();
   const intl = useIntl();
   const modalRef = useRef<HTMLDialogElement>(null);
+  const {parentSelector} = useModalContext();
 
   // To open the dialog as a modal, we need to trigger its javascript functions.
   useEffect(() => {
@@ -32,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
     }
   }, [isOpen]);
 
-  return (
+  const dialogUI = (
     <dialog
       className="openforms-modal"
       ref={modalRef}
@@ -71,6 +81,8 @@ const Modal: React.FC<ModalProps> = ({isOpen = false, title, closeModal, childre
       <div className="openforms-modal__body">{children}</div>
     </dialog>
   );
+
+  return noPortal ? dialogUI : ReactDOM.createPortal(dialogUI, parentSelector());
 };
 
 export default Modal;

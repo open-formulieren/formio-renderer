@@ -34,6 +34,7 @@ export default {
     closeModal: fn(),
     title: 'Modal title',
     children: <span>Simple modal content</span>,
+    noPortal: true,
   },
 } satisfies Meta<typeof Modal>;
 
@@ -89,5 +90,11 @@ export const CloseModal: Story = {
         expect(dialog).not.toBeVisible();
       });
     });
+  },
+};
+
+export const WithPortal: Story = {
+  args: {
+    noPortal: false,
   },
 };

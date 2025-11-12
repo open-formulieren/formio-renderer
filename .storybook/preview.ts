@@ -4,11 +4,11 @@ import '@open-formulieren/design-tokens/dist/index.css';
 import type {Preview} from '@storybook/react-vite';
 import '@utrecht/components/dist/document/css/index.css';
 
-import {utrechtDocumentDecorator} from './decorators';
+import {utrechtDocumentDecorator, withModal} from './decorators';
 import {reactIntl} from './reactIntl';
 
 const preview: Preview = {
-  decorators: [utrechtDocumentDecorator],
+  decorators: [utrechtDocumentDecorator, withModal],
   parameters: {
     reactIntl,
     controls: {
