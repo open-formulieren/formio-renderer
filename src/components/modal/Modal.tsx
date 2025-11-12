@@ -10,7 +10,7 @@ import {useModalContext} from './hooks';
 
 export interface ModalProps {
   isOpen?: boolean;
-  title?: React.ReactNode;
+  title: React.ReactNode;
   closeModal: () => void;
   children: React.ReactNode;
   noPortal?: boolean;
@@ -23,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({
   noPortal = false,
   children,
 }) => {
-  const id = useId();
+  const titleId = useId();
   const intl = useIntl();
   const modalRef = useRef<HTMLDialogElement>(null);
   const {parentSelector} = useModalContext();
@@ -46,7 +46,7 @@ const Modal: React.FC<ModalProps> = ({
     <dialog
       className="openforms-modal"
       ref={modalRef}
-      aria-labelledby={title ? id : undefined}
+      aria-labelledby={titleId}
       onClose={closeModal}
       onKeyDown={(event: React.KeyboardEvent<HTMLDialogElement>) => {
         // The `closedby="any"` should handle the "escape" key click in most cases.
@@ -58,25 +58,24 @@ const Modal: React.FC<ModalProps> = ({
       // eslint-disable-next-line react/no-unknown-property
       closedby="any"
     >
-      {title && (
-        <Heading2 id={id} className="openforms-modal__title">
+      <header className="openforms-modal__header">
+        <Heading2 id={titleId} className="openforms-modal__title">
           {title}
         </Heading2>
-      )}
-
-      <SubtleButton
-        className="openforms-modal__close"
-        type="button"
-        onClick={closeModal}
-        aria-label={intl.formatMessage({
-          description: 'Modal close button title',
-          defaultMessage: 'Close modal',
-        })}
-      >
-        <UtrechtIcon>
-          <Icon icon="close" />
-        </UtrechtIcon>
-      </SubtleButton>
+        <SubtleButton
+          className="openforms-modal__close"
+          type="button"
+          onClick={closeModal}
+          aria-label={intl.formatMessage({
+            description: 'Modal close button title',
+            defaultMessage: 'Close modal',
+          })}
+        >
+          <UtrechtIcon>
+            <Icon icon="close" />
+          </UtrechtIcon>
+        </SubtleButton>
+      </header>
 
       <div className="openforms-modal__body">{children}</div>
     </dialog>

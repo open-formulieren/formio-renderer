@@ -4,64 +4,45 @@
 @use '@/scss/bem';
 @use '@/scss/responsive';
 
-$modal-padding-block-start: var(--of-modal-padding-block-start, 40px);
-$modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
-$modal-padding-inline-start: var(--of-modal-padding-inline-start, 40px);
-$modal-padding-inline-end: var(--of-modal-padding-inline-end, 40px);
-
-// Take half the modal padding, and turn it negative
-$modal-close-icon-offset-block-start: calc($modal-padding-block-start * -0.5);
-$modal-close-icon-offset-inline-end: calc($modal-padding-inline-end * -0.5);
-
 body:has(.openforms-modal[open]) {
   overflow: hidden;
 }
 
 .openforms-modal {
-  &[open] {
-    display: grid;
-  }
+  --_of-modal-padding-block-start: var(--of-modal-padding-block-start, 40px);
+  --_of-modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
+  --_of-modal-padding-inline-start: var(--of-modal-padding-inline-start, 40px);
+  --_of-modal-padding-inline-end: var(--of-modal-padding-inline-end, 40px);
 
-  grid-template-columns: 1fr min-content;
-  grid-template-rows: auto 1fr;
-  grid-row-gap: 20px;
-  grid-template-areas:
-    'body close'
-    'body close';
-  padding-block-start: $modal-padding-block-start;
-  padding-block-end: $modal-padding-block-end;
-  padding-inline-start: $modal-padding-inline-start;
-  padding-inline-end: $modal-padding-inline-end;
+  --_of-modal-body-bleed-margin: var(--of-modal-body-bleed-margin, 2px);
 
-  box-sizing: border-box;
-  inline-size: 90dvw;
-
+  flex-direction: column;
+  row-gap: var(--of-modal-row-gap, 20px);
   min-block-size: 20dvh;
   block-size: fit-content;
   max-block-size: 90dvh;
+  inline-size: 90dvw;
 
-  border-style: solid;
-  border-width: var(--of-modal-border-width, 1px);
-  border-color: var(--of-modal-border-color, #eee);
+  // ensure that the modal as a whole is scrollable, and that content (like outlines)
+  // from the modal body can bleed into the blank space.
+  padding-block-start: var(--_of-modal-padding-block-start);
+  padding-block-end: var(--_of-modal-padding-block-end);
+  padding-inline-start: var(--_of-modal-padding-inline-start);
+  padding-inline-end: var(--_of-modal-padding-inline-end);
 
   background-color: var(--of-modal-background-color, white);
+  border-color: var(--of-modal-border-color, #eee);
+  border-style: solid;
+  border-width: var(--of-modal-border-width, 1px);
   box-shadow: var(
     --of-modal-box-shadow,
     0 4px 8px rgba(0, 0, 0, 0.2),
     0 6px 20px rgba(0, 0, 0, 0.2)
   );
+  box-sizing: border-box;
 
-  @include responsive.desktop {
-    inline-size: 50dvw;
-
-    min-block-size: 30dvh;
-    max-block-size: 50dvh;
-  }
-
-  &:has(.openforms-modal__title) {
-    grid-template-areas:
-      'title close'
-      'body body';
+  &[open] {
+    display: flex;
   }
 
   &::backdrop {
@@ -69,27 +50,24 @@ body:has(.openforms-modal[open]) {
     backdrop-filter: blur(1px);
   }
 
+  @include responsive.desktop {
+    inline-size: 50dvw;
+    min-block-size: 30dvh;
+    max-block-size: 50dvh;
+  }
+
+  @include bem.element('header') {
+    background-color: var(--of-modal-header-background-color, inherit);
+    display: block;
+    // necessary to prevent the close button from overlapping the title, because it's
+    // absolutely positioned. Unfortunately, calculating the offset + inline-size of
+    // the button to automatically apply this is a complicated mess in CSS and using
+    // explicit configuration is much easier to follow and maintain.
+    margin-inline-end: var(--of-modal-header-margin-inline-end, 10px);
+  }
+
   @include bem.element('close') {
-    position: relative;
-
-    $calculated-modal-close-icon-offset-block-start: calc(
-      $modal-close-icon-offset-block-start - var(--utrecht-button-padding-block-start) - var(
-          --_utrecht-button-border-width
-        )
-    );
-    inset-block-start: $calculated-modal-close-icon-offset-block-start;
-    inset-inline-end: calc(
-      $modal-close-icon-offset-inline-end - var(--utrecht-button-padding-inline-end) - var(
-          --_utrecht-button-border-width
-        )
-    );
-    // Also set bottom margin, to prevent button size from dictating the modal header
-    // spacing.
-    margin-block-end: $calculated-modal-close-icon-offset-block-start;
-
-    grid-area: close;
-    align-self: start;
-    justify-self: end;
+    box-sizing: border-box;
     transition:
       transform ease 0.1s,
       opacity ease 0.1s;
@@ -99,23 +77,60 @@ body:has(.openforms-modal[open]) {
     // This button is only used to show an icon. With this the icon is centered.
     line-height: 1;
 
+    // set the calculated close button inline-size + offset as space to reserve next
+    // to the title.
+    --_of-modal-close-hover-scale: 110%;
+    --_of-modal-close-translate-offset: calc(var(--_of-modal-close-hover-scale) - 100%);
+    // position: absolute removes it from the normal document flow, which prevents the
+    // button including its passing from taking up vertical space inside the heading
+    // element, which in turn prevents the button from pushing down the content and
+    // creating a too-large gap between heading and body.
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    // necessary to avoid horizontal scrollbar due to scale(1.1);
+    transform: translate(
+      calc(-1 * var(--_of-modal-close-translate-offset)),
+      var(--_of-modal-close-translate-offset)
+    );
+
     &:focus {
       outline: revert;
     }
 
     &:hover {
-      transform: scale(1.1);
+      transform: translate(
+          calc(-1 * var(--_of-modal-close-translate-offset)),
+          var(--_of-modal-close-translate-offset)
+        )
+        scale(var(--_of-modal-close-hover-scale));
       opacity: 0.7;
     }
   }
 
   @include bem.element('title') {
-    grid-area: title;
     break-inside: avoid-column;
   }
 
+  // we put a box/ring of blank space around the body so that outlines etc. can bleed
+  // into the background and not be cut-off, which otherwise happens because of the
+  // scroll behaviour. Disabling the scroll behaviour is obviously also not viable if
+  // the content block-size exceeds the modal size.
   @include bem.element('body') {
-    grid-area: body;
-    overflow-y: auto;
+    // overflow-y: auto implies overflow-x auto, they can't be decoupled
+    overflow: auto;
+    flex-grow: 1;
+    overflow-wrap: break-word;
+
+    // use negative margins that eat into the padding of the modal itself
+    margin-block-end: calc(-1 * var(--_of-modal-body-bleed-margin));
+    margin-block-start: calc(-1 * var(--_of-modal-body-bleed-margin));
+    margin-inline-end: calc(-1 * var(--_of-modal-body-bleed-margin));
+    margin-inline-start: calc(-1 * var(--_of-modal-body-bleed-margin));
+    // ... and add the padding back on the container which acts as bleed area
+    padding-block-end: var(--_of-modal-body-bleed-margin);
+    padding-block-start: var(--_of-modal-body-bleed-margin);
+    padding-inline-end: var(--_of-modal-body-bleed-margin);
+    padding-inline-start: var(--_of-modal-body-bleed-margin);
   }
 }

@@ -42,7 +42,7 @@
 
 @include responsive.mobile-only {
   .openforms-theme {
-    .utrecht-button,
+    .utrecht-button:not(.openforms-modal__close),
     .utrecht-button-link {
       display: flex;
       inline-size: 100%;
