@@ -61,6 +61,10 @@ export interface TextFieldProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Any additional content, positioned between the text field and the description (if any).
+   */
+  children?: React.ReactNode;
 }
 
 /**
@@ -80,6 +84,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  children,
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -128,6 +133,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
         />
       </Paragraph>
       {showCharCount && <CharCount id={characterCountId} text={value} limit={maxLength} />}
+      {children}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
