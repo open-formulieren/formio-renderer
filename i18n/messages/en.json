@@ -29,6 +29,11 @@
     "description": "Multi-field individual item label at $index. The index variable here is 1-indexed.",
     "originalDefault": "{label} {index}"
   },
+  "1+Q55M": {
+    "defaultMessage": "You are verifying the email address <link>{emailAddress}</link>. First, we need to send you a verification code on this email address. Then, you need to enter the code to confirm it.",
+    "description": "Email verification modal body text",
+    "originalDefault": "You are verifying the email address <link>{emailAddress}</link>. First, we need to send you a verification code on this email address. Then, you need to enter the code to confirm it."
+  },
   "1AgCMs": {
     "defaultMessage": "Remove",
     "description": "Button title to remove uploaded file",
@@ -73,6 +78,11 @@
     "defaultMessage": "Loading...",
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
+  },
+  "4tPKAs": {
+    "defaultMessage": "Verify",
+    "description": "Email verification: verify code button text",
+    "originalDefault": "Verify"
   },
   "5TAbGN": {
     "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
@@ -134,6 +144,11 @@
     "description": "Selectboxes minimum selected count error message",
     "originalDefault": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }."
   },
+  "Bq2hIW": {
+    "defaultMessage": "You must verify this email address to continue.",
+    "description": "Email verification warning for unverified emails.",
+    "originalDefault": "You must verify this email address to continue."
+  },
   "DBTNgI": {
     "defaultMessage": "d",
     "description": "Placeholder for day part of a date",
@@ -154,10 +169,20 @@
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
   },
+  "EZ7myd": {
+    "defaultMessage": "Email address verification",
+    "description": "Email verification modal title",
+    "originalDefault": "Email address verification"
+  },
   "ErdIGO": {
     "defaultMessage": "Clear signature",
     "description": "Signature: accessible clear signature label",
     "originalDefault": "Clear signature"
+  },
+  "FDy8nr": {
+    "defaultMessage": "The verification code may only contain letters (A-Z) and numbers (0-9).",
+    "description": "Validation error message for verification code pattern",
+    "originalDefault": "The verification code may only contain letters (A-Z) and numbers (0-9)."
   },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
@@ -239,6 +264,11 @@
     "description": "Select 'no options' message",
     "originalDefault": "No results found"
   },
+  "R7k4JC": {
+    "defaultMessage": "Enter the six-character code",
+    "description": "Email verification: code input field label",
+    "originalDefault": "Enter the six-character code"
+  },
   "RJ+0F/": {
     "defaultMessage": "Yes",
     "description": "'True' display",
@@ -319,6 +349,11 @@
     "description": "Validation error for required addressNL.streetName field.",
     "originalDefault": "You must provide a street name."
   },
+  "c0Ry9H": {
+    "defaultMessage": "The verification code must contain exactly six characters.",
+    "description": "Validation error message for verification codes with length != 6",
+    "originalDefault": "The verification code must contain exactly six characters."
+  },
   "cBsrax": {
     "defaultMessage": "House letter",
     "description": "Label for addressNL houseLetter input",
@@ -339,6 +374,11 @@
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "dsZqad": {
+    "defaultMessage": "The email address ''{email}' is verified.",
+    "description": "Email verification: verification status confirmation message.",
+    "originalDefault": "The email address ''{email}' is verified."
+  },
   "eAmrdi": {
     "defaultMessage": "Loading...",
     "description": "Loading content text",
@@ -348,6 +388,11 @@
     "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
     "description": "Description/label for upload drop zone.",
     "originalDefault": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>."
+  },
+  "ixMIBJ": {
+    "defaultMessage": "What would you like to do?",
+    "description": "Email verification mode selection label",
+    "originalDefault": "What would you like to do?"
   },
   "j1VL+H": {
     "defaultMessage": "{fileTypes} or {lastOption}",
@@ -359,10 +404,20 @@
     "description": "File upload error message: file too large",
     "originalDefault": "The file must be smaller than {fileMaxSize}."
   },
+  "lQY+Zm": {
+    "defaultMessage": "Enter the verification code",
+    "description": "Email verification mode selection: enter code label",
+    "originalDefault": "Enter the verification code"
+  },
   "lVNV/d": {
     "defaultMessage": "House number addition",
     "description": "Label for addressNL houseNumberAddition input",
     "originalDefault": "House number addition"
+  },
+  "lmWBQT": {
+    "defaultMessage": "The code is exactly six characters long and consists of only uppercase letters and numbers.",
+    "description": "Email verification: code input field description",
+    "originalDefault": "The code is exactly six characters long and consists of only uppercase letters and numbers."
   },
   "muPw1F": {
     "defaultMessage": "The datetime must be earlier than or equal to {max}.",
@@ -419,6 +474,11 @@
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while processing the co-sign results. Please contact the municipality."
   },
+  "qyWfE+": {
+    "defaultMessage": "Receive a verification code",
+    "description": "Email verification mode selection: send code label",
+    "originalDefault": "Receive a verification code"
+  },
   "r0uvHk": {
     "defaultMessage": "Remove ''{label} {index}'",
     "description": "Accessible remove icon/button label for item at $index. The index variable here is 1-indexed.",
@@ -433,6 +493,11 @@
     "defaultMessage": "The upload must be completed before you can continue.",
     "description": "File upload error message: only successful uploads can be submitted message.",
     "originalDefault": "The upload must be completed before you can continue."
+  },
+  "riuSfc": {
+    "defaultMessage": "Send code",
+    "description": "Email verification: send code button text",
+    "originalDefault": "Send code"
   },
   "sP3xMn": {
     "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
@@ -473,6 +538,11 @@
     "defaultMessage": "The value must be {min} or greater.",
     "description": "Validation error for number less than minimum value.",
     "originalDefault": "The value must be {min} or greater."
+  },
+  "xe7bA1": {
+    "defaultMessage": "Verify",
+    "description": "Email verification button label.",
+    "originalDefault": "Verify"
   },
   "yKo62N": {
     "defaultMessage": "Year",
