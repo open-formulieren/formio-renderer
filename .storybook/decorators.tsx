@@ -32,6 +32,7 @@ export const withFormik: Decorator = (Story, context) => {
   const initialValues = context.parameters?.formik?.initialValues || {};
   const initialErrors = context.parameters?.formik?.initialErrors || {};
   const initialTouched = context.parameters?.formik?.initialTouched || {};
+  const initialStatus = context.parameters?.formik?.initialStatus;
   const wrapForm = context.parameters?.formik?.wrapForm ?? true;
   const onSubmit = context.parameters?.formik?.onSubmit || fn();
   const zodSchema = context.parameters?.formik?.zodSchema;
@@ -40,6 +41,7 @@ export const withFormik: Decorator = (Story, context) => {
       initialValues={initialValues}
       initialErrors={initialErrors}
       initialTouched={initialTouched}
+      initialStatus={initialStatus}
       enableReinitialize
       onSubmit={async values => onSubmit(values)}
       validateOnBlur={false}
