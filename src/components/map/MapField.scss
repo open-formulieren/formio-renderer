@@ -1,0 +1,26 @@
+@use 'microscope-sass/lib/bem';
+@use 'leaflet/dist/leaflet';
+@import 'leaflet-draw/dist/leaflet.draw.css';
+@import 'leaflet-geosearch/dist/geosearch.css';
+@import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
+
+.openforms-leaflet-map {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 400px;
+  position: relative;
+  z-index: 0;
+
+  @include bem.modifier('disabled') {
+    cursor: default;
+  }
+
+  .leaflet-draw-actions {
+    a {
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+    }
+  }
+}
