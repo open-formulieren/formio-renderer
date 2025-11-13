@@ -12,7 +12,7 @@ import Tooltip from '../forms/Tooltip';
 import {overloadLeafletDeleteControl} from './DeleteControl';
 import LayersControl from './LeafletMapLayersControl';
 import LocationControl from './LeafletMapLocationControl';
-import SearchControl, {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
+import SearchControl, {type GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
 import './MapField.scss';
 import NearestAddress from './NearestAddress';
 import {DEFAULT_CENTER_COORDINATES, DEFAULT_INTERACTIONS, DEFAULT_ZOOM_LEVEL} from './constants';

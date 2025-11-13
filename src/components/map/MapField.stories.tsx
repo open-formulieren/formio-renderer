@@ -8,9 +8,9 @@ import {expect, fn, spyOn, userEvent, waitFor, within} from 'storybook/test';
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
-import MapField, {MapFieldProps} from './MapField';
+import MapField, {type MapFieldProps} from './MapField';
 import MockProvider from './test';
-import {GeoJsonGeometry} from './types';
+import {type GeoJsonGeometry} from './types';
 
 // add our leaflet instrumentation to the global window object
 declare global {
