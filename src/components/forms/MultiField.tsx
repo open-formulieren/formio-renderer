@@ -1,16 +1,11 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {
-  Button,
-  Fieldset,
-  FieldsetLegend,
-  SecondaryActionButton,
-  Icon as UtrechtIcon,
-} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useEffect, useId, useRef} from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import {Button, SecondaryActionButton} from '@/components/Button';
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';

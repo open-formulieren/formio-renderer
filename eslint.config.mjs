@@ -21,6 +21,25 @@ const config = defineConfig([
           prefer: 'type-imports',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          // the utrecht-button variants have some accessibility issues, use the wrappers
+          // instead
+          paths: [
+            {
+              name: '@utrecht/component-library-react',
+              importNames: [
+                'PrimaryActionButton',
+                'Button',
+                'SecondaryActionButton',
+                'SubtleButton',
+              ],
+              message: 'Use Button (variants) from `@/components/Button` instead.',
+            },
+          ],
+        },
+      ],
     },
   },
   // Unit tests

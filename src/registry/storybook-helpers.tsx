@@ -1,7 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {StoryContext} from '@storybook/react-vite';
-import {PrimaryActionButton} from '@utrecht/component-library-react';
 
+import {PrimaryActionButton} from '@/components/Button';
 import type {FormioFormProps} from '@/components/FormioForm';
 import FormioForm from '@/components/FormioForm';
 import type {JSONObject} from '@/types';
