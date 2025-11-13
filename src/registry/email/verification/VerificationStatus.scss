@@ -1,0 +1,22 @@
+@use '@utrecht/components/paragraph' as paragraph;
+
+@use '@/scss/alert';
+@use '@/scss/bem';
+
+.openforms-email-verification-status {
+  display: flex;
+  flex-direction: column;
+  // backwards compatible - remove fallback to form-field-with-button-gap in OF 4.0
+  gap: var(--of-email-verification-status-gap, var(--of-utrecht-form-field-with-button-gap, 10px));
+  padding-block-start: var(
+    --of-email-verification-status-padding-block-start,
+    var(--of-email-verification-status-gap, 10px)
+  );
+
+  @include bem.modifier('confirmation') {
+    padding-block-end: var(
+      --of-email-verification-status-padding-block-end,
+      var(--of-email-verification-status-gap, 10px)
+    );
+  }
+}
