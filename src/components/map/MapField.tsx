@@ -40,10 +40,6 @@ export interface MapFieldProps {
    */
   label: React.ReactNode;
   /**
-   * Required fields get additional markup/styling to indicate this validation requirement.
-   */
-  isRequired?: boolean;
-  /**
    * Disabled fields get marked as such in an accessible manner.
    */
   isDisabled?: boolean;
@@ -93,7 +89,6 @@ export interface MapFieldProps {
 const MapField: React.FC<MapFieldProps> = ({
   name,
   label = '',
-  isRequired = false,
   description = '',
   isDisabled = false,
   tooltip,
@@ -156,9 +151,7 @@ const MapField: React.FC<MapFieldProps> = ({
 
   return (
     <>
-      <LabelContent isDisabled={isDisabled} isRequired={isRequired}>
-        {label}
-      </LabelContent>
+      <LabelContent isDisabled={isDisabled}>{label}</LabelContent>
       <Tooltip>{tooltip}</Tooltip>
 
       <MapContainer
