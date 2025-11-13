@@ -274,7 +274,6 @@ const useMultiFieldEffects = (
 
   // detect if a new item is added and auto-focus it
   useEffect(() => {
-    console.log('effect!');
     const prevItemCount = itemCountRef.current;
     if (itemCount !== prevItemCount) {
       itemCountRef.current = itemCount;
