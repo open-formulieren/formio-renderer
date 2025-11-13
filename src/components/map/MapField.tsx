@@ -11,6 +11,7 @@ import {LabelContent} from '../forms/Label';
 import Tooltip from '../forms/Tooltip';
 import {overloadLeafletDeleteControl} from './DeleteControl';
 import LayersControl from './LeafletMapLayersControl';
+import LocationControl from './LeafletMapLocationControl';
 import SearchControl, {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
 import './MapField.scss';
 import NearestAddress from './NearestAddress';
@@ -241,7 +242,7 @@ const MapField: React.FC<MapFieldProps> = ({
                 notFoundMessage: intl.formatMessage(searchControlMessages.notFound),
               }}
             />
-            {/** <LocationControl />*/}
+            <LocationControl />
           </>
         )}
         {coordinates && <MapView coordinates={coordinates} />}

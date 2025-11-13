@@ -8,6 +8,8 @@ import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
 
+import {setupGeolocationMock} from './mocks/geolocationMock';
+
 /**
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
  * to wrap some 'page-global' styling.
@@ -100,4 +102,17 @@ export const withMockDate: Decorator = (Story, {parameters}) => {
       <Story />
     </ClockCleanup>
   );
+};
+
+export const withGeolocationMocking: Decorator = (Story, {parameters}) => {
+  const {updateGeolocationPermission} = setupGeolocationMock({
+    geolocationPermission: parameters.geolocation.permission,
+    geolocationLatitude: parameters.geolocation.latitude,
+    geolocationLongitude: parameters.geolocation.longitude,
+  });
+
+  // Expose updateGeolocationPermission function
+  parameters.geolocation.updatePermission = updateGeolocationPermission;
+
+  return <Story />;
 };
