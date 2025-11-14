@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
@@ -218,7 +218,9 @@ export const ShowCharCountWithoutLimit: Story = {
     expect(charactersUsedMessage).toBeVisible();
 
     // Expect that the character count is also accessible by screen-readers.
-    expect(input).toHaveAccessibleDescription('21 karakters.');
+    await waitFor(() => {
+      expect(input).toHaveAccessibleDescription('21 karakters.');
+    });
   },
 };
 
@@ -257,7 +259,9 @@ export const ShowCharCountWithLimit: Story = {
       // Expect the 'characters remaining' text to be shown, with the right amount of
       // remaining characters.
       expect(await canvas.findByText('Nog 29 karakters over.')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('Nog 29 karakters over.');
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 29 karakters over.');
+      });
     });
 
     await step('Character count for 1 character remaining', async () => {
@@ -265,21 +269,27 @@ export const ShowCharCountWithLimit: Story = {
       await userEvent.type(input, " I'm standing on the edge...");
 
       expect(await canvas.findByText('Nog 1 karakter over.')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('Nog 1 karakter over.');
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 1 karakter over.');
+      });
     });
 
     await step('Character count for 0 characters remaining', async () => {
       await userEvent.type(input, ' ');
 
       expect(await canvas.findByText('Nog 0 karakters over.')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('Nog 0 karakters over.');
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 0 karakters over.');
+      });
     });
 
     await step('Character count beyond characters limit', async () => {
       await userEvent.type(input, 'And I can go beyond it!');
 
       expect(await canvas.findByText('Nog -23 karakters over.')).toBeVisible();
-      expect(input).toHaveAccessibleDescription('Nog -23 karakters over.');
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog -23 karakters over.');
+      });
 
       // Trigger the zog validation
       await userEvent.tab();

@@ -3,6 +3,7 @@ import type {TextboxProps} from '@utrecht/component-library-react/dist/Textbox';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
+import CharCount from '@/components/forms/CharCount';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -47,6 +48,15 @@ export interface TextFieldProps {
    */
   placeholder?: string;
   /**
+   * Displays a countdown of the remaining amount of characters if a max length is
+   * provided, otherwise show how many characters are used.
+   */
+  showCharCount?: boolean;
+  /**
+   * Needed for `showCharCount` to calculate the remaining amount of characters.
+   */
+  maxLength?: number;
+  /**
    * Marker to signal this field is used in a multi-value field parent, which requires
    * some special attention w/r to validation errors.
    */
@@ -67,6 +77,8 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   isDisabled = false,
   placeholder,
   tooltip,
+  maxLength,
+  showCharCount = false,
   isMultiValue = false,
   ...extraProps
 }) => {
@@ -81,6 +93,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
+  const characterCountId = `${id}-character-count`;
 
   return (
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
@@ -106,11 +119,15 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           id={id}
           disabled={isDisabled}
           invalid={invalid}
-          aria-describedby={errorMessageId}
+          aria-describedby={
+            [errorMessageId, showCharCount && characterCountId].filter(Boolean).join(' ') ||
+            undefined
+          }
           placeholder={placeholder}
           {...extraProps}
         />
       </Paragraph>
+      {showCharCount && <CharCount id={characterCountId} text={value} limit={maxLength} />}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>

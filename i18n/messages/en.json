@@ -34,11 +34,6 @@
     "description": "Button title to remove uploaded file",
     "originalDefault": "Remove"
   },
-  "1TAtDi": {
-    "defaultMessage": "{remainingCharCount, plural, one {{remainingCharCount} character remaining.} other {{remainingCharCount} characters remaining.} }",
-    "description": "Textarea character remaining count",
-    "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
-  },
   "1hdvgS": {
     "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
     "description": "Co-sign auth option not available on form",
@@ -78,6 +73,11 @@
     "defaultMessage": "Loading...",
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
+  },
+  "5TAbGN": {
+    "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
+    "description": "Character count",
+    "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "646077": {
     "defaultMessage": "Invalid BSN.",
@@ -183,6 +183,11 @@
     "defaultMessage": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }.",
     "description": "File upload error message: too many files",
     "originalDefault": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }."
+  },
+  "I2pBWg": {
+    "defaultMessage": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }",
+    "description": "Character remaining count",
+    "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
   "IhLYXK": {
     "defaultMessage": "Toggle calendar",
@@ -413,11 +418,6 @@
     "defaultMessage": "Something went wrong while processing the co-sign results. Please contact the municipality.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while processing the co-sign results. Please contact the municipality."
-  },
-  "qTqAIS": {
-    "defaultMessage": "{charCount, plural, one {{charCount} character} other {{charCount} characters} }.",
-    "description": "Textarea character count",
-    "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "r0uvHk": {
     "defaultMessage": "Remove ''{label} {index}'",

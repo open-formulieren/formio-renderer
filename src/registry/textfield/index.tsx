@@ -14,7 +14,8 @@ export interface FormioTextFieldProps {
 }
 
 export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefinition}) => {
-  const {key, label, description, tooltip, placeholder, validate, disabled} = componentDefinition;
+  const {key, label, description, tooltip, placeholder, validate, disabled, showCharCount} =
+    componentDefinition;
 
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
@@ -32,11 +33,23 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
       {...sharedProps}
       newItemValue=""
       renderField={({name, label}) => (
-        <TextField name={name} label={label} placeholder={placeholder} isMultiValue />
+        <TextField
+          name={name}
+          label={label}
+          placeholder={placeholder}
+          showCharCount={showCharCount}
+          maxLength={validate?.maxLength}
+          isMultiValue
+        />
       )}
     />
   ) : (
-    <TextField {...sharedProps} placeholder={placeholder} />
+    <TextField
+      {...sharedProps}
+      placeholder={placeholder}
+      showCharCount={showCharCount}
+      maxLength={validate?.maxLength}
+    />
   );
 };
 

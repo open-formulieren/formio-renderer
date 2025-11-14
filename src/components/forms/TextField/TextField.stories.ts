@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
@@ -139,5 +139,115 @@ export const ValidateOnBlur: Story = {
     input.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+};
+
+export const ShowCharCountWithoutLimit: Story = {
+  name: 'Show character count without a character limit',
+  args: {
+    name: 'showCharCount',
+    label: 'Show char count',
+    showCharCount: true,
+    maxLength: undefined,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        showCharCount: '',
+      },
+    },
+  },
+  globals: {
+    locale: 'nl',
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Show char count');
+
+    await userEvent.type(input, 'I am an example text.');
+
+    // Expect the 'X characters' text to be shown, with the right amount of used
+    // characters.
+    const charactersUsedMessage = await canvas.findByText('21 karakters.');
+    expect(charactersUsedMessage).toBeVisible();
+
+    // Expect that the character count is also accessible by screen-readers.
+    await waitFor(() => {
+      expect(input).toHaveAccessibleDescription('21 karakters.');
+    });
+  },
+};
+
+export const ShowCharCountWithLimit: Story = {
+  name: 'Show character count with a character limit',
+  args: {
+    name: 'showCharCount',
+    label: 'Show char count',
+    showCharCount: true,
+    maxLength: 50,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        showCharCount: '',
+      },
+      zodSchema: z.object({
+        showCharCount: z.string().max(50),
+      }),
+    },
+  },
+  globals: {
+    locale: 'nl',
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByLabelText('Show char count');
+
+    // The character limit should not be set to the html component.
+    // Conform the current setup, we limit the amount of characters via custom validation
+    expect(input).not.toHaveAttribute('maxlength', '50');
+
+    await step('Character count is shown after typing content', async () => {
+      await userEvent.type(input, 'I am an example text.');
+
+      // Expect the 'characters remaining' text to be shown, with the right amount of
+      // remaining characters.
+      expect(await canvas.findByText('Nog 29 karakters over.')).toBeVisible();
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 29 karakters over.');
+      });
+    });
+
+    await step('Character count for 1 character remaining', async () => {
+      // Show the correct message when 1 character left.
+      await userEvent.type(input, " I'm standing on the edge...");
+
+      expect(await canvas.findByText('Nog 1 karakter over.')).toBeVisible();
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 1 karakter over.');
+      });
+    });
+
+    await step('Character count for 0 characters remaining', async () => {
+      await userEvent.type(input, ' ');
+
+      expect(await canvas.findByText('Nog 0 karakters over.')).toBeVisible();
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog 0 karakters over.');
+      });
+    });
+
+    await step('Character count beyond characters limit', async () => {
+      await userEvent.type(input, 'And I can go beyond it!');
+
+      expect(await canvas.findByText('Nog -23 karakters over.')).toBeVisible();
+      await waitFor(() => {
+        expect(input).toHaveAccessibleDescription('Nog -23 karakters over.');
+      });
+
+      // Trigger the zog validation
+      await userEvent.tab();
+      expect(await canvas.findByText('String must contain at most 50 character(s)')).toBeVisible();
+    });
   },
 };

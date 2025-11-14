@@ -57,48 +57,6 @@
       "value": "Verwijderen"
     }
   ],
-  "1TAtDi": [
-    {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "type": 0,
-              "value": "Nog "
-            },
-            {
-              "type": 1,
-              "value": "remainingCharCount"
-            },
-            {
-              "type": 0,
-              "value": " karakter over."
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "type": 0,
-              "value": "Nog "
-            },
-            {
-              "type": 1,
-              "value": "remainingCharCount"
-            },
-            {
-              "type": 0,
-              "value": " karakters over."
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
-      "value": "remainingCharCount"
-    }
-  ],
   "1hdvgS": [
     {
       "type": 0,
@@ -167,6 +125,40 @@
     {
       "type": 0,
       "value": "Opties ophalen..."
+    }
+  ],
+  "5TAbGN": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
+              "type": 0,
+              "value": " karakter."
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
+              "type": 0,
+              "value": " karakters."
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "charCount"
     }
   ],
   "646077": [
@@ -365,6 +357,48 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "I2pBWg": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Nog "
+            },
+            {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
+              "type": 0,
+              "value": " karakter over."
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Nog "
+            },
+            {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
+              "type": 0,
+              "value": " karakters over."
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "remainingCharCount"
     }
   ],
   "IhLYXK": [
@@ -755,44 +789,6 @@
     {
       "type": 0,
       "value": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op."
-    }
-  ],
-  "qTqAIS": [
-    {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "type": 1,
-              "value": "charCount"
-            },
-            {
-              "type": 0,
-              "value": " karakter"
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "type": 1,
-              "value": "charCount"
-            },
-            {
-              "type": 0,
-              "value": " karakters"
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
-      "value": "charCount"
-    },
-    {
-      "type": 0,
-      "value": "."
     }
   ],
   "r0uvHk": [

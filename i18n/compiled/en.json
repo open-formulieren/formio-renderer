@@ -57,40 +57,6 @@
       "value": "Remove"
     }
   ],
-  "1TAtDi": [
-    {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "type": 1,
-              "value": "remainingCharCount"
-            },
-            {
-              "type": 0,
-              "value": " character remaining."
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "type": 1,
-              "value": "remainingCharCount"
-            },
-            {
-              "type": 0,
-              "value": " characters remaining."
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
-      "value": "remainingCharCount"
-    }
-  ],
   "1hdvgS": [
     {
       "type": 0,
@@ -159,6 +125,36 @@
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "5TAbGN": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "1 character"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "charCount"
+            },
+            {
+              "type": 0,
+              "value": " characters"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "charCount"
     }
   ],
   "646077": [
@@ -383,6 +379,36 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "I2pBWg": [
+    {
+      "offset": 0,
+      "options": {
+        "one": {
+          "value": [
+            {
+              "type": 0,
+              "value": "1 character remaining"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "remainingCharCount"
+            },
+            {
+              "type": 0,
+              "value": " characters remaining"
+            }
+          ]
+        }
+      },
+      "pluralType": "cardinal",
+      "type": 6,
+      "value": "remainingCharCount"
     }
   ],
   "IhLYXK": [
@@ -799,44 +825,6 @@
     {
       "type": 0,
       "value": "Something went wrong while processing the co-sign results. Please contact the municipality."
-    }
-  ],
-  "qTqAIS": [
-    {
-      "offset": 0,
-      "options": {
-        "one": {
-          "value": [
-            {
-              "type": 1,
-              "value": "charCount"
-            },
-            {
-              "type": 0,
-              "value": " character"
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "type": 1,
-              "value": "charCount"
-            },
-            {
-              "type": 0,
-              "value": " characters"
-            }
-          ]
-        }
-      },
-      "pluralType": "cardinal",
-      "type": 6,
-      "value": "charCount"
-    },
-    {
-      "type": 0,
-      "value": "."
     }
   ],
   "r0uvHk": [
