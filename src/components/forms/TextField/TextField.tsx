@@ -47,6 +47,15 @@ export interface TextFieldProps {
    */
   placeholder?: string;
   /**
+   * Displays a countdown of the remaining amount of characters if a max length is
+   * provided, otherwise show how many characters are used.
+   */
+  showCharCount?: boolean;
+  /**
+   * Needed for `showCharCount` to calculate the remaining amount of characters.
+   */
+  maxLength?: number;
+  /**
    * Marker to signal this field is used in a multi-value field parent, which requires
    * some special attention w/r to validation errors.
    */

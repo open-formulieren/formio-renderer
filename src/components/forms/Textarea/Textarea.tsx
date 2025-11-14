@@ -53,7 +53,8 @@ export interface TextareaProps {
    */
   autoExpand?: boolean;
   /**
-   * Displays a countdown of the remaining amount of characters.
+   * Displays a countdown of the remaining amount of characters if a max length is
+   * provided, otherwise show how many characters are used.
    */
   showCharCount?: boolean;
   /**
