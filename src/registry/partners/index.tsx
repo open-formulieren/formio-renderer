@@ -1,8 +1,8 @@
 import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
-import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {FormattedMessage} from 'react-intl';
 
+import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import FormFieldContainer from '@/components/FormFieldContainer';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';

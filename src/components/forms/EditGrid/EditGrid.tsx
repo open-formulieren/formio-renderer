@@ -1,11 +1,12 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {FormField, SecondaryActionButton} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useMemo, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 import type {ValidationError} from 'zod-formik-adapter';
 
+import {SecondaryActionButton} from '@/components/Button';
 import FieldConfigProvider from '@/components/FieldConfigProvider';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';

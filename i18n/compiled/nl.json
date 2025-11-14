@@ -51,6 +51,26 @@
       "value": "index"
     }
   ],
+  "1+Q55M": [
+    {
+      "type": 0,
+      "value": "Om door te gaan moet je jouw e-mailadres "
+    },
+    {
+      "children": [
+        {
+          "type": 1,
+          "value": "emailAddress"
+        }
+      ],
+      "type": 8,
+      "value": "link"
+    },
+    {
+      "type": 0,
+      "value": " bevestigen. We sturen je eerst een bevestigingscode naar dit e-mailadres. Vervolgens moet je deze bevestigingscode hier invoeren."
+    }
+  ],
   "1AgCMs": [
     {
       "type": 0,
@@ -125,6 +145,12 @@
     {
       "type": 0,
       "value": "Opties ophalen..."
+    }
+  ],
+  "4tPKAs": [
+    {
+      "type": 0,
+      "value": "Bevestigen"
     }
   ],
   "5TAbGN": [
@@ -255,6 +281,12 @@
       "value": " of meer opties aangevinkt heeft.."
     }
   ],
+  "Bq2hIW": [
+    {
+      "type": 0,
+      "value": "Om door te gaan moet je dit e-mailadres bevestigen."
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -279,10 +311,22 @@
       "value": "De geboortedatum mag hoogstens 120 jaar geleden zijn."
     }
   ],
+  "EZ7myd": [
+    {
+      "type": 0,
+      "value": "E-mailadres bevestigen"
+    }
+  ],
   "ErdIGO": [
     {
       "type": 0,
       "value": "Wis handtekening"
+    }
+  ],
+  "FDy8nr": [
+    {
+      "type": 0,
+      "value": "De bevestigingscode bestaat uit hoofdletters (A-Z) en getallen (0-9)."
     }
   ],
   "FfBWqF": [
@@ -461,6 +505,12 @@
       "value": "Geen opties om te kiezen"
     }
   ],
+  "R7k4JC": [
+    {
+      "type": 0,
+      "value": "Voer de bevestigingscode in"
+    }
+  ],
   "RJ+0F/": [
     {
       "type": 0,
@@ -573,6 +623,12 @@
       "value": "Straatnaam is verplicht."
     }
   ],
+  "c0Ry9H": [
+    {
+      "type": 0,
+      "value": "De bevestigingscode moet precies zes tekens lang zijn."
+    }
+  ],
   "cBsrax": [
     {
       "type": 0,
@@ -611,6 +667,20 @@
     {
       "type": 0,
       "value": " zijn."
+    }
+  ],
+  "dsZqad": [
+    {
+      "type": 0,
+      "value": "Het e-mailadres '"
+    },
+    {
+      "type": 1,
+      "value": "email"
+    },
+    {
+      "type": 0,
+      "value": "' is bevestigd."
     }
   ],
   "eAmrdi": [
@@ -683,6 +753,12 @@
       "value": " groot zijn."
     }
   ],
+  "ixMIBJ": [
+    {
+      "type": 0,
+      "value": "Wat wil je doen?"
+    }
+  ],
   "j1VL+H": [
     {
       "type": 1,
@@ -711,10 +787,22 @@
       "value": " of kleiner zijn."
     }
   ],
+  "lQY+Zm": [
+    {
+      "type": 0,
+      "value": "Een bevestigingscode invullen"
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
       "value": "Huisnummertoevoeging"
+    }
+  ],
+  "lmWBQT": [
+    {
+      "type": 0,
+      "value": "De bevestigingscode is precies 6 tekens lang en bestaat uit hoofdletters en getallen."
     }
   ],
   "muPw1F": [
@@ -791,6 +879,12 @@
       "value": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op."
     }
   ],
+  "qyWfE+": [
+    {
+      "type": 0,
+      "value": "Een bevestigingscode ontvangen"
+    }
+  ],
   "r0uvHk": [
     {
       "type": 0,
@@ -823,6 +917,12 @@
     {
       "type": 0,
       "value": "De upload moet klaar zijn voor je door kan gaan."
+    }
+  ],
+  "riuSfc": [
+    {
+      "type": 0,
+      "value": "Verstuur code"
     }
   ],
   "sP3xMn": [
@@ -913,6 +1013,12 @@
     {
       "type": 0,
       "value": " of groter zijn."
+    }
+  ],
+  "xe7bA1": [
+    {
+      "type": 0,
+      "value": "Bevestigen"
     }
   ],
   "yKo62N": [

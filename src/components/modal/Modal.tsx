@@ -1,8 +1,9 @@
-import {Heading2, SubtleButton, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {Heading2, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {useEffect, useId, useRef} from 'react';
 import ReactDOM from 'react-dom';
 import {useIntl} from 'react-intl';
 
+import {SubtleButton} from '@/components/Button';
 import Icon from '@/components/icons';
 
 import './Modal.scss';

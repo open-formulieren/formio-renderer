@@ -1,6 +1,7 @@
-import {PrimaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {FormattedMessage} from 'react-intl';
+
+import {PrimaryActionButton} from '@/components/Button';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
 

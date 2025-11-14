@@ -1,9 +1,9 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {PrimaryActionButton, SecondaryActionButton} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
+import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import {withFormik} from '@/sb-decorators';
 
 import DateField from '../DateField';

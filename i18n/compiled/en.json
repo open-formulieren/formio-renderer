@@ -51,6 +51,26 @@
       "value": "index"
     }
   ],
+  "1+Q55M": [
+    {
+      "type": 0,
+      "value": "You are verifying the email address "
+    },
+    {
+      "children": [
+        {
+          "type": 1,
+          "value": "emailAddress"
+        }
+      ],
+      "type": 8,
+      "value": "link"
+    },
+    {
+      "type": 0,
+      "value": ". First, we need to send you a verification code on this email address. Then, you need to enter the code to confirm it."
+    }
+  ],
   "1AgCMs": [
     {
       "type": 0,
@@ -125,6 +145,12 @@
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "4tPKAs": [
+    {
+      "type": 0,
+      "value": "Verify"
     }
   ],
   "5TAbGN": [
@@ -281,6 +307,12 @@
       "value": "."
     }
   ],
+  "Bq2hIW": [
+    {
+      "type": 0,
+      "value": "You must verify this email address to continue."
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -305,10 +337,22 @@
       "value": "Date of birth must be within the last 120 years."
     }
   ],
+  "EZ7myd": [
+    {
+      "type": 0,
+      "value": "Email address verification"
+    }
+  ],
   "ErdIGO": [
     {
       "type": 0,
       "value": "Clear signature"
+    }
+  ],
+  "FDy8nr": [
+    {
+      "type": 0,
+      "value": "The verification code may only contain letters (A-Z) and numbers (0-9)."
     }
   ],
   "FfBWqF": [
@@ -471,6 +515,12 @@
       "value": "No results found"
     }
   ],
+  "R7k4JC": [
+    {
+      "type": 0,
+      "value": "Enter the six-character code"
+    }
+  ],
   "RJ+0F/": [
     {
       "type": 0,
@@ -609,6 +659,12 @@
       "value": "You must provide a street name."
     }
   ],
+  "c0Ry9H": [
+    {
+      "type": 0,
+      "value": "The verification code must contain exactly six characters."
+    }
+  ],
   "cBsrax": [
     {
       "type": 0,
@@ -647,6 +703,20 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "dsZqad": [
+    {
+      "type": 0,
+      "value": "The email address '"
+    },
+    {
+      "type": 1,
+      "value": "email"
+    },
+    {
+      "type": 0,
+      "value": "' is verified."
     }
   ],
   "eAmrdi": [
@@ -719,6 +789,12 @@
       "value": "."
     }
   ],
+  "ixMIBJ": [
+    {
+      "type": 0,
+      "value": "What would you like to do?"
+    }
+  ],
   "j1VL+H": [
     {
       "type": 1,
@@ -747,10 +823,22 @@
       "value": "."
     }
   ],
+  "lQY+Zm": [
+    {
+      "type": 0,
+      "value": "Enter the verification code"
+    }
+  ],
   "lVNV/d": [
     {
       "type": 0,
       "value": "House number addition"
+    }
+  ],
+  "lmWBQT": [
+    {
+      "type": 0,
+      "value": "The code is exactly six characters long and consists of only uppercase letters and numbers."
     }
   ],
   "muPw1F": [
@@ -827,6 +915,12 @@
       "value": "Something went wrong while processing the co-sign results. Please contact the municipality."
     }
   ],
+  "qyWfE+": [
+    {
+      "type": 0,
+      "value": "Receive a verification code"
+    }
+  ],
   "r0uvHk": [
     {
       "type": 0,
@@ -859,6 +953,12 @@
     {
       "type": 0,
       "value": "The upload must be completed before you can continue."
+    }
+  ],
+  "riuSfc": [
+    {
+      "type": 0,
+      "value": "Send code"
     }
   ],
   "sP3xMn": [
@@ -945,6 +1045,12 @@
     {
       "type": 0,
       "value": " or greater."
+    }
+  ],
+  "xe7bA1": [
+    {
+      "type": 0,
+      "value": "Verify"
     }
   ],
   "yKo62N": [
