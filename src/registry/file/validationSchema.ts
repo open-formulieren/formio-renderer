@@ -191,6 +191,7 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
     fileMaxSize = '',
     maxNumberOfFiles,
     file: fileTypeConfiguration,
+    errors,
   } = componentDefinition;
   const {required} = validate;
 
@@ -212,7 +213,7 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
   }
 
   if (required) {
-    schema = schema.min(1);
+    schema = errors?.required ? schema.min(1, {message: errors.required}) : schema.min(1);
   } else {
     schema = schema.optional();
   }

@@ -32,9 +32,16 @@ const isValidBsn = (value: string): boolean => {
  * Build a zod schema for the basic BSN validation rules: 9 digits and conform the
  * 11-test.
  */
-export const buildBsnValidationSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
-  return z
-    .string()
+export const buildBsnValidationSchema = (
+  intl: IntlShape,
+  customRequiredError: string | undefined = undefined
+): z.ZodFirstPartySchemaTypes => {
+  let schema: z.ZodFirstPartySchemaTypes = z.string();
+
+  if (customRequiredError) {
+    schema = z.string({required_error: customRequiredError});
+  }
+  return schema
     .length(9, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
     .regex(/[0-9]{9}/, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
     .refine(isValidBsn, {message: intl.formatMessage(BSN_INVALID_MESSAGE)});

@@ -222,6 +222,30 @@ export const ValidateRequiredInputGroup: ValidationStory = {
   },
 };
 
+export const ValidateRequiredInputGroupWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateRequiredDatePicker: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -278,6 +302,39 @@ export const InvalidDateInputGroup: ValidationStory = {
     expect(monthInput).toHaveDisplayValue('13');
     expect(dayInput).toHaveDisplayValue('8');
     expect(yearInput).toHaveDisplayValue('2000');
+  },
+};
+
+export const InvalidDateInputGroupWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      validate: {
+        required: false,
+      },
+      errors: {invalid_date: 'Custom error message for invalid date'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const monthInput = canvas.getByLabelText('Month');
+    await userEvent.type(monthInput, '13');
+
+    const dayInput = canvas.getByLabelText('Day');
+    await userEvent.type(dayInput, '8');
+
+    const yearInput = canvas.getByLabelText('Year');
+    await userEvent.type(yearInput, '2000');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for invalid date')).toBeVisible();
   },
 };
 
@@ -371,6 +428,57 @@ export const MinMaxValidationInputGroup: ValidationStory = {
       ).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
+    });
+  },
+};
+
+export const MinMaxValidationInputGroupWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      errors: {minDate: 'Custom error for min date', maxDate: 'Custom error for max date'},
+      datePicker: {
+        minDate: '2025-09-05',
+        maxDate: '2025-09-10',
+        showWeeks: false,
+        startingDay: 0,
+        initDate: '',
+        minMode: 'day',
+        maxMode: 'day',
+        yearRows: 0,
+        yearColumns: 0,
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const monthInput = canvas.getByLabelText('Month');
+    const dayInput = canvas.getByLabelText('Day');
+    const yearInput = canvas.getByLabelText('Year');
+    const button = canvas.getByRole('button', {name: 'Submit'});
+
+    await userEvent.type(monthInput, '9');
+    await userEvent.type(yearInput, '2025');
+
+    await step('Date before date range', async () => {
+      await userEvent.type(dayInput, '4');
+
+      await userEvent.click(button);
+      expect(await canvas.findByText('Custom error for min date')).toBeVisible();
+    });
+
+    await step('Date after date range', async () => {
+      await userEvent.clear(dayInput);
+      await userEvent.type(dayInput, '11');
+
+      await userEvent.click(button);
+      expect(await canvas.findByText('Custom error for max date')).toBeVisible();
     });
   },
 };

@@ -137,6 +137,35 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio field',
+      defaultValue: '',
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+      ...extensionBoilerplate,
+    } satisfies ManualRadioValuesSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateOptionalNull: ValidationStory = {
   ...BaseValidationStory,
   args: {

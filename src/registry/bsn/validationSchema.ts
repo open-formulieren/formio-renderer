@@ -8,11 +8,11 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, multiple, validate = {}} = componentDefinition;
+  const {key, multiple, validate = {}, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
   // TODO: localize!
-  let schema: z.ZodFirstPartySchemaTypes = buildBsnValidationSchema(intl);
+  let schema: z.ZodFirstPartySchemaTypes = buildBsnValidationSchema(intl, errors?.required);
   if (!required) {
     schema = schema.or(z.literal('')).optional();
   }
@@ -31,7 +31,7 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = errors?.required ? schema.min(1, {message: errors.required}) : schema.min(1);
     }
   }
 

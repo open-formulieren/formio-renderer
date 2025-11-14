@@ -7,15 +7,17 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   componentDefinition,
   {validatePlugins}
 ) => {
-  const {key, validate = {}, multiple} = componentDefinition;
+  const {key, validate = {}, multiple, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.string().email();
+  let schema: z.ZodFirstPartySchemaTypes = z.string(
+    errors?.required ? {required_error: errors.required} : undefined
+  );
 
   if (required) {
-    schema = schema.min(1);
+    schema = schema.min(1).email();
   } else {
-    schema = schema.or(z.literal('')).optional();
+    schema = z.string().email().or(z.literal('')).optional();
   }
 
   if (plugins.length) {
@@ -32,7 +34,7 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = errors?.required ? schema.min(1, {message: errors.required}) : schema.min(1);
     }
   }
 

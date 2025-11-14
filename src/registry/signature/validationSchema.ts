@@ -17,12 +17,14 @@ const getValidationSchema: GetValidationSchema<SignatureComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}} = componentDefinition;
+  const {key, validate = {}, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
-    .refine(isValidImage, {message: intl.formatMessage(SIGNATURE_INVALID_MESSAGE)});
+  let schema: z.ZodFirstPartySchemaTypes = z.string(
+    errors?.required ? {required_error: errors.required} : undefined
+  );
+
+  schema = schema.refine(isValidImage, {message: intl.formatMessage(SIGNATURE_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();
   }
