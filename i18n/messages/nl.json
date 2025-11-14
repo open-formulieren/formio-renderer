@@ -345,7 +345,7 @@
     "originalDefault": "Loading..."
   },
   "iiVLgn": {
-    "defaultMessage": "{multiple, select, false {Sleep een bestand of klik om een bestand te selecteren.} other {Sleep bestanden of klik om {limit, select, 0 {} other {tot {limit}} } bestanden toe te voegen.} } Een betsand mag hoogstens <fileSize></fileSize> groot zijn.",
+    "defaultMessage": "{multiple, select, false {Sleep een bestand of klik om een bestand te selecteren.} other {Sleep bestanden of klik om {limit, select, 0 {} other {tot {limit}} } bestanden toe te voegen.} } Een bestand mag hoogstens <fileSize></fileSize> groot zijn.",
     "description": "Description/label for upload drop zone.",
     "originalDefault": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>."
   },
