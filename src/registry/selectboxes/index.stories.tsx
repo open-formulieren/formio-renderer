@@ -206,6 +206,34 @@ export const ValidateRequired: ValidationStory = {
     expect(await canvas.findByText('Required')).toBeVisible();
   },
 };
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
 
 export const ValidateMinRequiredOnBlur: ValidationStory = {
   ...BaseValidationStory,
@@ -260,6 +288,73 @@ export const ValidateMinRequiredOnBlur: ValidationStory = {
       waitForElementToBeRemoved(error);
       await userEvent.click(canvas.getByRole('group'));
     });
+  },
+};
+
+export const ValidateMinRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: false,
+        minSelectedCount: 2,
+      },
+      errors: {minSelectedCount: 'Custom error message for min selected count'},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByLabelText('Option 2'));
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(canvas.queryByText('Custom error message for min selected count')).toBeInTheDocument();
+  },
+};
+
+export const ValidateMaxRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+      ],
+      validate: {
+        required: false,
+        maxSelectedCount: 1,
+      },
+      errors: {maxSelectedCount: 'Custom error message for max selected count'},
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByLabelText('Option 1'));
+    await userEvent.click(canvas.getByLabelText('Option 2'));
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(canvas.queryByText('Custom error message for max selected count')).toBeInTheDocument();
   },
 };
 

@@ -52,6 +52,19 @@ describe('phoneNumber component validation', () => {
     expect(success).toBe(!required);
   });
 
+  test('required with custom error message', () => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each(['123456789', '+31 6 11223344', '0031 6 11223344', '06 112 233 44', '06-112-23-44'])(
     'valid formats (value: %s)',
     value => {
@@ -75,6 +88,19 @@ describe('phoneNumber component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('pattern with custom error message', () => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {pattern: '06-[0-9]+'},
+      errors: {pattern: 'Custom error message for pattern'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('061234567');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for pattern');
   });
 
   test.each([
@@ -114,6 +140,23 @@ describe('phoneNumber component with multiple: true', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('required with custom error message and multiple: true', () => {
+    const component: PhoneNumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required with multiple: true'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe(
+      'Custom error message for required with multiple: true'
+    );
   });
 
   test('individual items are still validated', () => {
