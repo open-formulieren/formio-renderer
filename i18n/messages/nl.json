@@ -35,11 +35,6 @@
     "description": "Button title to remove uploaded file",
     "originalDefault": "Remove"
   },
-  "1TAtDi": {
-    "defaultMessage": "{remainingCharCount, plural, one {Nog {remainingCharCount} karakter over.} other {Nog {remainingCharCount} karakters over.} }",
-    "description": "Textarea character remaining count",
-    "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
-  },
   "1hdvgS": {
     "defaultMessage": "Er ging iets fout bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
@@ -80,6 +75,11 @@
     "defaultMessage": "Opties ophalen...",
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
+  },
+  "5TAbGN": {
+    "defaultMessage": "{charCount, plural, one {{charCount} karakter.} other {{charCount} karakters.} }",
+    "description": "Character count",
+    "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "646077": {
     "defaultMessage": "Ongeldig BSN.",
@@ -186,6 +186,11 @@
     "defaultMessage": "Te veel bestanden toegevoegd. Het {maxNumberOfFiles, plural, one {mag er hoogstens 1 zijn} other {mogen er hoogstens {maxNumberOfFiles} zijn}}.",
     "description": "File upload error message: too many files",
     "originalDefault": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }."
+  },
+  "I2pBWg": {
+    "defaultMessage": "{remainingCharCount, plural, one {Nog {remainingCharCount} karakter over.} other {Nog {remainingCharCount} karakters over.} }",
+    "description": "Character remaining count",
+    "originalDefault": "{remainingCharCount, plural, one {1 character remaining} other {{remainingCharCount} characters remaining} }"
   },
   "IhLYXK": {
     "defaultMessage": "Toon/verberg de kalender",
@@ -418,11 +423,6 @@
     "defaultMessage": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while processing the co-sign results. Please contact the municipality."
-  },
-  "qTqAIS": {
-    "defaultMessage": "{charCount, plural, one {{charCount} karakter} other {{charCount} karakters} }.",
-    "description": "Textarea character count",
-    "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
   },
   "r0uvHk": {
     "defaultMessage": "''{label} {index}' verwijderen",

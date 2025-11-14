@@ -1,0 +1,7 @@
+@use '@utrecht/components/paragraph';
+
+@use '@/scss/sr-only';
+
+.openforms-charcount {
+  padding-block-start: var(--of-charcount-padding-block-start, 8px);
+}
