@@ -1,6 +1,8 @@
 import type {DigitalAddressType} from '@open-formulieren/types';
 import type {IntlShape} from 'react-intl';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
+import type {GroupBase, OptionProps} from 'react-select';
+import {components} from 'react-select';
 
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
@@ -35,10 +37,24 @@ const getDigitalAddressOptions = (
       address === digitalAddressGroup.preferred
         ? intl.formatMessage({
             description: 'CustomerProfile: preferred digital address option description',
-            defaultMessage: 'Preferred address',
+            defaultMessage: '(Preferred)',
           })
         : undefined,
   }));
+
+const OptionWithDescription: React.FC<OptionProps<Option>> = props => {
+  const {label, description} = props.data;
+  return (
+    <components.Option<Option, boolean, GroupBase<Option>> {...props}>
+      <span className="openforms-customer-profile-option">
+        {label}
+        {description && (
+          <span className="openforms-customer-profile-option__description">{description}</span>
+        )}
+      </span>
+    </components.Option>
+  );
+};
 
 interface DigitalAddressFieldProps {
   namePrefix: string;
@@ -62,6 +78,7 @@ export const EmailField: React.FC<DigitalAddressFieldProps> = ({
         label={<FormattedMessage {...FIELD_LABELS.email} />}
         options={options}
         isRequired={isRequired}
+        optionComponent={OptionWithDescription}
       />
     );
   }
@@ -93,6 +110,7 @@ export const PhoneNumberField: React.FC<DigitalAddressFieldProps> = ({
         label={<FormattedMessage {...FIELD_LABELS.phoneNumber} />}
         options={options}
         isRequired={isRequired}
+        optionComponent={OptionWithDescription}
       />
     );
   }

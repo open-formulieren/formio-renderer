@@ -1,1 +1,23 @@
 @use '@utrecht/components/form-fieldset';
+
+@use '@/scss/bem';
+@use '@/scss/responsive';
+
+.openforms-customer-profile-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-column-gap: var(--of-customer-profile-option-column-gap, 4px);
+  grid-row-gap: var(--of-customer-profile-option-row-gap, 4px);
+
+  // Make sure long labels don't break the layout (like email addresses viewed on mobile)
+  word-break: break-word;
+
+  @include bem.element('description') {
+    color: var(--of-customer-profile-option-description-color, var(--of-color-fg-muted));
+  }
+
+  @include responsive.mobile-only {
+    // On mobile, show the description below the label
+    grid-template-columns: 1fr;
+  }
+}
