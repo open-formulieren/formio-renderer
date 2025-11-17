@@ -1,7 +1,7 @@
 import {FormField} from '@utrecht/component-library-react';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId} from 'react';
-import type {MultiValue, SingleValue} from 'react-select';
+import type {MultiValue, OptionProps, SingleValue} from 'react-select';
 
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
@@ -71,6 +71,10 @@ export interface SelectProps {
    * is to use `undefined` to remove the value from the Formik state entirely.
    */
   noOptionSelectedValue?: undefined | '';
+  /**
+   * Custom component used for the select dropdown options.
+   */
+  optionComponent?: React.FC<OptionProps<Option>>;
 }
 
 const EMPTY_MULTI_SELECT_VALUE: string[] = [];
@@ -87,6 +91,7 @@ const Select: React.FC<SelectProps> = ({
   description,
   tooltip,
   noOptionSelectedValue = undefined,
+  optionComponent,
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
@@ -141,6 +146,9 @@ const Select: React.FC<SelectProps> = ({
         isRequired={isRequired}
         isDisabled={isDisabled}
         formikValue={wrapperValue}
+        components={{
+          ...(optionComponent ? {Option: optionComponent} : undefined),
+        }}
         onChange={optionOrOptions => {
           let rawValue: string | string[] | undefined;
           // need to cast here because type narrowing doesn't work for the SingleValue | MultiValue
