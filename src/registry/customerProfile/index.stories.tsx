@@ -69,8 +69,8 @@ export const WithPreferredDigitalAddresses: Story = {
         customerProfile: {
           fetchDigitalAddresses: async () => ({
             email: {
-              addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com'],
-              preferred: 'bar@test.com',
+              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              preferred: 'preferred.long.email.address@test.com',
             },
             phoneNumber: {
               addresses: ['0612345678', '0687654321', '0612387645'],
