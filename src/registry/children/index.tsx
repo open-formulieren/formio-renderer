@@ -1,10 +1,11 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
-import {SecondaryActionButton} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';
 import {FieldArray, useFormikContext} from 'formik';
 import {useId, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import {SecondaryActionButton} from '@/components/Button';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
@@ -13,6 +14,7 @@ import {useFieldConfig} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
 import ChildModal from './ChildModal';
+import './Children.scss';
 import ChildrenTable from './ChildrenTable';
 import ValueDisplay from './ValueDisplay';
 import {EMPTY_CHILD} from './constants';
@@ -68,6 +70,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       isInvalid={invalid}
       hasTooltip={!!tooltip}
       aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ') || undefined}
+      className={clsx('openforms-children', {
+        'openforms-children--with-manual-creating': canAddChildrenManually,
+      })}
     >
       <FieldArray name={key} validateOnChange={false}>
         {arrayHelpers => (

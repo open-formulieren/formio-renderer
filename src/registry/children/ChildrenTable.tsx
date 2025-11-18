@@ -15,7 +15,6 @@ import Icon from '@/components/icons';
 
 import BareCheckbox from './BareCheckbox';
 import ChildModal from './ChildModal';
-import './ChildrenTable.scss';
 import type {ExtendedChildDetails} from './types';
 
 interface EditChildModalProps {

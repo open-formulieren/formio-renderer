@@ -1,0 +1,13 @@
+@use '@utrecht/components/table';
+@use '@utrecht/components/custom-checkbox';
+
+@use '@/scss/bem';
+
+.openforms-children {
+  @include bem.modifier('with-manual-creating') {
+    .utrecht-form-field-description--openforms-errors {
+      // Add spacing between the error message and the "add child" button
+      margin-block-end: var(--of-utrecht-form-field-description-errors-margin-block-end, 8px);
+    }
+  }
+}

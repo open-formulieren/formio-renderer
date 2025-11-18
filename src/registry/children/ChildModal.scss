@@ -1,8 +1,0 @@
-@use '@/scss/bem';
-
-.openforms-children-modal {
-  @include bem.element('save-button') {
-    // Ensuring the button isn't stretched to the full width of the modal
-    align-self: start;
-  }
-}

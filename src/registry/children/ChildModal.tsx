@@ -7,7 +7,6 @@ import {PrimaryActionButton} from '@/components/Button';
 import FormFieldContainer from '@/components/FormFieldContainer';
 import Modal from '@/components/modal';
 
-import './ChildModal.scss';
 import {BSNField, DateOfBirthField, FirstNamesField} from './subFields';
 import type {ExtendedChildDetails} from './types';
 import {buildChildSchema} from './validationSchema';
