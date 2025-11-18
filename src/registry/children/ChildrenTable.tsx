@@ -44,7 +44,7 @@ const EditChildModal: React.FC<EditChildModalProps> = ({child, onSubmit}) => {
           {
             description: "Children component: children table 'edit child' accessible label",
             defaultMessage: `{hasFirstNames, select,
-            true {Edit child with firstname: {firstNames}}
+            true {Edit child with first name: {firstNames}}
             other {Edit child with BSN: {bsn}}}`,
           },
           {
@@ -77,7 +77,7 @@ const ChildDeleteButton: React.FC<ChildDeleteButtonProps> = ({child, onRemoveChi
         {
           description: "Children component: children table 'delete child' accessible label",
           defaultMessage: `{hasFirstNames, select,
-            true {Delete child with firstname: {firstNames}}
+            true {Delete child with first name: {firstNames}}
             other {Delete child with BSN: {bsn}}}`,
         },
         {
@@ -96,7 +96,7 @@ const ChildDeleteButton: React.FC<ChildDeleteButtonProps> = ({child, onRemoveChi
 
 const EmptyMessage: React.FC = () => (
   <i>
-    <FormattedMessage description="Emtpy field message" defaultMessage="No information provided" />
+    <FormattedMessage description="Empty field message" defaultMessage="No information provided" />
   </i>
 );
 

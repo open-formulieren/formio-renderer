@@ -13,6 +13,12 @@
       "value": " or less."
     }
   ],
+  "+MVbpZ": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
   "+xOWBM": [
     {
       "type": 0,
@@ -29,6 +35,12 @@
     {
       "type": 0,
       "value": "House number addition must be up to four letters and digits."
+    }
+  ],
+  "07h5b8": [
+    {
+      "type": 0,
+      "value": "You must provide a first name."
     }
   ],
   "0EdUXi": [
@@ -141,6 +153,12 @@
       "value": "A BSN must be 9 digits."
     }
   ],
+  "3beumC": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
@@ -207,6 +225,12 @@
     {
       "type": 0,
       "value": "'"
+    }
+  ],
+  "94ZHpN": [
+    {
+      "type": 0,
+      "value": "BSN"
     }
   ],
   "9SgPC6": [
@@ -313,6 +337,26 @@
       "value": "You must verify this email address to continue."
     }
   ],
+  "BxPJLU": [
+    {
+      "type": 0,
+      "value": "First names"
+    }
+  ],
+  "CTDEh6": [
+    {
+      "type": 0,
+      "value": "The BSN "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
+    },
+    {
+      "type": 0,
+      "value": " is used for multiple children. Each child must have a unique BSN."
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -325,10 +369,22 @@
       "value": "Street name"
     }
   ],
+  "DGjM+p": [
+    {
+      "type": 0,
+      "value": "Firstnames"
+    }
+  ],
   "DZjLaH": [
     {
       "type": 0,
       "value": "Hour must be between 0-23 and minute between 0-59"
+    }
+  ],
+  "DcLzdm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
     }
   ],
   "E++Snm": [
@@ -467,6 +523,38 @@
       "value": "Initials"
     }
   ],
+  "K4JPOy": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Edit child with BSN: "
+            },
+            {
+              "type": 1,
+              "value": "bsn"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Edit child with first name: "
+            },
+            {
+              "type": 1,
+              "value": "firstNames"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "hasFirstNames"
+    }
+  ],
   "KWP1b9": [
     {
       "type": 0,
@@ -491,6 +579,12 @@
       "value": "m"
     }
   ],
+  "MrlKEu": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -501,6 +595,12 @@
     {
       "type": 0,
       "value": "House number"
+    }
+  ],
+  "PzBahf": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "QAN3ua": [
@@ -537,6 +637,12 @@
     {
       "type": 0,
       "value": "The maximum number of uploads is reached. You cannot upload additional files."
+    }
+  ],
+  "S5ydMY": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
     }
   ],
   "TZb5ph": [
@@ -601,6 +707,20 @@
       "value": "The format of the date of birth is incorrect."
     }
   ],
+  "U7YHLZ": [
+    {
+      "type": 0,
+      "value": "Include "
+    },
+    {
+      "type": 1,
+      "value": "firstname"
+    },
+    {
+      "type": 0,
+      "value": "?"
+    }
+  ],
   "UONGQo": [
     {
       "type": 0,
@@ -617,6 +737,38 @@
     {
       "type": 0,
       "value": "Add another"
+    }
+  ],
+  "ZAq+s7": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Delete child with BSN: "
+            },
+            {
+              "type": 1,
+              "value": "bsn"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Delete child with first name: "
+            },
+            {
+              "type": 1,
+              "value": "firstNames"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "hasFirstNames"
     }
   ],
   "ZGuxfW": [
@@ -651,6 +803,12 @@
     {
       "type": 0,
       "value": "Lastname"
+    }
+  ],
+  "bqbXGd": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "bv/J3Y": [
@@ -723,6 +881,24 @@
     {
       "type": 0,
       "value": "Loading..."
+    }
+  ],
+  "fwMwqD": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "h7JS6y": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
+  "hPHLdv": [
+    {
+      "type": 0,
+      "value": "Edit child"
     }
   ],
   "iiVLgn": [
@@ -941,6 +1117,12 @@
     {
       "type": 0,
       "value": "'"
+    }
+  ],
+  "r6qiY/": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "rQ5vC9": [

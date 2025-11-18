@@ -29,8 +29,7 @@ const FIRST_NAMES_REQUIRED_MESSAGE = defineMessage({
 
 const DUPLICATE_BSN_VALUES_MESSAGE = defineMessage({
   description: 'Validation error for duplicate children.bsn values.',
-  defaultMessage:
-    'The BSN number {bsn} is used for multiple children. Each child must have a unique BSN number.',
+  defaultMessage: 'The BSN {bsn} is used for multiple children. Each child must have a unique BSN.',
 });
 
 const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {

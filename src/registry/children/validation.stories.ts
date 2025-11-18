@@ -158,7 +158,7 @@ export const ValidateDuplicateBsnValues: ValidationStory = {
 
     await step('Check errors', async () => {
       const bsnError = await canvas.findByText(
-        'The BSN number 111222333 is used for multiple children. Each child must have a unique BSN number.'
+        'The BSN 111222333 is used for multiple children. Each child must have a unique BSN.'
       );
 
       expect(bsnError).toBeVisible();

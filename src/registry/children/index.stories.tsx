@@ -367,7 +367,7 @@ export const DeletingChildDetails: Story = {
 
     // Find the delete button by the child's firstname
     const deleteChildButton = canvas.getByRole('button', {
-      name: 'Delete child with firstname: John Doe',
+      name: 'Delete child with first name: John Doe',
     });
     expect(deleteChildButton).toBeVisible();
 
