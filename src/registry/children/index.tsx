@@ -15,7 +15,7 @@ import type {RegistryEntry} from '@/registry/types';
 import ChildModal from './ChildModal';
 import ChildrenTable from './ChildrenTable';
 import ValueDisplay from './ValueDisplay';
-import {EMPTY_CHILD, SUB_FIELD_NAMES} from './constants';
+import {EMPTY_CHILD} from './constants';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import type {ExtendedChildDetails} from './types';
@@ -34,7 +34,6 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   const {touched, error: formikError} = getFieldMeta<ExtendedChildDetails[]>(key);
   const {value: children} = getFieldProps<ExtendedChildDetails[]>(key);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [childToEdit, setChildToEdit] = useState<ExtendedChildDetails | undefined>();
 
   const error = formikError as unknown as
     | undefined
@@ -52,21 +51,10 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   // If there are no server-fetched children, we can add children manually.
   const canAddChildrenManually = serverFetchedChildren.length === 0;
 
-  const editChild = (child: ExtendedChildDetails | undefined) => {
-    setChildToEdit(child ?? EMPTY_CHILD);
-    setIsModalOpen(true);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
-  const closeModal = () => {
-    setChildToEdit(undefined);
-    setIsModalOpen(false);
-  };
-
-  const markChildAsTouched = (childIndex: number) => {
-    // Mark the subfields of the child as touched
-    SUB_FIELD_NAMES.forEach(field => {
-      setFieldTouched(`${key}.${childIndex}.${field}`, true);
-    });
+  const markFieldAsTouched = () => {
+    setFieldTouched(key, true);
   };
 
   return (
@@ -89,33 +77,30 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                 name={key}
                 values={children}
                 enableSelection={enableSelection}
-                editChild={editChild}
-                removeChild={childIndex => arrayHelpers.remove(childIndex)}
+                onSelectionChanged={() => markFieldAsTouched()}
+                updateChild={(childIndex, child) => {
+                  arrayHelpers.replace(childIndex, child);
+                  markFieldAsTouched();
+                }}
+                removeChild={childIndex => {
+                  arrayHelpers.remove(childIndex);
+                  markFieldAsTouched();
+                }}
               />
             )}
-            {canAddChildrenManually && childToEdit && (
+            {canAddChildrenManually && isModalOpen && (
               <ChildModal
                 isOpen={isModalOpen}
                 closeModal={closeModal}
-                data={childToEdit}
-                onChange={newChild => {
-                  const isNew = newChild.__id === undefined;
-                  let childIndex;
+                data={EMPTY_CHILD}
+                onSubmit={newChild => {
+                  arrayHelpers.push({
+                    ...newChild,
+                    __id: crypto.randomUUID(),
+                    selected: enableSelection ? false : undefined,
+                  });
 
-                  if (isNew) {
-                    // The current children.length will be the index of the new child
-                    childIndex = children.length;
-                    arrayHelpers.push({
-                      ...newChild,
-                      __id: crypto.randomUUID(),
-                      selected: enableSelection ? false : undefined,
-                    });
-                  } else {
-                    childIndex = children.findIndex(child => child.__id === newChild.__id);
-                    arrayHelpers.replace(childIndex, newChild);
-                  }
-
-                  markChildAsTouched(childIndex);
+                  markFieldAsTouched();
                   closeModal();
                 }}
               />
@@ -128,7 +113,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       {invalid && errorMessageId && <ValidationErrors error={fieldError} id={errorMessageId} />}
 
       {canAddChildrenManually && (
-        <SecondaryActionButton type="button" onClick={() => editChild(undefined)}>
+        <SecondaryActionButton type="button" onClick={() => setIsModalOpen(true)}>
           <FormattedMessage
             description="Children component modal: add child button label"
             defaultMessage="Add child"

@@ -109,11 +109,13 @@ export const ValidateDuplicateBsnValues: ValidationStory = {
     await step('Add first child', async () => {
       await userEvent.click(addChildButton);
 
-      const bsnInput = canvas.getByLabelText('BSN');
-      const firstNamesInput = canvas.getByLabelText('Firstnames');
-      const monthInput = canvas.getByLabelText('Month');
-      const dayInput = canvas.getByLabelText('Day');
-      const yearInput = canvas.getByLabelText('Year');
+      const modal = within(await canvas.findByRole('dialog'));
+
+      const bsnInput = modal.getByLabelText('BSN');
+      const firstNamesInput = modal.getByLabelText('Firstnames');
+      const monthInput = modal.getByLabelText('Month');
+      const dayInput = modal.getByLabelText('Day');
+      const yearInput = modal.getByLabelText('Year');
 
       // A bsn value that does pass the 11-test
       await userEvent.type(bsnInput, bsn);
@@ -130,11 +132,13 @@ export const ValidateDuplicateBsnValues: ValidationStory = {
     await step('Add second child', async () => {
       await userEvent.click(addChildButton);
 
-      const bsnInput = canvas.getByLabelText('BSN');
-      const firstNamesInput = canvas.getByLabelText('Firstnames');
-      const monthInput = canvas.getByLabelText('Month');
-      const dayInput = canvas.getByLabelText('Day');
-      const yearInput = canvas.getByLabelText('Year');
+      const modal = within(await canvas.findByRole('dialog'));
+
+      const bsnInput = modal.getByLabelText('BSN');
+      const firstNamesInput = modal.getByLabelText('Firstnames');
+      const monthInput = modal.getByLabelText('Month');
+      const dayInput = modal.getByLabelText('Day');
+      const yearInput = modal.getByLabelText('Year');
 
       // Using the same bsn value as the first child
       await userEvent.type(bsnInput, bsn);

@@ -16,10 +16,10 @@ interface ChildModalProps {
   isOpen: boolean;
   closeModal: () => void;
   data: ExtendedChildDetails;
-  onChange: (data: ExtendedChildDetails) => void;
+  onSubmit: (data: ExtendedChildDetails) => void;
 }
 
-const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChange}) => {
+const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onSubmit}) => {
   const intl = useIntl();
   return (
     <Modal
@@ -45,7 +45,7 @@ const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onChan
         validateOnChange={false}
         validateOnBlur={false}
         validationSchema={toFormikValidationSchema(buildChildSchema(intl))}
-        onSubmit={values => onChange(values)}
+        onSubmit={values => onSubmit(values)}
       >
         <Form>
           <FormFieldContainer>

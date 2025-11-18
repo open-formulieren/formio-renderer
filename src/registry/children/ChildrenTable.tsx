@@ -1,5 +1,4 @@
 import {
-  SubtleButton,
   Table,
   TableBody,
   TableCell,
@@ -8,42 +7,59 @@ import {
   TableRow,
   Icon as UtrechtIcon,
 } from '@utrecht/component-library-react';
+import {useState} from 'react';
 import {FormattedDate, FormattedMessage, useIntl} from 'react-intl';
 
+import {SubtleButton} from '@/components/Button';
 import Icon from '@/components/icons';
 
 import BareCheckbox from './BareCheckbox';
+import ChildModal from './ChildModal';
 import './ChildrenTable.scss';
 import type {ExtendedChildDetails} from './types';
 
-interface ChildEditButtonProps {
+interface EditChildModalProps {
   child: ExtendedChildDetails;
-  onEditChild: () => void;
+  onSubmit: (child: ExtendedChildDetails) => void;
 }
 
-const ChildEditButton: React.FC<ChildEditButtonProps> = ({child, onEditChild}) => {
+const EditChildModal: React.FC<EditChildModalProps> = ({child, onSubmit}) => {
   const intl = useIntl();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
-    <SubtleButton
-      onClick={onEditChild}
-      aria-label={intl.formatMessage(
-        {
-          description: "Children component: children table 'edit child' accessible label",
-          defaultMessage: `{hasFirstNames, select,
+    <>
+      <ChildModal
+        data={child}
+        isOpen={isModalOpen}
+        onSubmit={childData => {
+          onSubmit(childData);
+          closeModal();
+        }}
+        closeModal={closeModal}
+      />
+      <SubtleButton
+        onClick={() => setIsModalOpen(true)}
+        aria-label={intl.formatMessage(
+          {
+            description: "Children component: children table 'edit child' accessible label",
+            defaultMessage: `{hasFirstNames, select,
             true {Edit child with firstname: {firstNames}}
             other {Edit child with BSN: {bsn}}}`,
-        },
-        {
-          hasFirstNames: !!child.firstNames,
-          firstNames: child.firstNames,
-          bsn: child.bsn,
-        }
-      )}
-    >
-      <UtrechtIcon>
-        <Icon icon="edit" />
-      </UtrechtIcon>
-    </SubtleButton>
+          },
+          {
+            hasFirstNames: !!child.firstNames,
+            firstNames: child.firstNames,
+            bsn: child.bsn,
+          }
+        )}
+      >
+        <UtrechtIcon>
+          <Icon icon="edit" />
+        </UtrechtIcon>
+      </SubtleButton>
+    </>
   );
 };
 
@@ -89,7 +105,8 @@ export interface ChildrenTableProps {
   name: string;
   values: ExtendedChildDetails[];
   enableSelection?: boolean;
-  editChild: (child: ExtendedChildDetails | undefined) => void;
+  onSelectionChanged: () => void;
+  updateChild: (childIndex: number, child: ExtendedChildDetails) => void;
   removeChild: (childIndex: number) => void;
 }
 
@@ -97,7 +114,8 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
   name,
   values,
   enableSelection,
-  editChild,
+  onSelectionChanged,
+  updateChild,
   removeChild,
 }) => {
   const intl = useIntl();
@@ -142,7 +160,7 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
                       firstname: child.firstNames,
                     }
                   )}
-                  onChange={() => {}}
+                  onChange={onSelectionChanged}
                 />
               </TableCell>
             )}
@@ -159,7 +177,10 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
 
             {Boolean('__addedManually' in child && child['__addedManually']) && (
               <TableCell>
-                <ChildEditButton child={child} onEditChild={() => editChild(child)} />
+                <EditChildModal
+                  child={child}
+                  onSubmit={childData => updateChild(index, childData)}
+                />
                 <ChildDeleteButton child={child} onRemoveChild={() => removeChild(index)} />
               </TableCell>
             )}
