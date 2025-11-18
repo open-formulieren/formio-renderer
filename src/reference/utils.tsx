@@ -1,10 +1,10 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
-import {PrimaryActionButton} from '@utrecht/component-library-react';
 // @ts-expect-error no TS definitions included
 import {Form as ReactFormioForm} from 'react-formio';
 import {fn} from 'storybook/test';
 
+import {PrimaryActionButton} from '@/components/Button';
 import FormioForm from '@/components/FormioForm';
 import type {JSONObject} from '@/types';
 

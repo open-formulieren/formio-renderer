@@ -1,8 +1,9 @@
-import {Button, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {useId} from 'react';
 import {FormattedMessage, useIntl} from 'react-intl';
 
+import {Button} from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import {ValidationErrors} from '@/components/forms';
 import Icon from '@/components/icons';

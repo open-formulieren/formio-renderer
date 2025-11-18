@@ -1,0 +1,5 @@
+.openforms-email-verification-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--of-email-verification-form-gap, 20px);
+}

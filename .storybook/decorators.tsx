@@ -2,7 +2,7 @@ import {install} from '@sinonjs/fake-timers';
 import type {InstalledClock} from '@sinonjs/fake-timers';
 import type {Decorator} from '@storybook/react-vite';
 import {Form, Formik} from 'formik';
-import {type CSSProperties, useEffect} from 'react';
+import {useEffect} from 'react';
 import {fn} from 'storybook/test';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
@@ -14,18 +14,14 @@ import ModalContext from '@/components/modal/context';
  * to wrap some 'page-global' styling.
  */
 export const utrechtDocumentDecorator: Decorator = Story => {
-  return (
-    <div
-      className="utrecht-document utrecht-document--surface"
-      style={
-        {
-          '--utrecht-document-font-size': '16px',
-        } as CSSProperties
-      }
-    >
-      <Story />
-    </div>
-  );
+  const sbRoot = document.getElementById('storybook-root')!;
+  ['utrecht-document', 'utrecht-document--surface'].forEach(clsName => {
+    if (!sbRoot.classList.contains(clsName)) {
+      sbRoot.classList.add(clsName);
+    }
+  });
+  sbRoot.style.setProperty('--utrecht-document-font-size', '16px');
+  return <Story />;
 };
 
 export const withFormik: Decorator = (Story, context) => {
@@ -36,6 +32,7 @@ export const withFormik: Decorator = (Story, context) => {
   const initialValues = context.parameters?.formik?.initialValues || {};
   const initialErrors = context.parameters?.formik?.initialErrors || {};
   const initialTouched = context.parameters?.formik?.initialTouched || {};
+  const initialStatus = context.parameters?.formik?.initialStatus;
   const wrapForm = context.parameters?.formik?.wrapForm ?? true;
   const onSubmit = context.parameters?.formik?.onSubmit || fn();
   const zodSchema = context.parameters?.formik?.zodSchema;
@@ -44,6 +41,7 @@ export const withFormik: Decorator = (Story, context) => {
       initialValues={initialValues}
       initialErrors={initialErrors}
       initialTouched={initialTouched}
+      initialStatus={initialStatus}
       enableReinitialize
       onSubmit={async values => onSubmit(values)}
       validateOnBlur={false}

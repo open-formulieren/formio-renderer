@@ -11,7 +11,6 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   const {key, multiple, validate = {}} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  // TODO: localize!
   let schema: z.ZodFirstPartySchemaTypes = buildBsnValidationSchema(intl);
   if (!required) {
     schema = schema.or(z.literal('')).optional();

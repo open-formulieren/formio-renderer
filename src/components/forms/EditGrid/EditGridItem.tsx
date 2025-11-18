@@ -1,14 +1,10 @@
-import {
-  Fieldset,
-  FieldsetLegend,
-  PrimaryActionButton,
-  SecondaryActionButton,
-} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import type {FormikErrors} from 'formik';
 import {Formik, setNestedObjectValues} from 'formik';
 import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
 
+import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
 

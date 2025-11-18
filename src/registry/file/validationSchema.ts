@@ -92,9 +92,6 @@ export const transformReactDropzoneErrors = (
 
 /**
  * Build the validation schema for a single file in the uploads array.
- *
- * @todo Incorporate the allowed extensions/mime types -> check how Formio does this
- *       validation.
  */
 const buildFileValidationSchema = (
   intl: IntlShape,
