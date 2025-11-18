@@ -210,11 +210,13 @@ export const ManuallyAddingChildren: Story = {
     await userEvent.click(addChildButton);
 
     await step('Add first child', async () => {
-      const bsnField = canvas.getByLabelText('BSN');
-      const firstNamesField = canvas.getByLabelText('Firstnames');
-      const monthField = canvas.getByLabelText('Month');
-      const dayField = canvas.getByLabelText('Day');
-      const yearField = canvas.getByLabelText('Year');
+      const modal = within(await canvas.findByRole('dialog'));
+
+      const bsnField = modal.getByLabelText('BSN');
+      const firstNamesField = modal.getByLabelText('Firstnames');
+      const monthField = modal.getByLabelText('Month');
+      const dayField = modal.getByLabelText('Day');
+      const yearField = modal.getByLabelText('Year');
 
       expect(bsnField).toBeVisible();
       expect(firstNamesField).toBeVisible();
@@ -228,7 +230,7 @@ export const ManuallyAddingChildren: Story = {
       await userEvent.type(dayField, '7');
       await userEvent.type(yearField, '2000');
 
-      const submitButton = canvas.getByRole('button', {name: 'Save'});
+      const submitButton = modal.getByRole('button', {name: 'Save'});
       await userEvent.click(submitButton);
     });
 
@@ -246,11 +248,13 @@ export const ManuallyAddingChildren: Story = {
     await step('Add second child', async () => {
       await userEvent.click(addChildButton);
 
-      const bsnField = canvas.getByLabelText('BSN');
-      const firstNamesField = canvas.getByLabelText('Firstnames');
-      const monthField = canvas.getByLabelText('Month');
-      const dayField = canvas.getByLabelText('Day');
-      const yearField = canvas.getByLabelText('Year');
+      const modal = within(await canvas.findByRole('dialog'));
+
+      const bsnField = modal.getByLabelText('BSN');
+      const firstNamesField = modal.getByLabelText('Firstnames');
+      const monthField = modal.getByLabelText('Month');
+      const dayField = modal.getByLabelText('Day');
+      const yearField = modal.getByLabelText('Year');
 
       await userEvent.type(bsnField, '272525108');
       await userEvent.type(firstNamesField, 'Jimmy');
@@ -258,7 +262,7 @@ export const ManuallyAddingChildren: Story = {
       await userEvent.type(dayField, '16');
       await userEvent.type(yearField, '2003');
 
-      const submitButton = canvas.getByRole('button', {name: 'Save'});
+      const submitButton = modal.getByRole('button', {name: 'Save'});
       await userEvent.click(submitButton);
     });
 
