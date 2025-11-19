@@ -11,4 +11,5 @@ export type RendererIcon =
   | 'warning'
   | 'calendar'
   | 'refresh'
-  | 'error';
+  | 'error'
+  | 'arrow-right';
