@@ -23,4 +23,5 @@ export interface CustomerProfileParameters {
     submissionId: string,
     digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
   ) => Promise<DigitalAddressesResponseBody | null>;
+  portalUrl: string;
 }

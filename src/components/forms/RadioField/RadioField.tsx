@@ -17,18 +17,11 @@ export interface RadioOption {
   label: React.ReactNode;
 }
 
-export interface RadioFieldProps {
+interface BasicRadioFieldProps {
   /**
    * The name of the form field/input, used to set/track the field value in the form state.
    */
   name: string;
-  /**
-   * The (accessible) label for the field - anything that can be rendered.
-   *
-   * You must always provide a label to ensure the field is accessible to users of
-   * assistive technologies.
-   */
-  label: React.ReactNode;
   /**
    * Required fields get additional markup/styling to indicate this validation requirement.
    */
@@ -44,15 +37,39 @@ export interface RadioFieldProps {
    */
   description?: React.ReactNode;
   /**
-   * Optional tooltip to provide additional information that is not crucial but may
-   * assist users in filling out the field correctly.
-   */
-  tooltip?: React.ReactNode;
-  /**
    * Array of possible choices for the field. Only one can be selected.
    */
   options: RadioOption[];
 }
+
+type RadioFieldWithLabelProps = BasicRadioFieldProps & {
+  /**
+   * The (accessible) label for the field - anything that can be rendered.
+   *
+   * You must always provide a label to ensure the field is accessible to users of
+   * assistive technologies.
+   */
+  label: React.ReactNode;
+  /**
+   * Optional tooltip to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  tooltip?: React.ReactNode;
+  'aria-describedby'?: never;
+};
+
+type RadioFieldWithAriaLabelProps = BasicRadioFieldProps & {
+  label?: never;
+  tooltip?: never;
+  /**
+   * Aria-describedby attribute to provide additional information to accessibility tooling.
+   *
+   * Use aria-describedby for labelless radio fields.
+   */
+  'aria-describedby': string;
+};
+
+export type RadioFieldProps = RadioFieldWithLabelProps | RadioFieldWithAriaLabelProps;
 
 /**
  * A radio field with a set of options.
@@ -62,6 +79,7 @@ export interface RadioFieldProps {
 const RadioField: React.FC<RadioFieldProps> = ({
   name,
   label = '',
+  ['aria-describedby']: ariaDescribedby,
   isRequired = false,
   description = '',
   isDisabled = false,
@@ -143,7 +161,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-  const descriptionid = `${id}-description`;
+  const descriptionId = description ? `${id}-description` : undefined;
 
   return (
     <Fieldset
@@ -152,16 +170,18 @@ const RadioField: React.FC<RadioFieldProps> = ({
       disabled={isDisabled}
       invalid={invalid}
       role="radiogroup"
-      aria-describedby={description ? descriptionid : undefined}
+      aria-describedby={[descriptionId, ariaDescribedby].filter(Boolean).join(' ')}
     >
-      <FieldsetLegend
-        className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
-      >
-        <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
-          {label}
-        </LabelContent>
-        {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </FieldsetLegend>
+      {label && (
+        <FieldsetLegend
+          className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
+        >
+          <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
+            {label}
+          </LabelContent>
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </FieldsetLegend>
+      )}
 
       {options.map(({value, label: optionLabel}, index) => (
         <RadioOption
@@ -176,7 +196,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
         />
       ))}
 
-      <HelpText id={descriptionid}>{description}</HelpText>
+      <HelpText id={descriptionId}>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </Fieldset>
   );

@@ -12,6 +12,7 @@ import {useModalContext} from './hooks';
 export interface ModalProps {
   isOpen?: boolean;
   title: React.ReactNode;
+  titleId?: string;
   closeModal: () => void;
   children: React.ReactNode;
   noPortal?: boolean;
@@ -20,14 +21,19 @@ export interface ModalProps {
 const Modal: React.FC<ModalProps> = ({
   isOpen = false,
   title,
+  titleId,
   closeModal,
   noPortal = false,
   children,
 }) => {
-  const titleId = useId();
+  const id = useId();
   const intl = useIntl();
   const modalRef = useRef<HTMLDialogElement>(null);
   const {parentSelector} = useModalContext();
+
+  if (!titleId) {
+    titleId = `${id}-title`;
+  }
 
   // To open the dialog as a modal, we need to trigger its javascript functions.
   useEffect(() => {
