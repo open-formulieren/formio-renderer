@@ -7,6 +7,7 @@ import type {RendererIcon} from './types';
  */
 const FA_MAP: Record<RendererIcon, string> = {
   add: 'plus',
+  'arrow-right': 'arrow-right',
   edit: 'edit',
   remove: 'trash-can',
   tooltip: 'question-circle',
