@@ -1,5 +1,39 @@
 # Changes
 
+## 0.13.0 (2025-11-20)
+
+Feature release.
+
+**Features**
+
+- [`#206`][#206] Modals are now rendered with a portal in a different DOM node.
+- [`#130`][#130] The textfield component now supports displaying the character count.
+- [`OF#5460`][OF#5460] Improved the accessibility of the character count display.
+- The modal component is now exported and semi-public API.
+- We now provide `UtrechtButton` wrappers which handle the `disabled` prop with the correct
+  accessibility requirements.
+- [`#181`][#181] Implemented the email verification flow for the `email` component.
+- [`#122`][#122] Implemented the `children` component type.
+
+**Bugfixes**
+
+- [`#205`][#205] Added a workaround to ensure outlines of interactive elements are visible in
+  modals.
+- Fixed a typo in the translations.
+
+**Project maintenance**
+
+- Fixed loading the font assets on the Github pages hosted Storybook.
+- Cleaned up debug output and stale TODOs.
+- Added more useful `README.md` content that reflects the scope of this package.
+
+[#206]: https://github.com/open-formulieren/formio-renderer/issues/206
+[#205]: https://github.com/open-formulieren/formio-renderer/issues/205
+[#130]: https://github.com/open-formulieren/formio-renderer/issues/130
+[OF#5460]: https://github.com/open-formulieren/open-forms/issues/5460
+[#181]: https://github.com/open-formulieren/formio-renderer/issues/181
+[#122]: https://github.com/open-formulieren/formio-renderer/issues/122
+
 ## 0.12.0 (2025-11-06)
 
 Feature release.
