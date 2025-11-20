@@ -40,6 +40,7 @@
   }
 }
 
+// FIXME: this affects the SDK login button size - needs a cleaner approach.
 @include responsive.mobile-only {
   .openforms-theme {
     .utrecht-button:not(.openforms-modal__close),
