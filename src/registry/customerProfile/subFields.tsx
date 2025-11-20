@@ -1,13 +1,15 @@
-import type {DigitalAddressType} from '@open-formulieren/types';
+import type {DigitalAddress, DigitalAddressType} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
+import type {FormikErrors} from 'formik';
 import {useFormikContext} from 'formik';
-import {useEffect, useState} from 'react';
+import {useEffect, useId, useState} from 'react';
 import type {IntlShape} from 'react-intl';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {GroupBase, OptionProps} from 'react-select';
 import {components} from 'react-select';
 
 import {SecondaryActionButton} from '@/components/Button';
+import {ValidationErrors} from '@/components/forms';
 import Fieldset from '@/components/forms/Fieldset';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
@@ -203,14 +205,22 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   digitalAddressGroup,
   textfieldProps,
 }) => {
+  const id = useId();
   const {setFieldValue, getFieldMeta} = useFormikContext();
   const fieldName = `${namePrefix}.address`;
 
-  const {value, touched, error} = getFieldMeta(fieldName);
+  const {touched, error: formikError} = getFieldMeta(namePrefix);
 
   // If there are no addresses yet, we show a text input.
   const hasAddresses = !!digitalAddressGroup?.addresses?.length;
   const [useTextInput, setUseTextInput] = useState(!hasAddresses);
+
+  const error = formikError as unknown as undefined | string | FormikErrors<DigitalAddress>;
+
+  const fieldError = typeof error === 'string' && error;
+  const invalid = touched && !!fieldError;
+
+  const errorMessageId = invalid ? `${id}-error-message` : undefined;
 
   // When the digital addresses are loaded, we check if we need to show a text input.
   useEffect(() => {
@@ -218,7 +228,11 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   }, [hasAddresses]);
 
   return (
-    <Fieldset className="openforms-customer-profile__digital-address-fieldset">
+    <Fieldset
+      isInvalid={invalid}
+      aria-describedby={errorMessageId}
+      className="openforms-customer-profile__digital-address-fieldset"
+    >
       {hasAddresses && !useTextInput ? (
         <DigitalAddressesSelect
           type={type}
@@ -240,6 +254,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           textfieldProps={textfieldProps}
         />
       )}
+      {errorMessageId && fieldError && <ValidationErrors id={errorMessageId} error={fieldError} />}
     </Fieldset>
   );
 };
