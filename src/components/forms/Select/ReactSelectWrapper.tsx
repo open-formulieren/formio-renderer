@@ -1,6 +1,7 @@
 import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
-import Select, {type GroupBase, type InputProps, type Props, components} from 'react-select';
+import Select, {components} from 'react-select';
+import type {GroupBase, InputProps, Props} from 'react-select';
 
 import './ReactSelectWrapper.scss';
 

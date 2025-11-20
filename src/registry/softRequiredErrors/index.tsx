@@ -12,7 +12,8 @@ import {processVisibility} from '@/visibility';
 
 import './SoftRequiredErrors.scss';
 import SoftRequiredErrorsMessage from './SoftRequiredErrorsMessage';
-import {type MissingFields, getMissingFields, getSoftRequiredComponents} from './missingFields';
+import {getMissingFields, getSoftRequiredComponents} from './missingFields';
+import type {MissingFields} from './missingFields';
 
 export type SoftRequiredErrorsProps = RenderComponentProps<SoftRequiredErrorsComponentSchema>;
 
