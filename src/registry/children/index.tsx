@@ -1,5 +1,4 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
-import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';
 import {FieldArray, useFormikContext} from 'formik';
 import {useId, useState} from 'react';
@@ -70,9 +69,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       isInvalid={invalid}
       hasTooltip={!!tooltip}
       aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ') || undefined}
-      className={clsx('openforms-children', {
-        'openforms-children--with-manual-creating': canAddChildrenManually,
-      })}
+      className="openforms-children"
     >
       <FieldArray name={key} validateOnChange={false}>
         {arrayHelpers => (
