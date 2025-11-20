@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import {IntlProvider} from 'react-intl';
 import {expect, test, vi} from 'vitest';
 
-import FormioForm, {type FormioFormProps} from '@/components/FormioForm';
+import FormioForm from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 import type {JSONObject} from '@/types';
 
 type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit' | 'values'>;

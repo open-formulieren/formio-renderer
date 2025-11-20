@@ -1,4 +1,5 @@
-import {type MessageDescriptor, defineMessages} from 'react-intl';
+import {defineMessages} from 'react-intl';
+import type {MessageDescriptor} from 'react-intl';
 
 import type {DateTimePartValues} from './types';
 

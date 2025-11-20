@@ -10,7 +10,8 @@ import {IntlProvider} from 'react-intl';
 import {userEvent, waitFor, within} from 'storybook/test';
 import {describe, expect, test, vi} from 'vitest';
 
-import FormioForm, {type FormioFormProps} from '@/components/FormioForm';
+import FormioForm from '@/components/FormioForm';
+import type {FormioFormProps} from '@/components/FormioForm';
 
 type FormProps = Pick<FormioFormProps, 'components' | 'onSubmit' | 'values'>;
 

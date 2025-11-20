@@ -1,6 +1,7 @@
 import {FormLabel, Textbox} from '@utrecht/component-library-react';
 import {useId} from 'react';
-import {FormattedMessage, type MessageDescriptor, defineMessages, useIntl} from 'react-intl';
+import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
+import type {MessageDescriptor} from 'react-intl';
 
 import {PART_PLACEHOLDERS} from '../messages';
 import type {DatePart} from '../types';

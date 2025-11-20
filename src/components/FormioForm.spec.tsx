@@ -9,7 +9,8 @@ import {createRef, forwardRef, useState} from 'react';
 import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
 
-import FormioForm, {type FormStateRef, type FormioFormProps} from './FormioForm';
+import FormioForm from './FormioForm';
+import type {FormStateRef, FormioFormProps} from './FormioForm';
 
 type FormProps = Pick<FormioFormProps, 'components' | 'onChange' | 'onSubmit' | 'values'>;
 

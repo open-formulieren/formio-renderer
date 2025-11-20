@@ -2,7 +2,8 @@ import type {FileComponentSchema} from '@open-formulieren/types';
 import {useFormikContext} from 'formik';
 import type {ArrayHelpers, FieldHelperProps} from 'formik';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {ErrorCode, type FileRejection} from 'react-dropzone';
+import {ErrorCode} from 'react-dropzone';
+import type {FileRejection} from 'react-dropzone';
 import {useIntl} from 'react-intl';
 import type {IntlShape} from 'react-intl';
 

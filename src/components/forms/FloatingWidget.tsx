@@ -25,9 +25,6 @@
 import {
   FloatingArrow,
   FloatingFocusManager,
-  type UseFloatingOptions,
-  type UseFloatingReturn,
-  type UseInteractionsReturn,
   arrow,
   autoUpdate,
   flip,
@@ -37,6 +34,11 @@ import {
   useFloating,
   useInteractions,
   useRole,
+} from '@floating-ui/react';
+import type {
+  UseFloatingOptions,
+  UseFloatingReturn,
+  UseInteractionsReturn,
 } from '@floating-ui/react';
 import {useRef, useState} from 'react';
 
