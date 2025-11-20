@@ -13,6 +13,7 @@ const config = defineConfig([
     name: 'project/overrides',
     rules: {
       // covered by Typescript
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
       'react/prop-types': 'off',
       '@typescript-eslint/consistent-type-imports': [
         'error',
