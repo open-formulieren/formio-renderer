@@ -13,6 +13,12 @@
       "value": " of kleiner zijn."
     }
   ],
+  "+MVbpZ": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
   "+xOWBM": [
     {
       "type": 0,
@@ -29,6 +35,12 @@
     {
       "type": 0,
       "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
+    }
+  ],
+  "07h5b8": [
+    {
+      "type": 0,
+      "value": "You must provide a first name."
     }
   ],
   "0EdUXi": [
@@ -141,6 +153,12 @@
       "value": "Een BSN bestaat uit 9 cijfers."
     }
   ],
+  "3beumC": [
+    {
+      "type": 0,
+      "value": "BSN"
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
@@ -211,6 +229,12 @@
     {
       "type": 0,
       "value": "'"
+    }
+  ],
+  "94ZHpN": [
+    {
+      "type": 0,
+      "value": "BSN"
     }
   ],
   "9SgPC6": [
@@ -287,6 +311,26 @@
       "value": "Om door te gaan moet je dit e-mailadres bevestigen."
     }
   ],
+  "BxPJLU": [
+    {
+      "type": 0,
+      "value": "First names"
+    }
+  ],
+  "CTDEh6": [
+    {
+      "type": 0,
+      "value": "The BSN "
+    },
+    {
+      "type": 1,
+      "value": "bsn"
+    },
+    {
+      "type": 0,
+      "value": " is used for multiple children. Each child must have a unique BSN."
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -299,10 +343,22 @@
       "value": "Straatnaam"
     }
   ],
+  "DGjM+p": [
+    {
+      "type": 0,
+      "value": "Firstnames"
+    }
+  ],
   "DZjLaH": [
     {
       "type": 0,
       "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
+    }
+  ],
+  "DcLzdm": [
+    {
+      "type": 0,
+      "value": "Date of birth must be within the last 120 years."
     }
   ],
   "E++Snm": [
@@ -457,6 +513,38 @@
       "value": "Voorletters"
     }
   ],
+  "K4JPOy": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Edit child with BSN: "
+            },
+            {
+              "type": 1,
+              "value": "bsn"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Edit child with first name: "
+            },
+            {
+              "type": 1,
+              "value": "firstNames"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "hasFirstNames"
+    }
+  ],
   "KWP1b9": [
     {
       "type": 0,
@@ -481,6 +569,12 @@
       "value": "m"
     }
   ],
+  "MrlKEu": [
+    {
+      "type": 0,
+      "value": "Date of birth cannot be in the future."
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
@@ -491,6 +585,12 @@
     {
       "type": 0,
       "value": "Huisnummer"
+    }
+  ],
+  "PzBahf": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "QAN3ua": [
@@ -529,6 +629,12 @@
       "value": "De limiet van het aantal bestanden is bereikt. Je kan geen extra bestanden toevoegen."
     }
   ],
+  "S5ydMY": [
+    {
+      "type": 0,
+      "value": "The format of the date of birth is incorrect."
+    }
+  ],
   "TZb5ph": [
     {
       "type": 0,
@@ -561,6 +667,20 @@
       "value": "De geboortedatum heeft een ongeldig formaat."
     }
   ],
+  "U7YHLZ": [
+    {
+      "type": 0,
+      "value": "Include "
+    },
+    {
+      "type": 1,
+      "value": "firstname"
+    },
+    {
+      "type": 0,
+      "value": "?"
+    }
+  ],
   "UONGQo": [
     {
       "type": 0,
@@ -577,6 +697,38 @@
     {
       "type": 0,
       "value": "Nog één toevoegen"
+    }
+  ],
+  "ZAq+s7": [
+    {
+      "options": {
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Delete child with BSN: "
+            },
+            {
+              "type": 1,
+              "value": "bsn"
+            }
+          ]
+        },
+        "true": {
+          "value": [
+            {
+              "type": 0,
+              "value": "Delete child with first name: "
+            },
+            {
+              "type": 1,
+              "value": "firstNames"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "hasFirstNames"
     }
   ],
   "ZGuxfW": [
@@ -615,6 +767,12 @@
     {
       "type": 0,
       "value": "Achternaam"
+    }
+  ],
+  "bqbXGd": [
+    {
+      "type": 0,
+      "value": "No information provided"
     }
   ],
   "bv/J3Y": [
@@ -687,6 +845,24 @@
     {
       "type": 0,
       "value": "Laden..."
+    }
+  ],
+  "fwMwqD": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "h7JS6y": [
+    {
+      "type": 0,
+      "value": "Add child"
+    }
+  ],
+  "hPHLdv": [
+    {
+      "type": 0,
+      "value": "Edit child"
     }
   ],
   "iiVLgn": [
@@ -905,6 +1081,12 @@
     {
       "type": 0,
       "value": "' verwijderen"
+    }
+  ],
+  "r6qiY/": [
+    {
+      "type": 0,
+      "value": "Date of birth"
     }
   ],
   "rQ5vC9": [

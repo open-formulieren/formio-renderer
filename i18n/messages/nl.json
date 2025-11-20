@@ -4,6 +4,11 @@
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
+  "+MVbpZ": {
+    "defaultMessage": "Add child",
+    "description": "Children component modal: add child title",
+    "originalDefault": "Add child"
+  },
   "+xOWBM": {
     "defaultMessage": "Verwijderen",
     "description": "Edit grid item default remove button label",
@@ -18,6 +23,11 @@
     "defaultMessage": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers.",
     "description": "Validation error for addressNL.houseNumberAddition field.",
     "originalDefault": "House number addition must be up to four letters and digits."
+  },
+  "07h5b8": {
+    "defaultMessage": "You must provide a first name.",
+    "description": "Validation error for required children.firstNames field.",
+    "originalDefault": "You must provide a first name."
   },
   "0EdUXi": {
     "defaultMessage": "Opslaan",
@@ -76,6 +86,11 @@
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits."
   },
+  "3beumC": {
+    "defaultMessage": "BSN",
+    "description": "Children component: label for children BSN",
+    "originalDefault": "BSN"
+  },
   "4IX8hk": {
     "defaultMessage": "Opties ophalen...",
     "description": "(Async) select options loading message",
@@ -105,6 +120,11 @@
     "defaultMessage": "Verwijder ''{fileName}'",
     "description": "Accessible remove icon/button label for uploaded file.",
     "originalDefault": "Remove ''{fileName}'"
+  },
+  "94ZHpN": {
+    "defaultMessage": "BSN",
+    "description": "Children component: children table 'bsn' header",
+    "originalDefault": "BSN"
   },
   "9SgPC6": {
     "defaultMessage": "Verwijder item {index}",
@@ -151,6 +171,16 @@
     "description": "Email verification warning for unverified emails.",
     "originalDefault": "You must verify this email address to continue."
   },
+  "BxPJLU": {
+    "defaultMessage": "First names",
+    "description": "Children component: children table 'firstNames' header",
+    "originalDefault": "First names"
+  },
+  "CTDEh6": {
+    "defaultMessage": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN.",
+    "description": "Validation error for duplicate children.bsn values.",
+    "originalDefault": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN."
+  },
   "DBTNgI": {
     "defaultMessage": "d",
     "description": "Placeholder for day part of a date",
@@ -162,10 +192,20 @@
     "description": "Label for addressNL streetName read only result",
     "originalDefault": "Street name"
   },
+  "DGjM+p": {
+    "defaultMessage": "Firstnames",
+    "description": "Children component: label for children firstNames",
+    "originalDefault": "Firstnames"
+  },
   "DZjLaH": {
     "defaultMessage": "Uur moet tussen 0-23 zijn en minuut tussen 0-59.",
     "description": "Validation error describing shape of time format.",
     "originalDefault": "Hour must be between 0-23 and minute between 0-59"
+  },
+  "DcLzdm": {
+    "defaultMessage": "Date of birth must be within the last 120 years.",
+    "description": "Validation error for children.dateOfBirth that is after the minimum date.",
+    "originalDefault": "Date of birth must be within the last 120 years."
   },
   "E++Snm": {
     "defaultMessage": "De geboortedatum mag hoogstens 120 jaar geleden zijn.",
@@ -227,6 +267,11 @@
     "description": "Partners component: label for partners initials",
     "originalDefault": "Initials"
   },
+  "K4JPOy": {
+    "defaultMessage": "{hasFirstNames, select, true {Edit child with first name: {firstNames}} other {Edit child with BSN: {bsn}}}",
+    "description": "Children component: children table 'edit child' accessible label",
+    "originalDefault": "{hasFirstNames, select, true {Edit child with first name: {firstNames}} other {Edit child with BSN: {bsn}}}"
+  },
   "KWP1b9": {
     "defaultMessage": "Vorige maand",
     "description": "Calendar: previous month button title",
@@ -249,6 +294,11 @@
     "isTranslated": true,
     "originalDefault": "m"
   },
+  "MrlKEu": {
+    "defaultMessage": "Date of birth cannot be in the future.",
+    "description": "Validation error for children.dateOfBirth that is after the maximum date.",
+    "originalDefault": "Date of birth cannot be in the future."
+  },
   "Oc3efT": {
     "defaultMessage": "Plaats is verplicht.",
     "description": "Validation error for required addressNL.city field.",
@@ -258,6 +308,11 @@
     "defaultMessage": "Huisnummer",
     "description": "Label for addressNL houseNumber input",
     "originalDefault": "House number"
+  },
+  "PzBahf": {
+    "defaultMessage": "Date of birth",
+    "description": "Children component: label for children dateOfBirth",
+    "originalDefault": "Date of birth"
   },
   "QAN3ua": {
     "defaultMessage": "Je kan het/de bestand(en) loslaten.",
@@ -289,6 +344,11 @@
     "description": "Description for hidden upload button/dropzone because the file limit is reached.",
     "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
   },
+  "S5ydMY": {
+    "defaultMessage": "The format of the date of birth is incorrect.",
+    "description": "Validation error for children.dateOfBirth invalid format.",
+    "originalDefault": "The format of the date of birth is incorrect."
+  },
   "TZb5ph": {
     "defaultMessage": "Zorg dat dit veld {maxSelectedCount} of minder opties aagevinkt heeft.",
     "description": "Selectboxes maximum selected count error message",
@@ -309,6 +369,11 @@
     "description": "Validation error for partners.dateOfBirth invalid format.",
     "originalDefault": "The format of the date of birth is incorrect."
   },
+  "U7YHLZ": {
+    "defaultMessage": "Include {firstname}?",
+    "description": "Children component: child 'selected' aria label",
+    "originalDefault": "Include {firstname}?"
+  },
   "UONGQo": {
     "defaultMessage": "Huisnummer is verplicht.",
     "description": "Validation error when AddressNL.postcode is provided but not houseNumber",
@@ -323,6 +388,11 @@
     "defaultMessage": "Nog één toevoegen",
     "description": "Multi-field add button label text",
     "originalDefault": "Add another"
+  },
+  "ZAq+s7": {
+    "defaultMessage": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}",
+    "description": "Children component: children table 'delete child' accessible label",
+    "originalDefault": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}"
   },
   "ZGuxfW": {
     "defaultMessage": "Bestandsnaam",
@@ -348,6 +418,11 @@
     "defaultMessage": "Achternaam",
     "description": "Partners component: label for partners lastName",
     "originalDefault": "Lastname"
+  },
+  "bqbXGd": {
+    "defaultMessage": "No information provided",
+    "description": "Empty field message",
+    "originalDefault": "No information provided"
   },
   "bv/J3Y": {
     "defaultMessage": "Straatnaam is verplicht.",
@@ -388,6 +463,21 @@
     "defaultMessage": "Laden...",
     "description": "Loading content text",
     "originalDefault": "Loading..."
+  },
+  "fwMwqD": {
+    "defaultMessage": "Save",
+    "description": "Children component modal: save button label",
+    "originalDefault": "Save"
+  },
+  "h7JS6y": {
+    "defaultMessage": "Add child",
+    "description": "Children component modal: add child button label",
+    "originalDefault": "Add child"
+  },
+  "hPHLdv": {
+    "defaultMessage": "Edit child",
+    "description": "Children component modal: edit child title",
+    "originalDefault": "Edit child"
   },
   "iiVLgn": {
     "defaultMessage": "{multiple, select, false {Sleep een bestand of klik om een bestand te selecteren.} other {Sleep bestanden of klik om {limit, select, 0 {} other {tot {limit}} } bestanden toe te voegen.} } Een bestand mag hoogstens <fileSize></fileSize> groot zijn.",
@@ -488,6 +578,11 @@
     "defaultMessage": "''{label} {index}' verwijderen",
     "description": "Accessible remove icon/button label for item at $index. The index variable here is 1-indexed.",
     "originalDefault": "Remove ''{label} {index}'"
+  },
+  "r6qiY/": {
+    "defaultMessage": "Date of birth",
+    "description": "Children component: children table 'dateOfBirth' header",
+    "originalDefault": "Date of birth"
   },
   "rQ5vC9": {
     "defaultMessage": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB).",

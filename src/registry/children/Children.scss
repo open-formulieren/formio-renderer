@@ -1,0 +1,8 @@
+@use '@utrecht/components/table';
+@use '@utrecht/components/custom-checkbox';
+
+.openforms-children {
+  .utrecht-form-field-description--openforms-errors + .utrecht-button {
+    margin-block-start: var(--of-children-error-button-spacing, 8px);
+  }
+}
