@@ -34,7 +34,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   key = useFieldConfig(key);
   const {getFieldProps, getFieldMeta, setFieldTouched} = useFormikContext();
   const {touched, error: formikError} = getFieldMeta<ExtendedChildDetails[]>(key);
-  const {value: children} = getFieldProps<ExtendedChildDetails[]>(key);
+  const {value: children = []} = getFieldProps<ExtendedChildDetails[]>(key);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const error = formikError as unknown as
@@ -82,7 +82,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                 name={key}
                 values={children}
                 enableSelection={enableSelection}
-                onSelectionChanged={() => markFieldAsTouched()}
+                onSelectionBlur={() => markFieldAsTouched()}
                 updateChild={(childIndex, child) => {
                   arrayHelpers.replace(childIndex, child);
                   markFieldAsTouched();

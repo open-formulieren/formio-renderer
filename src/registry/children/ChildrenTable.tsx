@@ -104,7 +104,7 @@ export interface ChildrenTableProps {
   name: string;
   values: ExtendedChildDetails[];
   enableSelection?: boolean;
-  onSelectionChanged: () => void;
+  onSelectionBlur: () => void;
   updateChild: (childIndex: number, child: ExtendedChildDetails) => void;
   removeChild: (childIndex: number) => void;
 }
@@ -113,7 +113,7 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
   name,
   values,
   enableSelection,
-  onSelectionChanged,
+  onSelectionBlur,
   updateChild,
   removeChild,
 }) => {
@@ -159,7 +159,7 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
                       firstname: child.firstNames,
                     }
                   )}
-                  onChange={onSelectionChanged}
+                  onBlur={onSelectionBlur}
                 />
               </TableCell>
             )}

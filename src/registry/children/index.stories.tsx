@@ -111,6 +111,7 @@ export const WithSelectionEnabled: Story = {
             bsn: '123456789',
             firstNames: 'John',
             dateOfBirth: '2000-1-1',
+            selected: false,
           },
           {
             bsn: '074303909',
@@ -497,13 +498,13 @@ export const SelectedChildrenValueDisplay: ValueDisplayStory = {
       enableSelection: true,
     } satisfies ChildrenComponentSchema,
     value: [
-      // Missing selected property
+      // Unselected children
       {
         bsn: '123456789',
         firstNames: 'Joe C (Unselected)',
         dateOfBirth: '1984-2-13',
+        selected: false,
       },
-      // Unselected child
       {
         bsn: '111222333',
         firstNames: 'Joe B (Unselected)',
