@@ -5,7 +5,7 @@
     "originalDefault": "The value must be {max} or less."
   },
   "+MVbpZ": {
-    "defaultMessage": "Add child",
+    "defaultMessage": "Kind toevoegen",
     "description": "Children component modal: add child title",
     "originalDefault": "Add child"
   },
@@ -25,7 +25,7 @@
     "originalDefault": "House number addition must be up to four letters and digits."
   },
   "07h5b8": {
-    "defaultMessage": "You must provide a first name.",
+    "defaultMessage": "Voornaam is verplicht.",
     "description": "Validation error for required children.firstNames field.",
     "originalDefault": "You must provide a first name."
   },
@@ -89,6 +89,7 @@
   "3beumC": {
     "defaultMessage": "BSN",
     "description": "Children component: label for children BSN",
+    "isTranslated": true,
     "originalDefault": "BSN"
   },
   "4IX8hk": {
@@ -124,6 +125,7 @@
   "94ZHpN": {
     "defaultMessage": "BSN",
     "description": "Children component: children table 'bsn' header",
+    "isTranslated": true,
     "originalDefault": "BSN"
   },
   "9SgPC6": {
@@ -172,12 +174,12 @@
     "originalDefault": "You must verify this email address to continue."
   },
   "BxPJLU": {
-    "defaultMessage": "First names",
+    "defaultMessage": "Voornaam",
     "description": "Children component: children table 'firstNames' header",
     "originalDefault": "First names"
   },
   "CTDEh6": {
-    "defaultMessage": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN.",
+    "defaultMessage": "Het BSN {bsn} komt meerdere keren voor. Elk kind moet een uniek BSN hebben.",
     "description": "Validation error for duplicate children.bsn values.",
     "originalDefault": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN."
   },
@@ -193,7 +195,7 @@
     "originalDefault": "Street name"
   },
   "DGjM+p": {
-    "defaultMessage": "Firstnames",
+    "defaultMessage": "Voornaam",
     "description": "Children component: label for children firstNames",
     "originalDefault": "Firstnames"
   },
@@ -203,7 +205,7 @@
     "originalDefault": "Hour must be between 0-23 and minute between 0-59"
   },
   "DcLzdm": {
-    "defaultMessage": "Date of birth must be within the last 120 years.",
+    "defaultMessage": "De geboortedatum mag hoogstens 120 jaar geleden zijn.",
     "description": "Validation error for children.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
   },
@@ -268,7 +270,7 @@
     "originalDefault": "Initials"
   },
   "K4JPOy": {
-    "defaultMessage": "{hasFirstNames, select, true {Edit child with first name: {firstNames}} other {Edit child with BSN: {bsn}}}",
+    "defaultMessage": "{hasFirstNames, select, true {Bewerk kind met voornaam: {firstNames}} other {Bewerk kind met BSN: {bsn}}}",
     "description": "Children component: children table 'edit child' accessible label",
     "originalDefault": "{hasFirstNames, select, true {Edit child with first name: {firstNames}} other {Edit child with BSN: {bsn}}}"
   },
@@ -295,7 +297,7 @@
     "originalDefault": "m"
   },
   "MrlKEu": {
-    "defaultMessage": "Date of birth cannot be in the future.",
+    "defaultMessage": "De geboortedatum mag niet in de toekomst liggen.",
     "description": "Validation error for children.dateOfBirth that is after the maximum date.",
     "originalDefault": "Date of birth cannot be in the future."
   },
@@ -310,7 +312,7 @@
     "originalDefault": "House number"
   },
   "PzBahf": {
-    "defaultMessage": "Date of birth",
+    "defaultMessage": "Geboortedatum",
     "description": "Children component: label for children dateOfBirth",
     "originalDefault": "Date of birth"
   },
@@ -345,7 +347,7 @@
     "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
   },
   "S5ydMY": {
-    "defaultMessage": "The format of the date of birth is incorrect.",
+    "defaultMessage": "De geboortedatum heeft een ongeldig formaat.",
     "description": "Validation error for children.dateOfBirth invalid format.",
     "originalDefault": "The format of the date of birth is incorrect."
   },
@@ -370,7 +372,7 @@
     "originalDefault": "The format of the date of birth is incorrect."
   },
   "U7YHLZ": {
-    "defaultMessage": "Include {firstname}?",
+    "defaultMessage": "Selecteer {firstname}?",
     "description": "Children component: child 'selected' aria label",
     "originalDefault": "Include {firstname}?"
   },
@@ -390,7 +392,7 @@
     "originalDefault": "Add another"
   },
   "ZAq+s7": {
-    "defaultMessage": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}",
+    "defaultMessage": "{hasFirstNames, select, true {Verwijder kind met voornaam: {firstNames}} other {Verwijder kind met BSN: {bsn}}}",
     "description": "Children component: children table 'delete child' accessible label",
     "originalDefault": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}"
   },
@@ -420,7 +422,7 @@
     "originalDefault": "Lastname"
   },
   "bqbXGd": {
-    "defaultMessage": "No information provided",
+    "defaultMessage": "Geen informatie verstrekt.",
     "description": "Empty field message",
     "originalDefault": "No information provided"
   },
@@ -465,17 +467,17 @@
     "originalDefault": "Loading..."
   },
   "fwMwqD": {
-    "defaultMessage": "Save",
+    "defaultMessage": "Opslaan",
     "description": "Children component modal: save button label",
     "originalDefault": "Save"
   },
   "h7JS6y": {
-    "defaultMessage": "Add child",
+    "defaultMessage": "Kind toevoegen",
     "description": "Children component modal: add child button label",
     "originalDefault": "Add child"
   },
   "hPHLdv": {
-    "defaultMessage": "Edit child",
+    "defaultMessage": "Kind bewerken",
     "description": "Children component modal: edit child title",
     "originalDefault": "Edit child"
   },
@@ -580,7 +582,7 @@
     "originalDefault": "Remove ''{label} {index}'"
   },
   "r6qiY/": {
-    "defaultMessage": "Date of birth",
+    "defaultMessage": "Geboortedatum",
     "description": "Children component: children table 'dateOfBirth' header",
     "originalDefault": "Date of birth"
   },
