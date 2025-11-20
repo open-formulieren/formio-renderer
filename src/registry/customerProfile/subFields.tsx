@@ -1,18 +1,22 @@
 import type {DigitalAddress, DigitalAddressType} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
+import {clsx} from 'clsx';
+import type {FormikErrors} from 'formik';
 import {useFormikContext} from 'formik';
-import {useState} from 'react';
+import {useId, useState} from 'react';
 import type {IntlShape} from 'react-intl';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {GroupBase, OptionProps} from 'react-select';
 import {components} from 'react-select';
 
 import {SecondaryActionButton} from '@/components/Button';
+import {ValidationErrors} from '@/components/forms';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
 import Icon from '@/components/icons';
 
+import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
 import type {DigitalAddressGroup} from './types';
 
@@ -170,13 +174,37 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
 };
 
 interface DigitalAddressTypeFieldProps {
+  /**
+   * The name prefix for the fields.
+   */
   namePrefix: string;
+  /**
+   * Whether the subfield is required.
+   *
+   * A required profile component requires at least one digital address to be provided.
+   * This should only be set to true if the parent component is required,
+   * and only one digital address type is supported.
+   */
   isRequired?: boolean;
+  /**
+   * The pre-populated digital address group for this digital address type.
+   *
+   * If no "digitalAddressGroup" is provided, the field will show a text input.
+   * Otherwise, we show a select input with the "digitalAddressGroup.addresses" as
+   * options.
+   */
   digitalAddressGroup?: DigitalAddressGroup;
+  errors?: string | FormikErrors<DigitalAddress>;
 }
 
 interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
+  /**
+   * The type of digital address field.
+   */
   type: DigitalAddressType;
+  /**
+   * Additional props to pass to the text input.
+   */
   textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
@@ -196,9 +224,12 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   type,
   isRequired,
   digitalAddressGroup,
+  errors,
   textfieldProps,
 }) => {
-  const {getFieldHelpers} = useFormikContext<DigitalAddress>();
+  const id = useId();
+  const intl = useIntl();
+  const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const fieldName = `${namePrefix}.address`;
   const {setValue: setAddress} = getFieldHelpers<DigitalAddress['address']>(fieldName);
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
@@ -209,8 +240,36 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   const hasAddresses = !!digitalAddressGroup?.addresses?.length;
   const [useTextInput, setUseTextInput] = useState(!hasAddresses);
 
+  const fieldError = typeof errors === 'string' && errors;
+
+  const touched = DIGITAL_ADDRESS_FIELD_NAMES.some(subFieldName => {
+    const nestedFieldName = `${namePrefix}.${subFieldName}`;
+    const {touched} = getFieldMeta<boolean>(nestedFieldName);
+    return touched;
+  });
+
+  const invalid = touched && !!fieldError;
+  const errorMessageId = invalid ? `${id}-error-message` : undefined;
+
   return (
-    <div className="openforms-customer-profile-digital-address">
+    <div
+      className={clsx(
+        'openforms-customer-profile-digital-address',
+        invalid && 'openforms-customer-profile-digital-address--invalid'
+      )}
+      aria-label={intl.formatMessage(
+        {
+          description: 'Profile digital address: accessible digital address label',
+          defaultMessage: `Provide the {digitalAddressType, select,
+            email {email address}
+            phoneNumber {phone number}
+            other {{digitalAddressType}}
+          } on which you want to be contacted.`,
+        },
+        {digitalAddressType: type}
+      )}
+      aria-describedby={errorMessageId}
+    >
       {hasAddresses && !useTextInput ? (
         <DigitalAddressesSelect
           type={type}
@@ -232,6 +291,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           textfieldProps={textfieldProps}
         />
       )}
+      {errorMessageId && fieldError && <ValidationErrors id={errorMessageId} error={fieldError} />}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import {FormioCustomerProfile} from './index';
 
 export default {
-  title: 'Component registry / special / profile',
+  title: 'Component registry / special / profile / presentation',
   component: FormioCustomerProfile,
   decorators: [withFormSettingsProvider, withFormik],
   args: {
@@ -226,5 +226,54 @@ export const WithFetchedDigitalAddressesAddNewAddress: Story = {
 
       userEvent.click(modal.getByRole('button', {name: 'Save'}));
     });
+  },
+};
+
+export const WithComponentValidationError: Story = {
+  parameters: {
+    formik: {
+      initialTouched: {
+        customerProfile: [{address: true}],
+      },
+      initialErrors: {
+        customerProfile: 'Generic error message from component validation.',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(
+      await canvas.findByText('Generic error message from component validation.')
+    ).toBeVisible();
+  },
+};
+
+export const WithDigitalAddressValidationError: Story = {
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [
+          {
+            address: 'invalid-email',
+            type: 'email',
+            preferenceUpdate: 'useOnlyOnce',
+          },
+        ],
+      },
+      initialTouched: {
+        customerProfile: [{address: true}],
+      },
+      initialErrors: {
+        customerProfile: ['Generic error message from digital address validation.'],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(
+      await canvas.findByText('Generic error message from digital address validation.')
+    ).toBeVisible();
   },
 };

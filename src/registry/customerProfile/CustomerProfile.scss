@@ -4,6 +4,43 @@
 @use '@/scss/bem';
 @use '@/scss/responsive';
 
+.openforms-customer-profile-digital-address {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--of-customer-profile-digital-address-row-gap, 8px);
+
+  @include bem.modifier('invalid') {
+    // mimick utrecht-form-field styles, falling back to those design tokens
+    border-inline-start-style: solid;
+    border-inline-start-color: var(
+      --of-customer-profile-digital-address-invalid-border-inline-start-color,
+      var(--utrecht-form-field-invalid-border-inline-start-color)
+    );
+    border-inline-start-width: var(
+      --of-customer-profile-digital-address-invalid-border-inline-start-width,
+      var(--utrecht-form-field-invalid-border-inline-start-width, 0)
+    );
+
+    padding-inline-start: var(
+      --of-customer-profile-digital-address-invalid-padding-inline-start,
+      var(--utrecht-form-field-invalid-padding-inline-start, 0)
+    );
+    padding-inline-end: var(
+      --of-customer-profile-digital-address-invalid-padding-inline-end,
+      var(--utrecht-form-field-invalid-padding-inline-start, 0)
+    );
+    padding-block-start: var(
+      --of-customer-profile-digital-address-invalid-padding-block-start,
+      var(--utrecht-form-field-invalid-padding-inline-start, 0)
+    );
+    padding-block-end: var(
+      --of-customer-profile-digital-address-invalid-padding-block-end,
+      var(--utrecht-form-field-invalid-padding-inline-start, 0)
+    );
+    background-color: var(--utrecht-alert-error-background-color, var(--of-alert-error-bg));
+  }
+}
+
 .openforms-customer-profile-option {
   display: grid;
   grid-template-columns: 1fr auto;

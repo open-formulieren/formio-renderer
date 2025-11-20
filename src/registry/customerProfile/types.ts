@@ -1,4 +1,19 @@
-import type {CustomerProfileProperties, DigitalAddressType} from '@open-formulieren/types';
+import type {
+  CustomerProfileData,
+  CustomerProfileProperties,
+  DigitalAddressType,
+} from '@open-formulieren/types';
+
+/**
+ * A subset of the Formik state/values, scoped to the data belonging to the
+ * CustomerProfile component.
+ *
+ * The string key index matches the `component.key` type, which *could* be a string with
+ * periods, creating a nested object structure.
+ */
+export type FormValues = {
+  [k: string]: CustomerProfileData | FormValues;
+};
 
 export interface DigitalAddressGroup {
   addresses: string[];
