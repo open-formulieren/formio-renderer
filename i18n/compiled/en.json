@@ -13,10 +13,22 @@
       "value": " or less."
     }
   ],
+  "+KBbXH": [
+    {
+      "type": 0,
+      "value": "Click to start drawing shape"
+    }
+  ],
   "+MVbpZ": [
     {
       "type": 0,
       "value": "Add child"
+    }
+  ],
+  "+W79Dr": [
+    {
+      "type": 0,
+      "value": "Click to continue drawing line"
     }
   ],
   "+xOWBM": [
@@ -35,6 +47,12 @@
     {
       "type": 0,
       "value": "House number addition must be up to four letters and digits."
+    }
+  ],
+  "/yX9Xl": [
+    {
+      "type": 0,
+      "value": "Cancel drawing"
     }
   ],
   "07h5b8": [
@@ -101,6 +119,12 @@
       "value": "The file is too small."
     }
   ],
+  "2D6ubj": [
+    {
+      "type": 0,
+      "value": "Line"
+    }
+  ],
   "2HsmfN": [
     {
       "type": 0,
@@ -165,10 +189,22 @@
       "value": "Loading..."
     }
   ],
+  "4ZOmtU": [
+    {
+      "type": 0,
+      "value": "Save changes"
+    }
+  ],
   "4tPKAs": [
     {
       "type": 0,
       "value": "Verify"
+    }
+  ],
+  "4ui8R+": [
+    {
+      "type": 0,
+      "value": "Click last point to finish line"
     }
   ],
   "5TAbGN": [
@@ -199,6 +235,12 @@
       "pluralType": "cardinal",
       "type": 6,
       "value": "charCount"
+    }
+  ],
+  "62SBjV": [
+    {
+      "type": 0,
+      "value": "Shape (polygon)"
     }
   ],
   "646077": [
@@ -287,6 +329,18 @@
       "value": "provider"
     }
   ],
+  "B/W1uC": [
+    {
+      "type": 0,
+      "value": "Remove shapes"
+    }
+  ],
+  "BboxO6": [
+    {
+      "type": 0,
+      "value": "Use two fingers to move the map"
+    }
+  ],
   "Bo6onH": [
     {
       "type": 0,
@@ -357,6 +411,12 @@
       "value": " is used for multiple children. Each child must have a unique BSN."
     }
   ],
+  "D6TdPW": [
+    {
+      "type": 0,
+      "value": "Click map to place marker"
+    }
+  ],
   "DBTNgI": [
     {
       "type": 0,
@@ -411,6 +471,12 @@
       "value": "The verification code may only contain letters (A-Z) and numbers (0-9)."
     }
   ],
+  "FWCQJu": [
+    {
+      "type": 0,
+      "value": "Current location"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -437,6 +503,30 @@
     {
       "type": 0,
       "value": "HH"
+    }
+  ],
+  "H4VhcO": [
+    {
+      "type": 0,
+      "value": "Current location cannot be accessed"
+    }
+  ],
+  "HY6Irs": [
+    {
+      "type": 0,
+      "value": "Cancel changes"
+    }
+  ],
+  "HgLr1F": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
+  "Hkq6NE": [
+    {
+      "type": 0,
+      "value": "Finish drawing"
     }
   ],
   "HoCa81": [
@@ -561,6 +651,12 @@
       "value": "Previous month"
     }
   ],
+  "LYjd+f": [
+    {
+      "type": 0,
+      "value": "Use my current location"
+    }
+  ],
   "LaKfzC": [
     {
       "type": 0,
@@ -585,10 +681,28 @@
       "value": "Date of birth cannot be in the future."
     }
   ],
+  "N2sZnS": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "NZ8rJn": [
+    {
+      "type": 0,
+      "value": "Your current location cannot be accessed"
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
       "value": "You must provide a city."
+    }
+  ],
+  "Op4orj": [
+    {
+      "type": 0,
+      "value": "No shapes to remove"
     }
   ],
   "PCv4sQ": [
@@ -601,6 +715,12 @@
     {
       "type": 0,
       "value": "Date of birth"
+    }
+  ],
+  "Q6/Lj7": [
+    {
+      "type": 0,
+      "value": "Remove last drawn point"
     }
   ],
   "QAN3ua": [
@@ -707,6 +827,12 @@
       "value": "The format of the date of birth is incorrect."
     }
   ],
+  "U5+FHP": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
   "U7YHLZ": [
     {
       "type": 0,
@@ -737,6 +863,18 @@
     {
       "type": 0,
       "value": "Add another"
+    }
+  ],
+  "X/24FO": [
+    {
+      "type": 0,
+      "value": "Map component search button"
+    }
+  ],
+  "Y3jHZm": [
+    {
+      "type": 0,
+      "value": "Remove last point"
     }
   ],
   "ZAq+s7": [
@@ -777,6 +915,12 @@
       "value": "File name"
     }
   ],
+  "aUpjaY": [
+    {
+      "type": 0,
+      "value": "Sorry, that address could not be found."
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -797,6 +941,12 @@
     {
       "type": 0,
       "value": "House number must be a number with up to five digits (e.g. 456)."
+    }
+  ],
+  "bRtoG6": [
+    {
+      "type": 0,
+      "value": "Remove all"
     }
   ],
   "bmnUq8": [
@@ -863,6 +1013,12 @@
       "value": "."
     }
   ],
+  "dNGw+S": [
+    {
+      "type": 0,
+      "value": "Click to continue drawing shape"
+    }
+  ],
   "dsZqad": [
     {
       "type": 0,
@@ -883,10 +1039,22 @@
       "value": "Loading..."
     }
   ],
+  "fJVa0u": [
+    {
+      "type": 0,
+      "value": "Marker"
+    }
+  ],
   "fwMwqD": [
     {
       "type": 0,
       "value": "Save"
+    }
+  ],
+  "h2LzuB": [
+    {
+      "type": 0,
+      "value": "Are you sure you want to delete your drawn shape?"
     }
   ],
   "h7JS6y": [
@@ -1037,6 +1205,12 @@
       "value": "Time"
     }
   ],
+  "nLymjB": [
+    {
+      "type": 0,
+      "value": "Use ctrl + scroll to zoom the map"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
@@ -1059,6 +1233,12 @@
     {
       "type": 0,
       "value": "City"
+    }
+  ],
+  "ovI+W7": [
+    {
+      "type": 0,
+      "value": "Use ⌘ + scroll to zoom the map"
     }
   ],
   "oxM3rx": [
@@ -1149,6 +1329,18 @@
       "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
     }
   ],
+  "sSmY1N": [
+    {
+      "type": 0,
+      "value": "Enter address, please"
+    }
+  ],
+  "sYb+eZ": [
+    {
+      "type": 0,
+      "value": "Remove all shapes"
+    }
+  ],
   "syyEii": [
     {
       "type": 0,
@@ -1183,6 +1375,12 @@
     {
       "type": 1,
       "value": "maxTime"
+    }
+  ],
+  "vfKvuS": [
+    {
+      "type": 0,
+      "value": "Click first point to finish shape"
     }
   ],
   "wiPGoP": [
@@ -1235,6 +1433,12 @@
       "value": "Verify"
     }
   ],
+  "xh+7Vv": [
+    {
+      "type": 0,
+      "value": "Finish"
+    }
+  ],
   "yKo62N": [
     {
       "type": 0,
@@ -1263,6 +1467,24 @@
     {
       "type": 0,
       "value": "Invalid Dutch license plate"
+    }
+  ],
+  "zpHAro": [
+    {
+      "type": 0,
+      "value": "Click to start drawing line"
+    }
+  ],
+  "zvoXSU": [
+    {
+      "type": 0,
+      "value": "Nearest address: "
+    },
+    {
+      "children": [
+      ],
+      "type": 8,
+      "value": "address"
     }
   ]
 }

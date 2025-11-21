@@ -13,10 +13,22 @@
       "value": " of kleiner zijn."
     }
   ],
+  "+KBbXH": [
+    {
+      "type": 0,
+      "value": "Klik om een veelhoek (polygoon) te tekenen"
+    }
+  ],
   "+MVbpZ": [
     {
       "type": 0,
       "value": "Kind toevoegen"
+    }
+  ],
+  "+W79Dr": [
+    {
+      "type": 0,
+      "value": "Klik om verder te tekenen"
     }
   ],
   "+xOWBM": [
@@ -35,6 +47,12 @@
     {
       "type": 0,
       "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
+    }
+  ],
+  "/yX9Xl": [
+    {
+      "type": 0,
+      "value": "Tekeningen annuleren"
     }
   ],
   "07h5b8": [
@@ -101,6 +119,12 @@
       "value": "Het bestand is te klein."
     }
   ],
+  "2D6ubj": [
+    {
+      "type": 0,
+      "value": "Lijn"
+    }
+  ],
   "2HsmfN": [
     {
       "type": 0,
@@ -165,10 +189,22 @@
       "value": "Opties ophalen..."
     }
   ],
+  "4ZOmtU": [
+    {
+      "type": 0,
+      "value": "Wijzigingen opslaan"
+    }
+  ],
   "4tPKAs": [
     {
       "type": 0,
       "value": "Bevestigen"
+    }
+  ],
+  "4ui8R+": [
+    {
+      "type": 0,
+      "value": "Klik het laatste punt om de lijn te voltooien"
     }
   ],
   "5TAbGN": [
@@ -203,6 +239,12 @@
       "pluralType": "cardinal",
       "type": 6,
       "value": "charCount"
+    }
+  ],
+  "62SBjV": [
+    {
+      "type": 0,
+      "value": "Veelhoek (polygoon)"
     }
   ],
   "646077": [
@@ -291,6 +333,18 @@
       "value": "provider"
     }
   ],
+  "B/W1uC": [
+    {
+      "type": 0,
+      "value": "Verwijder vormen"
+    }
+  ],
+  "BboxO6": [
+    {
+      "type": 0,
+      "value": "Gebruik twee vingers om te navigeren in de kaart"
+    }
+  ],
   "Bo6onH": [
     {
       "type": 0,
@@ -329,6 +383,12 @@
     {
       "type": 0,
       "value": " komt meerdere keren voor. Elk kind moet een uniek BSN hebben."
+    }
+  ],
+  "D6TdPW": [
+    {
+      "type": 0,
+      "value": "Klik op de kaart om een pin/punt te plaatsen"
     }
   ],
   "DBTNgI": [
@@ -385,6 +445,12 @@
       "value": "De bevestigingscode bestaat uit hoofdletters (A-Z) en getallen (0-9)."
     }
   ],
+  "FWCQJu": [
+    {
+      "type": 0,
+      "value": "Huidige locatie"
+    }
+  ],
   "FfBWqF": [
     {
       "type": 0,
@@ -415,6 +481,30 @@
     {
       "type": 0,
       "value": "uu"
+    }
+  ],
+  "H4VhcO": [
+    {
+      "type": 0,
+      "value": "Huidige locatie kan niet bepaald worden"
+    }
+  ],
+  "HY6Irs": [
+    {
+      "type": 0,
+      "value": "Wijzigingen annuleren"
+    }
+  ],
+  "HgLr1F": [
+    {
+      "type": 0,
+      "value": "Annuleer"
+    }
+  ],
+  "Hkq6NE": [
+    {
+      "type": 0,
+      "value": "Tekening voltooien"
     }
   ],
   "HoCa81": [
@@ -551,6 +641,12 @@
       "value": "Vorige maand"
     }
   ],
+  "LYjd+f": [
+    {
+      "type": 0,
+      "value": "Gebruik mijn huidige locatie"
+    }
+  ],
   "LaKfzC": [
     {
       "type": 0,
@@ -575,10 +671,28 @@
       "value": "De geboortedatum mag niet in de toekomst liggen."
     }
   ],
+  "N2sZnS": [
+    {
+      "type": 0,
+      "value": "Opslaan"
+    }
+  ],
+  "NZ8rJn": [
+    {
+      "type": 0,
+      "value": "Je huidige locatie kan niet bepaald worden"
+    }
+  ],
   "Oc3efT": [
     {
       "type": 0,
       "value": "Plaats is verplicht."
+    }
+  ],
+  "Op4orj": [
+    {
+      "type": 0,
+      "value": "Geen vormen om te verwijderen"
     }
   ],
   "PCv4sQ": [
@@ -591,6 +705,12 @@
     {
       "type": 0,
       "value": "Geboortedatum"
+    }
+  ],
+  "Q6/Lj7": [
+    {
+      "type": 0,
+      "value": "Verwijder het laatst getekende punt"
     }
   ],
   "QAN3ua": [
@@ -667,6 +787,12 @@
       "value": "De geboortedatum heeft een ongeldig formaat."
     }
   ],
+  "U5+FHP": [
+    {
+      "type": 0,
+      "value": "Annuleer"
+    }
+  ],
   "U7YHLZ": [
     {
       "type": 0,
@@ -697,6 +823,18 @@
     {
       "type": 0,
       "value": "Nog één toevoegen"
+    }
+  ],
+  "X/24FO": [
+    {
+      "type": 0,
+      "value": "Zoeken"
+    }
+  ],
+  "Y3jHZm": [
+    {
+      "type": 0,
+      "value": "Verwijder laatste punt"
     }
   ],
   "ZAq+s7": [
@@ -737,6 +875,12 @@
       "value": "Bestandsnaam"
     }
   ],
+  "aUpjaY": [
+    {
+      "type": 0,
+      "value": "Sorry, dit address kan niet gevonden worden."
+    }
+  ],
   "abKEBH": [
     {
       "type": 0,
@@ -761,6 +905,12 @@
     {
       "type": 0,
       "value": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456)."
+    }
+  ],
+  "bRtoG6": [
+    {
+      "type": 0,
+      "value": "Verwijder alles"
     }
   ],
   "bmnUq8": [
@@ -827,6 +977,12 @@
       "value": " zijn."
     }
   ],
+  "dNGw+S": [
+    {
+      "type": 0,
+      "value": "Klik om verder te tekenen"
+    }
+  ],
   "dsZqad": [
     {
       "type": 0,
@@ -847,10 +1003,22 @@
       "value": "Laden..."
     }
   ],
+  "fJVa0u": [
+    {
+      "type": 0,
+      "value": "Pin/punt"
+    }
+  ],
   "fwMwqD": [
     {
       "type": 0,
       "value": "Opslaan"
+    }
+  ],
+  "h2LzuB": [
+    {
+      "type": 0,
+      "value": "Ben je zeker dat je de getekende vorm wil verwijderen?"
     }
   ],
   "h7JS6y": [
@@ -1001,6 +1169,12 @@
       "value": "Tijdstip"
     }
   ],
+  "nLymjB": [
+    {
+      "type": 0,
+      "value": "Gebruik CTRL + scroll om te zoomen in de kaart"
+    }
+  ],
   "nfRRDu": [
     {
       "type": 0,
@@ -1023,6 +1197,12 @@
     {
       "type": 0,
       "value": "Plaats"
+    }
+  ],
+  "ovI+W7": [
+    {
+      "type": 0,
+      "value": "Gebruik ⌘ + scroll om te zoomen in de kaart"
     }
   ],
   "oxM3rx": [
@@ -1113,6 +1293,18 @@
       "value": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78."
     }
   ],
+  "sSmY1N": [
+    {
+      "type": 0,
+      "value": "Zoek adres"
+    }
+  ],
+  "sYb+eZ": [
+    {
+      "type": 0,
+      "value": "Verwijder alle vormen van de kaart"
+    }
+  ],
   "syyEii": [
     {
       "type": 0,
@@ -1151,6 +1343,12 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "vfKvuS": [
+    {
+      "type": 0,
+      "value": "Klik op het eerste punt, om de veelhoek te voltooien"
     }
   ],
   "wiPGoP": [
@@ -1203,6 +1401,12 @@
       "value": "Bevestigen"
     }
   ],
+  "xh+7Vv": [
+    {
+      "type": 0,
+      "value": "Voltooi"
+    }
+  ],
   "yKo62N": [
     {
       "type": 0,
@@ -1231,6 +1435,24 @@
     {
       "type": 0,
       "value": "Ongeldig Nederlands kenteken"
+    }
+  ],
+  "zpHAro": [
+    {
+      "type": 0,
+      "value": "Klik om een lijn te tekenen"
+    }
+  ],
+  "zvoXSU": [
+    {
+      "type": 0,
+      "value": "Adres in de buurt: "
+    },
+    {
+      "children": [
+      ],
+      "type": 8,
+      "value": "address"
     }
   ]
 }

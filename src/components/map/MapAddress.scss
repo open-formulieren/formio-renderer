@@ -1,0 +1,8 @@
+@use '@/scss/bem';
+
+.openforms-map-address {
+  @include bem.element('description') {
+    display: inline;
+    font-style: normal;
+  }
+}

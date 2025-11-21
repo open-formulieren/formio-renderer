@@ -1,0 +1,28 @@
+@use 'leaflet/dist/leaflet';
+@use 'leaflet-geosearch/dist/geosearch.css';
+@use 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
+
+@use '@/scss/bem';
+
+@import 'leaflet-draw/dist/leaflet.draw.css';
+
+.openforms-leaflet-map {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 400px;
+  position: relative;
+  z-index: 0;
+
+  @include bem.modifier('disabled') {
+    cursor: default;
+  }
+
+  .leaflet-draw-actions {
+    a {
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+    }
+  }
+}
