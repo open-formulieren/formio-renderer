@@ -74,6 +74,18 @@ describe('select component validation', () => {
     expect(success).toBe(false);
   });
 
+  test('required with custom error message', async () => {
+    const component: SelectComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = await schema.safeParseAsync(undefined);
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test('allows empty array for non-required multi-select', async () => {
     const component: SelectComponentSchema = {
       ...BASE_COMPONENT,
@@ -116,7 +128,7 @@ describe('select component validation', () => {
     expect(success).toBe(true);
   });
 
-  test.each(['', 'invalid', 0])(
+  test.each(['invalid', 0])(
     'validates each member for multi-select against the options (value: %s)',
     async value => {
       const component: SelectComponentSchema = {
@@ -145,5 +157,22 @@ describe('select component validation', () => {
     const {success} = await schema.safeParseAsync('option1');
 
     expect(success).toBe(valid);
+  });
+
+  test('required with custom error message and multiple: true', () => {
+    const component: SelectComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required with multiple: true'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe(
+      'Custom error message for required with multiple: true'
+    );
   });
 });

@@ -50,6 +50,32 @@ describe('number component validation', () => {
     }
   );
 
+  test('min with custom error message', () => {
+    const component: NumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, required: true},
+      errors: {min: 'Custom error message for min value'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(4);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for min value');
+  });
+
+  test('max with custom error message', () => {
+    const component: NumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, required: true},
+      errors: {max: 'Custom error message for max value'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(12);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for max value');
+  });
+
   test.each([
     [false, null],
     [true, null],
@@ -63,6 +89,19 @@ describe('number component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(!required);
+  });
+
+  test('required with custom error message', () => {
+    const component: NumberComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {...BASE_COMPONENT.validate, required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
   });
 
   test.each([

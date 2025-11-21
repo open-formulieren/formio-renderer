@@ -157,6 +157,38 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'select',
+      key: 'my.select',
+      label: 'A select',
+      validate: {
+        required: true,
+      },
+      dataType: 'string',
+      dataSrc: 'values',
+      data: {
+        values: [
+          {value: '1', label: 'First'},
+          {value: '2', label: 'Second'},
+        ],
+      },
+      openForms: {translations: {}, dataSrc: 'manual'},
+      errors: {required: 'Custom error message for required'},
+    } satisfies SelectComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const PassesAllValidations: ValidationStory = {
   ...BaseValidationStory,
   args: {

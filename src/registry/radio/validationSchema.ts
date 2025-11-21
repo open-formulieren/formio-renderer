@@ -15,7 +15,7 @@ const getValidationSchema: GetValidationSchema<RadioComponentSchema> = (
   {validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
-  const {key, validate = {}, values} = componentDefinition;
+  const {key, validate = {}, values, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
   const enumMembers = values.map(({value}) => value);
@@ -23,22 +23,32 @@ const getValidationSchema: GetValidationSchema<RadioComponentSchema> = (
 
   // z.enum requires a non empty array in its types
   const [head, ...rest] = enumMembers;
-  let schema: ValidationSchema = z.enum([head, ...rest]);
+  const baseEnum: ValidationSchema = z.enum([head, ...rest]);
 
-  if (plugins.length) {
-    schema = schema.superRefine(async (val, ctx) => {
+  // wrap in union so superRefine sees empty values otherwise we can't validate required,
+  // zod already gives an error for an empty string for example since it's not a valid enum
+  let schema: z.ZodTypeAny = z.union([baseEnum, z.undefined(), z.null(), z.literal('')]);
+
+  schema = schema.superRefine(async (val, ctx) => {
+    const isEmpty = val === undefined || val === null || val === '';
+    if (required && isEmpty) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: errors?.required || 'Required',
+      });
+      return;
+    }
+
+    if (plugins.length) {
       const message = await validatePlugins(plugins, val);
       if (!message) return;
+
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: message,
       });
-    });
-  }
-
-  if (!required) {
-    schema = z.union([schema.optional(), z.null(), z.literal('')]);
-  }
+    }
+  });
 
   return {[key]: schema};
 };

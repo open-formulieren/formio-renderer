@@ -54,6 +54,19 @@ describe('file component validation', () => {
     expect(success).toBe(!required);
   });
 
+  test('required with custom error message', () => {
+    const component: FileComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test('accepts valid upload data with client side state', () => {
     const schema = buildValidationSchema(BASE_COMPONENT);
     const fileData = buildFile({

@@ -18,21 +18,23 @@ const getValidationSchema: GetValidationSchema<CurrencyComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, currency} = componentDefinition;
+  const {key, validate = {}, currency, errors} = componentDefinition;
   const {required, min, max, plugins = []} = validate;
 
   const numberFormat = new Intl.NumberFormat(intl.locale, {style: 'currency', currency});
   const maxFormatted = max && numberFormat.format(max);
   const minFormatted = min && numberFormat.format(min);
 
-  let schema: z.ZodFirstPartySchemaTypes = z.number();
+  let schema: z.ZodFirstPartySchemaTypes = z.number({required_error: errors?.required});
+
   if (max !== undefined)
     schema = schema.lte(max, {
-      message: intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max: maxFormatted}),
+      message:
+        errors?.max || intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max: maxFormatted}),
     });
   if (min !== undefined)
     schema = schema.gte(min, {
-      message: intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min: minFormatted}),
+      message: errors?.min || intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min: minFormatted}),
     });
   if (!required) schema = schema.nullable().optional();
 

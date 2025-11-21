@@ -141,6 +141,30 @@ export const ValidateCosignRequired: ValidationStory = {
   },
 };
 
+export const ValidateCosignRequiredWithCustomErrors: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'cosign',
+      type: 'cosign',
+      key: 'cosign',
+      label: 'Co-signer email address',
+      validateOn: 'blur', // ignored but required in the types
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const PassesAllValidations: ValidationStory = {
   ...BaseValidationStory,
   args: {

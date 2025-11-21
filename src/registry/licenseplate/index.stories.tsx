@@ -162,6 +162,31 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {
+        pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
+        required: true,
+      },
+      validateOn: 'blur',
+      errors: {required: 'Custom error message for required'},
+    } satisfies LicensePlateComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidatePattern: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -249,6 +274,45 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
     expect(await canvas.findByText('Invalid Dutch license plate')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {
+        pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
+        required: true,
+      },
+      validateOn: 'blur',
+      multiple: true,
+      errors: {required: 'Custom error message for required with multiple: true'},
+    } satisfies LicensePlateComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have multiple items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(2);
+
+    // trigger validation
+    await userEvent.click(textboxes[0]);
+    await userEvent.click(textboxes[1]);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findAllByText('Custom error message for required with multiple: true')
+    ).toHaveLength(2);
   },
 };
 

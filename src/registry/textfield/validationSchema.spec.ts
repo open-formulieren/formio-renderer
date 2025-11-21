@@ -51,6 +51,19 @@ describe('textfield component validation', () => {
     expect(success).toBe(!required);
   });
 
+  test('required with custom error message', () => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each([
     [3, 'aaa', true],
     [3, 'all cats are beatiful', false],
@@ -67,6 +80,19 @@ describe('textfield component validation', () => {
     expect(success).toBe(valid);
   });
 
+  test('max length with custom error message', () => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {maxLength: 3},
+      errors: {maxLength: 'Custom error message for max length'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('Invalid');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for max length');
+  });
+
   test.each([
     ['[0-9]+', 'abc13', false],
     ['[0-9]+', '124abc', false],
@@ -81,6 +107,19 @@ describe('textfield component validation', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('pattern with custom error message', () => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {pattern: '[0-9]+'},
+      errors: {pattern: 'Custom error message for pattern'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('invalid');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for pattern');
   });
 
   test.each([
@@ -120,5 +159,23 @@ describe('textfield with multiple: true', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('required with custom error message and multiple: true', () => {
+    const component: TextFieldComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required and multiple: true'},
+    };
+
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe(
+      'Custom error message for required and multiple: true'
+    );
   });
 });

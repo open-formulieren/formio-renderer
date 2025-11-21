@@ -189,6 +189,31 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      validate: {
+        required: true,
+      },
+      errors: {
+        required: 'Custom error message for required',
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateMaxLength: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -214,6 +239,34 @@ export const ValidateMaxLength: ValidationStory = {
   },
 };
 
+export const ValidateMaxLengthWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      validate: {
+        maxLength: 3,
+      },
+      errors: {
+        maxLength: 'Custom error message for max length',
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textField = canvas.getByLabelText('A textfield');
+    await userEvent.type(textField, 'too long');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for max length')).toBeVisible();
+  },
+};
+
 export const ValidatePattern: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -236,6 +289,34 @@ export const ValidatePattern: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Invalid')).toBeVisible();
+  },
+};
+
+export const ValidatePatternWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      validate: {
+        pattern: '^yeet{1,3}$',
+      },
+      errors: {
+        pattern: 'Custom error message for pattern',
+      },
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textField = canvas.getByLabelText('A textfield');
+    await userEvent.type(textField, 'ayeet');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for pattern')).toBeVisible();
   },
 };
 
@@ -329,6 +410,43 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
     expect(await canvas.findByText('Invalid')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A textfield',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required and multiple: true'},
+    } satisfies TextFieldComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have multiple items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(2);
+
+    // trigger validation
+    await userEvent.click(textboxes[0]);
+    await userEvent.click(textboxes[1]);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findAllByText('Custom error message for required and multiple: true')
+    ).toHaveLength(2);
   },
 };
 
