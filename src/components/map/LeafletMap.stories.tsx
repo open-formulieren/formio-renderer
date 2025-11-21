@@ -5,7 +5,9 @@ import {useEffect, useState} from 'react';
 import {useMap} from 'react-leaflet';
 import {expect, fn, spyOn, userEvent, waitFor, within} from 'storybook/test';
 
-import {withGeolocationMocking, withMapLayout} from '@/tests/map';
+import type {FormSettings} from '@/context';
+import {withFormSettingsProvider} from '@/sb-decorators';
+import MockProvider, {withGeolocationMocking, withMapLayout} from '@/tests/map';
 
 import LeafletMap from './LeafletMap';
 import type {LeafletMapProps} from './LeafletMap';
@@ -127,6 +129,62 @@ export const SetPoint: Story = {
         // To make sure that this test doesn't magically fail, just expect any 2 values
         coordinates: [expect.anything(), expect.anything()],
       });
+    });
+  },
+};
+
+const searchProvider = new MockProvider();
+
+export const SetPointWithAddressLookup: Story = {
+  decorators: [withMapLayout, withFormSettingsProvider],
+  args: {
+    onGeoJsonGeometrySet: fn(),
+    interactions: {
+      marker: true,
+      polygon: false,
+      polyline: false,
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        map: {
+          mapNearestLookup: async () => ({
+            label: 'Right here',
+          }),
+          searchProvider,
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    // There is a "Current location" button
+    const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
+    expect(currentLocationButton).toBeInTheDocument();
+
+    await step('Draw a marker', async () => {
+      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
+      await userEvent.click(map, {x: 100, y: 100});
+
+      // This 'button' is the placed marker on the map
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Point',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [expect.anything(), expect.anything()],
+      });
+
+      expect(await canvas.findByText('Right here')).toBeVisible();
     });
   },
 };
