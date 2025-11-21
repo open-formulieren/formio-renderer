@@ -17,7 +17,6 @@ import Fieldset from './fieldset';
 import File from './file';
 import IBAN from './iban';
 import LicensePlate from './licenseplate';
-import Map from './map';
 import Number from './number';
 import Partners from './partners';
 import PhoneNumber from './phoneNumber';
@@ -49,7 +48,6 @@ const REGISTRY: Registry = {
   phoneNumber: PhoneNumber,
   file: File,
   textarea: Textarea,
-  map: Map,
   number: Number,
   checkbox: Checkbox,
   selectboxes: Selectboxes,
