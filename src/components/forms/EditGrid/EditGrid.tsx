@@ -274,6 +274,7 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   validate: validateCallback,
   initiallyExpanded,
 }: IsolatedEditGridItemProps<T>) {
+  const {getFieldMeta} = useFormikContext();
   const isEditable = canEditItem?.(values, index) ?? true;
 
   // complex case - if isolation needs to be enabled, set up a proper
@@ -293,6 +294,8 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   const prefixedErrors: FormikErrors<WrappedItemData<T>> | undefined = errors
     ? setIn({}, namePrefix, errors)
     : undefined;
+  // errors are stored under the dotted path, set by the validation schema.
+  const {error: itemError} = getFieldMeta(`${name}.${index}`);
 
   let validate: ((values: WrappedItemData<T>) => Promise<void>) | undefined = undefined;
   if (validateCallback) {
@@ -326,6 +329,7 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
         canEdit={isEditable}
         validate={validate}
         errors={prefixedErrors}
+        itemError={typeof itemError === 'string' ? itemError : undefined}
         saveLabel={saveItemLabel}
         onChange={(newValue: WrappedItemData<T>) => {
           const itemValue: T = getIn(newValue, namePrefix);

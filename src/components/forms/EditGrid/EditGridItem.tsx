@@ -5,6 +5,7 @@ import {useId, useState} from 'react';
 import {useIntl} from 'react-intl';
 
 import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
 import type {JSONObject, JSONValue} from '@/types';
 
@@ -31,6 +32,10 @@ interface EditGridItemBaseProps {
    * Callback invoked when deleting the item.
    */
   onRemove: () => void;
+  /**
+   * Any item-level validation error.
+   */
+  itemError?: string;
 }
 
 interface WithoutIsolation {
@@ -102,11 +107,14 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   removeLabel,
   onRemove,
   initiallyExpanded = false,
+  itemError,
   ...props
 }: EditGridItemProps<T>) {
   const intl = useIntl();
   const [expanded, setExpanded] = useState<boolean>(initiallyExpanded);
-  const headingId = useId();
+  const id = useId();
+  const headingId = `${id}-heading`;
+  const itemErrorId = `${id}-item-error`;
 
   const accessibleRemoveButtonLabel = intl.formatMessage(
     {
@@ -127,7 +135,11 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
     <li className="openforms-editgrid__item">
       <Fieldset>
         {heading && (
-          <FieldsetLegend className="openforms-editgrid__item-heading" id={headingId}>
+          <FieldsetLegend
+            className="openforms-editgrid__item-heading"
+            id={headingId}
+            aria-describedby={itemError ? itemErrorId : undefined}
+          >
             {heading}
           </FieldsetLegend>
         )}
@@ -159,6 +171,12 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           >
             <>
               {props.getBody({expanded})}
+
+              {itemError ? (
+                <div>
+                  <ValidationErrors error={itemError} id={itemErrorId} />
+                </div>
+              ) : null}
 
               {expanded ? (
                 <IsolationModeButtons

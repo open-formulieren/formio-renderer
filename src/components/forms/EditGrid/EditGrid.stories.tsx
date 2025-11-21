@@ -258,6 +258,7 @@ export const ExternalErrorsInIsolationMode: Story = {
 // Mark (and validate!) incomplete items so that submission is blocked.
 export const MarkIncompleteItems: Story = {
   args: {
+    name: 'items',
     enableIsolation: true,
     getItemBody: (values, index, {expanded}) => (
       <>
@@ -275,9 +276,17 @@ export const MarkIncompleteItems: Story = {
     formik: {
       onSubmit: fn(),
       initialValues: {
-        items: [{myField: 'Item 1'}, {myField: 'Item 2'}],
+        items: [{myField: 'Item 1', ___isItemOpen: true}, {myField: 'Item 2'}],
       },
       renderSubmitButton: true,
+      zodSchema: z.object({
+        items: z.array(
+          z.custom(item => {
+            const isOpen: boolean | undefined = item.___isItemOpen;
+            return !isOpen;
+          }, 'Item is not complete!')
+        ),
+      }),
     },
   },
 
@@ -287,6 +296,7 @@ export const MarkIncompleteItems: Story = {
     await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Item is not complete!')).toBeVisible();
     expect(context.parameters.formik.onSubmit).not.toHaveBeenCalled();
   },
 };
