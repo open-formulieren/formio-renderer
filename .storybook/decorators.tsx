@@ -8,6 +8,7 @@ import {toFormikValidationSchema} from 'zod-formik-adapter';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
 import ModalContext from '@/components/modal/context';
+import {PrimaryActionButton} from '@/index';
 
 /**
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
@@ -36,6 +37,19 @@ export const withFormik: Decorator = (Story, context) => {
   const wrapForm = context.parameters?.formik?.wrapForm ?? true;
   const onSubmit = context.parameters?.formik?.onSubmit || fn();
   const zodSchema = context.parameters?.formik?.zodSchema;
+  const renderSubmitButton = context.parameters?.formik?.renderSubmitButton ?? false;
+
+  const story = (
+    <>
+      <Story />
+      {renderSubmitButton && (
+        <PrimaryActionButton type="submit" style={{marginBlockStart: '20px'}}>
+          Submit
+        </PrimaryActionButton>
+      )}
+    </>
+  );
+
   return (
     <Formik
       initialValues={initialValues}
@@ -50,10 +64,10 @@ export const withFormik: Decorator = (Story, context) => {
     >
       {wrapForm ? (
         <Form id="storybook-withFormik-decorator-form" data-testid="storybook-formik-form">
-          <Story />
+          {story}
         </Form>
       ) : (
-        <Story />
+        story
       )}
     </Formik>
   );

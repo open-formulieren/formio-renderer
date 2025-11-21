@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {getIn, useFormikContext} from 'formik';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
@@ -252,6 +252,42 @@ export const ExternalErrorsInIsolationMode: Story = {
       expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
       expect(canvas.getByText('Validation error 1.')).toBeVisible();
     });
+  },
+};
+
+// Mark (and validate!) incomplete items so that submission is blocked.
+export const MarkIncompleteItems: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+      initialValues: {
+        items: [{myField: 'Item 1'}, {myField: 'Item 2'}],
+      },
+      renderSubmitButton: true,
+    },
+  },
+
+  play: async ({canvasElement, context}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(context.parameters.formik.onSubmit).not.toHaveBeenCalled();
   },
 };
 
