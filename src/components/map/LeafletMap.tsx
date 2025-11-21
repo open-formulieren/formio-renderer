@@ -1,25 +1,18 @@
 import type {CoordinatePair, GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
-import {FormField} from '@utrecht/component-library-react';
-import {useField} from 'formik';
 import * as L from 'leaflet';
 import {useEffect, useId, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import {FeatureGroup, MapContainer, TileLayer, useMap} from 'react-leaflet';
 import {EditControl} from 'react-leaflet-draw';
 
-import {HelpText} from '@/components/forms';
-import Label from '@/components/forms/Label';
-import Tooltip from '@/components/forms/Tooltip';
-import {useFieldConfig} from '@/hooks';
-
 import {overloadLeafletDeleteControl} from './DeleteControl';
+import './LeafletMap.scss';
 import LayersControl from './LeafletMapLayersControl';
 import LocationControl from './LeafletMapLocationControl';
 import SearchControl from './LeafletMapSearchControl';
 import type {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
-import './MapField.scss';
 import NearestAddress from './NearestAddress';
-import {DEFAULT_CENTER_COORDINATES, DEFAULT_INTERACTIONS, DEFAULT_ZOOM_LEVEL} from './constants';
+import {DEFAULT_CENTER_COORDINATES, DEFAULT_ZOOM_LEVEL} from './constants';
 import {overloadLeafletDrawPolylineControl} from './drawPolylineControl';
 import {CRS_RD, TILE_LAYER_RD, initialize} from './init';
 import {
@@ -31,33 +24,11 @@ import type {Interactions} from './types';
 
 initialize();
 
-export interface MapFieldProps {
+export interface LeafletMapProps {
   /**
-   * The name of the form field/input, used to set/track the field value in the form state.
+   * Optional initial map value.
    */
-  name: string;
-  /**
-   * The (accessible) label for the field - anything that can be rendered.
-   *
-   * You must always provide a label to ensure the field is accessible to users of
-   * assistive technologies.
-   */
-  label: React.ReactNode;
-  /**
-   * Disabled fields get marked as such in an accessible manner.
-   */
-  isDisabled?: boolean;
-  /**
-   * Additional description displayed close to the field - use this to document any
-   * validation requirements that are crucial to successfully submit the form. More
-   * information that is contextual/background typically belongs in a tooltip.
-   */
-  description?: React.ReactNode;
-  /**
-   * Optional tooltip to provide additional information that is not crucial but may
-   * assist users in filling out the field correctly.
-   */
-  tooltip?: React.ReactNode;
+  geoJsonGeometry?: GeoJsonGeometry | null;
   /**
    * Optional initial point where the map will center around.
    */
@@ -84,34 +55,38 @@ export interface MapFieldProps {
    * The overlay(s) to use for the map.
    */
   overlays?: MapComponentSchema['overlays'];
+  /**
+   * A callback which is called upon changes to the current map value.
+   */
+  onGeoJsonGeometrySet?: (geoJsonGeometry: GeoJsonGeometry | null) => void;
 }
 
-const MapField: React.FC<MapFieldProps> = ({
-  name,
-  label = '',
-  description = '',
-  isDisabled = false,
-  tooltip,
+const LeafletMap: React.FC<LeafletMapProps> = ({
+  geoJsonGeometry,
   defaultCenter = DEFAULT_CENTER_COORDINATES,
   defaultZoomLevel = DEFAULT_ZOOM_LEVEL,
   tileLayerUrl = TILE_LAYER_RD.url,
   mapContainerChild,
-  interactions = DEFAULT_INTERACTIONS,
+  interactions,
+  onGeoJsonGeometrySet,
   overlays,
 }) => {
-  name = useFieldConfig(name);
-  const [{value}, , {setValue}] = useField<null | GeoJsonGeometry>(name);
   const featureGroupRef = useRef<L.FeatureGroup>(null);
   const id = useId();
   const intl = useIntl();
 
-  const center: L.LatLng | null = value ? L.geoJSON(value).getBounds().getCenter() : null;
+  const center: L.LatLng | null = geoJsonGeometry
+    ? L.geoJSON(geoJsonGeometry).getBounds().getCenter()
+    : null;
   const coordinates: CoordinatePair | null = center ? [center.lat, center.lng] : null;
 
+  const withoutControl = !interactions || Object.values(interactions).every(value => !value);
   // Get the names of the active interactions
-  const activeInteractionNames = Object.entries(interactions)
-    .filter(([, allow]) => !!allow)
-    .map<keyof Interactions>(([interaction]) => interaction as keyof Interactions);
+  const activeInteractionNames = !withoutControl
+    ? Object.entries(interactions)
+        .filter(([, allow]) => !!allow)
+        .map<keyof Interactions>(([interaction]) => interaction as keyof Interactions)
+    : [];
   const singleInteractionMode = activeInteractionNames.length === 1;
 
   useEffect(() => {
@@ -133,7 +108,7 @@ const MapField: React.FC<MapFieldProps> = ({
   const onFeatureDelete = () => {
     // The value `null` is needed to make sure that Formio actually updates the value.
     // node_modules/formiojs/components/_classes/component/Component.js:2528
-    setValue(null);
+    onGeoJsonGeometrySet?.(null);
   };
 
   const onSearchMarkerSet = (event: GeoSearchShowLocationEvent) => {
@@ -146,15 +121,11 @@ const MapField: React.FC<MapFieldProps> = ({
     // Remove all existing shapes from the map, ensuring that shapes are only added through
     // `geoJsonGeometry` changes.
     featureGroupRef.current?.clearLayers();
-    setValue(newFeatureLayer.toGeoJSON().geometry);
+    onGeoJsonGeometrySet?.(newFeatureLayer.toGeoJSON().geometry);
   };
 
   return (
-    <FormField className="utrecht-form-field--openforms">
-      <Label isDisabled={isDisabled} tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}>
-        {label}
-      </Label>
-
+    <>
       <MapContainer
         id={id}
         center={defaultCenter}
@@ -176,7 +147,7 @@ const MapField: React.FC<MapFieldProps> = ({
           duration: 3000,
         }}
         className={
-          isDisabled
+          withoutControl
             ? 'openforms-leaflet-map openforms-leaflet-map--disabled'
             : 'openforms-leaflet-map'
         }
@@ -184,11 +155,11 @@ const MapField: React.FC<MapFieldProps> = ({
         <EnsureTestId />
         <TileLayer {...TILE_LAYER_RD} url={tileLayerUrl} />
 
-        <LayersControl overlays={overlays} withoutControl={isDisabled} />
+        <LayersControl overlays={overlays} withoutControl={withoutControl} />
 
         {
           <FeatureGroup ref={featureGroupRef}>
-            {!isDisabled && (
+            {!withoutControl && (
               <>
                 {singleInteractionMode && (
                   <SingleInteractionMode shape={activeInteractionNames[0]} />
@@ -213,11 +184,14 @@ const MapField: React.FC<MapFieldProps> = ({
                 />
               </>
             )}
-            <Geometry geoJsonGeometry={value ?? undefined} featureGroupRef={featureGroupRef} />
+            <Geometry
+              geoJsonGeometry={geoJsonGeometry ?? undefined}
+              featureGroupRef={featureGroupRef}
+            />
           </FeatureGroup>
         }
 
-        {!isDisabled && (
+        {!withoutControl && (
           <>
             <SearchControl
               onMarkerSet={onSearchMarkerSet}
@@ -237,14 +211,15 @@ const MapField: React.FC<MapFieldProps> = ({
           </>
         )}
         {coordinates && <MapView coordinates={coordinates} />}
-        {isDisabled && <DisabledMapControls />}
+        {withoutControl && <DisabledMapControls />}
 
         {mapContainerChild}
       </MapContainer>
-      {coordinates && coordinates.length && <NearestAddress coordinates={coordinates} />}
 
-      <HelpText>{description}</HelpText>
-    </FormField>
+      {coordinates && coordinates.length && !withoutControl && (
+        <NearestAddress coordinates={coordinates} />
+      )}
+    </>
   );
 };
 
@@ -378,4 +353,4 @@ export const DisabledMapControls = () => {
   return null;
 };
 
-export default MapField;
+export default LeafletMap;

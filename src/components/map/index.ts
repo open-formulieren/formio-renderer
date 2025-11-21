@@ -1,5 +1,5 @@
 import {lazy} from 'react';
 
-const MapField = lazy(() => import('./MapField'));
+const LeafletMap = lazy(() => import('./LeafletMap'));
 
-export default MapField;
+export default LeafletMap;
