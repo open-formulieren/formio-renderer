@@ -61,6 +61,19 @@ describe('checkbox component validation', () => {
     expect(success).toBe(true);
   });
 
+  test('required with custom error message', async () => {
+    const component: CheckboxComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = await schema.safeParseAsync(false);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each([
     ['ok', true],
     ['fail', false],

@@ -7,15 +7,15 @@ const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = (
   componentDefinition,
   {validatePlugins}
 ) => {
-  const {key, validate = {}} = componentDefinition;
+  const {key, validate = {}, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.string().email();
+  let schema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
 
   if (required) {
-    schema = schema.min(1);
+    schema = schema.min(1).email();
   } else {
-    schema = schema.or(z.literal('')).optional();
+    schema = z.string().email().optional().or(z.literal(''));
   }
 
   if (plugins.length) {

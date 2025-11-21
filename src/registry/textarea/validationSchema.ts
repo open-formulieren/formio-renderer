@@ -7,18 +7,19 @@ const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = (
   componentDefinition,
   {validatePlugins}
 ) => {
-  const {key, validate = {}, multiple} = componentDefinition;
+  const {key, validate = {}, multiple, errors} = componentDefinition;
   const {required, maxLength, pattern, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.string();
-  if (maxLength !== undefined) schema = schema.max(maxLength);
+  let schema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
+
+  if (maxLength !== undefined) schema = schema.max(maxLength, {message: errors?.maxLength});
 
   if (pattern) {
     let normalizedPattern = pattern;
     // Formio implicitly adds the ^ and $ markers to consider the whole value
     if (!normalizedPattern.startsWith('^')) normalizedPattern = `^${normalizedPattern}`;
     if (!normalizedPattern.endsWith('$')) normalizedPattern = `${normalizedPattern}$`;
-    schema = schema.regex(new RegExp(normalizedPattern));
+    schema = schema.regex(new RegExp(normalizedPattern), {message: errors?.pattern});
   }
 
   if (required) {
@@ -41,7 +42,7 @@ const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = schema.min(1, {message: errors?.required});
     }
   }
 

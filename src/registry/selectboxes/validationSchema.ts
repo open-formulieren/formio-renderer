@@ -30,7 +30,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
   {intl, validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
-  const {key, validate = {}, values: options} = componentDefinition;
+  const {key, validate = {}, values: options, errors} = componentDefinition;
   const {required, minSelectedCount, maxSelectedCount, plugins = []} = validate;
 
   // all properties are required by default - this mirrors the explicit true/false
@@ -51,7 +51,8 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
             minimum: minSelectedCount,
             type: 'set',
             inclusive: false,
-            message: intl.formatMessage(MIN_COUNT_MESSAGE, {minSelectedCount}),
+            message:
+              errors?.minSelectedCount || intl.formatMessage(MIN_COUNT_MESSAGE, {minSelectedCount}),
           });
         }
       } else if (required && numChecked < 1) {
@@ -60,6 +61,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
           code: z.ZodIssueCode.invalid_type,
           received: z.ZodParsedType.undefined,
           expected: z.ZodParsedType.object,
+          message: errors?.required || 'Required',
         });
       }
 
@@ -69,7 +71,8 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
           maximum: maxSelectedCount,
           type: 'set',
           inclusive: true,
-          message: intl.formatMessage(MAX_COUNT_MESSAGE, {maxSelectedCount}),
+          message:
+            errors?.maxSelectedCount || intl.formatMessage(MAX_COUNT_MESSAGE, {maxSelectedCount}),
         });
       }
 

@@ -65,4 +65,17 @@ describe('signature component validation', () => {
 
     expect(success).toBe(valid);
   });
+
+  test('required with custom error message', () => {
+    const component: SignatureComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
 });

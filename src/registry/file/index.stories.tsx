@@ -414,6 +414,37 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['application/pdf']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: false,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    } satisfies FileComponentSchema,
+    values: {
+      my: {
+        file: [] as unknown as JSONObject[],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const submitButton = canvas.getByRole('button', {name: 'Submit'});
+    await userEvent.click(submitButton);
+
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateNoPendingOrErroredUploads: ValidationStory = {
   ...BaseValidationStory,
   args: {

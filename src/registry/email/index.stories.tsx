@@ -217,6 +217,30 @@ export const ValidateEmailRequired: ValidationStory = {
   },
 };
 
+export const ValidateEmailRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error for required'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error for required')).toBeVisible();
+  },
+};
+
 export const PassesAllValidations: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -276,6 +300,44 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
     expect(await canvas.findByText('Invalid email')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'email',
+      validateOn: 'blur', // ignored but required in the types
+      key: 'my.email',
+      label: 'Your email',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required with multiple: true'},
+    } satisfies EmailComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have multiple items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(2);
+
+    // trigger validation
+    await userEvent.click(textboxes[0]);
+    await userEvent.click(textboxes[1]);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findAllByText('Custom error message for required with multiple: true')
+    ).toHaveLength(2);
   },
 };
 
