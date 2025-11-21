@@ -169,6 +169,31 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
+      validate: {
+        required: true,
+      },
+      validateOn: 'blur',
+      errors: {required: 'Custom error message for required'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateMax: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -210,6 +235,35 @@ export const ValidateMax: ValidationStory = {
   },
 };
 
+export const ValidateMaxWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
+      validate: {
+        max: 10,
+      },
+      validateOn: 'blur',
+      errors: {max: 'Custom error message for max value'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const currencyField = canvas.getByLabelText('Currency');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+
+    await userEvent.type(currencyField, '10,1');
+    await userEvent.click(submit);
+    expect(canvas.queryByText('Custom error message for max value')).toBeVisible();
+  },
+};
+
 export const ValidateMin: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -248,6 +302,35 @@ export const ValidateMin: ValidationStory = {
     await userEvent.type(currencyField, '9,1');
     await userEvent.click(submit);
     expect(await canvas.findByText('De waarde moet € 10,00 of groter zijn.')).toBeVisible();
+  },
+};
+
+export const ValidateMinWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
+      validate: {
+        min: 10,
+      },
+      validateOn: 'blur',
+      errors: {min: 'Custom error message for min value'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const currencyField = canvas.getByLabelText('Currency');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+
+    await userEvent.type(currencyField, '9');
+    await userEvent.click(submit);
+    expect(canvas.queryByText('Custom error message for min value')).toBeVisible();
   },
 };
 

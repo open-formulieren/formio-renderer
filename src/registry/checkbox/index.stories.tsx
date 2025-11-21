@@ -147,6 +147,28 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'checkbox',
+      key: 'my.checkbox',
+      label: 'A required checkbox',
+      defaultValue: false,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    } satisfies CheckboxComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: CheckboxComponentSchema;
   value: boolean;

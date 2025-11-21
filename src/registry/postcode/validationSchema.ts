@@ -17,12 +17,14 @@ const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate, multiple} = componentDefinition;
+  const {key, validate, multiple, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
-    .regex(POSTCODE_REGEX, {message: intl.formatMessage(POSTCODE_INVALID_MESSAGE)});
+    .string({required_error: errors?.required})
+    .regex(POSTCODE_REGEX, {
+      message: errors?.pattern || intl.formatMessage(POSTCODE_INVALID_MESSAGE),
+    });
   if (!required) schema = schema.or(z.literal('')).optional();
 
   if (plugins.length) {
@@ -39,7 +41,7 @@ const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = schema.min(1, {message: errors?.required});
     }
   }
 

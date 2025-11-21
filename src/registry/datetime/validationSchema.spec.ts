@@ -62,6 +62,19 @@ describe('datetime component validation', () => {
     expect(success).toBe(false);
   });
 
+  test('required with custom error message', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each([
     // Invalid dates
     '2024-10-69T12:34:56',
@@ -82,6 +95,18 @@ describe('datetime component validation', () => {
     const {success} = schema.safeParse(date);
 
     expect(success).toBe(false);
+  });
+
+  test('invalid datetime with custom error message', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      errors: {invalid_datetime: 'Custom error message for invalid datetime'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('2024-10-69T12:34:56');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for invalid datetime');
   });
 
   test('Valid datetime', () => {
@@ -110,6 +135,19 @@ describe('datetime component validation', () => {
     expect(success).toBe(valid);
   });
 
+  test('min date with custom error message', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, minDate: '2024-01-01T00:00'},
+      errors: {minDate: 'Custom error message for min date'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('2023-10-08T12:52');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for min date');
+  });
+
   test.each([
     ['2024-01-01T00:00:00', false],
     ['2025-10-08T12:50:00', false],
@@ -125,6 +163,19 @@ describe('datetime component validation', () => {
     const {success} = schema.safeParse('2025-10-08T12:51:00');
 
     expect(success).toBe(valid);
+  });
+
+  test('max date with custom error message', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, maxDate: '2024-01-01T00:00'},
+      errors: {maxDate: 'Custom error message for max date'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('2025-10-08T12:52');
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for max date');
   });
 
   test.each([
@@ -164,6 +215,23 @@ describe('datetime component with multiple: true', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('required for multiple with custom error message', () => {
+    const component: DateTimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required with multiple: true'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe(
+      'Custom error message for required with multiple: true'
+    );
   });
 
   test('validates individual items', () => {

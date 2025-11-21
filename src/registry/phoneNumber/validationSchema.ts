@@ -14,24 +14,26 @@ const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, multiple} = componentDefinition;
+  const {key, validate = {}, multiple, errors} = componentDefinition;
   const {required, pattern, plugins = []} = validate;
 
   // base phone number shape - a more narrow pattern can be specified in the form builder
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
-    .regex(/^[+0-9][- 0-9]+$/, {message: intl.formatMessage(PHONE_NUMBER_INVALID_MESSAGE)});
+    .string({required_error: errors?.required})
+    .regex(/^[+0-9][- 0-9]+$/, {
+      message: intl.formatMessage(PHONE_NUMBER_INVALID_MESSAGE),
+    });
 
   if (pattern) {
     let normalizedPattern = pattern;
     // Formio implicitly adds the ^ and $ markers to consider the whole value
     if (!normalizedPattern.startsWith('^')) normalizedPattern = `^${normalizedPattern}`;
     if (!normalizedPattern.endsWith('$')) normalizedPattern = `${normalizedPattern}$`;
-    schema = schema.regex(new RegExp(normalizedPattern));
+    schema = schema.regex(new RegExp(normalizedPattern), {message: errors?.pattern});
   }
 
   if (required) {
-    schema = schema.min(1);
+    schema = schema.min(1, {message: errors?.required});
   } else {
     schema = schema.optional().or(z.literal(''));
   }
@@ -50,7 +52,7 @@ const getValidationSchema: GetValidationSchema<PhoneNumberComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = schema.min(1, {message: errors?.required});
     }
   }
 
