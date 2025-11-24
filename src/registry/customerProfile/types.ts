@@ -1,8 +1,4 @@
-import type {
-  CustomerProfileData,
-  CustomerProfileProperties,
-  DigitalAddressType,
-} from '@open-formulieren/types';
+import type {CustomerProfileData, DigitalAddressType} from '@open-formulieren/types';
 
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the
@@ -16,11 +12,12 @@ export type FormValues = {
 };
 
 export interface DigitalAddressGroup {
+  type: DigitalAddressType;
   addresses: string[];
   preferred?: string;
 }
 
-export type DigitalAddressesResponseBody = Partial<Record<DigitalAddressType, DigitalAddressGroup>>;
+export type DigitalAddressesResponseBody = DigitalAddressGroup[];
 
 /**
  * Dependency injection parameters for the customer profile component.
@@ -35,8 +32,7 @@ export type DigitalAddressesResponseBody = Partial<Record<DigitalAddressType, Di
  */
 export interface CustomerProfileParameters {
   fetchDigitalAddresses: (
-    submissionId: string,
-    digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
+    profileComponentName: string
   ) => Promise<DigitalAddressesResponseBody | null>;
   portalUrl: string;
 }

@@ -24,7 +24,7 @@ export default {
     formSettings: {
       componentParameters: {
         customerProfile: {
-          fetchDigitalAddresses: async () => ({}),
+          fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
         },
       } satisfies FormSettings['componentParameters'],
@@ -102,10 +102,10 @@ export const WithFetchedDigitalAddresses: Story = {
     formSettings: {
       componentParameters: {
         customerProfile: {
-          fetchDigitalAddresses: async () => ({
-            email: {addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            phoneNumber: {addresses: ['0612345678', '0687654321', '0612387645']},
-          }),
+          fetchDigitalAddresses: async () => [
+            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'phoneNumber', addresses: ['0612345678', '0687654321', '0612387645']},
+          ],
           portalUrl: 'https://example.com',
         },
       } satisfies FormSettings['componentParameters'],
@@ -118,16 +118,18 @@ export const WithPreferredDigitalAddresses: Story = {
     formSettings: {
       componentParameters: {
         customerProfile: {
-          fetchDigitalAddresses: async () => ({
-            email: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
               addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
               preferred: 'preferred.long.email.address@test.com',
             },
-            phoneNumber: {
+            {
+              type: 'phoneNumber',
               addresses: ['0612345678', '0687654321', '0612387645'],
               preferred: '0612387645',
             },
-          }),
+          ],
           portalUrl: 'https://example.com',
         },
       } satisfies FormSettings['componentParameters'],
@@ -172,11 +174,12 @@ export const WithFetchedDigitalAddressesAddNewAddress: Story = {
     formSettings: {
       componentParameters: {
         customerProfile: {
-          fetchDigitalAddresses: async () => ({
-            email: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
               addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
             },
-          }),
+          ],
           portalUrl: 'https://example.com',
         },
       } satisfies FormSettings['componentParameters'],

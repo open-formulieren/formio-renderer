@@ -42,7 +42,7 @@ const BaseValidationStory: ValidationStory = {
     formSettings: {
       componentParameters: {
         customerProfile: {
-          fetchDigitalAddresses: async () => ({}),
+          fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
         },
       } satisfies FormSettings['componentParameters'],
