@@ -2,6 +2,7 @@ import type {
   CustomerProfileData,
   CustomerProfileProperties,
   DigitalAddress,
+  DigitalAddressType,
 } from '@open-formulieren/types';
 import {useFormikContext} from 'formik';
 import {useState} from 'react';
@@ -16,12 +17,12 @@ interface UseDigitalAddresses {
 }
 
 export const useDigitalAddresses = (
-  profileComponentName: string,
+  profileComponentKey: string,
   digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
 ): UseDigitalAddresses => {
   const {setFieldValue} = useFormikContext<CustomerProfileData>();
   const formSettings = useFormSettings();
-  const [digitalAddresses, setDigitalAddresses] = useState<DigitalAddressesResponseBody>({});
+  const [digitalAddresses, setDigitalAddresses] = useState<DigitalAddressesResponseBody>([]);
 
   if (!formSettings?.componentParameters?.customerProfile) {
     throw new Error('Customer profile component parameters not configured');
@@ -30,26 +31,31 @@ export const useDigitalAddresses = (
   const {fetchDigitalAddresses} = formSettings.componentParameters.customerProfile;
 
   useAsync(async () => {
-    // @TODO get submission id from form context?
-    const result = await fetchDigitalAddresses('123', digitalAddressTypes);
+    const result = await fetchDigitalAddresses(profileComponentKey);
     if (!result) {
       // Initial the form with empty values if fetch failed.
       digitalAddressTypes.forEach((type, index) => {
-        setFieldValue(`${profileComponentName}.${index}`, {
+        setFieldValue(`${profileComponentKey}.${index}`, {
           address: '',
           type: type,
           useOnlyOnce: true,
         } satisfies DigitalAddress);
       });
+      setDigitalAddresses([]);
       return;
     }
 
-    digitalAddressTypes.forEach((type, index) => {
-      const addressData: DigitalAddressGroup = result[type] ?? {preferred: '', addresses: []};
-      // The default value is the preferred address or the first address in the list.
-      const defaultAddress = addressData.preferred ?? addressData.addresses[0] ?? '';
+    const addressesResultMap: Partial<Record<DigitalAddressType, DigitalAddressGroup>> =
+      Object.fromEntries(result.map(addressGroup => [addressGroup.type, addressGroup]));
 
-      setFieldValue(`${profileComponentName}.${index}`, {
+    digitalAddressTypes.forEach((type, index) => {
+      const addressData: DigitalAddressGroup | undefined = addressesResultMap[type];
+      // The default value is the preferred address or the first address in the list.
+      const defaultAddress = !addressData
+        ? ''
+        : (addressData.preferred ?? addressData.addresses[0] ?? '');
+
+      setFieldValue(`${profileComponentKey}.${index}`, {
         address: defaultAddress,
         type: type,
         useOnlyOnce: defaultAddress === '' ? true : undefined,

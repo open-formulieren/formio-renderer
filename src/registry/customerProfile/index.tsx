@@ -57,7 +57,9 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
       <div className="openforms-customer-profile__form-field-container">
         {digitalAddressTypes.map((digitalAddressType, index) => {
           const Component = DigitalAddressFields[digitalAddressType];
-          const digitalAddress = digitalAddresses[digitalAddressType];
+          const digitalAddress = digitalAddresses.find(
+            address => address.type === digitalAddressType
+          );
 
           return (
             <Component

@@ -242,7 +242,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
             setFieldValue(fieldName, '');
             setFieldValue(`${namePrefix}.useOnlyOnce`, true);
           }}
-          digitalAddressGroup={digitalAddressGroup as DigitalAddressGroup}
+          digitalAddressGroup={digitalAddressGroup}
           isRequired={isRequired}
         />
       ) : (

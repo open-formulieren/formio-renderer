@@ -1,16 +1,16 @@
-import type {CustomerProfileProperties, DigitalAddressType} from '@open-formulieren/types';
+import type {DigitalAddressType} from '@open-formulieren/types';
 
 export interface DigitalAddressGroup {
+  type: DigitalAddressType;
   addresses: string[];
   preferred?: string;
 }
 
-export type DigitalAddressesResponseBody = Partial<Record<DigitalAddressType, DigitalAddressGroup>>;
+export type DigitalAddressesResponseBody = DigitalAddressGroup[];
 
 export interface CustomerProfileParameters {
   fetchDigitalAddresses: (
-    submissionId: string,
-    digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
+    profileComponentName: string
   ) => Promise<DigitalAddressesResponseBody | null>;
   portalUrl: string;
 }
