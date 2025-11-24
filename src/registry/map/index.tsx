@@ -9,6 +9,7 @@ import LeafletMap from '@/components/map';
 import {useFieldConfig} from '@/hooks';
 
 import type {RegistryEntry} from '../types';
+import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
@@ -16,8 +17,6 @@ import getValidationSchema from './validationSchema';
 export interface FormioMapProps {
   componentDefinition: MapComponentSchema;
 }
-
-const ValueDisplay = React.lazy(() => import('./ValueDisplay'));
 
 export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
   const {
