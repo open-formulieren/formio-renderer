@@ -8,6 +8,7 @@ import type {GroupBase, OptionProps} from 'react-select';
 import {components} from 'react-select';
 
 import {SecondaryActionButton} from '@/components/Button';
+import Fieldset from '@/components/forms/Fieldset';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
@@ -37,6 +38,12 @@ export const ADD_DIGITAL_ADDRESS_BUTTON_LABELS = defineMessages<DigitalAddressTy
     defaultMessage: 'Add phone number',
   },
 });
+
+interface DigitalAddressSubFieldProps {
+  type: DigitalAddressType;
+  fieldName: string;
+  isRequired?: boolean;
+}
 
 /**
  * Turns an array of addresses into an array of options for a select component. If the
@@ -73,93 +80,64 @@ const OptionWithDescription: React.FC<OptionProps<Option>> = props => {
   );
 };
 
-interface DigitalAddressTypeFieldProps {
-  namePrefix: string;
-  isRequired?: boolean;
-  digitalAddressGroup?: DigitalAddressGroup;
+interface DigitalAddressesSelectProps extends DigitalAddressSubFieldProps {
+  onAddDigitalAddress: () => void;
+  digitalAddressGroup: DigitalAddressGroup;
 }
 
-interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
-  type: DigitalAddressType;
+const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
+  type,
+  fieldName,
+  isRequired,
+  digitalAddressGroup,
+  onAddDigitalAddress,
+}) => {
+  const intl = useIntl();
+  const options = getDigitalAddressOptions(intl, digitalAddressGroup);
+  return (
+    <>
+      <Select
+        name={fieldName}
+        label={<FormattedMessage {...FIELD_LABELS[type]} />}
+        options={options}
+        isRequired={isRequired}
+        optionComponent={OptionWithDescription}
+        isDisabled={options.length === 1}
+      />
+      <ButtonGroup>
+        <SecondaryActionButton onClick={onAddDigitalAddress}>
+          <FormattedMessage {...ADD_DIGITAL_ADDRESS_BUTTON_LABELS[type]} />
+        </SecondaryActionButton>
+      </ButtonGroup>
+    </>
+  );
+};
+
+interface DigitalAddressTextfieldProps extends DigitalAddressSubFieldProps {
+  namePrefix: string;
   textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
-/**
- * A generic field for digital addresses. If there are no digital addresses yet, it shows
- * a text input, otherwise it shows a select input with the addresses as options.
- * The user can choose to add a new digital address, which swaps the select input for a
- * text input.
- *
- * Only for new digital addresses can the user update their preferences. Otherwise, the
- * user will have to use the online portal (outside of Open Forms).
- *
- * @param namePrefix The name prefix for the fields.
- * @param type The type of digital address field.
- * @param isRequired Whether the fields are required.
- * @param digitalAddressGroup The digital address group to display.
- * @param textfieldProps Additional props to pass to the text input.
- */
-const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
-  namePrefix,
+const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   type,
+  namePrefix,
+  fieldName,
   isRequired,
-  digitalAddressGroup,
   textfieldProps,
 }) => {
   const {setFieldValue, getFieldMeta} = useFormikContext();
-  const intl = useIntl();
-  const fieldName = `${namePrefix}.address`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {value, touched, error} = getFieldMeta(fieldName);
 
-  // If there are no addresses yet, we show a text input.
-  const hasAddresses = !!digitalAddressGroup?.addresses?.length;
-  const [useTextInput, setUseTextInput] = useState(!hasAddresses);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const invalid = touched && !!error;
-  const showPreferencesButton = touched && !invalid && value !== '';
-
-  const fieldLabelMessage = FIELD_LABELS[type];
-
-  // When the digital addresses are loaded, we check if we need to show a text input.
-  useEffect(() => {
-    setUseTextInput(!hasAddresses);
-  }, [hasAddresses]);
-
-  // If it has addresses, we show the select input.
-  if (hasAddresses && !useTextInput) {
-    const options = getDigitalAddressOptions(intl, digitalAddressGroup);
-    return (
-      <>
-        <Select
-          name={fieldName}
-          label={<FormattedMessage {...fieldLabelMessage} />}
-          options={options}
-          isRequired={isRequired}
-          optionComponent={OptionWithDescription}
-          isDisabled={options.length === 1}
-        />
-        <ButtonGroup>
-          <SecondaryActionButton
-            onClick={() => {
-              setUseTextInput(true);
-              setFieldValue(fieldName, '');
-              setFieldValue(`${namePrefix}.useOnlyOnce`, true);
-            }}
-          >
-            <FormattedMessage {...ADD_DIGITAL_ADDRESS_BUTTON_LABELS[type]} />
-          </SecondaryActionButton>
-        </ButtonGroup>
-      </>
-    );
-  }
+  // Only show the preference button if the field is touched, has a value and has no error
+  const showPreferencesButton = touched && !error && value !== '';
 
   return (
     <>
       <TextField
         name={fieldName}
-        label={<FormattedMessage {...fieldLabelMessage} />}
+        label={<FormattedMessage {...FIELD_LABELS[type]} />}
         isRequired={isRequired}
         {...textfieldProps}
       />
@@ -187,6 +165,82 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
         </>
       )}
     </>
+  );
+};
+
+interface DigitalAddressTypeFieldProps {
+  namePrefix: string;
+  isRequired?: boolean;
+  digitalAddressGroup?: DigitalAddressGroup;
+}
+
+interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
+  type: DigitalAddressType;
+  textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
+}
+
+/**
+ * A generic field for digital addresses. If there are no digital addresses yet, it shows
+ * a text input, otherwise it shows a select input with the addresses as options.
+ * The user can choose to add a new digital address, which replaces the select input for
+ * the text input.
+ *
+ * Only for new digital addresses can the user update their preferences. Updating the
+ * preference can be done in a modal, once the digital address textfield contains a valid
+ * digital address. In other situations, the user will have to use the online portal
+ * (outside of Open Forms) to update their preferences.
+ *
+ * @param namePrefix The name prefix for the fields.
+ * @param type The type of digital address field.
+ * @param isRequired Whether the fields are required.
+ * @param digitalAddressGroup The digital address group to display.
+ * @param textfieldProps Additional props to pass to the text input.
+ */
+const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
+  namePrefix,
+  type,
+  isRequired,
+  digitalAddressGroup,
+  textfieldProps,
+}) => {
+  const {setFieldValue, getFieldMeta} = useFormikContext();
+  const fieldName = `${namePrefix}.address`;
+
+  const {value, touched, error} = getFieldMeta(fieldName);
+
+  // If there are no addresses yet, we show a text input.
+  const hasAddresses = !!digitalAddressGroup?.addresses?.length;
+  const [useTextInput, setUseTextInput] = useState(!hasAddresses);
+
+  // When the digital addresses are loaded, we check if we need to show a text input.
+  useEffect(() => {
+    setUseTextInput(!hasAddresses);
+  }, [hasAddresses]);
+
+  return (
+    <Fieldset className="openforms-customer-profile__digital-address-fieldset">
+      {hasAddresses && !useTextInput ? (
+        <DigitalAddressesSelect
+          type={type}
+          fieldName={fieldName}
+          onAddDigitalAddress={() => {
+            setUseTextInput(true);
+            setFieldValue(fieldName, '');
+            setFieldValue(`${namePrefix}.useOnlyOnce`, true);
+          }}
+          digitalAddressGroup={digitalAddressGroup as DigitalAddressGroup}
+          isRequired={isRequired}
+        />
+      ) : (
+        <DigitalAddressTextfield
+          type={type}
+          namePrefix={namePrefix}
+          fieldName={fieldName}
+          isRequired={isRequired}
+          textfieldProps={textfieldProps}
+        />
+      )}
+    </Fieldset>
   );
 };
 

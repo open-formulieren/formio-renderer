@@ -7,7 +7,19 @@
   @include bem.element('form-field-container') {
     display: flex;
     flex-direction: column;
-    row-gap: var(--of-customer-profile-row-gap, var(--of-form-field-container-gap, 24px));
+    row-gap: var(
+      --of-customer-profile-form-field-container-row-gap,
+      var(--of-form-field-container-gap, 24px)
+    );
+  }
+
+  @include bem.element('digital-address-fieldset') {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(
+      --of-customer-profile-digital-address-fieldset-row-gap,
+      var(--of-form-field-container-gap, 24px)
+    );
   }
 }
 
