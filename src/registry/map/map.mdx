@@ -1,0 +1,72 @@
+import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
+
+import * as MapStories from './index.stories';
+
+<Meta of={MapStories} name="Documentation" />
+
+# Developer documentation
+
+This document describes the different options available for the `MapComponent`.
+
+## Interactions
+
+The `interactions` property allows configuration of the allowed shapes, used for setting a value on
+the map.
+
+The `polygon` shape allows creating polygons, `polyline` allows creating lines and the `marker`
+shape allows creating points on the map. Note that all keys are required whenever this property is
+used.
+
+```tsx
+import 'MapComponent' from '@open-formulieren/formio-renderer';
+
+const interactions = {
+  marker: true,
+  polygon: false,
+  polyline: true,
+}
+
+const map = <MapComponent ...defaultProps interactions={interactions} />
+```
+
+## TileLayer
+
+The `tileLayerUrl` property can be specified to configure the base layer of the map. This can for
+example be used to show sattelite imagery instead of the abstract layer which is used by default.
+
+```tsx
+import 'MapComponent' from '@open-formulieren/formio-renderer';
+
+const tileLayerUrl =
+'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:28992/{z}/{x}/{y}.png';
+
+const map = <MapComponent ...defaultProps tileLayerUrl={tileLayerUrl} />
+```
+
+## Overlays
+
+To configure various overlays for the map, the `overlays` property can be specified. This allows for
+example, images and SVG's to be shown on the map over certain areas.
+
+```tsx
+import 'MapComponent' from '@open-formulieren/formio-renderer';
+
+const overlays = [
+  {
+    uuid: 'f20448c3-a8cb-471c-bfcc-78a6c22d0ae6',
+    url: 'https://service.pdok.nl/bzk/bro-grondwaterspiegeldiepte/wms/v2_0?request=getCapabilities&service=WMS',
+    label: 'Grondwaterspiegeldiepte layer',
+    type: 'wms',
+    layers: ['bro-grondwaterspiegeldieptemetingen-GHG'],
+  },
+  {
+    uuid: '931f18f0-cedc-453b-a2d5-a2c1ff9df523',
+    url: 'https://service.pdok.nl/lv/bag/wms/v2_0?request=getCapabilities&service=WMS',
+    label: 'BAG Pand and Verblijfsobject layer',
+    type: 'wms',
+    layers: ['pand', 'verblijfsobject'],
+  },
+];
+
+const map = <MapComponent ...defaultProps overlays={overlays} />
+```
