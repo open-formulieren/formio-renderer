@@ -5,11 +5,7 @@ import type {GetValidationSchema} from '@/registry/types';
 
 import {assertManualValues} from './types';
 
-type ValuesEnum = z.ZodEnum<[string, ...string[]]> | z.ZodEffects<ValuesEnum, string, string>;
-type ValidationSchema =
-  | ValuesEnum
-  | z.ZodUnion<[z.ZodOptional<ValuesEnum>, z.ZodLiteral<''>]>
-  | z.ZodArray<ValuesEnum>;
+type ValuesEnum = z.ZodEnum<[string, ...string[]]>;
 
 const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
   componentDefinition,
@@ -30,46 +26,46 @@ const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
 
   // z.enum requires a non empty array in its types
   const [head, ...rest] = enumMembers;
-  const baseEnum: ValidationSchema = z.enum([head, ...rest]);
+  let optionsSchema: ValuesEnum | z.ZodOptional<ValuesEnum> = z.enum([head, ...rest]);
+  // if the field is not required, we must allow the undefined option (result of
+  // pre-processing for null and empty strings)
+  if (!required) {
+    optionsSchema = optionsSchema.optional();
+  }
 
-  // wrap in union so superRefine sees empty values otherwise we can't validate required,
-  // zod already gives an error for an empty string for example since it's not a valid enum
-  let schema: z.ZodFirstPartySchemaTypes = z.union([
-    baseEnum,
-    z.undefined(),
-    z.null(),
-    z.literal(''),
-  ]);
+  // schema for the bare string base for the option, used for `required` validation
+  let baseSchema: z.ZodOptional<z.ZodString> | z.ZodString = z.string({
+    required_error: errors?.required,
+  });
+  if (!required) {
+    baseSchema = baseSchema.optional();
+  }
 
-  schema = schema.superRefine(async (val, ctx) => {
-    const isEmpty = val === undefined || val === null || val === '';
+  // transform all empty-ish values (null, undefined, empty string) into `undefined` to
+  // signal it's empty.
+  let schema: z.ZodFirstPartySchemaTypes = z.preprocess(
+    val => (val == null || val === '' ? undefined : val),
+    baseSchema
+      // apply enum/options validation
+      .pipe(optionsSchema)
+  );
 
-    if (required && isEmpty) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: errors?.required || 'Required',
-      });
-      return;
-    }
-
-    if (plugins.length) {
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
       const message = await validatePlugins(plugins, val);
       if (!message) return;
-
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: message,
       });
-    }
-  });
+    });
+  }
 
   if (multiple) {
     schema = z.array(schema);
     if (required) {
       schema = schema.min(1, {message: errors?.required});
     }
-  } else if (!required) {
-    schema = z.union([schema.optional(), z.literal('')]);
   }
 
   return {[key]: schema};

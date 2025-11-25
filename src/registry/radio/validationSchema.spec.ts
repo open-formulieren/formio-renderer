@@ -67,19 +67,6 @@ describe('radio component validation', () => {
     }
   );
 
-  test('required with custom error message', async () => {
-    const component: RadioComponentSchema = {
-      ...BASE_COMPONENT,
-      validate: {required: true},
-      errors: {required: 'Custom error message for required'},
-    };
-    const schema = buildValidationSchema(component);
-
-    const result = await schema.safeParseAsync('');
-
-    expect(result.error?.errors[0].message).toBe('Custom error message for required');
-  });
-
   test.each(['', null, undefined])('rejects empty value if required (value: %s', async value => {
     const component: RadioComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
@@ -88,6 +75,22 @@ describe('radio component validation', () => {
 
     expect(success).toBe(false);
   });
+
+  test.each(['', null, undefined])(
+    'required with custom error message (value: %s)',
+    async value => {
+      const component: RadioComponentSchema = {
+        ...BASE_COMPONENT,
+        validate: {required: true},
+        errors: {required: 'Custom error message for required'},
+      };
+      const schema = buildValidationSchema(component);
+
+      const result = await schema.safeParseAsync(value);
+
+      expect(result.error?.errors[0].message).toBe('Custom error message for required');
+    }
+  );
 
   test.each([
     ['ok', true],
