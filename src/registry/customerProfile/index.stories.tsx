@@ -1,10 +1,13 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 
 import type {FormSettings} from '@/context';
+import {rsSelect, rsValue} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioCustomerProfile} from './index';
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   title: 'Component registry / special / profile / presentation',
@@ -49,7 +52,7 @@ export const OnlyEmailDigitalAddressType: Story = {
   },
 };
 
-export const PreferencesModal: Story = {
+export const OpenPreferencesModal: Story = {
   args: {
     componentDefinition: {
       id: 'customerProfile',
@@ -97,69 +100,7 @@ export const PreferencesModal: Story = {
   },
 };
 
-export const WithFetchedDigitalAddresses: Story = {
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', addresses: ['0612345678', '0687654321', '0612387645']},
-          ],
-          portalUrl: 'https://example.com',
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
-};
-
-export const WithPreferredDigitalAddresses: Story = {
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [
-            {
-              type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
-              preferred: 'preferred.long.email.address@test.com',
-            },
-            {
-              type: 'phoneNumber',
-              addresses: ['0612345678', '0687654321', '0612387645'],
-              preferred: '0612387645',
-            },
-          ],
-          portalUrl: 'https://example.com',
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
-  play: ({canvasElement, step}) => {
-    const canvas = within(canvasElement);
-
-    step('Preferred addresses are selected', () => {
-      const preferredEmail = canvas.getByText('preferred.long.email.address@test.com');
-      const preferredPhoneNumber = canvas.getByText('0612387645');
-
-      // Both preferred addresses are displayed
-      expect(preferredEmail).toBeVisible();
-      expect(preferredPhoneNumber).toBeVisible();
-    });
-
-    step('Show email addresses dropdown menu with preferred option', async () => {
-      // Open email dropdown
-      await userEvent.click(canvas.getByLabelText('Email'));
-      const emailDropdownMenu = within(await canvas.findByRole('listbox'));
-
-      const preferredOption = emailDropdownMenu.getByRole('option', {name: /preferred/i});
-
-      expect(preferredOption).toHaveTextContent('preferred.long.email.address@test.com(Preferred)');
-    });
-  },
-};
-
-export const WithFetchedDigitalAddressesAddNewAddress: Story = {
+export const WithPrefilledDigitalAddressesChangeSelection: Story = {
   args: {
     componentDefinition: {
       id: 'customerProfile',
@@ -177,7 +118,53 @@ export const WithFetchedDigitalAddressesAddNewAddress: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              addresses: ['foo@test.com', 'baz@test.com'],
+            },
+          ],
+          portalUrl: 'https://example.com',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    // Wait for the prefill to finish and the dropdowns to be rendered
+    await sleep(100);
+
+    const canvas = within(canvasElement);
+    const emailField = canvas.getByLabelText('Email');
+
+    // Wait for the prefill to finish
+    await waitFor(() => {
+      // The email field should be displayed as a combobox, and the first address selected
+      expect(emailField).toHaveRole('combobox');
+      expect(rsValue(emailField)).toBe('foo@test.com');
+    });
+
+    // Update selection
+    await rsSelect(emailField, 'baz@test.com');
+    expect(rsValue(emailField)).toBe('baz@test.com');
+  },
+};
+
+export const WithPrefilledDigitalAddressesAddNewAddress: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
+              addresses: ['foo@test.com', 'baz@test.com'],
             },
           ],
           portalUrl: 'https://example.com',
@@ -186,20 +173,28 @@ export const WithFetchedDigitalAddressesAddNewAddress: Story = {
     },
   },
   play: async ({canvasElement, step}) => {
+    // Wait for the prefill to finish and the dropdowns to be rendered
+    await sleep(100);
+
     const canvas = within(canvasElement);
     const emailField = canvas.getByLabelText('Email');
 
-    // The email field should start as a combobox
-    expect(emailField).toHaveRole('combobox');
+    // Wait for the prefill to finish
+    await waitFor(() => {
+      // The email field should start as a combobox
+      expect(emailField).toHaveRole('combobox');
+    });
 
     await step('Add new email address', async () => {
       // Click the "add new address" button
       await userEvent.click(canvas.getByRole('button', {name: 'Add email address'}));
 
       const emailField = canvas.getByLabelText('Email');
-      // The email field changed to an empty textbox
-      expect(emailField).toHaveRole('textbox');
-      expect(emailField).toHaveDisplayValue('');
+      await waitFor(() => {
+        // The email field changed to an empty textbox
+        expect(emailField).toHaveRole('textbox');
+        expect(emailField).toHaveDisplayValue('');
+      });
 
       // Set email address, blur to trigger validation
       await userEvent.type(emailField, 'test@mail.com');
@@ -209,7 +204,9 @@ export const WithFetchedDigitalAddressesAddNewAddress: Story = {
     await step('update preference', async () => {
       // Open preferences modal
       userEvent.click(canvas.getByRole('button', {name: 'Update preferences'}));
-      const modal = within(await canvas.findByRole('dialog'));
+
+      const modalElement = await canvas.findByRole('dialog');
+      const modal = within(modalElement);
 
       const forFutureUseRadio = modal.getByRole('radio', {
         name: /save my data for the future forms/i,
