@@ -14,7 +14,7 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, datePicker, multiple} = componentDefinition;
+  const {key, validate = {}, datePicker, multiple, errors} = componentDefinition;
   const {required, plugins = []} = validate;
   // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
@@ -25,25 +25,25 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
   let dateSchema = z.coerce.date();
   if (minDate) {
-    dateSchema = dateSchema.min(parseISO(minDate));
+    dateSchema = dateSchema.min(parseISO(minDate), {message: errors?.minDate});
   }
   if (maxDate) {
-    dateSchema = dateSchema.max(parseISO(maxDate));
+    dateSchema = dateSchema.max(parseISO(maxDate), {message: errors?.maxDate});
   }
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
+    .string({required_error: errors?.required})
     .refine(
       value => {
         const parsed = parseISO(value);
         return isValid(parsed);
       },
-      {message: intl.formatMessage(INVALID_INPUT_MESSAGE)}
+      {message: errors?.invalid_date || intl.formatMessage(INVALID_INPUT_MESSAGE)}
     )
     .pipe(dateSchema);
 
   if (!required) {
-    schema = z.union([schema, z.literal('')]).optional();
+    schema = schema.optional().or(z.literal(''));
   }
 
   if (plugins.length) {
@@ -58,10 +58,13 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   }
 
   if (multiple) {
-    schema = z.array(schema);
+    let arraySchema = z.array(schema);
+
     if (required) {
-      schema = schema.min(1);
+      arraySchema = arraySchema.min(1, {message: errors?.required});
     }
+
+    schema = arraySchema;
   }
 
   return {[key]: schema};

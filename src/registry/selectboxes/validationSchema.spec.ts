@@ -85,6 +85,19 @@ describe('selectboxes component validation', () => {
 
     expect(success).toBe(false);
   });
+
+  test('required with custom error message', async () => {
+    const component: SelectboxesComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = await schema.safeParseAsync({option1: false, option2: false});
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
 });
 
 describe('selectboxes minimum selected count', () => {
@@ -101,6 +114,21 @@ describe('selectboxes minimum selected count', () => {
     const {success} = await schema.safeParseAsync({option1: false, option2: false});
 
     expect(success).toBe(true);
+  });
+
+  test('min selected count with custom error message', async () => {
+    const component: SelectboxesComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {
+        minSelectedCount: 2,
+      },
+      errors: {minSelectedCount: 'Custom error message for min selected count'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = await schema.safeParseAsync({option1: true, option2: false});
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for min selected count');
   });
 
   test('field not required, one selected', async () => {
@@ -190,5 +218,20 @@ describe('selectboxes maximum selected count', () => {
     const {success} = await schema.safeParseAsync({option1: true, option2: false});
 
     expect(success).toBe(valid);
+  });
+
+  test('max selected count with custom error message', async () => {
+    const component: SelectboxesComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {
+        maxSelectedCount: 1,
+      },
+      errors: {maxSelectedCount: 'Custom error message for max selected count'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = await schema.safeParseAsync({option1: true, option2: true});
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for max selected count');
   });
 });

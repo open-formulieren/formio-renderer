@@ -164,6 +164,30 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'number',
+      type: 'number',
+      key: 'number',
+      label: 'Number',
+      validate: {
+        required: true,
+      },
+      validateOn: 'blur',
+      errors: {required: 'Custom errom message for required'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom errom message for required')).toBeVisible();
+  },
+};
+
 export const ValidateMax: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -204,6 +228,35 @@ export const ValidateMax: ValidationStory = {
   },
 };
 
+export const ValidateMaxWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'number',
+      type: 'number',
+      key: 'number',
+      label: 'Number',
+      validate: {
+        max: 10,
+      },
+      validateOn: 'blur',
+      errors: {max: 'Custom error message for max value'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const number = canvas.getByLabelText('Number');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+
+    await userEvent.type(number, '12');
+    await userEvent.click(submit);
+
+    expect(await canvas.findByText('Custom error message for max value')).toBeVisible();
+  },
+};
+
 export const ValidateMin: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -241,6 +294,35 @@ export const ValidateMin: ValidationStory = {
     await userEvent.type(number, '9,1');
     await userEvent.click(submit);
     expect(await canvas.findByText('De waarde moet 10 of groter zijn.')).toBeVisible();
+  },
+};
+
+export const ValidateMinWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'number',
+      type: 'number',
+      key: 'number',
+      label: 'Number',
+      validate: {
+        min: 10,
+      },
+      validateOn: 'blur',
+      errors: {min: 'Custom error message for min value'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const number = canvas.getByLabelText('Number');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+
+    await userEvent.type(number, '5');
+    await userEvent.click(submit);
+
+    expect(await canvas.findByText('Custom error message for min value')).toBeVisible();
   },
 };
 

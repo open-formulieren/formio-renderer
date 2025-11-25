@@ -157,6 +157,30 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'iban',
+      key: 'my.iban',
+      label: 'An IBAN',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+    } satisfies IbanComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const ValidateIBAN: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -219,6 +243,45 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(await canvas.findByText('Required')).toBeVisible();
     expect(await canvas.findByText('Invalid IBAN')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'iban',
+      key: 'my.iban',
+      label: 'An IBAN field',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required with multiple: true'},
+    } satisfies IbanComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have multiple items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(2);
+
+    // trigger validation
+    await userEvent.click(textboxes[0]);
+    await userEvent.click(textboxes[1]);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(
+      await canvas.findAllByText('Custom error message for required with multiple: true')
+    ).toHaveLength(2);
   },
 };
 

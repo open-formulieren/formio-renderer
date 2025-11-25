@@ -150,6 +150,29 @@ export const ValidateRequired: ValidationStory = {
   },
 };
 
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+    } satisfies DateTimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+  },
+};
+
 export const InvalidDateTime: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -176,6 +199,32 @@ export const InvalidDateTime: ValidationStory = {
     ).toBeVisible();
 
     expect(date).toHaveDisplayValue('32-13-2025 12:34');
+  },
+};
+
+export const InvalidDateTimeWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      validate: {
+        required: false,
+      },
+      errors: {invalid_datetime: 'Custom error message for invalid datetime'},
+    } satisfies DateTimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = canvas.getByLabelText('Datetime');
+    await userEvent.type(date, '32-13-2025 12:34');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for invalid datetime')).toBeVisible();
   },
 };
 
@@ -239,6 +288,56 @@ export const MinMaxValidation: ValidationStory = {
       ).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({date: {time: '2025-10-08T15:00:00+02:00'}});
+    });
+  },
+};
+
+export const MinMaxValidationInputGroupWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      datePicker: {
+        minDate: '2025-10-08T12:00', // this is how the value is set in the form builder
+        maxDate: '2025-10-10T19:00',
+        showWeeks: false,
+        startingDay: 0,
+        initDate: '',
+        minMode: 'day',
+        maxMode: 'day',
+        yearRows: 0,
+        yearColumns: 0,
+      },
+      errors: {minDate: 'Custom error for min date', maxDate: 'Custom error for max date'},
+    } satisfies DateTimeComponentSchema,
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const date = canvas.getByLabelText('Datetime');
+    const button = canvas.getByRole('button', {name: 'Submit'});
+
+    await step('Date before date range', async () => {
+      await userEvent.type(date, '8-10-2025 11:50');
+
+      await userEvent.click(button);
+      expect(await canvas.findByText('Custom error for min date')).toBeVisible();
+      expect(args.onSubmit).not.toHaveBeenCalled();
+    });
+
+    await step('Date after date range', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '10-10-2025 21:00');
+
+      await userEvent.click(button);
+      expect(await canvas.findByText('Custom error for max date')).toBeVisible();
     });
   },
 };
@@ -335,6 +434,45 @@ export const InvalidMultipleDateTime: ValidationStory = {
     ).toBeVisible();
 
     expect(date).toHaveDisplayValue('13/32/2000 16:00 AM');
+  },
+};
+
+export const MultipleDateTimeWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      validate: {
+        required: true,
+      },
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required with multiple: true'},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have multiple items
+    const addButton = await canvas.findByText('Nog één toevoegen');
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    expect(textboxes).toHaveLength(2);
+
+    // trigger validation
+    await userEvent.click(textboxes[0]);
+    await userEvent.click(textboxes[1]);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(
+      await canvas.findAllByText('Custom error message for required with multiple: true')
+    ).toHaveLength(2);
   },
 };
 

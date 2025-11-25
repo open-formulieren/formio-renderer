@@ -37,10 +37,10 @@ const buildValidationSchema = (component: RadioComponentSchema) => {
 };
 
 describe('radio component validation', () => {
-  test.each(['option1', 'option2'])('accepts known values (value: %s)', value => {
+  test.each(['option1', 'option2'])('accepts known values (value: %s)', async value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(true);
   });
@@ -55,23 +55,42 @@ describe('radio component validation', () => {
 
   // formio reference has defaultValue: null but the submission value turns into an
   // empty string
-  test.each(['', null, undefined])('allows empty value if not required (value: %s)', value => {
-    const component: RadioComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
-    const schema = buildValidationSchema(component);
+  test.each(['', null, undefined])(
+    'allows empty value if not required (value: %s)',
+    async value => {
+      const component: RadioComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
+      const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+      const {success} = await schema.safeParseAsync(value);
 
-    expect(success).toBe(true);
-  });
+      expect(success).toBe(true);
+    }
+  );
 
-  test.each(['', null, undefined])('rejects empty value if required (value: %s', value => {
+  test.each(['', null, undefined])('rejects empty value if required (value: %s', async value => {
     const component: RadioComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
-    const {success} = schema.safeParse(value);
+    const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(false);
   });
+
+  test.each(['', null, undefined])(
+    'required with custom error message (value: %s)',
+    async value => {
+      const component: RadioComponentSchema = {
+        ...BASE_COMPONENT,
+        validate: {required: true},
+        errors: {required: 'Custom error message for required'},
+      };
+      const schema = buildValidationSchema(component);
+
+      const result = await schema.safeParseAsync(value);
+
+      expect(result.error?.errors[0].message).toBe('Custom error message for required');
+    }
+  );
 
   test.each([
     ['ok', true],

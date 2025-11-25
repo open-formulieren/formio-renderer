@@ -65,6 +65,19 @@ describe('email component validation', () => {
     expect(success).toBe(!required);
   });
 
+  test('required with custom error message', () => {
+    const component: EmailComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each([
     ['ok', true],
     ['fail', false],
@@ -102,6 +115,23 @@ describe('email component with multiple: true', () => {
     const {success} = schema.safeParse(value);
 
     expect(success).toBe(valid);
+  });
+
+  test('required with custom error message and multiple: true', () => {
+    const component: EmailComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      multiple: true,
+      defaultValue: [],
+      errors: {required: 'Custom error message for required with multiple: true'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse([]);
+
+    expect(result.error?.errors[0].message).toBe(
+      'Custom error message for required with multiple: true'
+    );
   });
 
   test('individual items are still validated', () => {

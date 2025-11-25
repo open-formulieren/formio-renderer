@@ -25,7 +25,7 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, datePicker, multiple} = componentDefinition;
+  const {key, validate = {}, datePicker, multiple, errors} = componentDefinition;
   const {required, plugins = []} = validate;
   // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
@@ -46,7 +46,9 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
       minute: '2-digit',
     });
     dateSchema = dateSchema.min(minDate, {
-      message: intl.formatMessage(DATETIME_LESS_THAN_MIN_DATE_MESSAGE, {min: minDateString}),
+      message:
+        errors?.minDate ||
+        intl.formatMessage(DATETIME_LESS_THAN_MIN_DATE_MESSAGE, {min: minDateString}),
     });
   }
   if (maxDate) {
@@ -58,23 +60,25 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
       minute: '2-digit',
     });
     dateSchema = dateSchema.max(maxDate, {
-      message: intl.formatMessage(DATETIME_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDateString}),
+      message:
+        errors?.maxDate ||
+        intl.formatMessage(DATETIME_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDateString}),
     });
   }
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
+    .string({required_error: errors?.required})
     .refine(
       value => {
         const parsed = parseISO(value);
         return isValid(parsed);
       },
-      {message: intl.formatMessage(DATETIME_INVALID_MESSAGE)}
+      {message: errors?.invalid_datetime || intl.formatMessage(DATETIME_INVALID_MESSAGE)}
     )
     .pipe(dateSchema);
 
   if (!required) {
-    schema = z.union([schema, z.literal('')]).optional();
+    schema = schema.optional().or(z.literal(''));
   }
 
   if (plugins.length) {
@@ -89,10 +93,13 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
   }
 
   if (multiple) {
-    schema = z.array(schema);
+    let arraySchema = z.array(schema);
+
     if (required) {
-      schema = schema.min(1);
+      arraySchema = arraySchema.min(1, {message: errors?.required});
     }
+
+    schema = arraySchema;
   }
 
   return {[key]: schema};
