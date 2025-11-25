@@ -1,4 +1,4 @@
-import type {PreferenceUpdateOptions} from '@open-formulieren/types';
+import type {DigitalAddressType, PreferenceUpdateOptions} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Form, Formik} from 'formik';
 import {useId} from 'react';
@@ -10,10 +10,12 @@ import RadioField from '@/components/forms/RadioField';
 import type {RadioOption} from '@/components/forms/RadioField/RadioField';
 import type {ModalProps} from '@/components/modal/Modal';
 import Modal from '@/components/modal/Modal';
-import {useFormSettings} from '@/hooks';
+
+import PortalUrl from './PortalUrl';
 
 interface DigitalAddressPreferencesModalProps extends Pick<ModalProps, 'closeModal' | 'isOpen'> {
   onSubmit: (preference: PreferenceUpdateOptions) => void;
+  digitalAddressType: DigitalAddressType;
 }
 
 type FormValues = {preference: PreferenceUpdateOptions};
@@ -23,16 +25,10 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
   closeModal,
   isOpen,
   onSubmit,
+  digitalAddressType,
 }) => {
   const id = useId();
   const titleId = `${id}-title`;
-  const formSettings = useFormSettings();
-  if (!formSettings?.componentParameters?.customerProfile) {
-    throw new Error('Customer profile component parameters not configured');
-  }
-
-  const {portalUrl} = formSettings.componentParameters.customerProfile;
-
   return (
     <Modal
       titleId={titleId}
@@ -64,11 +60,7 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
                         defaultMessage={`Save my data for the future forms.
                           You can edit your preferences in the online <a>portal</a>.`}
                         values={{
-                          a: (...chunks) => (
-                            <a href={portalUrl} target="_blank" rel="noopener noreferrer">
-                              {chunks}
-                            </a>
-                          ),
+                          a: chunks => <PortalUrl>{chunks}</PortalUrl>,
                         }}
                       />
                     ),
@@ -77,8 +69,13 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
                     value: 'useOnlyOnce',
                     label: (
                       <FormattedMessage
-                        description="Digital address preferences modal 'useOnlyOnce' option label"
-                        defaultMessage="Use this email address only for this form."
+                        description="Profile digital address preferences modal 'useOnlyOnce' option label"
+                        defaultMessage={`Use this {digitalAddressType, select,
+                          email {email address}
+                          phoneNumber {phone number}
+                          other {{digitalAddressType}}
+                        } only for this form.`}
+                        values={{digitalAddressType}}
                       />
                     ),
                   },
