@@ -288,7 +288,7 @@ interface GeometryProps {
   featureGroupRef: React.RefObject<L.FeatureGroup>;
 }
 
-export const Geometry: React.FC<GeometryProps> = ({geoJsonGeometry, featureGroupRef}) => {
+const Geometry: React.FC<GeometryProps> = ({geoJsonGeometry, featureGroupRef}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -327,7 +327,7 @@ interface MapViewProps {
   coordinates?: CoordinatePair;
 }
 
-export const MapView: React.FC<MapViewProps> = ({coordinates = null}) => {
+const MapView: React.FC<MapViewProps> = ({coordinates = null}) => {
   const map = useMap();
   useEffect(() => {
     if (!coordinates) return;
@@ -339,7 +339,7 @@ export const MapView: React.FC<MapViewProps> = ({coordinates = null}) => {
   return null;
 };
 
-export const DisabledMapControls = () => {
+const DisabledMapControls = () => {
   const map = useMap();
   useEffect(() => {
     map.dragging.disable();
