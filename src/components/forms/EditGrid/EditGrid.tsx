@@ -2,7 +2,7 @@ import {ButtonGroup} from '@utrecht/button-group-react';
 import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
-import {useMemo, useState} from 'react';
+import {useMemo} from 'react';
 import {FormattedMessage} from 'react-intl';
 import type {ValidationError} from 'zod-formik-adapter';
 
@@ -16,6 +16,8 @@ import {useFieldConfig} from '@/hooks';
 import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridItem from './EditGridItem';
+import {ITEM_EXPANDED_MARKER} from './constants';
+import type {MarkedEditGridItem} from './types';
 
 interface EditGridBaseProps<T> {
   /**
@@ -98,7 +100,11 @@ interface WithIsolation<T> {
    *
    * When editing inline (so *not* in isolation mode), `opts.expanded` will always be `false`.`
    */
-  getItemBody: (values: T, index: number, opts: {expanded: boolean}) => React.ReactNode;
+  getItemBody: (
+    values: MarkedEditGridItem<T>,
+    index: number,
+    opts: {expanded: boolean}
+  ) => React.ReactNode;
   /**
    * Callback to validate a single item. It receives the item index and the item values.
    *
@@ -125,7 +131,6 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   name = useFieldConfig(name);
   const {getFieldProps, errors, getFieldHelpers} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
-  const [indexToAutoExpand, setIndexToAutoExpand] = useState<number | null>(null);
   return (
     <FormField type="editgrid" className="utrecht-form-field--openforms">
       {label && (
@@ -180,7 +185,6 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     removeItemLabel={removeItemLabel}
                     onRemove={() => arrayHelpers.remove(index)}
                     validate={props.validate}
-                    initiallyExpanded={indexToAutoExpand === index}
                   />
                 );
               })}
@@ -191,10 +195,12 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 <SecondaryActionButton
                   type="button"
                   onClick={() => {
-                    if (formikItems) {
-                      setIndexToAutoExpand(formikItems.length);
-                    }
-                    arrayHelpers.push(emptyItem);
+                    const newItem: MarkedEditGridItem<T> = setIn(
+                      emptyItem,
+                      ITEM_EXPANDED_MARKER,
+                      true
+                    );
+                    arrayHelpers.push(newItem);
                   }}
                 >
                   <Icon icon="add" />
@@ -252,7 +258,6 @@ type IsolatedEditGridItemProps<T> = {
    * (Initial) errors for the item.
    */
   errors: FormikErrors<T> | undefined;
-  initiallyExpanded: boolean;
   onChange: (newValue: T) => void;
   onRemove: () => void;
 } & Pick<EditGridProps<T>, 'getItemHeading' | 'canRemoveItem' | 'removeItemLabel'> &
@@ -272,7 +277,6 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   canRemoveItem,
   removeItemLabel = '',
   validate: validateCallback,
-  initiallyExpanded,
 }: IsolatedEditGridItemProps<T>) {
   const isEditable = canEditItem?.(values, index) ?? true;
 
@@ -334,7 +338,6 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
         canRemove={canRemoveItem?.(values, index) ?? true}
         removeLabel={removeItemLabel}
         onRemove={onRemove}
-        initiallyExpanded={initiallyExpanded}
       />
     </FieldConfigProvider>
   );

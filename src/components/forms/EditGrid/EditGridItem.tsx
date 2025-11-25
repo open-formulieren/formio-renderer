@@ -1,15 +1,18 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import type {FormikErrors} from 'formik';
-import {Formik, setNestedObjectValues} from 'formik';
-import {useId, useState} from 'react';
+import {Formik, getIn, setIn, setNestedObjectValues} from 'formik';
+import {useContext, useId} from 'react';
 import {useIntl} from 'react-intl';
 
 import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import Icon from '@/components/icons';
+import {FieldConfigContext} from '@/context';
 import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
 import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
+import {ITEM_EXPANDED_MARKER} from './constants';
+import type {MarkedEditGridItem} from './types';
 
 interface EditGridItemBaseProps {
   index: number;
@@ -44,7 +47,6 @@ interface WithoutIsolation {
   canEdit?: never;
   saveLabel?: never;
   onChange?: never;
-  initiallyExpanded?: false;
   validate?: never;
   errors?: never;
 }
@@ -61,7 +63,7 @@ interface WithIsolation<T> {
    * Note that this is only accepted as *initial* data and changes in props do not change
    * the form field values.
    */
-  data: T;
+  data: MarkedEditGridItem<T>;
   /**
    * Callback to render the main content of a single item. Gets passed options representing
    * the current UI state.
@@ -80,10 +82,6 @@ interface WithIsolation<T> {
    */
   onChange: (newValue: T) => void;
   /**
-   * Set to `true` for newly added items so that the user can start editing directly.
-   */
-  initiallyExpanded?: boolean;
-  /**
    * Validate hook to pass to Formik's `validationSchema` prop. It must validate the
    * shape of a single item.
    *
@@ -101,12 +99,11 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   canRemove,
   removeLabel,
   onRemove,
-  initiallyExpanded = false,
   ...props
 }: EditGridItemProps<T>) {
   const intl = useIntl();
-  const [expanded, setExpanded] = useState<boolean>(initiallyExpanded);
   const headingId = useId();
+  const {namePrefix} = useContext(FieldConfigContext);
 
   const accessibleRemoveButtonLabel = intl.formatMessage(
     {
@@ -116,12 +113,15 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
     {index: index + 1}
   );
 
-  // if there are errors but the state is not expanded, ensure that it is expanded so
-  // that errors are displayed. Updates to the values result in those errors being
-  // cleared via `props.onChange`.
-  if (props.errors && !expanded) {
-    setExpanded(true);
-  }
+  const expandedPropertyPath = namePrefix
+    ? `${namePrefix}.${ITEM_EXPANDED_MARKER}`
+    : ITEM_EXPANDED_MARKER;
+  const isExpanded =
+    !!(props.enableIsolation && props.canEdit && getIn(props.data, expandedPropertyPath)) ||
+    // if there are errors but the state is not expanded, ensure that it is expanded so
+    // that errors are displayed. Updates to the values result in those errors being
+    // cleared via `props.onChange`.
+    !!props.errors;
 
   return (
     <li className="openforms-editgrid__item">
@@ -142,7 +142,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
         {props.enableIsolation && props.canEdit ? (
           // We apply the same Formik rendering philosophy as in FormioForm.tsx w/r to initial
           // values, errors, touched state and the validation behaviour (validate individual fields, on blur)
-          <Formik<T>
+          <Formik<MarkedEditGridItem<T>>
             initialValues={props.data}
             initialErrors={props.errors}
             initialTouched={props.errors ? setNestedObjectValues(props.errors, true) : undefined}
@@ -153,14 +153,17 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             validateOnBlur={false}
             validationSchema={props.validate ? {validate: props.validate} : undefined}
             onSubmit={async values => {
+              // remove marker on submit
+              if (getIn(values, expandedPropertyPath)) {
+                values = setIn(values, expandedPropertyPath, undefined);
+              }
               if (props.canEdit) props.onChange(values);
-              setExpanded(false);
             }}
           >
             <>
-              {props.getBody({expanded})}
+              {props.getBody({expanded: isExpanded})}
 
-              {expanded ? (
+              {isExpanded ? (
                 <IsolationModeButtons
                   saveLabel={props.saveLabel}
                   canRemove={Boolean(canRemove)}
@@ -172,7 +175,20 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 <EditGridButtonGroup>
                   <SecondaryActionButton
                     type="button"
-                    onClick={() => setExpanded(true)}
+                    onClick={() => {
+                      // add a marker to the item indicating that it's expanded, so that
+                      // this marker can be detected during validation.
+                      // The initial approach was to use a Symbol for this, but those
+                      // get stripped out by Zod during validation, even with
+                      // z.object().passthrough() :(
+                      // we use setIn to keep the rest of the object data references stable
+                      const markedItem: MarkedEditGridItem<T> = setIn(
+                        props.data,
+                        expandedPropertyPath,
+                        true
+                      );
+                      props.onChange(markedItem);
+                    }}
                     aria-label={intl.formatMessage(
                       {
                         description: 'Accessible edit icon/button label for item inside edit grid',
