@@ -1,4 +1,4 @@
-import type {DigitalAddress} from '@open-formulieren/types';
+import type {DigitalAddress, DigitalAddressType} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Form, Formik} from 'formik';
 import {FormattedMessage} from 'react-intl';
@@ -15,12 +15,14 @@ type UserPreference = Pick<DigitalAddress, 'useOnlyOnce' | 'isNewPreferred'>;
 
 interface DigitalAddressPreferencesModalProps extends Pick<ModalProps, 'closeModal' | 'isOpen'> {
   onSubmit: (preference: UserPreference) => void;
+  digitalAddressType: DigitalAddressType;
 }
 
 const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalProps> = ({
   closeModal,
   isOpen,
   onSubmit,
+  digitalAddressType,
 }) => {
   const formSettings = useFormSettings();
   if (!formSettings?.componentParameters?.customerProfile) {
@@ -63,8 +65,9 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
                   value: 'isNewPreferred',
                   label: (
                     <FormattedMessage
-                      description="Digital address preferences modal 'isNewPreferred' option label"
-                      defaultMessage="Save my data for the future forms. You can edit your preferences in the online <a>portal</a>."
+                      description="Profile digital address preferences modal 'isNewPreferred' option label"
+                      defaultMessage={`Save my data for the future forms.
+                        You can edit your preferences in the online <a>portal</a>.`}
                       values={{
                         a: (...chunks) => (
                           <a href={portalUrl} target="_blank" rel="noopener noreferrer">
@@ -79,8 +82,13 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
                   value: 'useOnlyOnce',
                   label: (
                     <FormattedMessage
-                      description="Digital address preferences modal 'useOnlyOnce' option label"
-                      defaultMessage="Use this email address only for this form."
+                      description="Profile digital address preferences modal 'useOnlyOnce' option label"
+                      defaultMessage={`Use this {digitalAddressType, select,
+                        email {email address}
+                        phoneNumber {phone number}
+                        other {{digitalAddressType}}
+                      } only for this form.`}
+                      values={{digitalAddressType}}
                     />
                   ),
                 },

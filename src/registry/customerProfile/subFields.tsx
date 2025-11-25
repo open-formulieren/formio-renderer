@@ -1,5 +1,6 @@
 import type {DigitalAddress, DigitalAddressType} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
+import {Alert} from '@utrecht/component-library-react';
 import type {FormikErrors} from 'formik';
 import {useFormikContext} from 'formik';
 import {useEffect, useId, useState} from 'react';
@@ -15,6 +16,7 @@ import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
 import Icon from '@/components/icons';
+import {useFormSettings} from '@/hooks';
 
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
 import type {DigitalAddressGroup} from './types';
@@ -27,17 +29,6 @@ export const FIELD_LABELS = defineMessages<DigitalAddressType>({
   phoneNumber: {
     description: 'Label for customerProfile phoneNumber input',
     defaultMessage: 'Phone number',
-  },
-});
-
-export const ADD_DIGITAL_ADDRESS_BUTTON_LABELS = defineMessages<DigitalAddressType>({
-  email: {
-    description: "Profile digital address 'add email' button label",
-    defaultMessage: 'Add email address',
-  },
-  phoneNumber: {
-    description: "Profile digital address 'add phone number' button label",
-    defaultMessage: 'Add phone number',
   },
 });
 
@@ -96,6 +87,12 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
 }) => {
   const intl = useIntl();
   const options = getDigitalAddressOptions(intl, digitalAddressGroup);
+  const formSettings = useFormSettings();
+  if (!formSettings?.componentParameters?.customerProfile) {
+    throw new Error('Customer profile component parameters not configured');
+  }
+
+  const {portalUrl} = formSettings.componentParameters.customerProfile;
   return (
     <>
       <Select
@@ -106,9 +103,40 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
         optionComponent={OptionWithDescription}
         isDisabled={options.length === 1}
       />
+      <Alert type="info">
+        <FormattedMessage
+          description="Profile digital address multiple addresses: edit preference text"
+          defaultMessage={`There are multiple {digitalAddressType, select,
+              email {email addresses}
+              phoneNumber {phone numbers}
+              other {{digitalAddressType}}
+            } associated with your account. Use the dropdown to select the {digitalAddressType, select,
+              email {email address}
+              phoneNumber {phone number}
+              other {{digitalAddressType}}
+            } you want to use for this form. To update your preferences, use the online <a>portal</a>.
+          `}
+          values={{
+            digitalAddressType: type,
+            a: (...chunks) => (
+              <a href={portalUrl} target="_blank" rel="noopener noreferrer">
+                {chunks}
+              </a>
+            ),
+          }}
+        />
+      </Alert>
       <ButtonGroup>
         <SecondaryActionButton onClick={onAddDigitalAddress}>
-          <FormattedMessage {...ADD_DIGITAL_ADDRESS_BUTTON_LABELS[type]} />
+          <FormattedMessage
+            description="Profile digital address 'add digital address' button label"
+            defaultMessage={`Add {digitalAddressType, select,
+              email {email address}
+              phoneNumber {phone number}
+              other {{digitalAddressType}}
+            }`}
+            values={{digitalAddressType: type}}
+          />
         </SecondaryActionButton>
       </ButtonGroup>
     </>
@@ -145,6 +173,18 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
       />
       {showPreferencesButton && (
         <>
+          <Alert type="info">
+            <FormattedMessage
+              description="Profile digital address new address: default preference text"
+              defaultMessage={`The {digitalAddressType, select,
+                email {email address}
+                phoneNumber {phone number}
+                other {{digitalAddressType}}
+              } you provide will automatically only be used for this form.
+              You can update your preferences using the button below.`}
+              values={{digitalAddressType: type}}
+            />
+          </Alert>
           <ButtonGroup>
             <SecondaryActionButton onClick={() => setIsModalOpen(true)}>
               <FormattedMessage
@@ -163,6 +203,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
               setFieldValue(`${namePrefix}.useOnlyOnce`, newPreference.useOnlyOnce);
               setIsModalOpen(false);
             }}
+            digitalAddressType={type}
           />
         </>
       )}
