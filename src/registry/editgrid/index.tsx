@@ -12,7 +12,7 @@ import {useFieldConfig, useFormSettings} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {buildValidationSchema, useValidationSchemas, validatePlugins} from '@/validationSchema';
-import {extractInitialValues} from '@/values';
+import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
@@ -219,7 +219,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   // ensure we keep setting a deeper scope when dealing with nesting
   const parentScope = !isRoot ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
-  const initialValues = extractInitialValues(components, getRegistryEntry);
+  const initialValues = deepMergeValues(extractInitialValues(components, getRegistryEntry), {});
   const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
 
   // if this is the root scope (the most outer edit grid), then we must build the components
