@@ -25,6 +25,46 @@
       "value": "Kind toevoegen"
     }
   ],
+  "+RF9ZR": [
+    {
+      "type": 0,
+      "value": "Gebruik dit "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "e-mailadres"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "telefoonnummer"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " enkel voor dit formulier."
+    }
+  ],
   "+W79Dr": [
     {
       "type": 0,
@@ -207,6 +247,12 @@
       "value": "Klik het laatste punt om de lijn te voltooien"
     }
   ],
+  "5Mqh8g": [
+    {
+      "type": 0,
+      "value": "Ongeldig telefoonnummer."
+    }
+  ],
   "5TAbGN": [
     {
       "offset": 0,
@@ -257,6 +303,32 @@
     {
       "type": 0,
       "value": "mm"
+    }
+  ],
+  "6o3CZT": [
+    {
+      "type": 0,
+      "value": "E-mailadres"
+    }
+  ],
+  "8FUhnA": [
+    {
+      "type": 0,
+      "value": "Sla mijn gegevens op voor de volgende keer. U kunt deze later altijd nog wijzigen in het "
+    },
+    {
+      "children": [
+        {
+          "type": 0,
+          "value": "portaal"
+        }
+      ],
+      "type": 8,
+      "value": "a"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "8uM5Vx": [
@@ -339,6 +411,20 @@
       "value": "Verwijder vormen"
     }
   ],
+  "BWCtbf": [
+    {
+      "type": 0,
+      "value": "Je kan niet meerdere digitale adressen van het type "
+    },
+    {
+      "type": 1,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " invullen."
+    }
+  ],
   "BboxO6": [
     {
       "type": 0,
@@ -369,6 +455,12 @@
     {
       "type": 0,
       "value": "Voornaam"
+    }
+  ],
+  "CGXGUq": [
+    {
+      "type": 0,
+      "value": "Pas voorkeur aan"
     }
   ],
   "CTDEh6": [
@@ -413,6 +505,12 @@
     {
       "type": 0,
       "value": "Uur moet tussen 0-23 zijn en minuut tussen 0-59."
+    }
+  ],
+  "Dbfk+1": [
+    {
+      "type": 0,
+      "value": "Het digitale adres kan niet gebruikt worden voor zowel 'enkel dit formulier' als 'voor toekomstige formulieren'."
     }
   ],
   "DcLzdm": [
@@ -653,6 +751,12 @@
       "value": "Handtekening"
     }
   ],
+  "Lp2KV6": [
+    {
+      "type": 0,
+      "value": "(Voorkeur)"
+    }
+  ],
   "LsgvKh": [
     {
       "type": 0,
@@ -705,6 +809,46 @@
     {
       "type": 0,
       "value": "Geboortedatum"
+    }
+  ],
+  "Q4fCjD": [
+    {
+      "type": 0,
+      "value": "Je "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "e-mailadres"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "telefoonnummer"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " wordt automatisch enkel voor dit formulier gebruikt. Je kunt deze voorkeur aanpassen via de knop hieronder."
     }
   ],
   "Q6/Lj7": [
@@ -813,6 +957,94 @@
       "value": "Huisnummer is verplicht."
     }
   ],
+  "VTpxKE": [
+    {
+      "type": 0,
+      "value": "There are multiple "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email addresses"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone numbers"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " associated with your account. Use the dropdown to select the "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " you want to use for this form. To update your preferences, use the online "
+    },
+    {
+      "children": [
+        {
+          "type": 0,
+          "value": "portal"
+        }
+      ],
+      "type": 8,
+      "value": "a"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "WpfP0s": [
     {
       "type": 0,
@@ -835,6 +1067,18 @@
     {
       "type": 0,
       "value": "Verwijder laatste punt"
+    }
+  ],
+  "YH71s5": [
+    {
+      "type": 0,
+      "value": "Ongeldig e-mailadres."
+    }
+  ],
+  "YnTumB": [
+    {
+      "type": 0,
+      "value": "Telefoonnummer"
     }
   ],
   "ZAq+s7": [
@@ -1033,6 +1277,12 @@
       "value": "Kind bewerken"
     }
   ],
+  "i3G0QQ": [
+    {
+      "type": 0,
+      "value": "Pas uw voorkeur aan"
+    }
+  ],
   "iiVLgn": [
     {
       "options": {
@@ -1131,6 +1381,46 @@
       "value": " of kleiner zijn."
     }
   ],
+  "kpiWvx": [
+    {
+      "type": 0,
+      "value": "Voeg "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "e-mailadres"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "telefoonnummer"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " toe"
+    }
+  ],
   "lQY+Zm": [
     {
       "type": 0,
@@ -1227,6 +1517,12 @@
     {
       "type": 0,
       "value": "Ongeldige invoer"
+    }
+  ],
+  "pitnjr": [
+    {
+      "type": 0,
+      "value": "Bevestigen"
     }
   ],
   "pzR8ui": [
