@@ -1,0 +1,40 @@
+// sort-imports-ignore
+// a hack - this library has side effects because it patches L from leaflet.
+import L from 'leaflet';
+import 'proj4leaflet';
+import {GestureHandling} from 'leaflet-gesture-handling';
+// @ts-expect-error leaflet types support is minimal
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+// @ts-expect-error leaflet types support is minimal
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+// @ts-expect-error leaflet types support is minimal
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+
+let initialized: boolean = false;
+
+// TODO: fix remove marker button
+/**
+ * fix leaflet images import - https://github.com/Leaflet/Leaflet/issues/4968
+ * @return {Void}
+ */
+const fixIconUrls = () => {
+  // @ts-expect-error leaflet types support is minimal
+  delete L.Icon.Default.prototype._getIconUrl;
+  // the call to `require` ensures that the static assets are bundled along (or, for small
+  // images, inlined as base64)
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: iconRetinaUrl,
+    iconUrl: iconUrl,
+    shadowUrl: shadowUrl,
+  });
+};
+
+const initialize = () => {
+  if (initialized) return;
+  fixIconUrls();
+  L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
+  initialized = true;
+};
+
+export {CRS_RD, TILE_LAYER_RD} from '@open-formulieren/leaflet-tools';
+export {initialize};

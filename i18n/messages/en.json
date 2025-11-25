@@ -4,10 +4,20 @@
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
+  "+KBbXH": {
+    "defaultMessage": "Click to start drawing shape",
+    "description": "Draw handler polygon tooltip start.",
+    "originalDefault": "Click to start drawing shape"
+  },
   "+MVbpZ": {
     "defaultMessage": "Add child",
     "description": "Children component modal: add child title",
     "originalDefault": "Add child"
+  },
+  "+W79Dr": {
+    "defaultMessage": "Click to continue drawing line",
+    "description": "Draw handler polyline tooltip continue.",
+    "originalDefault": "Click to continue drawing line"
   },
   "+xOWBM": {
     "defaultMessage": "Remove",
@@ -23,6 +33,11 @@
     "defaultMessage": "House number addition must be up to four letters and digits.",
     "description": "Validation error for addressNL.houseNumberAddition field.",
     "originalDefault": "House number addition must be up to four letters and digits."
+  },
+  "/yX9Xl": {
+    "defaultMessage": "Cancel drawing",
+    "description": "Draw toolbar cancel button tooltip.",
+    "originalDefault": "Cancel drawing"
   },
   "07h5b8": {
     "defaultMessage": "You must provide a first name.",
@@ -59,6 +74,11 @@
     "description": "File upload error message: file too small",
     "originalDefault": "The file is too small."
   },
+  "2D6ubj": {
+    "defaultMessage": "Line",
+    "description": "Draw toolbar polyline button tooltip.",
+    "originalDefault": "Line"
+  },
   "2HsmfN": {
     "defaultMessage": "BSN",
     "description": "Partners component: label for partners BSN",
@@ -94,15 +114,30 @@
     "description": "(Async) select options loading message",
     "originalDefault": "Loading..."
   },
+  "4ZOmtU": {
+    "defaultMessage": "Save changes",
+    "description": "Edit toolbar save tooltip.",
+    "originalDefault": "Save changes"
+  },
   "4tPKAs": {
     "defaultMessage": "Verify",
     "description": "Email verification: verify code button text",
     "originalDefault": "Verify"
   },
+  "4ui8R+": {
+    "defaultMessage": "Click last point to finish line",
+    "description": "Draw handler polyline tooltip end.",
+    "originalDefault": "Click last point to finish line"
+  },
   "5TAbGN": {
     "defaultMessage": "{charCount, plural, one {1 character} other {{charCount} characters} }",
     "description": "Character count",
     "originalDefault": "{charCount, plural, one {1 character} other {{charCount} characters} }"
+  },
+  "62SBjV": {
+    "defaultMessage": "Shape (polygon)",
+    "description": "Draw toolbar polygon button tooltip.",
+    "originalDefault": "Shape (polygon)"
   },
   "646077": {
     "defaultMessage": "Invalid BSN.",
@@ -159,6 +194,16 @@
     "description": "Login button label",
     "originalDefault": "Login with {provider}"
   },
+  "B/W1uC": {
+    "defaultMessage": "Remove shapes",
+    "description": "Edit toolbar remove button tooltip.",
+    "originalDefault": "Remove shapes"
+  },
+  "BboxO6": {
+    "defaultMessage": "Use two fingers to move the map",
+    "description": "Gesturehandeling phone touch message.",
+    "originalDefault": "Use two fingers to move the map"
+  },
   "Bo6onH": {
     "defaultMessage": "You must select at least {minSelectedCount, plural, one {{minSelectedCount, number} item} other {{minSelectedCount, number} items} }.",
     "description": "Selectboxes minimum selected count error message",
@@ -178,6 +223,11 @@
     "defaultMessage": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN.",
     "description": "Validation error for duplicate children.bsn values.",
     "originalDefault": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN."
+  },
+  "D6TdPW": {
+    "defaultMessage": "Click map to place marker",
+    "description": "Draw handler marker tooltip start.",
+    "originalDefault": "Click map to place marker"
   },
   "DBTNgI": {
     "defaultMessage": "d",
@@ -224,6 +274,11 @@
     "description": "Validation error message for verification code pattern",
     "originalDefault": "The verification code may only contain letters (A-Z) and numbers (0-9)."
   },
+  "FWCQJu": {
+    "defaultMessage": "Current location",
+    "description": "Leaflet map: use user location button ariaLabel text.",
+    "originalDefault": "Current location"
+  },
   "FfBWqF": {
     "defaultMessage": "Show tooltip",
     "description": "Tooltip icon label",
@@ -243,6 +298,26 @@
     "defaultMessage": "HH",
     "description": "Placeholder for the hour part of the time",
     "originalDefault": "HH"
+  },
+  "H4VhcO": {
+    "defaultMessage": "Current location cannot be accessed",
+    "description": "Leaflet map: use user location button disabled ariaLabel text.",
+    "originalDefault": "Current location cannot be accessed"
+  },
+  "HY6Irs": {
+    "defaultMessage": "Cancel changes",
+    "description": "Edit toolbar cancel tooltip.",
+    "originalDefault": "Cancel changes"
+  },
+  "HgLr1F": {
+    "defaultMessage": "Cancel",
+    "description": "Draw toolbar cancel button message.",
+    "originalDefault": "Cancel"
+  },
+  "Hkq6NE": {
+    "defaultMessage": "Finish drawing",
+    "description": "Draw toolbar finish button tooltip.",
+    "originalDefault": "Finish drawing"
   },
   "HoCa81": {
     "defaultMessage": "Too many files uploaded. You can upload {maxNumberOfFiles, plural, one {one file.} other {up to {maxNumberOfFiles} files} }.",
@@ -274,6 +349,11 @@
     "description": "Calendar: previous month button title",
     "originalDefault": "Previous month"
   },
+  "LYjd+f": {
+    "defaultMessage": "Use my current location",
+    "description": "Leaflet map: use user location button tooltip text.",
+    "originalDefault": "Use my current location"
+  },
   "LaKfzC": {
     "defaultMessage": "Signature",
     "description": "Signature value alt text",
@@ -294,10 +374,25 @@
     "description": "Validation error for children.dateOfBirth that is after the maximum date.",
     "originalDefault": "Date of birth cannot be in the future."
   },
+  "N2sZnS": {
+    "defaultMessage": "Save",
+    "description": "Edit toolbar save message.",
+    "originalDefault": "Save"
+  },
+  "NZ8rJn": {
+    "defaultMessage": "Your current location cannot be accessed",
+    "description": "Leaflet map: use user location button disabled tooltip text.",
+    "originalDefault": "Your current location cannot be accessed"
+  },
   "Oc3efT": {
     "defaultMessage": "You must provide a city.",
     "description": "Validation error for required addressNL.city field.",
     "originalDefault": "You must provide a city."
+  },
+  "Op4orj": {
+    "defaultMessage": "No shapes to remove",
+    "description": "Edit toolbar remove button disabled tooltip.",
+    "originalDefault": "No shapes to remove"
   },
   "PCv4sQ": {
     "defaultMessage": "House number",
@@ -308,6 +403,11 @@
     "defaultMessage": "Date of birth",
     "description": "Children component: label for children dateOfBirth",
     "originalDefault": "Date of birth"
+  },
+  "Q6/Lj7": {
+    "defaultMessage": "Remove last drawn point",
+    "description": "Draw toolbar undo button tooltip.",
+    "originalDefault": "Remove last drawn point"
   },
   "QAN3ua": {
     "defaultMessage": "The file(s) are ready to drop.",
@@ -364,6 +464,11 @@
     "description": "Validation error for partners.dateOfBirth invalid format.",
     "originalDefault": "The format of the date of birth is incorrect."
   },
+  "U5+FHP": {
+    "defaultMessage": "Cancel",
+    "description": "Edit toolbar cancel message.",
+    "originalDefault": "Cancel"
+  },
   "U7YHLZ": {
     "defaultMessage": "Include {firstname}?",
     "description": "Children component: child 'selected' aria label",
@@ -384,6 +489,16 @@
     "description": "Multi-field add button label text",
     "originalDefault": "Add another"
   },
+  "X/24FO": {
+    "defaultMessage": "Map component search button",
+    "description": "The leaflet map's search button areaLabel text.",
+    "originalDefault": "Map component search button"
+  },
+  "Y3jHZm": {
+    "defaultMessage": "Remove last point",
+    "description": "Draw toolbar undo button message.",
+    "originalDefault": "Remove last point"
+  },
   "ZAq+s7": {
     "defaultMessage": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}",
     "description": "Children component: children table 'delete child' accessible label",
@@ -393,6 +508,11 @@
     "defaultMessage": "File name",
     "description": "Accessible label for uploaded file name",
     "originalDefault": "File name"
+  },
+  "aUpjaY": {
+    "defaultMessage": "Sorry, that address could not be found.",
+    "description": "The leaflet map's location not found message.",
+    "originalDefault": "Sorry, that address could not be found."
   },
   "abKEBH": {
     "defaultMessage": "No",
@@ -408,6 +528,11 @@
     "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
     "description": "Validation error for addressNL.houseNumber field.",
     "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
+  },
+  "bRtoG6": {
+    "defaultMessage": "Remove all",
+    "description": "Edit toolbar clearAll message.",
+    "originalDefault": "Remove all"
   },
   "bmnUq8": {
     "defaultMessage": "Lastname",
@@ -449,6 +574,11 @@
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "dNGw+S": {
+    "defaultMessage": "Click to continue drawing shape",
+    "description": "Draw handler polygon tooltip continue.",
+    "originalDefault": "Click to continue drawing shape"
+  },
   "dsZqad": {
     "defaultMessage": "The email address ''{email}' is verified.",
     "description": "Email verification: verification status confirmation message.",
@@ -459,10 +589,20 @@
     "description": "Loading content text",
     "originalDefault": "Loading..."
   },
+  "fJVa0u": {
+    "defaultMessage": "Marker",
+    "description": "Draw toolbar marker button tooltip.",
+    "originalDefault": "Marker"
+  },
   "fwMwqD": {
     "defaultMessage": "Save",
     "description": "Children component modal: save button label",
     "originalDefault": "Save"
+  },
+  "h2LzuB": {
+    "defaultMessage": "Are you sure you want to delete your drawn shape?",
+    "description": "Leaflet map: delete drawn shape confirmation message",
+    "originalDefault": "Are you sure you want to delete your drawn shape?"
   },
   "h7JS6y": {
     "defaultMessage": "Add child",
@@ -519,6 +659,11 @@
     "description": "Datetime picker: accessible time input field label",
     "originalDefault": "Time"
   },
+  "nLymjB": {
+    "defaultMessage": "Use ctrl + scroll to zoom the map",
+    "description": "Gesturehandeling pc scroll message.",
+    "originalDefault": "Use ctrl + scroll to zoom the map"
+  },
   "nfRRDu": {
     "defaultMessage": "yyyy",
     "description": "Placeholder for year part of a date",
@@ -538,6 +683,11 @@
     "defaultMessage": "City",
     "description": "Label for addressNL city read only result",
     "originalDefault": "City"
+  },
+  "ovI+W7": {
+    "defaultMessage": "Use ⌘ + scroll to zoom the map",
+    "description": "Gesturehandeling mac scroll message.",
+    "originalDefault": "Use ⌘ + scroll to zoom the map"
   },
   "oxM3rx": {
     "defaultMessage": "Close modal",
@@ -599,6 +749,16 @@
     "description": "Validation error for phone number format.",
     "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
+  "sSmY1N": {
+    "defaultMessage": "Enter address, please",
+    "description": "The leaflet map's input fields placeholder message.",
+    "originalDefault": "Enter address, please"
+  },
+  "sYb+eZ": {
+    "defaultMessage": "Remove all shapes",
+    "description": "Edit toolbar clearAll tooltip.",
+    "originalDefault": "Remove all shapes"
+  },
   "syyEii": {
     "defaultMessage": "Date of birth",
     "description": "Partners component: label for partners dateOfBirth",
@@ -619,6 +779,11 @@
     "description": "Validation error describing the value is not in-between the minimum and maximum time.",
     "originalDefault": "Time must be in-between {minTime} and {maxTime}"
   },
+  "vfKvuS": {
+    "defaultMessage": "Click first point to finish shape",
+    "description": "Draw handler polygon tooltip end.",
+    "originalDefault": "Click first point to finish shape"
+  },
   "wiPGoP": {
     "defaultMessage": "Add partner details",
     "description": "Partners component: 'add partner' button label",
@@ -638,6 +803,11 @@
     "defaultMessage": "Verify",
     "description": "Email verification button label.",
     "originalDefault": "Verify"
+  },
+  "xh+7Vv": {
+    "defaultMessage": "Finish",
+    "description": "Draw toolbar finish button message.",
+    "originalDefault": "Finish"
   },
   "yKo62N": {
     "defaultMessage": "Year",
@@ -663,5 +833,15 @@
     "defaultMessage": "Invalid Dutch license plate",
     "description": "Validation error for license plate.",
     "originalDefault": "Invalid Dutch license plate"
+  },
+  "zpHAro": {
+    "defaultMessage": "Click to start drawing line",
+    "description": "Draw handler polyline tooltip start.",
+    "originalDefault": "Click to start drawing line"
+  },
+  "zvoXSU": {
+    "defaultMessage": "Nearest address: <address></address>",
+    "description": "Reverse geocoded address result display",
+    "originalDefault": "Nearest address: <address></address>"
   }
 }
