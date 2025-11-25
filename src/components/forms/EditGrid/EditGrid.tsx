@@ -17,7 +17,7 @@ import {useFieldConfig} from '@/hooks';
 import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridItem from './EditGridItem';
-import {ITEM_EXPANDED_MARKER} from './constants';
+import {ITEM_ADDED_MARKER, ITEM_EXPANDED_MARKER} from './constants';
 import type {MarkedEditGridItem} from './types';
 
 interface EditGridBaseProps<T> {
@@ -217,11 +217,12 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 <SecondaryActionButton
                   type="button"
                   onClick={() => {
-                    const newItem: MarkedEditGridItem<T> = setIn(
+                    let newItem: MarkedEditGridItem<T> = setIn(
                       emptyItem,
                       ITEM_EXPANDED_MARKER,
                       true
                     );
+                    newItem = setIn(newItem, ITEM_ADDED_MARKER, true);
                     arrayHelpers.push(newItem);
                   }}
                 >

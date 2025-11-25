@@ -13,7 +13,7 @@ import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
 import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
-import {ITEM_EXPANDED_MARKER} from './constants';
+import {ITEM_ADDED_MARKER, ITEM_EXPANDED_MARKER} from './constants';
 import type {MarkedEditGridItem} from './types';
 
 interface EditGridItemBaseProps {
@@ -125,6 +125,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const expandedPropertyPath = namePrefix
     ? `${namePrefix}.${ITEM_EXPANDED_MARKER}`
     : ITEM_EXPANDED_MARKER;
+  const newItemPropertyPath = namePrefix ? `${namePrefix}.${ITEM_ADDED_MARKER}` : ITEM_ADDED_MARKER;
   const isExpanded =
     !!(props.enableIsolation && props.canEdit && getIn(props.data, expandedPropertyPath)) ||
     // if there are errors but the state is not expanded, ensure that it is expanded so
@@ -168,9 +169,12 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             validateOnBlur={false}
             validationSchema={props.validate ? {validate: props.validate} : undefined}
             onSubmit={async values => {
-              // remove marker on submit
+              // remove markers on submit
               if (getIn(values, expandedPropertyPath)) {
                 values = setIn(values, expandedPropertyPath, undefined);
+              }
+              if (getIn(values, newItemPropertyPath)) {
+                values = setIn(values, newItemPropertyPath, undefined);
               }
               if (props.canEdit) props.onChange(values);
             }}
@@ -188,9 +192,20 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
               {isExpanded ? (
                 <IsolationModeButtons
                   saveLabel={props.saveLabel}
-                  canRemove={Boolean(canRemove)}
-                  onRemove={onRemove}
-                  removeLabel={removeLabel}
+                  onCancel={() => {
+                    const values = props.data;
+                    // if it's a newly added item, remove it again
+                    if (getIn(values, newItemPropertyPath)) {
+                      onRemove();
+                    } else {
+                      // otherwise, revert the changes
+                      const newValues = setIn(values, expandedPropertyPath, undefined);
+                      props.onChange(newValues);
+                    }
+                  }}
+                  // looks wrong, it isn't... these are badly named properties in the
+                  // edit grid component
+                  cancelLabel={removeLabel}
                   aria-describedby={heading ? headingId : undefined}
                 />
               ) : (

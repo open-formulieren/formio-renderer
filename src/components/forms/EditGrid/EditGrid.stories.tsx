@@ -165,6 +165,54 @@ export const AddingItemInIsolationMode: Story = {
   },
 };
 
+export const CancelButtonInIsolationMode: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => false,
+    emptyItem: {myField: 'new item'},
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    // check that we have the edit buttons
+    const editButtons = canvas.getAllByRole('button', {name: /Edit item \d/});
+    expect(editButtons).toHaveLength(2);
+
+    await step('Edit item 1 and cancel the edit', async () => {
+      await userEvent.click(editButtons[0]);
+
+      const cancelButton = await canvas.findByRole('button', {name: 'Cancel'});
+      expect(cancelButton).toBeVisible();
+
+      // make some edits that should be discarded
+      await userEvent.type(canvas.getByLabelText('My field (1)'), ' - edits to discard');
+      await userEvent.click(cancelButton);
+      expect(cancelButton).not.toBeVisible();
+      expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
+    });
+
+    await step('Cancel newly added item removes it', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+
+      const cancelButton = await canvas.findByRole('button', {name: 'Cancel'});
+      expect(cancelButton).toBeVisible();
+      await userEvent.click(cancelButton);
+
+      expect(cancelButton).not.toBeVisible();
+      expect(canvas.getAllByRole('listitem')).toHaveLength(2);
+    });
+  },
+};
+
 const ItemBody: React.FC = () => {
   const {values: formikValues} = useFormikContext();
 
@@ -203,8 +251,8 @@ export const NonEditableItemInIsolation: Story = {
     const canvas = within(canvasElement);
 
     // Expect that both items can retrieve their data from the formik context.
-    await expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
-    await expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
+    expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
+    expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
   },
 };
 

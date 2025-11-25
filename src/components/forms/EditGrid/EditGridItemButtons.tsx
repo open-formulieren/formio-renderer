@@ -52,10 +52,9 @@ const RemoveButton: React.FC<RemoveButtonProps> = ({
 export interface IsolationModeButtonsProps {
   // Saving
   saveLabel?: React.ReactNode;
-  // Removing
-  canRemove: boolean;
-  removeLabel?: React.ReactNode;
-  onRemove: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // Cancelling
+  cancelLabel?: React.ReactNode;
+  onCancel: (e: React.MouseEvent<HTMLButtonElement>) => void;
   // accessibility
   ['aria-describedby']: string | undefined;
 }
@@ -73,9 +72,8 @@ export interface IsolationModeButtonsProps {
  */
 const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
   saveLabel,
-  canRemove,
-  removeLabel,
-  onRemove,
+  cancelLabel,
+  onCancel,
   ['aria-describedby']: ariaDescribedBy,
 }) => {
   const {submitForm} = useFormikContext<unknown>();
@@ -89,9 +87,18 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
         }}
         aria-describedby={ariaDescribedBy}
       />
-      {canRemove && (
-        <RemoveButton label={removeLabel} onClick={onRemove} aria-describedby={ariaDescribedBy} />
-      )}
+
+      <PrimaryActionButton hint="danger" onClick={onCancel} aria-describedby={ariaDescribedBy}>
+        {cancelLabel || (
+          <FormattedMessage
+            // yes, this description looks off, but that's actually the formio.js meaning
+            // even though the actual behaviour is 'cancel' and not remove (unless it's
+            // a freshly added item)
+            description="Edit grid item default remove button label"
+            defaultMessage="Cancel"
+          />
+        )}
+      </PrimaryActionButton>
     </EditGridButtonGroup>
   );
 };
