@@ -35,6 +35,23 @@
     & + .openforms-editgrid__item {
       border-block-start: none;
     }
+
+    @include bem.modifier('invalid') {
+      // mimick utrecht-form-field styles, falling back to those design tokens
+      border-inline-start-style: solid;
+      border-inline-start-color: var(
+        --of-editgrid-item-invalid-border-inline-start-color,
+        var(--utrecht-form-field-invalid-border-inline-start-color)
+      );
+      border-inline-start-width: var(
+        --of-editgrid-item-invalid-border-inline-start-width,
+        var(--utrecht-form-field-invalid-border-inline-start-width, 0)
+      );
+      padding-inline-start: var(
+        --of-editgrid-item-invalid-padding-inline-start,
+        var(--utrecht-form-field-invalid-padding-inline-start, 0)
+      );
+    }
   }
 
   @include bem.element('item-heading') {
@@ -65,5 +82,14 @@
     // the alignment is also contextual, so we opt for an open-forms extension that
     // can be tweaked with proprietary design tokens.
     justify-content: var(--of-button-group-editgrid-justify-content, flex-end);
+  }
+}
+
+.openforms-theme {
+  .openforms-editgrid {
+    .openforms-editgrid__item.openforms-editgrid__item--invalid {
+      background-color: var(--utrecht-alert-error-background-color, var(--of-alert-error-bg));
+      white-space: preserve-breaks wrap;
+    }
   }
 }

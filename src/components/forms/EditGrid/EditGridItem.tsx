@@ -1,10 +1,12 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';
 import {Formik, getIn, setIn, setNestedObjectValues} from 'formik';
 import {useContext, useId} from 'react';
 import {useIntl} from 'react-intl';
 
 import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
 import {FieldConfigContext} from '@/context';
 import type {JSONObject, JSONValue} from '@/types';
@@ -34,6 +36,10 @@ interface EditGridItemBaseProps {
    * Callback invoked when deleting the item.
    */
   onRemove: () => void;
+  /**
+   * Any item-level validation error.
+   */
+  itemError?: string;
 }
 
 interface WithoutIsolation {
@@ -99,11 +105,14 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   canRemove,
   removeLabel,
   onRemove,
+  itemError,
   ...props
 }: EditGridItemProps<T>) {
   const intl = useIntl();
-  const headingId = useId();
   const {namePrefix} = useContext(FieldConfigContext);
+  const id = useId();
+  const headingId = `${id}-heading`;
+  const itemErrorId = `${id}-item-error`;
 
   const accessibleRemoveButtonLabel = intl.formatMessage(
     {
@@ -124,10 +133,16 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
     !!props.errors;
 
   return (
-    <li className="openforms-editgrid__item">
+    <li
+      className={clsx('openforms-editgrid__item', itemError && 'openforms-editgrid__item--invalid')}
+    >
       <Fieldset>
         {heading && (
-          <FieldsetLegend className="openforms-editgrid__item-heading" id={headingId}>
+          <FieldsetLegend
+            className="openforms-editgrid__item-heading"
+            id={headingId}
+            aria-describedby={itemError ? itemErrorId : undefined}
+          >
             {heading}
           </FieldsetLegend>
         )}
@@ -162,6 +177,13 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           >
             <>
               {props.getBody({expanded: isExpanded})}
+
+              {itemError ? (
+                // wrapper div to workaround `order` CSS from utrecht-form-field
+                <div>
+                  <ValidationErrors error={itemError} id={itemErrorId} />
+                </div>
+              ) : null}
 
               {isExpanded ? (
                 <IsolationModeButtons
