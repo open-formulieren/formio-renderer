@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {getIn, useFormikContext} from 'formik';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
@@ -9,6 +9,7 @@ import {withFormik} from '@/sb-decorators';
 import {validate} from '@/validationSchema';
 
 import EditGrid from '.';
+import {ITEM_EXPANDED_MARKER} from './constants';
 
 interface ItemData {
   myField: string;
@@ -77,15 +78,19 @@ export const WithIsolation: Story = {
   args: {
     enableIsolation: true,
     getItemHeading: () => 'Isolation mode editing',
-    getItemBody: (values, index, {expanded}) => (
-      <>
-        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
-      </>
-    ),
+    getItemBody: (values, index, {expanded}) => {
+      const valuesWithoutMarker = {...values};
+      delete valuesWithoutMarker[ITEM_EXPANDED_MARKER];
+      return (
+        <>
+          {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+          <span>
+            Raw data:
+            <code>{JSON.stringify(valuesWithoutMarker)}</code>
+          </span>
+        </>
+      );
+    },
     validate: async (_: number, values: ItemData) => {
       const schema = z.object({
         myField: z.string().refine(value => value !== 'Item 1', {message: 'Nooope'}),
@@ -252,6 +257,52 @@ export const ExternalErrorsInIsolationMode: Story = {
       expect(canvas.queryByText('Validation error 0.')).not.toBeInTheDocument();
       expect(canvas.getByText('Validation error 1.')).toBeVisible();
     });
+  },
+};
+
+// Mark (and validate!) incomplete items so that submission is blocked.
+export const MarkIncompleteItems: Story = {
+  args: {
+    name: 'items',
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <span>
+          Raw data:
+          <code>{JSON.stringify(values)}</code>
+        </span>
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+      initialValues: {
+        items: [{myField: 'Item 1'}, {myField: 'Item 2'}],
+      },
+      renderSubmitButton: true,
+      zodSchema: z.object({
+        items: z.array(
+          z.custom(item => {
+            const isExpanded: boolean | undefined = item[ITEM_EXPANDED_MARKER];
+            return !isExpanded;
+          }, 'Item is not complete!')
+        ),
+      }),
+    },
+  },
+
+  play: async ({canvasElement, context}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Item is not complete!')).toBeVisible();
+    expect(context.parameters.formik.onSubmit).not.toHaveBeenCalled();
   },
 };
 

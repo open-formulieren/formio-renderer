@@ -2,14 +2,18 @@ import type {
   AddressData,
   ColumnsComponentSchema,
   ContentComponentSchema,
+  EditGridComponentSchema,
   FieldsetComponentSchema,
 } from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, within} from 'storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
+import type {FormioFormProps} from '@/components/FormioForm';
 import {getRegistryEntry} from '@/registry';
+import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik} from '@/sb-decorators';
+import type {JSONObject} from '@/types';
 
 import {FormioEditGrid} from './';
 
@@ -628,6 +632,67 @@ export const WithNestedRadio: Story = {
 
       expect(secondRadioB).toBeChecked();
       expect(firstRadioA).toBeChecked();
+    });
+  },
+};
+
+interface ValidationStoryArgs {
+  componentDefinition: EditGridComponentSchema;
+  onSubmit: FormioFormProps['onSubmit'];
+  values: JSONObject;
+}
+
+type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+const BaseValidationStory: ValidationStory = {
+  render: renderComponentInForm,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValidateNoIncompleteItems: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    } satisfies EditGridComponentSchema,
+    values: {
+      editgrid: [{my: {textfield: 'Item 1 textfield'}}, {my: {textfield: 'Item 2 textfield'}}],
+    },
+  },
+  play: async ({canvasElement, step, context}) => {
+    const canvas = within(canvasElement);
+
+    await step('Submit attempt with item 1 expanded', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(await canvas.findByText('Save all rows before proceeding.')).toBeVisible();
+      expect(context.args.onSubmit).not.toHaveBeenCalled();
+    });
+
+    await step('Saving the row allows submit', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(context.args.onSubmit).toHaveBeenCalledWith({
+        editgrid: [{my: {textfield: 'Item 1 textfield'}}, {my: {textfield: 'Item 2 textfield'}}],
+      });
     });
   },
 };
