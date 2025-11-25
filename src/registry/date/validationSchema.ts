@@ -24,31 +24,26 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   const maxDate = datePicker?.maxDate;
 
   let dateSchema = z.coerce.date();
-
   if (minDate) {
     dateSchema = dateSchema.min(parseISO(minDate), {message: errors?.minDate});
   }
-
   if (maxDate) {
     dateSchema = dateSchema.max(parseISO(maxDate), {message: errors?.maxDate});
   }
 
-  let stringSchema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
-
-  stringSchema = stringSchema.refine(
-    value => {
-      if (!value && !required) return true;
-
-      const parsed = parseISO(value);
-      return isValid(parsed);
-    },
-    {message: errors?.invalid_date || intl.formatMessage(INVALID_INPUT_MESSAGE)}
-  );
-
-  let schema: z.ZodFirstPartySchemaTypes = stringSchema.pipe(dateSchema);
+  let schema: z.ZodFirstPartySchemaTypes = z
+    .string({required_error: errors?.required})
+    .refine(
+      value => {
+        const parsed = parseISO(value);
+        return isValid(parsed);
+      },
+      {message: errors?.invalid_date || intl.formatMessage(INVALID_INPUT_MESSAGE)}
+    )
+    .pipe(dateSchema);
 
   if (!required) {
-    schema = z.union([schema, z.literal(''), z.undefined()]);
+    schema = schema.optional().or(z.literal(''));
   }
 
   if (plugins.length) {

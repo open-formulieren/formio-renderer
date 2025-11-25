@@ -66,22 +66,19 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
     });
   }
 
-  let stringSchema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
-
-  stringSchema = stringSchema.refine(
-    value => {
-      if (!value && !required) return true;
-
-      const parsed = parseISO(value);
-      return isValid(parsed);
-    },
-    {message: errors?.invalid_datetime || intl.formatMessage(DATETIME_INVALID_MESSAGE)}
-  );
-
-  let schema: z.ZodFirstPartySchemaTypes = stringSchema.pipe(dateSchema);
+  let schema: z.ZodFirstPartySchemaTypes = z
+    .string({required_error: errors?.required})
+    .refine(
+      value => {
+        const parsed = parseISO(value);
+        return isValid(parsed);
+      },
+      {message: errors?.invalid_datetime || intl.formatMessage(DATETIME_INVALID_MESSAGE)}
+    )
+    .pipe(dateSchema);
 
   if (!required) {
-    schema = z.union([schema, z.literal('')]).optional();
+    schema = schema.optional().or(z.literal(''));
   }
 
   if (plugins.length) {
