@@ -153,3 +153,9 @@ export const withGeolocationMocking: Decorator = (Story, {parameters}) => {
 
   return <Story />;
 };
+
+export const LOCATION_PERMISSIONS = {granted: 'granted', prompt: 'prompt', denied: 'denied'};
+type LocationPermissionState = (typeof LOCATION_PERMISSIONS)[keyof typeof LOCATION_PERMISSIONS];
+
+export const getLocationPermission = async (): Promise<LocationPermissionState> =>
+  (await navigator.permissions.query({name: 'geolocation'})).state;

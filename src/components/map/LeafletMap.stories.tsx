@@ -7,7 +7,12 @@ import {expect, fn, spyOn, userEvent, waitFor, within} from 'storybook/test';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider} from '@/sb-decorators';
-import MockProvider, {withGeolocationMocking, withMapLayout} from '@/tests/map';
+import MockProvider, {
+  LOCATION_PERMISSIONS,
+  getLocationPermission,
+  withGeolocationMocking,
+  withMapLayout,
+} from '@/tests/map';
 
 import LeafletMap from './LeafletMap';
 import type {LeafletMapProps} from './LeafletMap';
@@ -94,6 +99,13 @@ export const Point: Story = {
   },
 };
 
+const getLocationButtonLabel = async (): Promise<string> => {
+  const locationPermission = await getLocationPermission();
+  return locationPermission === LOCATION_PERMISSIONS.denied
+    ? 'Current location cannot be accessed'
+    : 'Current location';
+};
+
 export const SetPoint: Story = {
   args: {
     onGeoJsonGeometrySet: fn(),
@@ -113,7 +125,10 @@ export const SetPoint: Story = {
     });
 
     // There is a "Current location" button
-    const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
+    const locationButtonLabel = await getLocationButtonLabel();
+    const currentLocationButton = await within(map).findByRole('link', {
+      name: locationButtonLabel,
+    });
     expect(currentLocationButton).toBeInTheDocument();
 
     await step('Draw a marker', async () => {
@@ -167,7 +182,10 @@ export const SetPointWithAddressLookup: Story = {
     });
 
     // There is a "Current location" button
-    const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
+    const locationButtonLabel = await getLocationButtonLabel();
+    const currentLocationButton = await within(map).findByRole('link', {
+      name: locationButtonLabel,
+    });
     expect(currentLocationButton).toBeInTheDocument();
 
     await step('Draw a marker', async () => {
@@ -206,7 +224,8 @@ export const WithoutInteractions: Story = {
       expect(map).toBeVisible();
     });
 
-    const currentLocationButton = canvas.queryByTitle('Current location');
+    const locationButtonLabel = await getLocationButtonLabel();
+    const currentLocationButton = canvas.queryByTitle(locationButtonLabel);
     expect(currentLocationButton).not.toBeInTheDocument();
 
     const deleteButton = canvas.queryByTitle('Remove shapes');
@@ -232,7 +251,10 @@ export const SingleInteractionMode: Story = {
     });
 
     // There is a "Current location" button
-    const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
+    const locationButtonLabel = await getLocationButtonLabel();
+    const currentLocationButton = await within(map).findByRole('link', {
+      name: locationButtonLabel,
+    });
     expect(currentLocationButton).toBeInTheDocument();
 
     const deleteButton = canvas.queryByTitle('No shapes to remove');
@@ -258,7 +280,10 @@ export const AllInteractions: Story = {
     });
 
     // There is a "Current location" button
-    const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
+    const locationButtonLabel = await getLocationButtonLabel();
+    const currentLocationButton = await within(map).findByRole('link', {
+      name: locationButtonLabel,
+    });
     expect(currentLocationButton).toBeInTheDocument();
 
     const markerButton = await within(map).findByRole('link', {name: 'Marker'});
@@ -282,7 +307,7 @@ export const WithCurrentLocationGranted: Story = {
   },
   parameters: {
     geolocation: {
-      permission: 'granted',
+      permission: LOCATION_PERMISSIONS.granted,
       latitude: 52.3857386,
       longitude: 4.8417475,
       updatePermission: () => {}, // Is set by withGeolocationMocking
@@ -325,7 +350,7 @@ export const WithCurrentLocationDenied: Story = {
   },
   parameters: {
     geolocation: {
-      permission: 'denied',
+      permission: LOCATION_PERMISSIONS.denied,
     },
   },
   decorators: [withMapLayout, withGeolocationMocking],
@@ -367,7 +392,7 @@ export const WithCurrentLocationManuallyTogglePermission: Story = {
   },
   parameters: {
     geolocation: {
-      permission: 'prompt',
+      permission: LOCATION_PERMISSIONS.prompt,
     },
   },
   decorators: [withMapLayout, withGeolocationMocking],
