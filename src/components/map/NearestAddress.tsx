@@ -44,9 +44,7 @@ const NearestAddress: React.FC<NearestAddressProps> = ({coordinates}) => {
           defaultMessage="Nearest address: <address></address>"
           values={{
             address: () => (
-              <address className="openforms-map-address openforms-map-address__description">
-                {addressLabel}
-              </address>
+              <address className="openforms-map-address__description">{addressLabel}</address>
             ),
           }}
         />
