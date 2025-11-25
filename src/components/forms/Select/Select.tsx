@@ -146,6 +146,8 @@ const Select: React.FC<SelectProps> = ({
         isRequired={isRequired}
         isDisabled={isDisabled}
         formikValue={wrapperValue}
+        // Classname is used by storybook helper functions
+        className="openforms-rs"
         components={{
           ...(optionComponent ? {Option: optionComponent} : undefined),
         }}
