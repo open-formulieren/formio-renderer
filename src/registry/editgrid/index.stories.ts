@@ -696,3 +696,40 @@ export const ValidateNoIncompleteItems: ValidationStory = {
     });
   },
 };
+
+export const ValidateRequired: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      validate: {
+        required: true,
+      },
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    } satisfies EditGridComponentSchema,
+  },
+  play: async ({canvasElement, context, step}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Array must contain at least 1 element(s)')).toBeVisible();
+    expect(context.args.onSubmit).not.toHaveBeenCalled();
+
+    await step('Verify item error display', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+    });
+  },
+};

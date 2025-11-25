@@ -2,15 +2,16 @@ import {ButtonGroup} from '@utrecht/button-group-react';
 import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
-import {useMemo} from 'react';
+import {useId, useMemo} from 'react';
 import {FormattedMessage} from 'react-intl';
 import type {ValidationError} from 'zod-formik-adapter';
 
 import {SecondaryActionButton} from '@/components/Button';
 import FieldConfigProvider from '@/components/FieldConfigProvider';
 import HelpText from '@/components/forms/HelpText';
-import Label from '@/components/forms/Label';
+import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
+import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
 import {useFieldConfig} from '@/hooks';
 import type {JSONObject, JSONValue} from '@/types';
@@ -131,18 +132,37 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   name = useFieldConfig(name);
   const {getFieldProps, errors, getFieldHelpers} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
+  const id = useId();
+  const labelId = label ? `${id}-label` : undefined;
+
+  const error: string | (FormikErrors<T> | undefined)[] = getIn(errors, name);
+  const isStringError = typeof error === 'string';
+  const hasFieldLevelError = isStringError && !!error;
+  const errorMessageId = hasFieldLevelError ? `${id}-error-message` : undefined;
+
   return (
-    <FormField type="editgrid" className="utrecht-form-field--openforms">
+    <FormField
+      type="editgrid"
+      className="utrecht-form-field--openforms"
+      invalid={hasFieldLevelError}
+    >
       {label && (
-        <Label isRequired={isRequired} tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}>
-          {label}
-        </Label>
+        <>
+          <LabelContent isRequired={isRequired} noLabelTag id={labelId}>
+            {label}
+          </LabelContent>
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </>
       )}
       <FieldArray name={name} validateOnChange={false}>
         {arrayHelpers => (
           <div className="openforms-editgrid">
             {/* Render each item wrapped in an EditGridItem */}
-            <ol className="openforms-editgrid__container">
+            <ol
+              className="openforms-editgrid__container"
+              aria-labelledby={labelId}
+              aria-describedby={errorMessageId}
+            >
               {formikItems?.map((values, index) => {
                 if (!props.enableIsolation) {
                   return (
@@ -167,7 +187,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     name={name}
                     index={index}
                     values={values}
-                    errors={getIn(errors, `${name}.${index}`)}
+                    errors={hasFieldLevelError ? undefined : getIn(errors, `${name}.${index}`)}
                     getItemHeading={getItemHeading}
                     getItemBody={props.getItemBody}
                     canEditItem={props.canEditItem}
@@ -178,8 +198,10 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                       // is invoked, it implies that the schema validation passed. Any
                       // external (backend) errors will require re-validation of the whole
                       // form by the backend, so we can safely clear those backend errors.
-                      const {setError} = getFieldHelpers(`${name}.${index}`);
-                      setError(undefined);
+                      if (!hasFieldLevelError) {
+                        const {setError} = getFieldHelpers(`${name}.${index}`);
+                        setError(undefined);
+                      }
                     }}
                     canRemoveItem={canRemoveItem}
                     removeItemLabel={removeItemLabel}
@@ -217,6 +239,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
         )}
       </FieldArray>
       <HelpText>{description}</HelpText>
+      {isStringError && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );
 }
@@ -256,8 +279,13 @@ type IsolatedEditGridItemProps<T> = {
   values: T;
   /**
    * (Initial) errors for the item.
+   *
+   * There may be:
+   * - no errors at all
+   * - a string error, which is an error for the item as a whole
+   * - a nested object of errors, with errors for the nested fields of the item
    */
-  errors: FormikErrors<T> | undefined;
+  errors: FormikErrors<T> | string | undefined;
   onChange: (newValue: T) => void;
   onRemove: () => void;
 } & Pick<EditGridProps<T>, 'getItemHeading' | 'canRemoveItem' | 'removeItemLabel'> &
@@ -278,7 +306,6 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   removeItemLabel = '',
   validate: validateCallback,
 }: IsolatedEditGridItemProps<T>) {
-  const {getFieldMeta} = useFormikContext();
   const isEditable = canEditItem?.(values, index) ?? true;
 
   // complex case - if isolation needs to be enabled, set up a proper
@@ -295,11 +322,8 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
   // don't pass down the entire error state, but extract only the errors
   // for this particular item. it's important that 'undefined' is returned
   // if there are no 'outside' errors.
-  const prefixedErrors: FormikErrors<WrappedItemData<T>> | undefined = errors
-    ? setIn({}, namePrefix, errors)
-    : undefined;
-  // errors are stored under the dotted path, set by the validation schema.
-  const {error: itemError} = getFieldMeta(`${name}.${index}`);
+  const prefixedErrors: FormikErrors<WrappedItemData<T>> | undefined =
+    errors && typeof errors === 'object' ? setIn({}, namePrefix, errors) : undefined;
 
   let validate: ((values: WrappedItemData<T>) => Promise<void>) | undefined = undefined;
   if (validateCallback) {
@@ -333,7 +357,7 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
         canEdit={isEditable}
         validate={validate}
         errors={prefixedErrors}
-        itemError={typeof itemError === 'string' ? itemError : undefined}
+        itemError={typeof errors === 'string' ? errors : undefined}
         saveLabel={saveItemLabel}
         onChange={(newValue: WrappedItemData<T>) => {
           const itemValue: T = getIn(newValue, namePrefix);
