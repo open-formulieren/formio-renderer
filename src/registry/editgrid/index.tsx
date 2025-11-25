@@ -18,6 +18,7 @@ import {processVisibility} from '@/visibility';
 import ItemPreview from './ItemPreview';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
+import getValidationSchema from './validationSchema';
 import applyVisibility from './visibility';
 
 // set up a context to track the parent values when dealing with nested edit grids
@@ -272,6 +273,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
 const EditGridComponent: RegistryEntry<EditGridComponentSchema> = {
   formField: FormioEditGrid,
   getInitialValues,
+  getValidationSchema,
   applyVisibility,
   isEmpty,
 };
