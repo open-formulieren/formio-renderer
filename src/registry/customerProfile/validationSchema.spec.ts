@@ -86,6 +86,10 @@ describe('plain customer profile component validation', () => {
         type: 'email',
         address: 'second@mail.com',
       },
+      {
+        type: 'email',
+        address: 'third@mail.com',
+      },
     ]);
 
     expect(success).toBe(false);

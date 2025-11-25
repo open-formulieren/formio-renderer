@@ -4,8 +4,9 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
-import {FormioCustomerProfile} from '@/registry/customerProfile/index';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
+
+import {FormioCustomerProfile} from './index';
 
 export default {
   title: 'Component registry / special / profile / validation',

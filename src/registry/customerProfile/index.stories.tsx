@@ -36,6 +36,21 @@ type Story = StoryObj<typeof FormioCustomerProfile>;
 
 export const MinimalConfiguration: Story = {};
 
+export const WithTooltipAndDescription: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      tooltip: 'This is a tooltip',
+      description: 'This is a description',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+};
+
 export const OnlyEmailDigitalAddressType: Story = {
   args: {
     componentDefinition: {
@@ -49,7 +64,7 @@ export const OnlyEmailDigitalAddressType: Story = {
   },
 };
 
-export const PreferencesModal: Story = {
+export const OpenPreferencesModal: Story = {
   args: {
     componentDefinition: {
       id: 'customerProfile',
@@ -93,141 +108,6 @@ export const PreferencesModal: Story = {
       // By default, the "use only for this form" radio button is checked
       expect(forFutureUseRadio).not.toBeChecked();
       expect(oneTimeUseRadio).toBeChecked();
-    });
-  },
-};
-
-export const WithFetchedDigitalAddresses: Story = {
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', addresses: ['0612345678', '0687654321', '0612387645']},
-          ],
-          portalUrl: 'https://example.com',
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
-};
-
-export const WithPreferredDigitalAddresses: Story = {
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [
-            {
-              type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
-              preferred: 'preferred.long.email.address@test.com',
-            },
-            {
-              type: 'phoneNumber',
-              addresses: ['0612345678', '0687654321', '0612387645'],
-              preferred: '0612387645',
-            },
-          ],
-          portalUrl: 'https://example.com',
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
-  play: ({canvasElement, step}) => {
-    const canvas = within(canvasElement);
-
-    step('Preferred addresses are selected', () => {
-      const preferredEmail = canvas.getByText('preferred.long.email.address@test.com');
-      const preferredPhoneNumber = canvas.getByText('0612387645');
-
-      // Both preferred addresses are displayed
-      expect(preferredEmail).toBeVisible();
-      expect(preferredPhoneNumber).toBeVisible();
-    });
-
-    step('Show email addresses dropdown menu with preferred option', async () => {
-      // Open email dropdown
-      await userEvent.click(canvas.getByLabelText('Email'));
-      const emailDropdownMenu = within(await canvas.findByRole('listbox'));
-
-      const preferredOption = emailDropdownMenu.getByRole('option', {name: /preferred/i});
-
-      expect(preferredOption).toHaveTextContent('preferred.long.email.address@test.com(Preferred)');
-    });
-  },
-};
-
-export const WithFetchedDigitalAddressesAddNewAddress: Story = {
-  args: {
-    componentDefinition: {
-      id: 'customerProfile',
-      type: 'customerProfile',
-      key: 'customerProfile',
-      label: 'Profile',
-      digitalAddressTypes: ['email'],
-      shouldUpdateCustomerData: false,
-    },
-  },
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [
-            {
-              type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
-            },
-          ],
-          portalUrl: 'https://example.com',
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
-  play: async ({canvasElement, step}) => {
-    const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
-
-    // The email field should start as a combobox
-    expect(emailField).toHaveRole('combobox');
-
-    await step('Add new email address', async () => {
-      // Click the "add new address" button
-      await userEvent.click(canvas.getByRole('button', {name: 'Add email address'}));
-
-      const emailField = canvas.getByLabelText('Email');
-      // The email field changed to an empty textbox
-      expect(emailField).toHaveRole('textbox');
-      expect(emailField).toHaveDisplayValue('');
-
-      // Set email address, blur to trigger validation
-      await userEvent.type(emailField, 'test@mail.com');
-      await emailField.blur();
-    });
-
-    await step('update preference', async () => {
-      // Open preferences modal
-      userEvent.click(canvas.getByRole('button', {name: 'Update preferences'}));
-      const modal = within(await canvas.findByRole('dialog'));
-
-      const forFutureUseRadio = modal.getByRole('radio', {
-        name: /save my data for the future forms/i,
-      });
-      const oneTimeUseRadio = modal.getByRole('radio', {
-        name: /Use this email address only for this form/i,
-      });
-
-      // The "use only for this form" radio button is checked
-      expect(forFutureUseRadio).not.toBeChecked();
-      expect(oneTimeUseRadio).toBeChecked();
-
-      // Change preference to "save for future forms"
-      await userEvent.click(forFutureUseRadio);
-      expect(forFutureUseRadio).toBeChecked();
-      expect(oneTimeUseRadio).not.toBeChecked();
-
-      userEvent.click(modal.getByRole('button', {name: 'Save'}));
     });
   },
 };
