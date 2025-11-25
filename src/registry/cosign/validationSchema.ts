@@ -10,13 +10,16 @@ const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = (
   const {key, validate = {}, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
-
-  if (required) {
-    schema = schema.min(1).email();
-  } else {
-    schema = z.string().email().optional().or(z.literal(''));
+  let baseSchema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required}).email();
+  if (!required) {
+    baseSchema = z.optional(baseSchema);
   }
+
+  // normalize empty-ish values like `null`, `undefined`, `''`` to undefined
+  let schema: z.ZodFirstPartySchemaTypes = z.preprocess(
+    val => (val === '' ? undefined : val),
+    baseSchema
+  );
 
   if (plugins.length) {
     schema = schema.superRefine(async (val, ctx) => {
