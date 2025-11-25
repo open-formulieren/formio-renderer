@@ -915,6 +915,12 @@
       "value": "Map component search button"
     }
   ],
+  "XAQW/X": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
   "Y3jHZm": [
     {
       "type": 0,
@@ -1259,6 +1265,12 @@
     {
       "type": 0,
       "value": "Use ctrl + scroll to zoom the map"
+    }
+  ],
+  "nTNZBL": [
+    {
+      "type": 0,
+      "value": "Save all rows before proceeding."
     }
   ],
   "nfRRDu": [

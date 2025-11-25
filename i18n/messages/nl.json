@@ -511,6 +511,11 @@
     "description": "The leaflet map's search button areaLabel text.",
     "originalDefault": "Map component search button"
   },
+  "XAQW/X": {
+    "defaultMessage": "Annuleren",
+    "description": "Edit grid item default remove button label",
+    "originalDefault": "Cancel"
+  },
   "Y3jHZm": {
     "defaultMessage": "Verwijder laatste punt",
     "description": "Draw toolbar undo button message.",
@@ -685,6 +690,11 @@
     "defaultMessage": "Gebruik CTRL + scroll om te zoomen in de kaart",
     "description": "Gesturehandeling pc scroll message.",
     "originalDefault": "Use ctrl + scroll to zoom the map"
+  },
+  "nTNZBL": {
+    "defaultMessage": "Bewaar alle rijen voordat je doorgaat.",
+    "description": "Validation error when the edit grid item is still in 'expanded' state.",
+    "originalDefault": "Save all rows before proceeding."
   },
   "nfRRDu": {
     "defaultMessage": "jjjj",

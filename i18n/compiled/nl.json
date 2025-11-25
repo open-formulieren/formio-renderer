@@ -875,6 +875,12 @@
       "value": "Zoeken"
     }
   ],
+  "XAQW/X": [
+    {
+      "type": 0,
+      "value": "Annuleren"
+    }
+  ],
   "Y3jHZm": [
     {
       "type": 0,
@@ -1223,6 +1229,12 @@
     {
       "type": 0,
       "value": "Gebruik CTRL + scroll om te zoomen in de kaart"
+    }
+  ],
+  "nTNZBL": [
+    {
+      "type": 0,
+      "value": "Bewaar alle rijen voordat je doorgaat."
     }
   ],
   "nfRRDu": [

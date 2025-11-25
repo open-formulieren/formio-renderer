@@ -504,6 +504,11 @@
     "description": "The leaflet map's search button areaLabel text.",
     "originalDefault": "Map component search button"
   },
+  "XAQW/X": {
+    "defaultMessage": "Cancel",
+    "description": "Edit grid item default remove button label",
+    "originalDefault": "Cancel"
+  },
   "Y3jHZm": {
     "defaultMessage": "Remove last point",
     "description": "Draw toolbar undo button message.",
@@ -678,6 +683,11 @@
     "defaultMessage": "Use ctrl + scroll to zoom the map",
     "description": "Gesturehandeling pc scroll message.",
     "originalDefault": "Use ctrl + scroll to zoom the map"
+  },
+  "nTNZBL": {
+    "defaultMessage": "Save all rows before proceeding.",
+    "description": "Validation error when the edit grid item is still in 'expanded' state.",
+    "originalDefault": "Save all rows before proceeding."
   },
   "nfRRDu": {
     "defaultMessage": "yyyy",
