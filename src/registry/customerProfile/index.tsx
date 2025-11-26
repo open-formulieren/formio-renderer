@@ -17,6 +17,7 @@ import {useFieldConfig} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
 import './CustomerProfile.scss';
+import ValueDisplay from './ValueDisplay';
 import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
 import isEmpty from './empty';
 import {useDigitalAddresses} from './hooks';
@@ -103,6 +104,7 @@ const CustomerProfileComponent: RegistryEntry<CustomerProfileComponentSchema> = 
   formField: FormioCustomerProfile,
   getValidationSchema,
   isEmpty,
+  valueDisplay: ValueDisplay,
   getInitialValues,
 };
 

@@ -284,6 +284,14 @@ export const DisplayComponentValues: Story = {
           label: 'Children',
           enableSelection: false,
         },
+        {
+          id: 'customerProfile',
+          type: 'customerProfile',
+          key: 'customerProfile',
+          label: 'Profile',
+          shouldUpdateCustomerData: false,
+          digitalAddressTypes: ['email', 'phoneNumber'],
+        },
       ],
     },
   },
@@ -317,6 +325,18 @@ export const DisplayComponentValues: Story = {
             children: [
               {bsn: '111222333', firstNames: 'John Doe', dateOfBirth: '1980-01-01'},
               {bsn: '406138072', firstNames: 'Billy', dateOfBirth: '1996-11-7'},
+            ],
+            customerProfile: [
+              {
+                type: 'email',
+                address: 'test@mail.com',
+                preferenceUpdate: 'useOnlyOnce',
+              },
+              {
+                type: 'phoneNumber',
+                address: '0612345678',
+                preferenceUpdate: 'isNewPreferred',
+              },
             ],
           },
         ],

@@ -1,9 +1,11 @@
+import type {CustomerProfileComponentSchema, CustomerProfileData} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, within} from 'storybook/test';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
+import ValueDisplay from './ValueDisplay';
 import {FormioCustomerProfile} from './index';
 
 export default {
@@ -158,5 +160,135 @@ export const WithDigitalAddressValidationError: Story = {
     expect(
       await canvas.findByText('Generic error message from digital address validation.')
     ).toBeVisible();
+  },
+};
+
+interface ValueDisplayStoryArgs {
+  componentDefinition: CustomerProfileComponentSchema;
+  value: CustomerProfileData;
+}
+
+type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
+
+const BaseValueDisplayStory: ValueDisplayStory = {
+  render: args => <ValueDisplay {...args} />,
+  args: {
+    componentDefinition: {
+      type: 'customerProfile',
+      id: 'customerProfile',
+      key: 'customerProfile',
+      label: 'customerProfile',
+      shouldUpdateCustomerData: false,
+      digitalAddressTypes: ['email', 'phoneNumber'],
+    },
+  },
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const SingleValueDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: [
+      {
+        type: 'email',
+        address: 'test@mail.com',
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Email label and value are shown
+    const term = canvas.getByRole('term');
+    const definition = canvas.getByRole('definition');
+
+    expect(term).toBeVisible();
+    expect(definition).toBeVisible();
+
+    // Unfortunately, we cannot link the terms and definitions to each other.
+    // So we have to relay on the correctness of the order.
+    expect(term).toHaveTextContent('Email');
+    expect(definition).toHaveTextContent('test@mail.com');
+  },
+};
+
+export const MultipleValuesDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: [
+      {
+        type: 'email',
+        address: 'test@mail.com',
+      },
+      {
+        type: 'phoneNumber',
+        address: '0612345678',
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // All digital addresses are shown
+    const terms = canvas.getAllByRole('term');
+    const definitions = canvas.getAllByRole('definition');
+
+    expect(terms).toHaveLength(2);
+    expect(definitions).toHaveLength(2);
+
+    expect(terms[0]).toHaveTextContent('Email');
+    expect(definitions[0]).toHaveTextContent('test@mail.com');
+
+    expect(terms[1]).toHaveTextContent('Phone number');
+    expect(definitions[1]).toHaveTextContent('0612345678');
+  },
+};
+
+export const NoValuesDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: undefined,
+  },
+};
+
+export const WithPreferencesValuesDisplay: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    value: [
+      {
+        type: 'email',
+        address: 'test@mail.com',
+        preferenceUpdate: 'useOnlyOnce',
+      },
+      {
+        type: 'phoneNumber',
+        address: '0612345678',
+        preferenceUpdate: 'isNewPreferred',
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // All digital addresses are shown
+    const terms = canvas.getAllByRole('term');
+    const definitions = canvas.getAllByRole('definition');
+
+    expect(terms).toHaveLength(2);
+    expect(definitions).toHaveLength(2);
+
+    // Because "use only once" doesn't affect the user's profile data,
+    // we don't explicitly show that this email address is used only once.
+    expect(terms[0]).toHaveTextContent('Email');
+    expect(definitions[0]).toHaveTextContent('test@mail.com');
+
+    // Marking the phone number as preferred will change the user's profile data,
+    // so we highlight it here.
+    expect(terms[1]).toHaveTextContent('Phone number');
+    expect(definitions[1]).toHaveTextContent('0612345678 (Will become preferred phone number)');
   },
 };
