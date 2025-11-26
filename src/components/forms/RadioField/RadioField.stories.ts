@@ -143,7 +143,10 @@ export const ValidateOnBlur: Story = {
     expect(input).toHaveFocus();
     expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
-    input.blur();
+    // simulate the user clicking anywhere else on the page, which removes focus from
+    // the input
+    await userEvent.click(canvasElement);
+    expect(input).not.toHaveFocus();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
   },

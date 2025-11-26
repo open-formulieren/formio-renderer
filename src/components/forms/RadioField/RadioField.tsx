@@ -1,7 +1,7 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
-import {useField} from 'formik';
-import {useId} from 'react';
+import {useField, useFormikContext} from 'formik';
+import {useEffect, useId, useRef} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
@@ -69,8 +69,77 @@ const RadioField: React.FC<RadioFieldProps> = ({
   tooltip,
 }) => {
   name = useFieldConfig(name);
-  const [, {error = '', touched}] = useField({name, type: 'radio'});
+  const {validateField, getFieldProps} = useFormikContext();
+  const [, {error = '', touched}] = useField<string>({name, type: 'radio'});
   const id = useId();
+
+  const fieldsetRef = useRef<HTMLDivElement | null>(null);
+  const lastValidatedValueRef = useRef<string>('');
+
+  // track the focus state of the fieldset and its radio children - when the field(set)
+  // as a whole loses focus we can validate the field 'on blur'. Validating on blur of
+  // an individual radio input results in errors being displayed while the user is
+  // navigating with the keyboard.
+  // See also: the selectboxes implementation, which is a more complex variant but uses
+  // the same pattern.
+  useEffect(() => {
+    const container = fieldsetRef.current;
+    if (!container) return;
+
+    // extract the latest value without depending on the value state, as that would
+    // re-run the useEffect hook due to a changed dependency.
+    const {value} = getFieldProps<string>(name);
+
+    // Run validation only if the value has changed since the last validate call.
+    const maybeRunValidation = () => {
+      const hasChanged = value !== lastValidatedValueRef.current;
+      if (!hasChanged) return;
+      // moving on to other components without even touching this field should not
+      // trigger validation - other components only activate `onBlur` too, which implies
+      // 'touched'
+      if (!touched) return;
+
+      validateField(name);
+      lastValidatedValueRef.current = value;
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      const clickedElement = event.target;
+      // ignore clicking inputs or labels, as they result in focus events which we
+      // already listen to.
+      // we deliberately also accept clicks on elements inside the container, since
+      // clicking any element inside the container also results in focus loss.
+      if (clickedElement instanceof HTMLLabelElement || clickedElement instanceof HTMLInputElement)
+        return;
+      // any other element (anywhere) being clicked triggers validation, as focus loss
+      // is implied
+      maybeRunValidation();
+    };
+
+    /**
+     * Detect focus events on anything other than elements inside the fieldset container.
+     *
+     * Receiving this event means that some node got focus - if it's outside of our
+     * container we can trigger validation because we're 100% certain that the container
+     * does not have focus.
+     */
+    const handleFocusIn = (event: FocusEvent) => {
+      const focusedElement = event.target;
+      if (container.contains(focusedElement as Node)) return;
+      maybeRunValidation();
+    };
+
+    // we subscribe to global events because we need to know whether the focus shifted
+    // away from our component
+    document.addEventListener('click', handleClick);
+    document.addEventListener('focusin', handleFocusIn);
+    // no focusout event support to detect focus shift because of programmatic blurs,
+    // as browser support is only partial and it's quite a theoretical edge case
+    return () => {
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, [getFieldProps, validateField, name, touched]);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
@@ -78,6 +147,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
 
   return (
     <Fieldset
+      ref={fieldsetRef}
       className="utrecht-form-fieldset--openforms"
       disabled={isDisabled}
       invalid={invalid}
