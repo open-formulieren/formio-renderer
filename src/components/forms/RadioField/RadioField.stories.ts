@@ -143,8 +143,41 @@ export const ValidateOnBlur: Story = {
     expect(input).toHaveFocus();
     expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
-    input.blur();
+    // simulate the user clicking anywhere else on the page, which removes focus from
+    // the input
+    await userEvent.click(canvasElement);
+    expect(input).not.toHaveFocus();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+  },
+};
+
+// don't display validation errors if there's still focus on a radio input
+export const NoErrorWhileFocus: Story = {
+  args: {
+    name: 'radio',
+    label: 'No error displayed while keyboard navigation happens',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        radio: '',
+      },
+      zodSchema: z.object({
+        radio: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const firstRadio = await canvas.findByLabelText('Sherlock');
+    firstRadio.focus();
+    await userEvent.keyboard('{ArrowDown}');
+
+    const secondRadio = canvas.getByLabelText('Watson');
+    expect(secondRadio).toBeChecked();
+    expect(secondRadio).toHaveFocus();
   },
 };

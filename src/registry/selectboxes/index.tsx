@@ -98,7 +98,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
       document.removeEventListener('click', handleClick);
       document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [fieldsetRef, lastValidatedValueRef, getFieldProps, validateField, key, touched]);
+  }, [getFieldProps, validateField, key, touched]);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;

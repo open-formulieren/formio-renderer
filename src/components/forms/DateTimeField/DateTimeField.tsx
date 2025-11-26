@@ -226,7 +226,10 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
             const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
             await setValue(newValue);
             onBlur(event);
-            await validateField(name);
+            // only run validation while the picker is not opened
+            if (!isOpen) {
+              await validateField(name);
+            }
           }}
           className="utrecht-textbox--openforms"
           id={id}
@@ -288,6 +291,13 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
           onChange={onPartChange}
           value={time}
           className="utrecht-textbox--openforms"
+          onKeyDown={async (event: React.KeyboardEvent) => {
+            // treat enter key as a submit
+            if (event.key === 'Enter') {
+              setIsOpen(false);
+              await validateField(name);
+            }
+          }}
         />
       </FloatingWidget>
       <HelpText>{description}</HelpText>
