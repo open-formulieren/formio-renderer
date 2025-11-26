@@ -153,4 +153,20 @@ describe('map component validation', () => {
 
     expect(success).toBe(false);
   });
+
+  test.each([undefined])('Non-required component: %s', value => {
+    const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: false}});
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(true);
+  });
+
+  test.each([undefined])('Required component: %s', value => {
+    const schema = buildValidationSchema({...BASE_COMPONENT, validate: {required: true}});
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(false);
+  });
 });

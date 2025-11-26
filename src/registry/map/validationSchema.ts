@@ -4,13 +4,14 @@ import {z} from 'zod';
 import type {GetValidationSchema} from '@/registry/types';
 
 const getValidationSchema: GetValidationSchema<MapComponentSchema> = componentDefinition => {
-  const {key} = componentDefinition;
+  const {key, validate = {}} = componentDefinition;
+  const {required} = validate;
 
   const coordinates = z.array(z.number()).length(2);
   const pointValue = coordinates;
   const lineValue = z.array(coordinates).min(1);
   const polygonValue = z.array(z.array(coordinates).min(1)).length(1);
-  const schema: z.ZodFirstPartySchemaTypes = z.union([
+  let schema: z.ZodFirstPartySchemaTypes = z.union([
     z.object({
       type: z.literal('Point'),
       coordinates: pointValue,
@@ -25,6 +26,10 @@ const getValidationSchema: GetValidationSchema<MapComponentSchema> = componentDe
     }),
     z.null(),
   ]);
+
+  if (!required) {
+    schema = schema.optional();
+  }
 
   return {[key]: schema};
 };
