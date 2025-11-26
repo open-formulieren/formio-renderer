@@ -226,7 +226,10 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
             const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
             await setValue(newValue);
             onBlur(event);
-            await validateField(name);
+            // only run validation while the picker is not opened
+            if (!isOpen) {
+              await validateField(name);
+            }
           }}
           className="utrecht-textbox--openforms"
           id={id}
