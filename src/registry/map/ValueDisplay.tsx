@@ -1,4 +1,5 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
+import {Suspense} from 'react';
 
 import LeafletMap from '@/components/map';
 
@@ -13,17 +14,19 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({componentDefinition, value})
   if (!value) return null;
 
   return (
-    <LeafletMap
-      geoJsonGeometry={value}
-      defaultZoomLevel={defaultZoom ?? undefined}
-      tileLayerUrl={tileLayerUrl}
-      defaultCenter={
-        initialCenter && initialCenter.lng && initialCenter.lat
-          ? [initialCenter.lat, initialCenter.lng]
-          : undefined
-      }
-      overlays={overlays}
-    />
+    <Suspense>
+      <LeafletMap
+        geoJsonGeometry={value}
+        defaultZoomLevel={defaultZoom ?? undefined}
+        tileLayerUrl={tileLayerUrl}
+        defaultCenter={
+          initialCenter && initialCenter.lng && initialCenter.lat
+            ? [initialCenter.lat, initialCenter.lng]
+            : undefined
+        }
+        overlays={overlays}
+      />
+    </Suspense>
   );
 };
 
