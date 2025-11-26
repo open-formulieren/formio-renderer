@@ -3,9 +3,12 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 
-const getValidationSchema: GetValidationSchema<MapComponentSchema> = componentDefinition => {
+const getValidationSchema: GetValidationSchema<MapComponentSchema> = (
+  componentDefinition,
+  {validatePlugins}
+) => {
   const {key, validate = {}} = componentDefinition;
-  const {required} = validate;
+  const {required, plugins = []} = validate;
 
   const coordinates = z.array(z.number()).length(2);
   const pointValue = coordinates;
@@ -29,6 +32,17 @@ const getValidationSchema: GetValidationSchema<MapComponentSchema> = componentDe
 
   if (!required) {
     schema = schema.optional();
+  }
+
+  if (plugins.length) {
+    schema = schema.superRefine(async (val, ctx) => {
+      const message = await validatePlugins(plugins, val);
+      if (!message) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: message,
+      });
+    });
   }
 
   return {[key]: schema};
