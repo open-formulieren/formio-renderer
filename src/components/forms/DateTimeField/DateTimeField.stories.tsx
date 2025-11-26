@@ -1,6 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {addDays, subDays} from 'date-fns';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
+import {z} from 'zod';
 
 import {PrimaryActionButton} from '@/components/Button';
 import {withFormSettingsProvider, withFormik, withMockDate} from '@/sb-decorators';
@@ -314,5 +315,42 @@ export const NoAsterisksForRequired = {
     formSettings: {
       requiredFieldsWithAsterisk: false,
     },
+  },
+};
+
+// don't display validation errors if the calendar/picker is open
+export const NoErrorWhileFocus: Story = {
+  decorators: [withMockDate],
+  args: {
+    name: 'datetime',
+    label: 'No error displayed while picker is open',
+    isDisabled: false,
+    isRequired: true,
+  },
+  parameters: {
+    mockDate: new Date('2025-09-29T12:00:00+02:00'),
+    formik: {
+      initialValues: {
+        datetime: '',
+      },
+      zodSchema: z.object({
+        datetime: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // open the datetime picker and shift focus to it
+    const input = canvas.getByLabelText('No error displayed while picker is open');
+    await userEvent.click(input);
+
+    const dialog = await canvas.findByRole('dialog');
+    expect(dialog).toBeVisible();
+    await userEvent.click(dialog);
+    await waitFor(() => {
+      expect(input).not.toHaveFocus();
+    });
   },
 };
