@@ -291,6 +291,13 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
           onChange={onPartChange}
           value={time}
           className="utrecht-textbox--openforms"
+          onKeyDown={async (event: React.KeyboardEvent) => {
+            // treat enter key as a submit
+            if (event.key === 'Enter') {
+              setIsOpen(false);
+              await validateField(name);
+            }
+          }}
         />
       </FloatingWidget>
       <HelpText>{description}</HelpText>
