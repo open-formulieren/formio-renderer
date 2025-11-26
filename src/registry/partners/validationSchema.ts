@@ -6,6 +6,7 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
   description: 'Validation error for partners.dateOfBirth that is after the minimum date.',
@@ -22,11 +23,6 @@ const DATE_OF_BIRTH_INVALID_MESSAGE = defineMessage({
   defaultMessage: 'The format of the date of birth is incorrect.',
 });
 
-const LAST_NAME_REQUIRED_MESSAGE = defineMessage({
-  description: 'Validation error for required partners.lastName field.',
-  defaultMessage: 'You must provide a last name.',
-});
-
 const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
   const today = new Date();
 
@@ -39,7 +35,12 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
     .max(maxDate, {message: intl.formatMessage(DATE_OF_BIRTH_MAX_DATE_MESSAGE)});
 
   return z
-    .string()
+    .string({
+      required_error: intl.formatMessage(getErrorMessage('required'), {
+        field: 'partners.dateOfBirth',
+        fieldLabel: 'Date of birth',
+      }),
+    })
     .refine(
       value => {
         const parsed = parseISO(value);
@@ -71,7 +72,14 @@ const getValidationSchema: GetValidationSchema<PartnersComponentSchema> = (
       bsn: buildBsnValidationSchema(intl),
       initials: z.string().optional(),
       affixes: z.string().optional(),
-      lastName: z.string().min(1, {message: intl.formatMessage(LAST_NAME_REQUIRED_MESSAGE)}),
+      lastName: z
+        .string({
+          message: intl.formatMessage(getErrorMessage('required'), {
+            field: 'partners.lastName',
+            fieldLabel: 'Lastname',
+          }),
+        })
+        .min(1),
       dateOfBirth: buildDateOfBirthSchema(intl),
       // __addedManually must either be true or undefined.
       __addedManually: z.literal<boolean>(true).optional(),

@@ -58,6 +58,19 @@ describe('time component validation', () => {
     expect(success).toBe(false);
   });
 
+  test('required with custom error message', () => {
+    const component: TimeComponentSchema = {
+      ...BASE_COMPONENT,
+      validate: {required: true},
+      errors: {required: 'Custom error message for required'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse(undefined);
+
+    expect(result.error?.errors[0].message).toBe('Custom error message for required');
+  });
+
   test.each(['24:00', '23:60', '23:60', '1:1', '01:1', '1:01', 42, 12.34, null])(
     'Invalid time: %s',
     value => {

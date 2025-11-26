@@ -2,6 +2,8 @@ import type {IntlShape} from 'react-intl';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
+import {getErrorMessage} from './errorMessages';
+
 const BSN_STRUCTURE_MESSAGE = defineMessage({
   description: 'Validation error describing shape of BSN.',
   defaultMessage: 'A BSN must be 9 digits.',
@@ -34,10 +36,15 @@ const isValidBsn = (value: string): boolean => {
  */
 export const buildBsnValidationSchema = (
   intl: IntlShape,
-  customRequiredError: string | undefined = undefined
+  customRequiredError: string | undefined = undefined,
+  label: string = 'BSN'
 ): z.ZodFirstPartySchemaTypes => {
   return z
-    .string({required_error: customRequiredError})
+    .string({
+      required_error:
+        customRequiredError ||
+        intl.formatMessage(getErrorMessage('required'), {field: 'BSN', fieldLabel: label}),
+    })
     .length(9, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
     .regex(/[0-9]{9}/, {message: intl.formatMessage(BSN_STRUCTURE_MESSAGE)})
     .refine(isValidBsn, {message: intl.formatMessage(BSN_INVALID_MESSAGE)});

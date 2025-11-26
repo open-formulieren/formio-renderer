@@ -3,6 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const SIGNATURE_INVALID_MESSAGE = defineMessage({
   description: 'Validation error for signature',
@@ -17,11 +18,15 @@ const getValidationSchema: GetValidationSchema<SignatureComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, errors} = componentDefinition;
+  const {key, validate = {}, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string({required_error: errors?.required})
+    .string({
+      required_error:
+        errors?.required ||
+        intl.formatMessage(getErrorMessage('required'), {field: 'Signature', fieldLabel: label}),
+    })
     .refine(isValidImage, {message: intl.formatMessage(SIGNATURE_INVALID_MESSAGE)});
   if (!required) {
     schema = schema.or(z.literal('')).optional();

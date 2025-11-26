@@ -3,6 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const NUMBER_GREATER_THAN_MAX_MESSAGE = defineMessage({
   description: 'Validation error for number greater than maximum value.',
@@ -18,12 +19,19 @@ const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, errors} = componentDefinition;
+  const {key, validate = {}, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
   const max = validate?.max;
   const min = validate?.min;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.number({required_error: errors?.required});
+  let schema: z.ZodFirstPartySchemaTypes = z.number({
+    required_error:
+      errors?.required ||
+      intl.formatMessage(getErrorMessage('required'), {
+        field: 'Number',
+        fieldLabel: label,
+      }),
+  });
 
   if (max !== undefined)
     schema = schema.lte(max, {

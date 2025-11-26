@@ -3,6 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const POSTCODE_PATTERN: PostcodeComponentSchema['validate']['pattern'] =
   '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$';
@@ -17,11 +18,15 @@ const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate, multiple, errors} = componentDefinition;
+  const {key, validate, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string({required_error: errors?.required})
+    .string({
+      required_error:
+        errors?.required ||
+        intl.formatMessage(getErrorMessage('required'), {field: 'Postcode', fieldLabel: label}),
+    })
     .regex(POSTCODE_REGEX, {
       message: errors?.pattern || intl.formatMessage(POSTCODE_INVALID_MESSAGE),
     });
@@ -41,7 +46,11 @@ const getValidationSchema: GetValidationSchema<PostcodeComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(1, {
+        message:
+          errors?.required ||
+          intl.formatMessage(getErrorMessage('required'), {field: 'Postcode', fieldLabel: label}),
+      });
     }
   }
 

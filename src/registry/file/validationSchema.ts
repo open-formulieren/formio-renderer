@@ -6,6 +6,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 import {DEFAULT_MAX_SIZE} from './constants';
 import {getSizeInBytes, humanFileSize} from './utils';
@@ -189,6 +190,7 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
     maxNumberOfFiles,
     file: fileTypeConfiguration,
     errors,
+    label,
   } = componentDefinition;
   const {required} = validate;
 
@@ -210,7 +212,11 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
   }
 
   if (required) {
-    schema = schema.min(1, {message: errors?.required});
+    schema = schema.min(1, {
+      message:
+        errors?.required ||
+        intl.formatMessage(getErrorMessage('required'), {field: 'File', fieldLabel: label}),
+    });
   } else {
     schema = schema.optional();
   }

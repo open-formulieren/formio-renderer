@@ -4,17 +4,28 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const INVALID_INPUT_MESSAGE = defineMessage({
   description: 'Invalid input validation error for date field',
-  defaultMessage: 'Invalid input',
+  defaultMessage: 'The date must be in a valid format (e.g., 10/30/2025).',
+});
+
+const DATE_GREATER_THAN_MAX_DATE_MESSAGE = defineMessage({
+  description: 'Validation error for date less than or equal to maximum date.',
+  defaultMessage: 'The date must be earlier than or equal to {max}.',
+});
+
+const DATE_LESS_THAN_MIN_DATE_MESSAGE = defineMessage({
+  description: 'Validation error for date greater than or equal to minimum date.',
+  defaultMessage: 'The date must be later than or equal to {min}.',
 });
 
 const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, datePicker, multiple, errors} = componentDefinition;
+  const {key, validate = {}, datePicker, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
   // In the backend, we set/grab the min and max dates from the `datePicker` property, so we also
   // need to do this here. Once we swapped formio for our own renderer - and also implemented
@@ -25,14 +36,24 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
   let dateSchema = z.coerce.date();
   if (minDate) {
-    dateSchema = dateSchema.min(parseISO(minDate), {message: errors?.minDate});
+    dateSchema = dateSchema.min(parseISO(minDate), {
+      message:
+        errors?.minDate || intl.formatMessage(DATE_LESS_THAN_MIN_DATE_MESSAGE, {min: minDate}),
+    });
   }
   if (maxDate) {
-    dateSchema = dateSchema.max(parseISO(maxDate), {message: errors?.maxDate});
+    dateSchema = dateSchema.max(parseISO(maxDate), {
+      message:
+        errors?.maxDate || intl.formatMessage(DATE_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDate}),
+    });
   }
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string({required_error: errors?.required})
+    .string({
+      required_error:
+        errors?.required ||
+        intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+    })
     .refine(
       value => {
         const parsed = parseISO(value);
@@ -61,7 +82,11 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
     let arraySchema = z.array(schema);
 
     if (required) {
-      arraySchema = arraySchema.min(1, {message: errors?.required});
+      arraySchema = arraySchema.min(1, {
+        message:
+          errors?.required ||
+          intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+      });
     }
 
     schema = arraySchema;

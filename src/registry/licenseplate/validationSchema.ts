@@ -3,6 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const LICENSE_PLATE_PATTERN: LicensePlateComponentSchema['validate']['pattern'] =
   '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$';
@@ -10,18 +11,25 @@ const LICENSE_PLATE_REGEX = new RegExp(LICENSE_PLATE_PATTERN);
 
 const LICENSE_PLATE_INVALID_MESSAGE = defineMessage({
   description: 'Validation error for license plate.',
-  defaultMessage: 'Invalid Dutch license plate',
+  defaultMessage: 'Invalid Dutch license plate.',
 });
 
 const getValidationSchema: GetValidationSchema<LicensePlateComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate, multiple, errors} = componentDefinition;
+  const {key, validate, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string({required_error: errors?.required})
+    .string({
+      required_error:
+        errors?.required ||
+        intl.formatMessage(getErrorMessage('required'), {
+          field: 'License plate',
+          fieldLabel: label,
+        }),
+    })
     .regex(LICENSE_PLATE_REGEX, {message: intl.formatMessage(LICENSE_PLATE_INVALID_MESSAGE)});
   if (!required) schema = schema.or(z.literal('')).optional();
 
@@ -39,7 +47,14 @@ const getValidationSchema: GetValidationSchema<LicensePlateComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(1, {
+        message:
+          errors?.required ||
+          intl.formatMessage(getErrorMessage('required'), {
+            field: 'License plate',
+            fieldLabel: label,
+          }),
+      });
     }
   }
 

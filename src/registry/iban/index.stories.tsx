@@ -153,7 +153,7 @@ export const ValidateRequired: ValidationStory = {
     expect(ibanField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('The required field An IBAN must be filled in.')).toBeVisible();
   },
 };
 
@@ -204,7 +204,7 @@ export const ValidateIBAN: ValidationStory = {
     await userEvent.type(ibanField, 'This is not an IBAN');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid IBAN')).toBeVisible();
+    expect(await canvas.findByText('Invalid IBAN.')).toBeVisible();
   },
 };
 
@@ -241,8 +241,10 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[3], 'NL91ABNA0417164300'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
-    expect(await canvas.findByText('Invalid IBAN')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field An IBAN field must be filled in.')
+    ).toBeVisible();
+    expect(await canvas.findByText('Invalid IBAN.')).toBeVisible();
   },
 };
 

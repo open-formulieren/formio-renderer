@@ -162,7 +162,35 @@ export const ValidateRequired: ValidationStory = {
     expect(timeField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A timefield must be filled in.')
+    ).toBeVisible();
+  },
+};
+
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+      },
+      errors: {required: 'Custom error message for required'},
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
   },
 };
 
@@ -197,6 +225,37 @@ export const ValidateMinTime: ValidationStory = {
   },
 };
 
+export const ValidateMinTimeWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        minTime: '09:00',
+      },
+      errors: {minTime: 'Custom error message for min time'},
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '8:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(await canvas.findByText('Custom error message for min time')).toBeVisible();
+  },
+};
+
 export const ValidateMaxTime: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -225,6 +284,37 @@ export const ValidateMaxTime: ValidationStory = {
 
     const expectedMesage = 'Time must be before 17:00';
     expect(await canvas.findByText(expectedMesage)).toBeVisible();
+  },
+};
+
+export const ValidateMaxTimeWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      validate: {
+        required: true,
+        maxTime: '17:00',
+      },
+      errors: {maxTime: 'Custom error message for max time'},
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const timeField = canvas.getByLabelText('A timefield');
+    await userEvent.type(timeField, '23:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    expect(await canvas.findByText('Custom error message for max time')).toBeVisible();
   },
 };
 
@@ -326,8 +416,51 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[2], '11:30'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A timefield must be filled in.')
+    ).toBeVisible();
     expect(await canvas.findByText('Time must be after 09:00')).toBeVisible();
+  },
+};
+
+export const ValidationMultipleWithCustomErrorMessages: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'A timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+      validate: {
+        required: true,
+        maxTime: '17:00',
+      },
+      errors: {
+        required: 'Custom error message for required',
+        maxTime: 'Custom error message for max time',
+      },
+    } satisfies TimeComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // ensure we have three items
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+
+    const textboxes = canvas.getAllByLabelText(/A timefield \d/);
+    expect(textboxes).toHaveLength(2);
+
+    await userEvent.type(textboxes[0], '18:00');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
+    expect(await canvas.findByText('Custom error message for max time')).toBeVisible();
   },
 };
 

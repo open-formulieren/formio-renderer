@@ -205,10 +205,11 @@ export const ValidateRequired: ValidationStory = {
     // Submit empty partner data
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
-    const errors = await canvas.findAllByText('Required');
-    for (const error of errors) {
-      expect(error).toBeVisible();
-    }
+    expect(await canvas.findByText('The required field BSN must be filled in.')).toBeVisible();
+    expect(await canvas.findByText('The required field Lastname must be filled in.')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Date of birth must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -240,7 +241,9 @@ export const ValidateInvalid: ValidationStory = {
 
     await step('Check errors', async () => {
       const bsnError = await canvas.findByText('Invalid BSN.');
-      const lastnameError = await canvas.findByText('Required');
+      const lastnameError = await canvas.findByText(
+        'The required field Lastname must be filled in.'
+      );
       const dateOfBirthError = await canvas.findByText(
         'Date of birth must be within the last 120 years.'
       );

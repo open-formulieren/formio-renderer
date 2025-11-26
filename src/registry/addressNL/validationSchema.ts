@@ -4,6 +4,7 @@ import type {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 const DEFAULT_POSTCODE_PATTERN: PostcodeComponentSchema['validate']['pattern'] =
   '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$';
@@ -31,16 +32,6 @@ const HOUSE_NUMBER_ADDITION_INVALID_MESSAGE = defineMessage({
   defaultMessage: 'House number addition must be up to four letters and digits.',
 });
 
-const STREET_NAME_INVALID_MESSAGE = defineMessage({
-  description: 'Validation error for required addressNL.streetName field.',
-  defaultMessage: 'You must provide a street name.',
-});
-
-const CITY_INVALID_MESSAGE = defineMessage({
-  description: 'Validation error for required addressNL.city field.',
-  defaultMessage: 'You must provide a city.',
-});
-
 interface PostcodeOptions {
   pattern: string | undefined;
   message: string | undefined;
@@ -53,7 +44,12 @@ const buildPostcodeSchema = (
 ): z.ZodFirstPartySchemaTypes => {
   const defaultMessage = intl.formatMessage(POSTCODE_INVALID_MESSAGE);
   let postcodeSchema: z.ZodFirstPartySchemaTypes = z
-    .string()
+    .string({
+      required_error: intl.formatMessage(getErrorMessage('required'), {
+        field: 'addressNL.postcode',
+        fieldLabel: 'Postcode',
+      }),
+    })
     .regex(DEFAULT_POSTCODE_REGEX, {message: defaultMessage});
   // add the custom pattern *on top of* the default pattern, which is always supposed to
   // be less strict than custom patterns
@@ -72,9 +68,16 @@ const buildHouseNumberSchema = (
   intl: IntlShape,
   isRequired: boolean
 ): z.ZodFirstPartySchemaTypes => {
-  let houseNumberSchema: z.ZodFirstPartySchemaTypes = z.string().regex(HOUSE_NUMBER_REGEX, {
-    message: intl.formatMessage(HOUSE_NUMBER_INVALID_MESSAGE),
-  });
+  let houseNumberSchema: z.ZodFirstPartySchemaTypes = z
+    .string({
+      required_error: intl.formatMessage(getErrorMessage('required'), {
+        field: 'addressNL.houseNumber',
+        fieldLabel: 'House number',
+      }),
+    })
+    .regex(HOUSE_NUMBER_REGEX, {
+      message: intl.formatMessage(HOUSE_NUMBER_INVALID_MESSAGE),
+    });
   if (!isRequired) {
     houseNumberSchema = houseNumberSchema.optional();
   }
@@ -88,7 +91,10 @@ const buildStreetNameSchema = (
   let streetNameSchema: z.ZodFirstPartySchemaTypes = z.string();
   if (isRequired) {
     streetNameSchema = streetNameSchema.min(1, {
-      message: intl.formatMessage(STREET_NAME_INVALID_MESSAGE),
+      message: intl.formatMessage(getErrorMessage('required'), {
+        field: 'addressNL.streetName',
+        fieldLabel: 'Street name',
+      }),
     });
   } else {
     streetNameSchema = streetNameSchema.optional();
@@ -106,10 +112,15 @@ const buildCitySchema = (
   isRequired: boolean,
   {pattern, message}: CityOptions
 ): z.ZodFirstPartySchemaTypes => {
-  const defaultMessage = intl.formatMessage(CITY_INVALID_MESSAGE);
+  const defaultMessage = intl.formatMessage(getErrorMessage('required'), {
+    field: 'addressNL.city',
+    fieldLabel: 'City',
+  });
   let citySchema: z.ZodFirstPartySchemaTypes = z.string();
   if (pattern) {
-    citySchema = citySchema.regex(new RegExp(pattern), {message: message || defaultMessage});
+    citySchema = citySchema.regex(new RegExp(pattern), {
+      message: message || defaultMessage,
+    });
   }
   if (isRequired) {
     citySchema = citySchema.min(1, {message: defaultMessage});
@@ -195,10 +206,9 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (!val.houseNumber) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage({
-              description:
-                'Validation error when AddressNL.postcode is provided but not houseNumber',
-              defaultMessage: 'You must provide a house number.',
+            message: intl.formatMessage(getErrorMessage('required'), {
+              field: 'addressNL.houseNumber',
+              fieldLabel: 'House number',
             }),
             path: ['houseNumber'],
           });
@@ -207,10 +217,9 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (!val.postcode) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage({
-              description:
-                'Validation error when AddressNL.houseNumber is provided but not postcode',
-              defaultMessage: 'You must provide a postcode.',
+            message: intl.formatMessage(getErrorMessage('required'), {
+              field: 'addressNL.postcode',
+              fieldLabel: 'Postcode',
             }),
             path: ['postcode'],
           });
@@ -219,7 +228,10 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (deriveAddress && !val.streetName) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(STREET_NAME_INVALID_MESSAGE),
+            message: intl.formatMessage(getErrorMessage('required'), {
+              field: 'addressNL.streetName',
+              fieldLabel: 'Street name',
+            }),
             path: ['streetName'],
           });
         }
@@ -227,7 +239,10 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (deriveAddress && !val.city) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(CITY_INVALID_MESSAGE),
+            message: intl.formatMessage(getErrorMessage('required'), {
+              field: 'addressNL.city',
+              fieldLabel: 'City',
+            }),
             path: ['city'],
           });
         }

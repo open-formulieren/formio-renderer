@@ -143,7 +143,9 @@ export const ValidateRequired: ValidationStory = {
     expect(textField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A required checkbox must be filled in.')
+    ).toBeVisible();
   },
 };
 

@@ -203,7 +203,9 @@ export const ValidateRequired: ValidationStory = {
     expect(selectboxesLabel).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A selectboxes field must be filled in.')
+    ).toBeVisible();
   },
 };
 export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {

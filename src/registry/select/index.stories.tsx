@@ -153,7 +153,7 @@ export const ValidateRequired: ValidationStory = {
     expect(select).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('The required field A select must be filled in.')).toBeVisible();
   },
 };
 

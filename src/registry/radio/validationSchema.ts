@@ -2,6 +2,7 @@ import type {RadioComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
 
 import {assertManualValues} from './types';
 
@@ -9,10 +10,10 @@ type ValuesEnum = z.ZodEnum<[string, ...string[]]>;
 
 const getValidationSchema: GetValidationSchema<RadioComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
-  const {key, validate = {}, values, errors} = componentDefinition;
+  const {key, validate = {}, values, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   const enumMembers = values.map(({value}) => value);
@@ -29,7 +30,9 @@ const getValidationSchema: GetValidationSchema<RadioComponentSchema> = (
 
   // schema for the bare string base for the option, used for `required` validation
   let baseSchema: z.ZodOptional<z.ZodString> | z.ZodString = z.string({
-    required_error: errors?.required,
+    required_error:
+      errors?.required ||
+      intl.formatMessage(getErrorMessage('required'), {field: 'Radio', fieldLabel: label}),
   });
   if (!required) {
     baseSchema = baseSchema.optional();

@@ -1,27 +1,47 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {getErrorMessage} from '@/validationSchemas/errorMessages';
+
+const TEXTFIELD_MAX_LENGTH_MESSAGE = defineMessage({
+  description: 'Validation error for TEXTFIELD that exceeds max length.',
+  defaultMessage: 'There are too many characters provided.',
+});
+
+const TEXTFIELD_WRONG_PATTERN_MESSAGE = defineMessage({
+  description: 'Validation error for TEXTFIELD that does not match the pattern.',
+  defaultMessage: 'The submitted value does not match the pattern: {pattern}.',
+});
 
 const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, multiple, errors} = componentDefinition;
+  const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, maxLength, pattern, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required});
-
-  if (maxLength !== undefined) {
-    schema = schema.max(maxLength, {message: errors?.maxLength});
-  }
+  let schema: z.ZodFirstPartySchemaTypes = z.string({
+    required_error:
+      errors?.required ||
+      intl.formatMessage(getErrorMessage('required'), {field: 'Textfield', fieldLabel: label}),
+  });
+  if (maxLength !== undefined)
+    schema = schema = schema.max(maxLength, {
+      message:
+        errors?.maxLength || intl.formatMessage(TEXTFIELD_MAX_LENGTH_MESSAGE, {field: label}),
+    });
 
   if (pattern) {
     let normalizedPattern = pattern;
     // Formio implicitly adds the ^ and $ markers to consider the whole value
     if (!normalizedPattern.startsWith('^')) normalizedPattern = `^${normalizedPattern}`;
     if (!normalizedPattern.endsWith('$')) normalizedPattern = `${normalizedPattern}$`;
-    schema = schema.regex(new RegExp(normalizedPattern), {message: errors?.pattern});
+    schema = schema.regex(new RegExp(normalizedPattern), {
+      message:
+        errors?.pattern || intl.formatMessage(TEXTFIELD_WRONG_PATTERN_MESSAGE, {pattern: pattern}),
+    });
   }
 
   if (required) {
@@ -44,7 +64,11 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(
+        1,
+        errors?.required ||
+          intl.formatMessage(getErrorMessage('required'), {field: 'Textfield', fieldLabel: label})
+      );
     }
   }
 

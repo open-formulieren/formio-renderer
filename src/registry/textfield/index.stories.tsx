@@ -185,7 +185,9 @@ export const ValidateRequired: ValidationStory = {
     expect(textField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A textfield must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -235,7 +237,7 @@ export const ValidateMaxLength: ValidationStory = {
     await userEvent.type(textField, 'too long');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('String must contain at most 3 character(s)')).toBeVisible();
+    expect(await canvas.findByText('There are too many characters provided.')).toBeVisible();
   },
 };
 
@@ -288,7 +290,9 @@ export const ValidatePattern: ValidationStory = {
     await userEvent.type(textField, 'ayeet');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid')).toBeVisible();
+    expect(
+      await canvas.findByText('The submitted value does not match the pattern: ^yeet{1,3}$.')
+    ).toBeVisible();
   },
 };
 
@@ -408,8 +412,10 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[2], 'yeett'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
-    expect(await canvas.findByText('Invalid')).toBeVisible();
+    expect(await canvas.findByText('There are too many characters provided.')).toBeVisible();
+    expect(
+      await canvas.findByText('The submitted value does not match the pattern: ^yeet{1,3}$.')
+    ).toBeVisible();
   },
 };
 
@@ -497,7 +503,7 @@ export const ValidationMultipleAndPlugin: ValidationStory = {
     await userEvent.type(textboxes[2], 'okay'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('String must contain at most 10 character(s)')).toBeVisible();
+    expect(await canvas.findByText('There are too many characters provided.')).toBeVisible();
     expect(await canvas.findByText('Failure requested.')).toBeVisible();
   },
 };

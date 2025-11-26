@@ -218,7 +218,9 @@ export const ValidateRequiredInputGroup: ValidationStory = {
     expect(yearInput).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Your date must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -265,7 +267,9 @@ export const ValidateRequiredDatePicker: ValidationStory = {
     const canvas = within(canvasElement);
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Your date must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -297,7 +301,9 @@ export const InvalidDateInputGroup: ValidationStory = {
     await userEvent.type(yearInput, '2000');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid input')).toBeVisible();
+    expect(
+      await canvas.findByText('The date must be in a valid format (e.g., 10/30/2025).')
+    ).toBeVisible();
 
     expect(monthInput).toHaveDisplayValue('13');
     expect(dayInput).toHaveDisplayValue('8');
@@ -360,7 +366,9 @@ export const InvalidDateDatePicker: ValidationStory = {
     await userEvent.type(date, '13/32/2000');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid input')).toBeVisible();
+    expect(
+      await canvas.findByText('The date must be in a valid format (e.g., 10/30/2025).')
+    ).toBeVisible();
 
     expect(date).toHaveDisplayValue('13/32/2000');
   },
@@ -403,9 +411,7 @@ export const MinMaxValidationInputGroup: ValidationStory = {
       await userEvent.type(dayInput, '4');
 
       await userEvent.click(button);
-      expect(
-        await canvas.findByText(/Date must be greater than or equal to Fri Sep 05 2025/)
-      ).toBeVisible();
+      expect(await canvas.findByText(/The date must be later than or equal to/)).toBeVisible();
       expect(args.onSubmit).not.toHaveBeenCalled();
     });
 
@@ -414,7 +420,9 @@ export const MinMaxValidationInputGroup: ValidationStory = {
       await userEvent.type(dayInput, '8');
 
       await userEvent.click(button);
-      expect(await canvas.queryByText('Invalid input')).not.toBeInTheDocument();
+      expect(
+        canvas.queryByText('The date must be in a valid format (e.g., 10/30/2025).')
+      ).not.toBeInTheDocument();
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
     });
 
@@ -423,9 +431,7 @@ export const MinMaxValidationInputGroup: ValidationStory = {
       await userEvent.type(dayInput, '15');
 
       await userEvent.click(button);
-      expect(
-        await canvas.queryByText(/Date must be smaller than or equal to Wed Sep 10 2025/)
-      ).toBeVisible();
+      expect(await canvas.findByText(/The date must be earlier than or equal to/)).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
     });
@@ -515,9 +521,7 @@ export const MinMaxValidationDatePicker: ValidationStory = {
       await userEvent.type(date, '9/4/2025');
 
       await userEvent.click(button);
-      expect(
-        await canvas.findByText(/Date must be greater than or equal to Fri Sep 05 2025/)
-      ).toBeVisible();
+      expect(await canvas.findByText(/The date must be later than or equal to/)).toBeVisible();
       expect(args.onSubmit).not.toHaveBeenCalled();
     });
 
@@ -526,7 +530,7 @@ export const MinMaxValidationDatePicker: ValidationStory = {
       await userEvent.type(date, '9/8/2025');
 
       await userEvent.click(button);
-      expect(await canvas.queryByText('Invalid input')).not.toBeInTheDocument();
+      expect(canvas.queryByText(/The date must be in a valid format/)).not.toBeInTheDocument();
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
     });
 
@@ -535,9 +539,7 @@ export const MinMaxValidationDatePicker: ValidationStory = {
       await userEvent.type(date, '9/15/2025');
 
       await userEvent.click(button);
-      expect(
-        await canvas.queryByText(/Date must be smaller than or equal to Wed Sep 10 2025/)
-      ).toBeVisible();
+      expect(await canvas.findByText(/The date must be earlier than or equal to/)).toBeVisible();
       // Still should have only been called once with the valid date from the previous step
       expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
     });
@@ -573,7 +575,9 @@ export const InvalidMultipleDateInputGroup: ValidationStory = {
     await userEvent.type(yearInput, '2000');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid input')).toBeVisible();
+    expect(
+      await canvas.findByText('The date must be in a valid format (e.g., 10/30/2025).')
+    ).toBeVisible();
 
     expect(monthInput).toHaveDisplayValue('13');
     expect(dayInput).toHaveDisplayValue('8');
@@ -604,7 +608,9 @@ export const InvalidMultipleDateDatePicker: ValidationStory = {
     await userEvent.type(date, '13/32/2000');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid input')).toBeVisible();
+    expect(
+      await canvas.findByText('The date must be in a valid format (e.g., 10/30/2025).')
+    ).toBeVisible();
 
     expect(date).toHaveDisplayValue('13/32/2000');
   },

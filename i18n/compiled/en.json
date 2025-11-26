@@ -37,12 +37,6 @@
       "value": "Remove"
     }
   ],
-  "+zrboi": [
-    {
-      "type": 0,
-      "value": "Invalid IBAN"
-    }
-  ],
   "/RrV7w": [
     {
       "type": 0,
@@ -53,12 +47,6 @@
     {
       "type": 0,
       "value": "Cancel drawing"
-    }
-  ],
-  "07h5b8": [
-    {
-      "type": 0,
-      "value": "You must provide a first name."
     }
   ],
   "0EdUXi": [
@@ -135,6 +123,12 @@
     {
       "type": 0,
       "value": "Previous year"
+    }
+  ],
+  "2RWk49": [
+    {
+      "type": 0,
+      "value": "Invalid Dutch license plate."
     }
   ],
   "33UD7T": [
@@ -255,6 +249,20 @@
       "value": "MM"
     }
   ],
+  "8soi1P": [
+    {
+      "type": 0,
+      "value": "The submitted value does not match the pattern: "
+    },
+    {
+      "type": 1,
+      "value": "pattern"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "8uM5Vx": [
     {
       "type": 0,
@@ -333,6 +341,12 @@
     {
       "type": 0,
       "value": "Remove shapes"
+    }
+  ],
+  "BYKDMO": [
+    {
+      "type": 0,
+      "value": "The date must be in a valid format (e.g., 10/30/2025)."
     }
   ],
   "BboxO6": [
@@ -675,6 +689,12 @@
       "value": "m"
     }
   ],
+  "MTfsUB": [
+    {
+      "type": 0,
+      "value": "There are too many characters provided."
+    }
+  ],
   "MrlKEu": [
     {
       "type": 0,
@@ -693,10 +713,18 @@
       "value": "Your current location cannot be accessed"
     }
   ],
-  "Oc3efT": [
+  "OOpMyF": [
     {
       "type": 0,
-      "value": "You must provide a city."
+      "value": "The required field "
+    },
+    {
+      "type": 1,
+      "value": "fieldLabel"
+    },
+    {
+      "type": 0,
+      "value": " must be filled in."
     }
   ],
   "Op4orj": [
@@ -759,6 +787,20 @@
       "value": "The maximum number of uploads is reached. You cannot upload additional files."
     }
   ],
+  "S2Wyuv": [
+    {
+      "type": 0,
+      "value": "The submitted value does not match the pattern: "
+    },
+    {
+      "type": 1,
+      "value": "pattern"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "S5ydMY": [
     {
       "type": 0,
@@ -809,12 +851,6 @@
       "value": "."
     }
   ],
-  "TcqyzM": [
-    {
-      "type": 0,
-      "value": "You must provide a postcode."
-    }
-  ],
   "Tip5+d": [
     {
       "type": 0,
@@ -847,10 +883,18 @@
       "value": "?"
     }
   ],
-  "UONGQo": [
+  "V0B3pn": [
     {
       "type": 0,
-      "value": "You must provide a house number."
+      "value": "The date must be later than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "WpfP0s": [
@@ -875,6 +919,12 @@
     {
       "type": 0,
       "value": "Remove last point"
+    }
+  ],
+  "Yg2+vS": [
+    {
+      "type": 0,
+      "value": "Invalid email address."
     }
   ],
   "ZAq+s7": [
@@ -937,6 +987,12 @@
       "value": "maxTime"
     }
   ],
+  "b4uuR7": [
+    {
+      "type": 0,
+      "value": "There are too many characters provided."
+    }
+  ],
   "bKPaUj": [
     {
       "type": 0,
@@ -959,12 +1015,6 @@
     {
       "type": 0,
       "value": "No information provided"
-    }
-  ],
-  "bv/J3Y": [
-    {
-      "type": 0,
-      "value": "You must provide a street name."
     }
   ],
   "c0Ry9H": [
@@ -1217,16 +1267,24 @@
       "value": "yyyy"
     }
   ],
+  "o3TabP": [
+    {
+      "type": 0,
+      "value": "The date must be earlier than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "oCHirf": [
     {
       "type": 0,
       "value": "Uploading..."
-    }
-  ],
-  "odKXcF": [
-    {
-      "type": 0,
-      "value": "You must provide a last name."
     }
   ],
   "osSl3z": [
@@ -1257,12 +1315,6 @@
     {
       "type": 0,
       "value": "House letter must be a single letter."
-    }
-  ],
-  "ph6ljt": [
-    {
-      "type": 0,
-      "value": "Invalid input"
     }
   ],
   "pzR8ui": [
@@ -1351,6 +1403,12 @@
     {
       "type": 0,
       "value": "Not co-signed"
+    }
+  ],
+  "u1vsoV": [
+    {
+      "type": 0,
+      "value": "Invalid IBAN."
     }
   ],
   "vCObuG": [
@@ -1461,12 +1519,6 @@
     {
       "type": 0,
       "value": "Date of birth cannot be in the future."
-    }
-  ],
-  "z+/GrY": [
-    {
-      "type": 0,
-      "value": "Invalid Dutch license plate"
     }
   ],
   "zpHAro": [

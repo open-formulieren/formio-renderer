@@ -187,7 +187,7 @@ export const ValidateEmailFormat: ValidationStory = {
     await userEvent.type(emailField, 'invalid');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid email')).toBeVisible();
+    expect(await canvas.findByText('Invalid email address.')).toBeVisible();
   },
 };
 
@@ -213,7 +213,9 @@ export const ValidateEmailRequired: ValidationStory = {
     expect(emailField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Your email must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -298,8 +300,10 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[2], 'info@example.com'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
-    expect(await canvas.findByText('Invalid email')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Your email must be filled in.')
+    ).toBeVisible();
+    expect(await canvas.findByText('Invalid email address.')).toBeVisible();
   },
 };
 
