@@ -1,12 +1,12 @@
 import {ArgTypes, Canvas, Meta} from '@storybook/addon-docs/blocks';
 
-import * as MapStories from './index.stories';
+import * as MapStories from './LeafletMap.stories.tsx';
 
 <Meta of={MapStories} name="Documentation" />
 
 # Developer documentation
 
-This document describes the different options available for the `MapComponent`.
+This document describes the different options available for the `LeafletMap`.
 
 ## Interactions
 
@@ -18,7 +18,7 @@ shape allows creating points on the map. Note that all keys are required wheneve
 used.
 
 ```tsx
-import 'MapComponent' from '@open-formulieren/formio-renderer';
+import {LeafletMap} from '@open-formulieren/formio-renderer';
 
 const interactions = {
   marker: true,
@@ -26,7 +26,7 @@ const interactions = {
   polyline: true,
 }
 
-const map = <MapComponent ...defaultProps interactions={interactions} />
+const map = <LeafletMap {...defaultProps} interactions={interactions} />
 ```
 
 ## TileLayer
@@ -35,12 +35,12 @@ The `tileLayerUrl` property can be specified to configure the base layer of the 
 example be used to show sattelite imagery instead of the abstract layer which is used by default.
 
 ```tsx
-import 'MapComponent' from '@open-formulieren/formio-renderer';
+import {LeafletMap} from '@open-formulieren/formio-renderer';
 
 const tileLayerUrl =
 'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:28992/{z}/{x}/{y}.png';
 
-const map = <MapComponent ...defaultProps tileLayerUrl={tileLayerUrl} />
+const map = <LeafletMap {...defaultProps} tileLayerUrl={tileLayerUrl} />
 ```
 
 ## Overlays
@@ -49,7 +49,7 @@ To configure various overlays for the map, the `overlays` property can be specif
 example, images and SVG's to be shown on the map over certain areas.
 
 ```tsx
-import 'MapComponent' from '@open-formulieren/formio-renderer';
+import {LeafletMap} from '@open-formulieren/formio-renderer';
 
 const overlays = [
   {
@@ -68,5 +68,5 @@ const overlays = [
   },
 ];
 
-const map = <MapComponent ...defaultProps overlays={overlays} />
+const map = <LeafletMap {...defaultProps} overlays={overlays} />
 ```
