@@ -1,6 +1,6 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
 import {FormField} from '@utrecht/component-library-react';
-import {useField, useFormikContext} from 'formik';
+import {useField} from 'formik';
 import React, {useId} from 'react';
 
 import {HelpText, Label, ValidationErrors} from '@/components/forms';
