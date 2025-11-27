@@ -25,10 +25,11 @@ export interface FormioSelectboxesProps {
 export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDefinition}) => {
   assertManualValues(componentDefinition);
   const {key, label, tooltip, description, validate = {}, values: options} = componentDefinition;
-  const {required = false} = validate;
-
+  const {required = false, maxSelectedCount} = validate;
   const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
-  const [, {error = ''}] = useField(key);
+  const [{value: selectboxesState = {}}, {error = ''}] = useField<{string: boolean} | undefined>(
+    key
+  );
   const id = useId();
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null);
@@ -98,11 +99,19 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
       document.removeEventListener('click', handleClick);
       document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [getFieldProps, validateField, key, touched]);
+  }, [getFieldProps, validateField, key, touched, maxSelectedCount]);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
+
+  // update the UI by disabling the additional checkboxes once the limit is reached.
+  // Extract the option keys/values of only the selected checkboxes.
+  const selectedValues = Object.entries(selectboxesState)
+    .filter(([, selected]) => selected)
+    .map(([value]) => value);
+  const limitReached =
+    maxSelectedCount === undefined ? false : selectedValues.length >= maxSelectedCount;
 
   return (
     <Fieldset
@@ -128,6 +137,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
           description={description}
           descriptionAsHelpText={false}
           ignoreRequired
+          isDisabled={limitReached && !selectedValues.includes(value)}
         />
       ))}
 
