@@ -27,28 +27,6 @@ const SaveButton: React.FC<SaveButtonProps> = ({
   </PrimaryActionButton>
 );
 
-export interface RemoveButtonProps {
-  label?: React.ReactNode;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  // accessibility
-  ['aria-describedby']: string | undefined;
-}
-
-const RemoveButton: React.FC<RemoveButtonProps> = ({
-  label,
-  onClick,
-  ['aria-describedby']: ariaDescribedBy,
-}) => (
-  <PrimaryActionButton hint="danger" onClick={onClick} aria-describedby={ariaDescribedBy}>
-    {label || (
-      <FormattedMessage
-        description="Edit grid item default remove button label"
-        defaultMessage="Remove"
-      />
-    )}
-  </PrimaryActionButton>
-);
-
 export interface IsolationModeButtonsProps {
   // Saving
   saveLabel?: React.ReactNode;
@@ -91,10 +69,8 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
       <PrimaryActionButton hint="danger" onClick={onCancel} aria-describedby={ariaDescribedBy}>
         {cancelLabel || (
           <FormattedMessage
-            // yes, this description looks off, but that's actually the formio.js meaning
-            // even though the actual behaviour is 'cancel' and not remove (unless it's
-            // a freshly added item)
-            description="Edit grid item default remove button label"
+            // may be confusing, but cancelling a newly added item actually removes it.
+            description="Edit grid item default cancel button label"
             defaultMessage="Cancel"
           />
         )}
@@ -103,4 +79,4 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
   );
 };
 
-export {SaveButton, RemoveButton, IsolationModeButtons};
+export {SaveButton, IsolationModeButtons};

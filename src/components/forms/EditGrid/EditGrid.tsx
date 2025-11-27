@@ -9,7 +9,7 @@ import type {ValidationError} from 'zod-formik-adapter';
 import {SecondaryActionButton} from '@/components/Button';
 import FieldConfigProvider from '@/components/FieldConfigProvider';
 import HelpText from '@/components/forms/HelpText';
-import {LabelContent} from '@/components/forms/Label';
+import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
@@ -136,8 +136,8 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const labelId = label ? `${id}-label` : undefined;
 
   const error: string | (FormikErrors<T> | undefined)[] = getIn(errors, name);
-  const isStringError = typeof error === 'string';
-  const hasFieldLevelError = isStringError && !!error;
+  const fieldError = typeof error === 'string' && error;
+  const hasFieldLevelError = !!fieldError;
   const errorMessageId = hasFieldLevelError ? `${id}-error-message` : undefined;
 
   return (
@@ -147,13 +147,16 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
       invalid={hasFieldLevelError}
     >
       {label && (
-        <>
-          <LabelContent isRequired={isRequired} noLabelTag id={labelId}>
-            {label}
-          </LabelContent>
-          {tooltip && <Tooltip>{tooltip}</Tooltip>}
-        </>
+        <Label
+          labelId={labelId}
+          isRequired={isRequired}
+          tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
+          noLabelTag
+        >
+          {label}
+        </Label>
       )}
+
       <FieldArray name={name} validateOnChange={false}>
         {arrayHelpers => (
           <div className="openforms-editgrid">
@@ -217,12 +220,12 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                 <SecondaryActionButton
                   type="button"
                   onClick={() => {
-                    let newItem: MarkedEditGridItem<T> = setIn(
-                      emptyItem,
-                      ITEM_EXPANDED_MARKER,
-                      true
-                    );
-                    newItem = setIn(newItem, ITEM_ADDED_MARKER, true);
+                    // add the markers to the new item
+                    const newItem: MarkedEditGridItem<T> = {
+                      ...emptyItem,
+                      [ITEM_EXPANDED_MARKER]: true,
+                      [ITEM_ADDED_MARKER]: true,
+                    };
                     arrayHelpers.push(newItem);
                   }}
                 >
@@ -240,7 +243,9 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
         )}
       </FieldArray>
       <HelpText>{description}</HelpText>
-      {isStringError && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      {hasFieldLevelError && errorMessageId && (
+        <ValidationErrors error={error} id={errorMessageId} />
+      )}
     </FormField>
   );
 }

@@ -219,6 +219,8 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   // ensure we keep setting a deeper scope when dealing with nesting
   const parentScope = !isRoot ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
+  // deepMergeValues is required to deep-assign the dotted key paths, and theoverrides
+  // object is empty because there are never overrides for a new item being added
   const initialValues = deepMergeValues(extractInitialValues(components, getRegistryEntry), {});
   const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
 

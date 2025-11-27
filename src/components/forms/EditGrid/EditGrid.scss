@@ -51,6 +51,10 @@
         --of-editgrid-item-invalid-padding-inline-start,
         var(--utrecht-form-field-invalid-padding-inline-start, 0)
       );
+
+      // ensure that multiple errors can be merged into a newline separated string but
+      // are still displayed on a line for each error.
+      white-space: preserve-breaks wrap;
     }
   }
 
@@ -88,8 +92,8 @@
 .openforms-theme {
   .openforms-editgrid {
     .openforms-editgrid__item.openforms-editgrid__item--invalid {
+      // see src/scss/form-field-overrides.scss
       background-color: var(--utrecht-alert-error-background-color, var(--of-alert-error-bg));
-      white-space: preserve-breaks wrap;
     }
   }
 }

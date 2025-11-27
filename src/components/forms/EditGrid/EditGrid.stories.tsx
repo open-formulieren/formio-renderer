@@ -10,10 +10,35 @@ import {validate} from '@/validationSchema';
 
 import EditGrid from '.';
 import {ITEM_EXPANDED_MARKER} from './constants';
+import type {MarkedEditGridItem} from './types';
 
 interface ItemData {
   myField: string;
 }
+
+const RawDataDisplay: React.FC<{
+  data: MarkedEditGridItem<ItemData>;
+  indent?: number;
+  omitPrefix?: boolean;
+}> = ({data, indent, omitPrefix}) => {
+  const copyWithoutMarker = {...data};
+  delete copyWithoutMarker[ITEM_EXPANDED_MARKER];
+  const stringified = JSON.stringify(copyWithoutMarker, null, indent);
+  if (omitPrefix) {
+    return (
+      <code>
+        <pre style={{marginBlock: 0}}>{stringified}</pre>
+      </code>
+    );
+  }
+
+  return (
+    <span>
+      Raw data:
+      <code>{stringified}</code>
+    </span>
+  );
+};
 
 export default {
   title: 'Internal API / Forms / EditGrid',
@@ -27,11 +52,7 @@ export default {
     emptyItem: {myField: ''},
     addButtonLabel: undefined,
     getItemHeading: (_, index) => `Item ${index + 1}`,
-    getItemBody: (values: ItemData) => (
-      <code>
-        <pre style={{marginBlock: '0'}}>{JSON.stringify(values, null, 2)}</pre>
-      </code>
-    ),
+    getItemBody: (values: ItemData) => <RawDataDisplay data={values} indent={2} omitPrefix />,
     canRemoveItem: (_, index) => index % 2 === 1,
   },
   parameters: {
@@ -78,19 +99,12 @@ export const WithIsolation: Story = {
   args: {
     enableIsolation: true,
     getItemHeading: () => 'Isolation mode editing',
-    getItemBody: (values, index, {expanded}) => {
-      const valuesWithoutMarker = {...values};
-      delete valuesWithoutMarker[ITEM_EXPANDED_MARKER];
-      return (
-        <>
-          {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-          <span>
-            Raw data:
-            <code>{JSON.stringify(valuesWithoutMarker)}</code>
-          </span>
-        </>
-      );
-    },
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <RawDataDisplay data={values} />
+      </>
+    ),
     validate: async (_: number, values: ItemData) => {
       const schema = z.object({
         myField: z.string().refine(value => value !== 'Item 1', {message: 'Nooope'}),
@@ -143,10 +157,7 @@ export const AddingItemInIsolationMode: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => true,
@@ -171,10 +182,7 @@ export const CancelButtonInIsolationMode: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => false,
@@ -262,10 +270,7 @@ export const ExternalErrorsInIsolationMode: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => true,
@@ -316,10 +321,7 @@ export const MarkIncompleteItems: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => true,
@@ -361,10 +363,7 @@ export const InlineEditing: Story = {
     getItemBody: (values, index) => (
       <>
         <TextField name={`items.${index}.myField`} label={`My field (${index + 1})`} />
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canEditItem: undefined,

@@ -101,6 +101,11 @@
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits."
   },
+  "3aKZqi": {
+    "defaultMessage": "Annuleren",
+    "description": "Edit grid item default cancel button label",
+    "originalDefault": "Cancel"
+  },
   "3beumC": {
     "defaultMessage": "BSN",
     "description": "Children component: label for children BSN",
@@ -511,11 +516,6 @@
     "description": "The leaflet map's search button areaLabel text.",
     "originalDefault": "Map component search button"
   },
-  "XAQW/X": {
-    "defaultMessage": "Annuleren",
-    "description": "Edit grid item default remove button label",
-    "originalDefault": "Cancel"
-  },
   "Y3jHZm": {
     "defaultMessage": "Verwijder laatste punt",
     "description": "Draw toolbar undo button message.",
@@ -692,7 +692,7 @@
     "originalDefault": "Use ctrl + scroll to zoom the map"
   },
   "nTNZBL": {
-    "defaultMessage": "Bewaar alle rijen voordat je doorgaat.",
+    "defaultMessage": "Sla alle rijen op voordat je doorgaat.",
     "description": "Validation error when the edit grid item is still in 'expanded' state.",
     "originalDefault": "Save all rows before proceeding."
   },

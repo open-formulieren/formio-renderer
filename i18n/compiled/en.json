@@ -171,6 +171,12 @@
       "value": "A BSN must be 9 digits."
     }
   ],
+  "3aKZqi": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
   "3beumC": [
     {
       "type": 0,
@@ -913,12 +919,6 @@
     {
       "type": 0,
       "value": "Map component search button"
-    }
-  ],
-  "XAQW/X": [
-    {
-      "type": 0,
-      "value": "Cancel"
     }
   ],
   "Y3jHZm": [

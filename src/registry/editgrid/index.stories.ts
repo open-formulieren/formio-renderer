@@ -730,6 +730,11 @@ export const ValidateRequired: ValidationStory = {
 
     await step('Verify item error display', async () => {
       await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      // no assert/expect here on purpose, because proving that something does *not*
+      // exist is tough. This was a regression to verify that the field-level error
+      // doesn't 'leak' into the item level error because of the index access in keys.
+      // Ultimately, this requires verification in Chromatic by accepting the snapshot
+      // on the condition of it not "looking weird".
     });
   },
 };

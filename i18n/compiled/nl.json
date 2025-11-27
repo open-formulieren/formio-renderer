@@ -171,6 +171,12 @@
       "value": "Een BSN bestaat uit 9 cijfers."
     }
   ],
+  "3aKZqi": [
+    {
+      "type": 0,
+      "value": "Annuleren"
+    }
+  ],
   "3beumC": [
     {
       "type": 0,
@@ -875,12 +881,6 @@
       "value": "Zoeken"
     }
   ],
-  "XAQW/X": [
-    {
-      "type": 0,
-      "value": "Annuleren"
-    }
-  ],
   "Y3jHZm": [
     {
       "type": 0,
@@ -1234,7 +1234,7 @@
   "nTNZBL": [
     {
       "type": 0,
-      "value": "Bewaar alle rijen voordat je doorgaat."
+      "value": "Sla alle rijen op voordat je doorgaat."
     }
   ],
   "nfRRDu": [

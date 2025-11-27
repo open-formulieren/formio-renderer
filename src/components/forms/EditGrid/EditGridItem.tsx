@@ -3,7 +3,7 @@ import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';
 import {Formik, getIn, setIn, setNestedObjectValues} from 'formik';
 import {useContext, useId} from 'react';
-import {useIntl} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
 
 import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import ValidationErrors from '@/components/forms/ValidationErrors';
@@ -12,7 +12,7 @@ import {FieldConfigContext} from '@/context';
 import type {JSONObject, JSONValue} from '@/types';
 
 import EditGridButtonGroup from './EditGridButtonGroup';
-import {IsolationModeButtons, RemoveButton} from './EditGridItemButtons';
+import {IsolationModeButtons} from './EditGridItemButtons';
 import {ITEM_ADDED_MARKER, ITEM_EXPANDED_MARKER} from './constants';
 import type {MarkedEditGridItem} from './types';
 
@@ -112,7 +112,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const {namePrefix} = useContext(FieldConfigContext);
   const id = useId();
   const headingId = `${id}-heading`;
-  const itemErrorId = `${id}-item-error`;
+  const itemErrorId = itemError ? `${id}-item-error` : undefined;
 
   const accessibleRemoveButtonLabel = intl.formatMessage(
     {
@@ -142,7 +142,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           <FieldsetLegend
             className="openforms-editgrid__item-heading"
             id={headingId}
-            aria-describedby={itemError ? itemErrorId : undefined}
+            aria-describedby={itemErrorId}
           >
             {heading}
           </FieldsetLegend>
@@ -182,12 +182,12 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             <>
               {props.getBody({expanded: isExpanded})}
 
-              {itemError ? (
+              {itemError && itemErrorId && (
                 // wrapper div to workaround `order` CSS from utrecht-form-field
                 <div>
                   <ValidationErrors error={itemError} id={itemErrorId} />
                 </div>
-              ) : null}
+              )}
 
               {isExpanded ? (
                 <IsolationModeButtons
@@ -204,7 +204,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     }
                   }}
                   // looks wrong, it isn't... these are badly named properties in the
-                  // edit grid component
+                  // formio edit grid component
                   cancelLabel={removeLabel}
                   aria-describedby={heading ? headingId : undefined}
                 />
@@ -257,11 +257,18 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             {props.getBody({expanded: false})}
             {canRemove && (
               <EditGridButtonGroup>
-                <RemoveButton
-                  label={removeLabel}
+                <PrimaryActionButton
+                  hint="danger"
                   onClick={onRemove}
                   aria-describedby={heading ? headingId : undefined}
-                />
+                >
+                  {removeLabel || (
+                    <FormattedMessage
+                      description="Edit grid item default remove button label"
+                      defaultMessage="Remove"
+                    />
+                  )}
+                </PrimaryActionButton>
               </EditGridButtonGroup>
             )}
           </>
