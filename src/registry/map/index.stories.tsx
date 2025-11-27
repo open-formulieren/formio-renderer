@@ -610,3 +610,92 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
     expect(await canvas.findByText('Custom errom message for required')).toBeVisible();
   },
 };
+
+export const ValidateOnBlur: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: true},
+      interactions: {
+        marker: true,
+        polygon: false,
+        polyline: false,
+      },
+    } satisfies MapComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    map.blur();
+
+    expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const ValidateOnChange: Story = {
+  args: {
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: true},
+      interactions: {
+        marker: true,
+        polygon: false,
+        polyline: false,
+      },
+    } satisfies MapComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          map: 'foobar',
+        },
+      },
+      initialErrors: {
+        my: {
+          map: 'Incorrect value',
+        },
+      },
+      initialTouched: {
+        my: {
+          map: true,
+        },
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    expect(await canvas.findByText('Incorrect value')).toBeVisible();
+
+    await step('Draw a marker', async () => {
+      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
+      await userEvent.click(map, {x: 100, y: 100});
+
+      // This 'button' is the placed marker on the map
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
+
+      // Having a valid value should pass validation and therefore remove the error message
+      expect(canvas.queryByTitle('Incorrect value')).not.toBeInTheDocument();
+    });
+  },
+};

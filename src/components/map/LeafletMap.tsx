@@ -59,6 +59,7 @@ export interface LeafletMapProps {
    * A callback which is called upon changes to the current map value.
    */
   onGeoJsonGeometrySet?: (geoJsonGeometry: GeoJsonGeometry | null) => void;
+  onBlur?: () => void;
 }
 
 const LeafletMap: React.FC<LeafletMapProps> = ({
@@ -69,6 +70,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   mapContainerChild,
   interactions,
   onGeoJsonGeometrySet,
+  onBlur,
   overlays,
 }) => {
   const featureGroupRef = useRef<L.FeatureGroup>(null);
@@ -216,6 +218,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         )}
         {coordinates && <MapView coordinates={coordinates} />}
         {withoutControl && <DisabledMapControls />}
+        {onBlur && <MapBlur onBlur={onBlur} />}
 
         {mapContainerChild}
       </MapContainer>
@@ -353,6 +356,24 @@ const DisabledMapControls = () => {
     map.boxZoom.disable();
     map.keyboard.disable();
     map.tapHold?.disable();
+  }, [map]);
+  return null;
+};
+
+interface MapBlurProps {
+  onBlur: () => void;
+}
+
+const MapBlur: React.FC<MapBlurProps> = props => {
+  const {onBlur} = props;
+
+  const map = useMap();
+  useEffect(() => {
+    map.on('blur', onBlur);
+
+    return () => {
+      map.off('blur', onBlur);
+    };
   }, [map]);
   return null;
 };

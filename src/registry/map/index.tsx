@@ -1,6 +1,6 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
 import {FormField} from '@utrecht/component-library-react';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 import React, {useId} from 'react';
 
 import {HelpText, Label, ValidationErrors} from '@/components/forms';
@@ -33,7 +33,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
 
   const name = useFieldConfig(key);
   const id = useId();
-  const [{value}, {touched}, {setValue}] = useField<null | GeoJsonGeometry>(name);
+  const [{value}, {touched}, {setTouched, setValue}] = useField<null | GeoJsonGeometry>(name);
   const withoutControl = !interactions || Object.values(interactions).every(value => !value);
   const error = useFieldError(name, false);
 
@@ -60,7 +60,11 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
           interactions={interactions}
           overlays={overlays}
           onGeoJsonGeometrySet={(geoJsonGeometry: GeoJsonGeometry) => {
-            setValue(geoJsonGeometry);
+            setTouched(true, false);
+            setValue(geoJsonGeometry, true);
+          }}
+          onBlur={() => {
+            setTouched(true, true);
           }}
         />
       </React.Suspense>
