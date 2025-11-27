@@ -20,7 +20,7 @@ The state is intended to be managed via Formik's
 The edit grid component roughly follow Formio's `editgrid` type, but we have some additional
 flexibility.
 
-**Controlling extra items**
+### Controlling extra items
 
 The prop `emptyItem` controls what will be added to the form state when the "Add another" button is
 clicked. This means that you can actually (depending on form state) add different items each time,
@@ -30,7 +30,7 @@ Pass `null` to disable adding extra rows/items.
 
 <Canvas of={EditGridStories.WithoutAddButton} />
 
-**Nested item type**
+### Nested item type
 
 The component is generic, so if you know upfront what the shape of the data is, you can pass that as
 a generic type argument for improved type checking. This can be particularly useful when rendering
@@ -44,7 +44,7 @@ the `EditGrid` low-level component in your own Formik state.
 />
 ```
 
-**Isolation mode**
+### Isolation mode
 
 To replicate Formio's editing behaviour, the isolation mode via `enableIsolation` is available. In
 this mode, edits to an item are only updated into the main form state after an explicit save action.
@@ -52,6 +52,44 @@ This save button is _only_ available when `enableIsolation: true`, as it would o
 confusing.
 
 <Canvas of={EditGridStories.WithIsolation} />
+
+**Item expanded state validation**
+
+When an item is open for editing in "expanded" state, a marker is added to the data. The caller of
+the component is responsible for performing (Zod) validation on this state if submissions with draft
+item data should be blocked.
+
+Example code:
+
+```ts
+import {z} from 'zod';
+
+import {ITEM_EXPANDED_MARKER} from '@/components/forms/EditGrid/constants';
+import type {MarkedEditGridItem} from '@/components/forms/EditGrid/types';
+import type {JSONObject} from '@/types';
+
+const schema = z
+  .array(
+    z.object({
+      name: z.string(),
+      dateOfBirth: z.string().date(),
+      [ITEM_EXPANDED_MARKER]: z.boolean().optional(),
+    })
+  )
+  .superRefine((items, ctx) => {
+    items.forEach((item, index) => {
+      if (item[ITEM_EXPANDED_MARKER]) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Save all rows before proceeding.',
+          path: [index],
+        });
+      }
+    });
+  });
+```
+
+For a real implementation, see `src/registry/editgrid/validationSchema.ts`.
 
 ## Props
 

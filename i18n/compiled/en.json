@@ -13,6 +13,20 @@
       "value": " or less."
     }
   ],
+  "+AhGyf": [
+    {
+      "type": 0,
+      "value": "Ensure the number of items is less than or equal to "
+    },
+    {
+      "type": 1,
+      "value": "maxLength"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "+KBbXH": [
     {
       "type": 0,
@@ -169,6 +183,12 @@
     {
       "type": 0,
       "value": "A BSN must be 9 digits."
+    }
+  ],
+  "3aKZqi": [
+    {
+      "type": 0,
+      "value": "Cancel"
     }
   ],
   "3beumC": [
@@ -1259,6 +1279,12 @@
     {
       "type": 0,
       "value": "Use ctrl + scroll to zoom the map"
+    }
+  ],
+  "nTNZBL": [
+    {
+      "type": 0,
+      "value": "Save all rows before proceeding."
     }
   ],
   "nfRRDu": [

@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {getIn, useFormikContext} from 'formik';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, within} from 'storybook/test';
 import {z} from 'zod';
 
 import {TextField} from '@/components/forms';
@@ -9,10 +9,36 @@ import {withFormik} from '@/sb-decorators';
 import {validate} from '@/validationSchema';
 
 import EditGrid from '.';
+import {ITEM_EXPANDED_MARKER} from './constants';
+import type {MarkedEditGridItem} from './types';
 
 interface ItemData {
   myField: string;
 }
+
+const RawDataDisplay: React.FC<{
+  data: MarkedEditGridItem<ItemData>;
+  indent?: number;
+  omitPrefix?: boolean;
+}> = ({data, indent, omitPrefix}) => {
+  const copyWithoutMarker = {...data};
+  delete copyWithoutMarker[ITEM_EXPANDED_MARKER];
+  const stringified = JSON.stringify(copyWithoutMarker, null, indent);
+  if (omitPrefix) {
+    return (
+      <code>
+        <pre style={{marginBlock: 0}}>{stringified}</pre>
+      </code>
+    );
+  }
+
+  return (
+    <span>
+      Raw data:
+      <code>{stringified}</code>
+    </span>
+  );
+};
 
 export default {
   title: 'Internal API / Forms / EditGrid',
@@ -26,11 +52,7 @@ export default {
     emptyItem: {myField: ''},
     addButtonLabel: undefined,
     getItemHeading: (_, index) => `Item ${index + 1}`,
-    getItemBody: (values: ItemData) => (
-      <code>
-        <pre style={{marginBlock: '0'}}>{JSON.stringify(values, null, 2)}</pre>
-      </code>
-    ),
+    getItemBody: (values: ItemData) => <RawDataDisplay data={values} indent={2} omitPrefix />,
     canRemoveItem: (_, index) => index % 2 === 1,
   },
   parameters: {
@@ -80,10 +102,7 @@ export const WithIsolation: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     validate: async (_: number, values: ItemData) => {
@@ -138,10 +157,7 @@ export const AddingItemInIsolationMode: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => true,
@@ -157,6 +173,51 @@ export const AddingItemInIsolationMode: Story = {
 
     const textfield = canvas.getByLabelText('My field (3)');
     expect(textfield).toHaveDisplayValue('new item');
+  },
+};
+
+export const CancelButtonInIsolationMode: Story = {
+  args: {
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <RawDataDisplay data={values} />
+      </>
+    ),
+    canRemoveItem: () => false,
+    emptyItem: {myField: 'new item'},
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    // check that we have the edit buttons
+    const editButtons = canvas.getAllByRole('button', {name: /Edit item \d/});
+    expect(editButtons).toHaveLength(2);
+
+    await step('Edit item 1 and cancel the edit', async () => {
+      await userEvent.click(editButtons[0]);
+
+      const cancelButton = await canvas.findByRole('button', {name: 'Cancel'});
+      expect(cancelButton).toBeVisible();
+
+      // make some edits that should be discarded
+      await userEvent.type(canvas.getByLabelText('My field (1)'), ' - edits to discard');
+      await userEvent.click(cancelButton);
+      expect(cancelButton).not.toBeVisible();
+      expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
+    });
+
+    await step('Cancel newly added item removes it', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+
+      const cancelButton = await canvas.findByRole('button', {name: 'Cancel'});
+      expect(cancelButton).toBeVisible();
+      await userEvent.click(cancelButton);
+
+      expect(cancelButton).not.toBeVisible();
+      expect(canvas.getAllByRole('listitem')).toHaveLength(2);
+    });
   },
 };
 
@@ -198,8 +259,8 @@ export const NonEditableItemInIsolation: Story = {
     const canvas = within(canvasElement);
 
     // Expect that both items can retrieve their data from the formik context.
-    await expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
-    await expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
+    expect(await canvas.findByText('{"myField":"Item 1"}')).toBeVisible();
+    expect(await canvas.findByText('{"myField":"Item 2"}')).toBeVisible();
   },
 };
 
@@ -209,10 +270,7 @@ export const ExternalErrorsInIsolationMode: Story = {
     getItemBody: (values, index, {expanded}) => (
       <>
         {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canRemoveItem: () => true,
@@ -255,6 +313,49 @@ export const ExternalErrorsInIsolationMode: Story = {
   },
 };
 
+// Mark (and validate!) incomplete items so that submission is blocked.
+export const MarkIncompleteItems: Story = {
+  args: {
+    name: 'items',
+    enableIsolation: true,
+    getItemBody: (values, index, {expanded}) => (
+      <>
+        {expanded && <TextField name="myField" label={`My field (${index + 1})`} />}
+        <RawDataDisplay data={values} />
+      </>
+    ),
+    canRemoveItem: () => true,
+    emptyItem: {myField: 'new item'},
+  },
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+      initialValues: {
+        items: [{myField: 'Item 1'}, {myField: 'Item 2'}],
+      },
+      renderSubmitButton: true,
+      zodSchema: z.object({
+        items: z.array(
+          z.custom(item => {
+            const isExpanded: boolean | undefined = item[ITEM_EXPANDED_MARKER];
+            return !isExpanded;
+          }, 'Item is not complete!')
+        ),
+      }),
+    },
+  },
+
+  play: async ({canvasElement, context}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Item is not complete!')).toBeVisible();
+    expect(context.parameters.formik.onSubmit).not.toHaveBeenCalled();
+  },
+};
+
 export const InlineEditing: Story = {
   args: {
     enableIsolation: false,
@@ -262,10 +363,7 @@ export const InlineEditing: Story = {
     getItemBody: (values, index) => (
       <>
         <TextField name={`items.${index}.myField`} label={`My field (${index + 1})`} />
-        <span>
-          Raw data:
-          <code>{JSON.stringify(values)}</code>
-        </span>
+        <RawDataDisplay data={values} />
       </>
     ),
     canEditItem: undefined,

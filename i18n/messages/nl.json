@@ -4,6 +4,11 @@
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
+  "+AhGyf": {
+    "defaultMessage": "Ensure the number of items is less than or equal to {maxLength}.",
+    "description": "Validation error for editgrid that exceeds max length.",
+    "originalDefault": "Ensure the number of items is less than or equal to {maxLength}."
+  },
   "+KBbXH": {
     "defaultMessage": "Klik om een veelhoek (polygoon) te tekenen",
     "description": "Draw handler polygon tooltip start.",
@@ -100,6 +105,11 @@
     "defaultMessage": "Een BSN bestaat uit 9 cijfers.",
     "description": "Validation error describing shape of BSN.",
     "originalDefault": "A BSN must be 9 digits."
+  },
+  "3aKZqi": {
+    "defaultMessage": "Annuleren",
+    "description": "Edit grid item default cancel button label",
+    "originalDefault": "Cancel"
   },
   "3beumC": {
     "defaultMessage": "BSN",
@@ -685,6 +695,11 @@
     "defaultMessage": "Gebruik CTRL + scroll om te zoomen in de kaart",
     "description": "Gesturehandeling pc scroll message.",
     "originalDefault": "Use ctrl + scroll to zoom the map"
+  },
+  "nTNZBL": {
+    "defaultMessage": "Sla alle rijen op voordat je doorgaat.",
+    "description": "Validation error when the edit grid item is still in 'expanded' state.",
+    "originalDefault": "Save all rows before proceeding."
   },
   "nfRRDu": {
     "defaultMessage": "jjjj",

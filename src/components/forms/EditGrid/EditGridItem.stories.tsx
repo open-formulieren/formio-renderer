@@ -9,6 +9,7 @@ import type {JSONObject} from '@/types';
 import {validate} from '@/validationSchema';
 
 import {EditGridItem} from '.';
+import {ITEM_EXPANDED_MARKER} from './constants';
 
 export default {
   title: 'Internal API / Forms / EditGrid / EditGridItem',
@@ -56,6 +57,7 @@ export const IsolatedMode: Story = {
     enableIsolation: true,
     data: {
       topLevelKey: 'initial',
+      [ITEM_EXPANDED_MARKER]: true,
     },
     canEdit: true,
     canRemove: false,
@@ -65,8 +67,6 @@ export const IsolatedMode: Story = {
 
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
-
-    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
 
     const textfield = canvas.getByLabelText('Top level key');
     await userEvent.clear(textfield);
@@ -80,8 +80,14 @@ export const IsolatedMode: Story = {
 
 export const IsolatedModeCanRemove: Story = {
   args: {
-    ...IsolatedMode.args,
+    enableIsolation: true,
+    data: {
+      topLevelKey: 'initial',
+    },
+    canEdit: true,
     canRemove: true,
+    getBody: ({expanded}) =>
+      expanded ? <TextField name="topLevelKey" label="Top level key" /> : 'A preview body',
   },
 };
 
@@ -99,7 +105,6 @@ export const IsolatedModeWithZodSchema: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
     const inputField = await canvas.findByLabelText('Top level key');
     expect(inputField).toHaveDisplayValue('initial');
     await userEvent.click(inputField);

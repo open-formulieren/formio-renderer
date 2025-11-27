@@ -27,35 +27,12 @@ const SaveButton: React.FC<SaveButtonProps> = ({
   </PrimaryActionButton>
 );
 
-export interface RemoveButtonProps {
-  label?: React.ReactNode;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  // accessibility
-  ['aria-describedby']: string | undefined;
-}
-
-const RemoveButton: React.FC<RemoveButtonProps> = ({
-  label,
-  onClick,
-  ['aria-describedby']: ariaDescribedBy,
-}) => (
-  <PrimaryActionButton hint="danger" onClick={onClick} aria-describedby={ariaDescribedBy}>
-    {label || (
-      <FormattedMessage
-        description="Edit grid item default remove button label"
-        defaultMessage="Remove"
-      />
-    )}
-  </PrimaryActionButton>
-);
-
 export interface IsolationModeButtonsProps {
   // Saving
   saveLabel?: React.ReactNode;
-  // Removing
-  canRemove: boolean;
-  removeLabel?: React.ReactNode;
-  onRemove: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // Cancelling
+  cancelLabel?: React.ReactNode;
+  onCancel: (e: React.MouseEvent<HTMLButtonElement>) => void;
   // accessibility
   ['aria-describedby']: string | undefined;
 }
@@ -73,9 +50,8 @@ export interface IsolationModeButtonsProps {
  */
 const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
   saveLabel,
-  canRemove,
-  removeLabel,
-  onRemove,
+  cancelLabel,
+  onCancel,
   ['aria-describedby']: ariaDescribedBy,
 }) => {
   const {submitForm} = useFormikContext<unknown>();
@@ -89,11 +65,18 @@ const IsolationModeButtons: React.FC<IsolationModeButtonsProps> = ({
         }}
         aria-describedby={ariaDescribedBy}
       />
-      {canRemove && (
-        <RemoveButton label={removeLabel} onClick={onRemove} aria-describedby={ariaDescribedBy} />
-      )}
+
+      <PrimaryActionButton hint="danger" onClick={onCancel} aria-describedby={ariaDescribedBy}>
+        {cancelLabel || (
+          <FormattedMessage
+            // may be confusing, but cancelling a newly added item actually removes it.
+            description="Edit grid item default cancel button label"
+            defaultMessage="Cancel"
+          />
+        )}
+      </PrimaryActionButton>
     </EditGridButtonGroup>
   );
 };
 
-export {SaveButton, RemoveButton, IsolationModeButtons};
+export {SaveButton, IsolationModeButtons};

@@ -14,6 +14,11 @@ export interface LabelContentProps {
   type?: string;
   noLabelTag?: boolean;
   /**
+   * HTML ID for the label element itself, so that it can be referenced by
+   * aria-labeledby.
+   */
+  labelId?: string;
+  /**
    * Sometimes the label should never get an asterisk or suffix for the required state,
    * e.g. when the checkbox is part of a larger component (like selectboxes).
    */
@@ -29,6 +34,7 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   isRequired = false,
   type,
   noLabelTag = false,
+  labelId,
   noOptionalSuffix = false,
   children,
 }) => {
@@ -40,6 +46,7 @@ export const LabelContent: React.FC<LabelContentProps> = ({
 
   return (
     <Component
+      id={labelId}
       htmlFor={id}
       disabled={isDisabled}
       className={clsx({
@@ -73,6 +80,18 @@ export interface LabelProps {
   isDisabled?: boolean;
   isRequired?: boolean;
   tooltip?: React.ReactNode;
+  /**
+   * Render the label in a `span` rather than a `label` tag.
+   *
+   * @warning ensure you know what you're doing, as incorrectly specifying this will
+   * affect accessibility negatively!
+   */
+  noLabelTag?: boolean;
+  /**
+   * HTML ID for the label element itself, so that it can be referenced by
+   * aria-labeledby.
+   */
+  labelId?: string;
 }
 
 const Label: React.FC<LabelProps> = ({
@@ -80,6 +99,8 @@ const Label: React.FC<LabelProps> = ({
   isRequired = false,
   isDisabled = false,
   tooltip,
+  noLabelTag = false,
+  labelId,
   children,
 }) => (
   <div
@@ -87,7 +108,13 @@ const Label: React.FC<LabelProps> = ({
       'utrecht-form-field__label--openforms-tooltip': !!tooltip,
     })}
   >
-    <LabelContent id={id} isRequired={isRequired} isDisabled={isDisabled}>
+    <LabelContent
+      id={id}
+      labelId={labelId}
+      isRequired={isRequired}
+      isDisabled={isDisabled}
+      noLabelTag={noLabelTag}
+    >
       {children}
     </LabelContent>
     {tooltip}
