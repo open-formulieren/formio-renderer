@@ -80,7 +80,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
 
   try {
     center = geoJsonGeometry ? L.geoJSON(geoJsonGeometry).getBounds().getCenter() : null;
-  } catch (Error) {
+  } catch {
     console.log('Invalid GeoJson object');
     geoJsonGeometry = null;
   }
@@ -374,7 +374,7 @@ const MapBlur: React.FC<MapBlurProps> = props => {
     return () => {
       map.off('blur', onBlur);
     };
-  }, [map]);
+  }, [map, onBlur]);
   return null;
 };
 
