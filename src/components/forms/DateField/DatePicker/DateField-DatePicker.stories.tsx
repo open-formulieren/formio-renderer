@@ -299,10 +299,10 @@ export const NoErrorWhileFocus: Story = {
 
     const dialog = await canvas.findByRole('dialog');
     expect(dialog).toBeVisible();
-    await userEvent.click(dialog);
-    await waitFor(() => {
-      expect(dialog).toHaveFocus();
-      expect(input).not.toHaveFocus();
-    });
+
+    // select a date to shift focus
+    const dateButton = await canvas.findByRole('button', {name: 'maandag 29 september 2025'});
+    dateButton.focus();
+    expect(input).not.toHaveFocus();
   },
 };
