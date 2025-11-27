@@ -1,14 +1,9 @@
 import type {EmailComponentSchema} from '@open-formulieren/types';
-import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildEmailValidationSchema} from '@/validationSchemas/email';
 import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
-
-const INVALID_EMAIL_ADDRESS_MESSAGE = defineMessage({
-  description: 'Validation error for invalid email.',
-  defaultMessage: 'Invalid email address.',
-});
 
 const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   componentDefinition,
@@ -17,11 +12,11 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let baseSchema: z.ZodFirstPartySchemaTypes = z
-    .string({
-      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-    })
-    .email({message: intl.formatMessage(INVALID_EMAIL_ADDRESS_MESSAGE)});
+  let baseSchema: z.ZodFirstPartySchemaTypes = buildEmailValidationSchema(
+    intl,
+    label,
+    errors?.required
+  );
   if (!required) {
     baseSchema = z.optional(baseSchema);
   }
