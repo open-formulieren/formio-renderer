@@ -301,6 +301,7 @@ export const NoErrorWhileFocus: Story = {
     expect(dialog).toBeVisible();
     await userEvent.click(dialog);
     await waitFor(() => {
+      expect(dialog).toHaveFocus();
       expect(input).not.toHaveFocus();
     });
   },
