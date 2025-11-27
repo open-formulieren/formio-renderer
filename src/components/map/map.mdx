@@ -24,9 +24,9 @@ const interactions = {
   marker: true,
   polygon: false,
   polyline: true,
-}
+};
 
-const map = <LeafletMap {...defaultProps} interactions={interactions} />
+const map = <LeafletMap {...defaultProps} interactions={interactions} />;
 ```
 
 ## TileLayer
@@ -38,9 +38,9 @@ example be used to show sattelite imagery instead of the abstract layer which is
 import {LeafletMap} from '@open-formulieren/formio-renderer';
 
 const tileLayerUrl =
-'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:28992/{z}/{x}/{y}.png';
+  'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:28992/{z}/{x}/{y}.png';
 
-const map = <LeafletMap {...defaultProps} tileLayerUrl={tileLayerUrl} />
+const map = <LeafletMap {...defaultProps} tileLayerUrl={tileLayerUrl} />;
 ```
 
 ## Overlays
@@ -68,5 +68,5 @@ const overlays = [
   },
 ];
 
-const map = <LeafletMap {...defaultProps} overlays={overlays} />
+const map = <LeafletMap {...defaultProps} overlays={overlays} />;
 ```
