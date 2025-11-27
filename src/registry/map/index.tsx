@@ -1,12 +1,12 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
 import {FormField} from '@utrecht/component-library-react';
 import {useField} from 'formik';
-import React from 'react';
+import React, {useId} from 'react';
 
-import {HelpText, Label} from '@/components/forms';
+import {HelpText, Label, ValidationErrors} from '@/components/forms';
 import Tooltip from '@/components/forms/Tooltip';
 import LeafletMap from '@/components/map';
-import {useFieldConfig} from '@/hooks';
+import {useFieldConfig, useFieldError} from '@/hooks';
 
 import type {RegistryEntry} from '../types';
 import ValueDisplay from './ValueDisplay';
@@ -32,11 +32,15 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
   } = componentDefinition;
 
   const name = useFieldConfig(key);
-  const [{value}, , {setValue}] = useField<null | GeoJsonGeometry>(name);
+  const id = useId();
+  const [{value}, {touched}, {setValue}] = useField<null | GeoJsonGeometry>(name);
   const withoutControl = !interactions || Object.values(interactions).every(value => !value);
+  const error = useFieldError(name, false);
+
+  const errorMessageId = error ? `${id}-error-message` : undefined;
 
   return (
-    <FormField className="utrecht-form-field--openforms">
+    <FormField invalid={error ? true : false} className="utrecht-form-field--openforms">
       <Label
         isDisabled={withoutControl}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
@@ -55,11 +59,14 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
           }
           interactions={interactions}
           overlays={overlays}
-          onGeoJsonGeometrySet={setValue}
+          onGeoJsonGeometrySet={(geoJsonGeometry: GeoJsonGeometry) => {
+            setValue(geoJsonGeometry);
+          }}
         />
       </React.Suspense>
 
       <HelpText>{description}</HelpText>
+      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );
 };

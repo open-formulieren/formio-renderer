@@ -1,12 +1,14 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, waitFor, within} from 'storybook/test';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
+import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import MockProvider, {withMapLayout} from '@/tests/map';
 
 import {FormioMap} from '.';
+import {renderComponentInForm} from '../storybook-helpers';
 import ValueDisplay from './ValueDisplay';
 
 export default {
@@ -470,4 +472,99 @@ export const LineDisplay: ValueDisplayStory = {
     },
   },
   render: args => <ValueDisplay {...args} />,
+};
+
+interface ValidationStoryArgs {
+  componentDefinition: MapComponentSchema;
+  onSubmit: FormioFormProps['onSubmit'];
+}
+
+type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+const BaseValidationStory: ValidationStory = {
+  render: renderComponentInForm,
+  parameters: {
+    formik: {
+      disable: true,
+    },
+  },
+};
+
+export const ValidateNotRequired: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: false},
+    } satisfies MapComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(canvas.queryByTitle('Invalid input')).not.toBeInTheDocument();
+  },
+};
+
+export const ValidateRequiredWithoutCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: true},
+    } satisfies MapComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Required')).toBeVisible();
+  },
+};
+
+export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: true},
+      errors: {required: 'Custom errom message for required'},
+    } satisfies MapComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText('Custom errom message for required')).toBeVisible();
+  },
 };
