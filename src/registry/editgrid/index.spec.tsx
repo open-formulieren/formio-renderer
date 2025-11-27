@@ -371,7 +371,9 @@ test('Item validation schema adapts to component visibility', async () => {
 
   const innerSaveButton = screen.getAllByRole<HTMLButtonElement>('button', {name: 'Save'})[0];
   await userEvent.click(innerSaveButton);
-  expect(await screen.findByText('Invalid')).toBeVisible();
+  expect(
+    await screen.findByText('The submitted value does not match the pattern: [a-z]{4}.')
+  ).toBeVisible();
   expect(screen.queryAllByRole('button', {name: 'Save'})).toHaveLength(2);
 });
 

@@ -148,8 +148,8 @@ export const ValidatesNestedComponents: ValidationStory = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
-    expect(await canvas.findByText('String must contain at most 3 character(s)')).toBeVisible();
-    expect(await canvas.findByText('Invalid email')).toBeVisible();
+    expect(await canvas.findByText('There are too many characters provided.')).toBeVisible();
+    expect(await canvas.findByText('Invalid email address.')).toBeVisible();
 
     expect(args.onSubmit).not.toHaveBeenCalled();
   },

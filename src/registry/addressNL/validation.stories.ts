@@ -52,11 +52,10 @@ export const ComponentRequired: Story = {
     expect(postcodeField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    const errors = await canvas.findAllByText('Required');
-    expect(errors).toHaveLength(2);
-    for (const error of errors) {
-      expect(error).toBeVisible();
-    }
+    expect(await canvas.findByText('The required field Postcode must be filled in.')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field House number must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -87,7 +86,9 @@ export const ComponentNotRequired: Story = {
     await step('Enter only postcode', async () => {
       await userEvent.type(postcodeField, '1234 AB');
       await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-      expect(await canvas.findByText('You must provide a house number.')).toBeVisible();
+      expect(
+        await canvas.findByText('The required field House number must be filled in.')
+      ).toBeVisible();
     });
 
     await userEvent.clear(postcodeField);
@@ -96,7 +97,9 @@ export const ComponentNotRequired: Story = {
     await step('Enter only house number', async () => {
       await userEvent.type(houseNumberField, '333');
       await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-      expect(await canvas.findByText('You must provide a postcode.')).toBeVisible();
+      expect(
+        await canvas.findByText('The required field Postcode must be filled in.')
+      ).toBeVisible();
     });
   },
 };
@@ -143,8 +146,10 @@ export const AutofillImpliesCityAndStreetRequired: Story = {
     await userEvent.type(houseNumberField, '333');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('You must provide a street name.')).toBeVisible();
-    expect(await canvas.findByText('You must provide a city.')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Street name must be filled in.')
+    ).toBeVisible();
+    expect(await canvas.findByText('The required field City must be filled in.')).toBeVisible();
   },
 };
 

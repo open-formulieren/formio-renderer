@@ -2,15 +2,20 @@ import type {CosignV2ComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildEmailValidationSchema} from '@/validationSchemas/email';
 
 const getValidationSchema: GetValidationSchema<CosignV2ComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, errors} = componentDefinition;
+  const {key, validate = {}, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let baseSchema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required}).email();
+  let baseSchema: z.ZodFirstPartySchemaTypes = buildEmailValidationSchema(
+    intl,
+    label,
+    errors?.required
+  );
   if (!required) {
     baseSchema = z.optional(baseSchema);
   }

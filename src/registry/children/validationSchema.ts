@@ -6,6 +6,9 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
+
+import {FIELD_LABELS} from './subFields';
 
 const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
   description: 'Validation error for children.dateOfBirth that is after the minimum date.',
@@ -20,11 +23,6 @@ const DATE_OF_BIRTH_MAX_DATE_MESSAGE = defineMessage({
 const DATE_OF_BIRTH_INVALID_MESSAGE = defineMessage({
   description: 'Validation error for children.dateOfBirth invalid format.',
   defaultMessage: 'The format of the date of birth is incorrect.',
-});
-
-const FIRST_NAMES_REQUIRED_MESSAGE = defineMessage({
-  description: 'Validation error for required children.firstNames field.',
-  defaultMessage: 'You must provide a first name.',
 });
 
 const DUPLICATE_BSN_VALUES_MESSAGE = defineMessage({
@@ -44,7 +42,11 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
     .max(maxDate, {message: intl.formatMessage(DATE_OF_BIRTH_MAX_DATE_MESSAGE)});
 
   return z
-    .string()
+    .string({
+      required_error: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.dateOfBirth),
+      }),
+    })
     .refine(
       value => {
         const parsed = parseISO(value);
@@ -57,8 +59,14 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
 
 const buildChildSchema = (intl: IntlShape): z.ZodSchema => {
   return z.object({
-    bsn: buildBsnValidationSchema(intl),
-    firstNames: z.string().min(1, {message: intl.formatMessage(FIRST_NAMES_REQUIRED_MESSAGE)}),
+    bsn: buildBsnValidationSchema(intl, intl.formatMessage(FIELD_LABELS.bsn)),
+    firstNames: z
+      .string({
+        required_error: buildRequiredMessage(intl, {
+          fieldLabel: intl.formatMessage(FIELD_LABELS.firstNames),
+        }),
+      })
+      .min(1),
     dateOfBirth: buildDateOfBirthSchema(intl),
     selected: z.boolean().optional(),
     // __addedManually must either be true or undefined.

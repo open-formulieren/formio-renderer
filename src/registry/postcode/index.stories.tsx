@@ -170,7 +170,9 @@ export const ValidateRequired: ValidationStory = {
     expect(textField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A postcode field must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -317,7 +319,9 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[2], '1015CJ'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field A postcode field must be filled in.')
+    ).toBeVisible();
     expect(
       await canvas.findByText('The submitted value does not match the postcode pattern: 1234 AB')
     ).toBeVisible();

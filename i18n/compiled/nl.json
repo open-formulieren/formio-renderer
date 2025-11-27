@@ -37,12 +37,6 @@
       "value": "Verwijderen"
     }
   ],
-  "+zrboi": [
-    {
-      "type": 0,
-      "value": "Ongeldig IBAN"
-    }
-  ],
   "/RrV7w": [
     {
       "type": 0,
@@ -53,12 +47,6 @@
     {
       "type": 0,
       "value": "Tekeningen annuleren"
-    }
-  ],
-  "07h5b8": [
-    {
-      "type": 0,
-      "value": "Voornaam is verplicht."
     }
   ],
   "0EdUXi": [
@@ -137,6 +125,12 @@
       "value": "Vorig jaar"
     }
   ],
+  "2RWk49": [
+    {
+      "type": 0,
+      "value": "Ongeldig Nederlands kenteken."
+    }
+  ],
   "33UD7T": [
     {
       "type": 0,
@@ -181,6 +175,20 @@
     {
       "type": 0,
       "value": "BSN"
+    }
+  ],
+  "46fk1B": [
+    {
+      "type": 0,
+      "value": "Het verplichte veld '"
+    },
+    {
+      "type": 1,
+      "value": "fieldLabel"
+    },
+    {
+      "type": 0,
+      "value": "' is niet ingevuld."
     }
   ],
   "4IX8hk": [
@@ -257,6 +265,20 @@
     {
       "type": 0,
       "value": "mm"
+    }
+  ],
+  "8soi1P": [
+    {
+      "type": 0,
+      "value": "De opgegeven waarde voldoet niet aan het formaat: "
+    },
+    {
+      "type": 1,
+      "value": "pattern"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "8uM5Vx": [
@@ -337,6 +359,12 @@
     {
       "type": 0,
       "value": "Verwijder vormen"
+    }
+  ],
+  "BYKDMO": [
+    {
+      "type": 0,
+      "value": "De datum moet een geldig formaat hebben (bijvoorbeeld 30-10-2025)."
     }
   ],
   "BboxO6": [
@@ -665,6 +693,12 @@
       "value": "m"
     }
   ],
+  "MTfsUB": [
+    {
+      "type": 0,
+      "value": "Er zijn te veel karakters opgegeven."
+    }
+  ],
   "MrlKEu": [
     {
       "type": 0,
@@ -681,12 +715,6 @@
     {
       "type": 0,
       "value": "Je huidige locatie kan niet bepaald worden"
-    }
-  ],
-  "Oc3efT": [
-    {
-      "type": 0,
-      "value": "Plaats is verplicht."
     }
   ],
   "Op4orj": [
@@ -749,6 +777,20 @@
       "value": "De limiet van het aantal bestanden is bereikt. Je kan geen extra bestanden toevoegen."
     }
   ],
+  "S2Wyuv": [
+    {
+      "type": 0,
+      "value": "De opgegeven waarde voldoet niet aan het formaat: "
+    },
+    {
+      "type": 1,
+      "value": "pattern"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "S5ydMY": [
     {
       "type": 0,
@@ -767,12 +809,6 @@
     {
       "type": 0,
       "value": " of minder opties aagevinkt heeft."
-    }
-  ],
-  "TcqyzM": [
-    {
-      "type": 0,
-      "value": "Postcode is verplicht."
     }
   ],
   "Tip5+d": [
@@ -807,16 +843,24 @@
       "value": "?"
     }
   ],
-  "UONGQo": [
+  "V0B3pn": [
     {
       "type": 0,
-      "value": "Huisnummer is verplicht."
+      "value": "De datum moet op of na "
+    },
+    {
+      "type": 1,
+      "value": "min"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
     }
   ],
   "WpfP0s": [
     {
       "type": 0,
-      "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB"
+      "value": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB."
     }
   ],
   "WzAGB4": [
@@ -835,6 +879,12 @@
     {
       "type": 0,
       "value": "Verwijder laatste punt"
+    }
+  ],
+  "Yg2+vS": [
+    {
+      "type": 0,
+      "value": "Ongeldig e-mailadres."
     }
   ],
   "ZAq+s7": [
@@ -901,6 +951,12 @@
       "value": " zijn."
     }
   ],
+  "b4uuR7": [
+    {
+      "type": 0,
+      "value": "Er zijn te veel karakters opgegeven."
+    }
+  ],
   "bKPaUj": [
     {
       "type": 0,
@@ -923,12 +979,6 @@
     {
       "type": 0,
       "value": "Geen informatie verstrekt."
-    }
-  ],
-  "bv/J3Y": [
-    {
-      "type": 0,
-      "value": "Straatnaam is verplicht."
     }
   ],
   "c0Ry9H": [
@@ -1181,16 +1231,24 @@
       "value": "jjjj"
     }
   ],
+  "o3TabP": [
+    {
+      "type": 0,
+      "value": "De datum moet op of voor "
+    },
+    {
+      "type": 1,
+      "value": "max"
+    },
+    {
+      "type": 0,
+      "value": " zijn."
+    }
+  ],
   "oCHirf": [
     {
       "type": 0,
       "value": "Uploaden..."
-    }
-  ],
-  "odKXcF": [
-    {
-      "type": 0,
-      "value": "Je moet een achternaam opgeven."
     }
   ],
   "osSl3z": [
@@ -1221,12 +1279,6 @@
     {
       "type": 0,
       "value": "Huisletter moet één enkele letter zijn."
-    }
-  ],
-  "ph6ljt": [
-    {
-      "type": 0,
-      "value": "Ongeldige invoer"
     }
   ],
   "pzR8ui": [
@@ -1315,6 +1367,12 @@
     {
       "type": 0,
       "value": "Niet medeondertekend"
+    }
+  ],
+  "u1vsoV": [
+    {
+      "type": 0,
+      "value": "Ongeldig IBAN."
     }
   ],
   "vCObuG": [
@@ -1429,12 +1487,6 @@
     {
       "type": 0,
       "value": "De geboortedatum mag niet in de toekomst liggen."
-    }
-  ],
-  "z+/GrY": [
-    {
-      "type": 0,
-      "value": "Ongeldig Nederlands kenteken"
     }
   ],
   "zpHAro": [

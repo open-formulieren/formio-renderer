@@ -2,12 +2,13 @@ import type {CheckboxComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, errors} = componentDefinition;
+  const {key, validate = {}, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   const schema: z.ZodEffects<z.ZodBoolean> = z.boolean().superRefine(async (val, ctx) => {
@@ -18,7 +19,7 @@ const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = (
         // a lie, but required for the error map hook
         received: z.ZodParsedType.undefined,
         expected: z.ZodParsedType.boolean,
-        message: errors?.required,
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
     if (plugins.length) {

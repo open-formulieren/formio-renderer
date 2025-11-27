@@ -479,7 +479,7 @@ test('Modifying the form definition updates the validation schema', async () => 
   const submitButton = screen.getByRole('button', {name: 'Submit'});
   await user.type(texfield, '12345678901');
   await user.click(submitButton);
-  expect(await screen.findByText('String must contain at most 10 character(s)')).toBeVisible();
+  expect(await screen.findByText('There are too many characters provided.')).toBeVisible();
   expect(onSubmit).not.toHaveBeenCalled();
 
   // correct the input and check that we can submit
@@ -493,7 +493,7 @@ test('Modifying the form definition updates the validation schema', async () => 
   const updatedTexfield = await screen.findByLabelText('Textfield with max length');
   expect(updatedTexfield).toHaveDisplayValue('1234ab');
   await user.click(submitButton);
-  expect(await screen.findByText('String must contain at most 3 character(s)')).toBeVisible();
+  expect(await screen.findByText('There are too many characters provided.')).toBeVisible();
 });
 
 describe('onChange prop', () => {

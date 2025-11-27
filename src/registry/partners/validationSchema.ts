@@ -6,6 +6,9 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
+
+import {FIELD_LABELS} from './subFields';
 
 const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
   description: 'Validation error for partners.dateOfBirth that is after the minimum date.',
@@ -22,11 +25,6 @@ const DATE_OF_BIRTH_INVALID_MESSAGE = defineMessage({
   defaultMessage: 'The format of the date of birth is incorrect.',
 });
 
-const LAST_NAME_REQUIRED_MESSAGE = defineMessage({
-  description: 'Validation error for required partners.lastName field.',
-  defaultMessage: 'You must provide a last name.',
-});
-
 const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => {
   const today = new Date();
 
@@ -39,7 +37,11 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
     .max(maxDate, {message: intl.formatMessage(DATE_OF_BIRTH_MAX_DATE_MESSAGE)});
 
   return z
-    .string()
+    .string({
+      required_error: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.dateOfBirth),
+      }),
+    })
     .refine(
       value => {
         const parsed = parseISO(value);
@@ -68,10 +70,16 @@ const getValidationSchema: GetValidationSchema<PartnersComponentSchema> = (
   // Define partners schema
   const partnersSchema = z.array(
     z.object({
-      bsn: buildBsnValidationSchema(intl),
+      bsn: buildBsnValidationSchema(intl, intl.formatMessage(FIELD_LABELS.bsn)),
       initials: z.string().optional(),
       affixes: z.string().optional(),
-      lastName: z.string().min(1, {message: intl.formatMessage(LAST_NAME_REQUIRED_MESSAGE)}),
+      lastName: z
+        .string({
+          message: buildRequiredMessage(intl, {
+            fieldLabel: intl.formatMessage(FIELD_LABELS.lastName),
+          }),
+        })
+        .min(1),
       dateOfBirth: buildDateOfBirthSchema(intl),
       // __addedManually must either be true or undefined.
       __addedManually: z.literal<boolean>(true).optional(),

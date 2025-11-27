@@ -2,6 +2,7 @@ import type {SelectComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {assertManualValues} from './types';
 
@@ -9,7 +10,7 @@ type ValuesEnum = z.ZodEnum<[string, ...string[]]>;
 
 const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
   const {
@@ -18,6 +19,7 @@ const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
     multiple = false,
     data: {values: options},
     errors,
+    label,
   } = componentDefinition;
   const {required, plugins = []} = validate;
 
@@ -35,7 +37,7 @@ const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
 
   // schema for the bare string base for the option, used for `required` validation
   let baseSchema: z.ZodOptional<z.ZodString> | z.ZodString = z.string({
-    required_error: errors?.required,
+    required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
   if (!required) {
     baseSchema = baseSchema.optional();
@@ -64,7 +66,9 @@ const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(1, {
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+      });
     }
   }
 

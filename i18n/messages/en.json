@@ -24,11 +24,6 @@
     "description": "Edit grid item default remove button label",
     "originalDefault": "Remove"
   },
-  "+zrboi": {
-    "defaultMessage": "Invalid IBAN",
-    "description": "Validation error for IBAN that does not pass the mod-97 test.",
-    "originalDefault": "Invalid IBAN"
-  },
   "/RrV7w": {
     "defaultMessage": "House number addition must be up to four letters and digits.",
     "description": "Validation error for addressNL.houseNumberAddition field.",
@@ -38,11 +33,6 @@
     "defaultMessage": "Cancel drawing",
     "description": "Draw toolbar cancel button tooltip.",
     "originalDefault": "Cancel drawing"
-  },
-  "07h5b8": {
-    "defaultMessage": "You must provide a first name.",
-    "description": "Validation error for required children.firstNames field.",
-    "originalDefault": "You must provide a first name."
   },
   "0EdUXi": {
     "defaultMessage": "Save",
@@ -89,6 +79,11 @@
     "description": "Calendar: previous year button title",
     "originalDefault": "Previous year"
   },
+  "2RWk49": {
+    "defaultMessage": "Invalid Dutch license plate.",
+    "description": "Validation error for license plate.",
+    "originalDefault": "Invalid Dutch license plate."
+  },
   "33UD7T": {
     "defaultMessage": "Affixes",
     "description": "Partners component: label for partners affixes",
@@ -108,6 +103,11 @@
     "defaultMessage": "BSN",
     "description": "Children component: label for children BSN",
     "originalDefault": "BSN"
+  },
+  "46fk1B": {
+    "defaultMessage": "The required field {fieldLabel} must be filled in.",
+    "description": "Validation error for required field.",
+    "originalDefault": "The required field {fieldLabel} must be filled in."
   },
   "4IX8hk": {
     "defaultMessage": "Loading...",
@@ -148,6 +148,11 @@
     "defaultMessage": "MM",
     "description": "Placeholder for the minute part of the time",
     "originalDefault": "MM"
+  },
+  "8soi1P": {
+    "defaultMessage": "The submitted value does not match the pattern: {pattern}.",
+    "description": "Validation error for TEXTFIELD that does not match the pattern.",
+    "originalDefault": "The submitted value does not match the pattern: {pattern}."
   },
   "8uM5Vx": {
     "defaultMessage": "Remove ''{fileName}'",
@@ -198,6 +203,11 @@
     "defaultMessage": "Remove shapes",
     "description": "Edit toolbar remove button tooltip.",
     "originalDefault": "Remove shapes"
+  },
+  "BYKDMO": {
+    "defaultMessage": "The date must be in a valid format (e.g., 10/30/2025).",
+    "description": "Invalid input validation error for date field",
+    "originalDefault": "The date must be in a valid format (e.g., 10/30/2025)."
   },
   "BboxO6": {
     "defaultMessage": "Use two fingers to move the map",
@@ -369,6 +379,11 @@
     "description": "Placeholder for month part of a date",
     "originalDefault": "m"
   },
+  "MTfsUB": {
+    "defaultMessage": "There are too many characters provided.",
+    "description": "Validation error for TEXTFIELD that exceeds max length.",
+    "originalDefault": "There are too many characters provided."
+  },
   "MrlKEu": {
     "defaultMessage": "Date of birth cannot be in the future.",
     "description": "Validation error for children.dateOfBirth that is after the maximum date.",
@@ -383,11 +398,6 @@
     "defaultMessage": "Your current location cannot be accessed",
     "description": "Leaflet map: use user location button disabled tooltip text.",
     "originalDefault": "Your current location cannot be accessed"
-  },
-  "Oc3efT": {
-    "defaultMessage": "You must provide a city.",
-    "description": "Validation error for required addressNL.city field.",
-    "originalDefault": "You must provide a city."
   },
   "Op4orj": {
     "defaultMessage": "No shapes to remove",
@@ -439,6 +449,11 @@
     "description": "Description for hidden upload button/dropzone because the file limit is reached.",
     "originalDefault": "The maximum number of uploads is reached. You cannot upload additional files."
   },
+  "S2Wyuv": {
+    "defaultMessage": "The submitted value does not match the pattern: {pattern}.",
+    "description": "Validation error for Textarea that does not match the pattern.",
+    "originalDefault": "The submitted value does not match the pattern: {pattern}."
+  },
   "S5ydMY": {
     "defaultMessage": "The format of the date of birth is incorrect.",
     "description": "Validation error for children.dateOfBirth invalid format.",
@@ -448,11 +463,6 @@
     "defaultMessage": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }.",
     "description": "Selectboxes maximum selected count error message",
     "originalDefault": "You can only select up to {maxSelectedCount, plural, one {{maxSelectedCount, number} item} other {{maxSelectedCount, number} items} }."
-  },
-  "TcqyzM": {
-    "defaultMessage": "You must provide a postcode.",
-    "description": "Validation error when AddressNL.houseNumber is provided but not postcode",
-    "originalDefault": "You must provide a postcode."
   },
   "Tip5+d": {
     "defaultMessage": "Next year",
@@ -474,10 +484,10 @@
     "description": "Children component: child 'selected' aria label",
     "originalDefault": "Include {firstname}?"
   },
-  "UONGQo": {
-    "defaultMessage": "You must provide a house number.",
-    "description": "Validation error when AddressNL.postcode is provided but not houseNumber",
-    "originalDefault": "You must provide a house number."
+  "V0B3pn": {
+    "defaultMessage": "The date must be later than or equal to {min}.",
+    "description": "Validation error for date greater than or equal to minimum date.",
+    "originalDefault": "The date must be later than or equal to {min}."
   },
   "WpfP0s": {
     "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
@@ -498,6 +508,11 @@
     "defaultMessage": "Remove last point",
     "description": "Draw toolbar undo button message.",
     "originalDefault": "Remove last point"
+  },
+  "Yg2+vS": {
+    "defaultMessage": "Invalid email address.",
+    "description": "Validation error for invalid email.",
+    "originalDefault": "Invalid email address."
   },
   "ZAq+s7": {
     "defaultMessage": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}",
@@ -524,6 +539,11 @@
     "description": "Validation error describing the value is not before the maximum time.",
     "originalDefault": "Time must be before {maxTime}"
   },
+  "b4uuR7": {
+    "defaultMessage": "There are too many characters provided.",
+    "description": "Validation error for Textarea that exceeds max length.",
+    "originalDefault": "There are too many characters provided."
+  },
   "bKPaUj": {
     "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
     "description": "Validation error for addressNL.houseNumber field.",
@@ -543,11 +563,6 @@
     "defaultMessage": "No information provided",
     "description": "Empty field message",
     "originalDefault": "No information provided"
-  },
-  "bv/J3Y": {
-    "defaultMessage": "You must provide a street name.",
-    "description": "Validation error for required addressNL.streetName field.",
-    "originalDefault": "You must provide a street name."
   },
   "c0Ry9H": {
     "defaultMessage": "The verification code must contain exactly six characters.",
@@ -669,15 +684,15 @@
     "description": "Placeholder for year part of a date",
     "originalDefault": "yyyy"
   },
+  "o3TabP": {
+    "defaultMessage": "The date must be earlier than or equal to {max}.",
+    "description": "Validation error for date less than or equal to maximum date.",
+    "originalDefault": "The date must be earlier than or equal to {max}."
+  },
   "oCHirf": {
     "defaultMessage": "Uploading...",
     "description": "Pending file upload accessible description.",
     "originalDefault": "Uploading..."
-  },
-  "odKXcF": {
-    "defaultMessage": "You must provide a last name.",
-    "description": "Validation error for required partners.lastName field.",
-    "originalDefault": "You must provide a last name."
   },
   "osSl3z": {
     "defaultMessage": "City",
@@ -703,11 +718,6 @@
     "defaultMessage": "House letter must be a single letter.",
     "description": "Validation error for addressNL.houseLetter field.",
     "originalDefault": "House letter must be a single letter."
-  },
-  "ph6ljt": {
-    "defaultMessage": "Invalid input",
-    "description": "Invalid input validation error for date field",
-    "originalDefault": "Invalid input"
   },
   "pzR8ui": {
     "defaultMessage": "Something went wrong while processing the co-sign results. Please contact the municipality.",
@@ -769,6 +779,11 @@
     "description": "Not co-signed (summary) message",
     "originalDefault": "Not co-signed"
   },
+  "u1vsoV": {
+    "defaultMessage": "Invalid IBAN.",
+    "description": "Validation error for IBAN that does not pass the mod-97 test.",
+    "originalDefault": "Invalid IBAN."
+  },
   "vCObuG": {
     "defaultMessage": "Day",
     "description": "Date input group: day label",
@@ -828,11 +843,6 @@
     "defaultMessage": "Date of birth cannot be in the future.",
     "description": "Validation error for partners.dateOfBirth that is after the maximum date.",
     "originalDefault": "Date of birth cannot be in the future."
-  },
-  "z+/GrY": {
-    "defaultMessage": "Invalid Dutch license plate",
-    "description": "Validation error for license plate.",
-    "originalDefault": "Invalid Dutch license plate"
   },
   "zpHAro": {
     "defaultMessage": "Click to start drawing line",

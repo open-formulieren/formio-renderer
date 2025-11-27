@@ -2,15 +2,21 @@ import type {EmailComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildEmailValidationSchema} from '@/validationSchemas/email';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, multiple, errors} = componentDefinition;
+  const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let baseSchema: z.ZodFirstPartySchemaTypes = z.string({required_error: errors?.required}).email();
+  let baseSchema: z.ZodFirstPartySchemaTypes = buildEmailValidationSchema(
+    intl,
+    label,
+    errors?.required
+  );
   if (!required) {
     baseSchema = z.optional(baseSchema);
   }
@@ -35,7 +41,9 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(1, {
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+      });
     }
   }
 

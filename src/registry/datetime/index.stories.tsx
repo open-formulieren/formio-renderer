@@ -146,7 +146,9 @@ export const ValidateRequired: ValidationStory = {
     const canvas = within(canvasElement);
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText("Het verplichte veld 'Datetime' is niet ingevuld.")
+    ).toBeVisible();
   },
 };
 

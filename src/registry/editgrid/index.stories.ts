@@ -139,7 +139,9 @@ export const WithValidationSchema: Story = {
     const input = await canvas.findByLabelText('Numbers only, required');
     await userEvent.type(input, 'abc');
     await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-    expect(await canvas.findByText('Invalid')).toBeVisible();
+    expect(
+      await canvas.findByText('The submitted value does not match the pattern: \\d+.')
+    ).toBeVisible();
   },
 };
 

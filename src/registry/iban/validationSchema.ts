@@ -4,10 +4,11 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const IBAN_INVALID_MESSAGE = defineMessage({
   description: 'Validation error for IBAN that does not pass the mod-97 test.',
-  defaultMessage: 'Invalid IBAN',
+  defaultMessage: 'Invalid IBAN.',
 });
 
 const isValidIBAN = (value: string): boolean => {
@@ -22,11 +23,13 @@ const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, multiple, errors} = componentDefinition;
+  const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string({required_error: errors?.required})
+    .string({
+      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+    })
     .refine(isValidIBAN, {message: intl.formatMessage(IBAN_INVALID_MESSAGE)});
 
   if (!required) {
@@ -47,7 +50,9 @@ const getValidationSchema: GetValidationSchema<IbanComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {message: errors?.required});
+      schema = schema.min(1, {
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+      });
     }
   }
 

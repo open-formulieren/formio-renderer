@@ -312,7 +312,9 @@ export const InitialErrorsRevalidation: Story = {
       const input = canvas.getByLabelText('Field 2');
       await userEvent.type(input, 'invalid input');
       input.blur();
-      expect(await canvas.findByText('Invalid')).toBeVisible();
+      expect(
+        await canvas.findByText('The submitted value does not match the pattern: [0-9]+.')
+      ).toBeVisible();
       expect(canvas.queryByText('External error for field 2')).not.toBeInTheDocument();
       // may not be removed
       expect(canvas.getByText('External error for field 1')).toBeVisible();

@@ -3,6 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {assertManualValues} from './types';
 
@@ -30,7 +31,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
   {intl, validatePlugins}
 ) => {
   assertManualValues(componentDefinition);
-  const {key, validate = {}, values: options, errors} = componentDefinition;
+  const {key, validate = {}, values: options, errors, label} = componentDefinition;
   const {required, minSelectedCount, maxSelectedCount, plugins = []} = validate;
 
   // all properties are required by default - this mirrors the explicit true/false
@@ -61,7 +62,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
           code: z.ZodIssueCode.invalid_type,
           received: z.ZodParsedType.undefined,
           expected: z.ZodParsedType.object,
-          message: errors?.required || 'Required',
+          message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
         });
       }
 

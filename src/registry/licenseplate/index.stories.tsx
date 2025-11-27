@@ -158,7 +158,9 @@ export const ValidateRequired: ValidationStory = {
     expect(licensePlate).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field License plate must be filled in.')
+    ).toBeVisible();
   },
 };
 
@@ -209,7 +211,7 @@ export const ValidatePattern: ValidationStory = {
     await userEvent.type(licensePlate, '0 AAA 12');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid Dutch license plate')).toBeVisible();
+    expect(await canvas.findByText('Invalid Dutch license plate.')).toBeVisible();
   },
 };
 
@@ -272,8 +274,10 @@ export const ValidationMultiple: ValidationStory = {
     await userEvent.type(textboxes[2], '123-abc-def'); // ok
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
-    expect(await canvas.findByText('Invalid Dutch license plate')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field License plate must be filled in.')
+    ).toBeVisible();
+    expect(await canvas.findByText('Invalid Dutch license plate.')).toBeVisible();
   },
 };
 

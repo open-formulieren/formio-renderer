@@ -160,7 +160,9 @@ describe('selectboxes minimum selected count', () => {
 
     expect(success).toBe(false);
     // TODO: use proper message with error map
-    expect(error?.issues?.[0].message).toBe('Required');
+    expect(error?.issues?.[0].message).toBe(
+      'The required field Selectboxes field must be filled in.'
+    );
   });
 
   test('field required, one selected', async () => {

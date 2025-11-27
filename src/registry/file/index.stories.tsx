@@ -414,6 +414,38 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
   },
 };
 
+export const ValidateRequired: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      ...FILE_COMPONENT_BOILERPLATE,
+      ...getFileConfiguration(['application/pdf']),
+      id: 'component1',
+      type: 'file',
+      key: 'my.file',
+      label: 'Your file',
+      multiple: false,
+      validate: {required: true},
+    } satisfies FileComponentSchema,
+    values: {
+      my: {
+        file: [] as unknown as JSONObject[],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const submitButton = canvas.getByRole('button', {name: 'Submit'});
+    await userEvent.click(submitButton);
+
+    expect(
+      await canvas.findByText('The required field Your file must be filled in.')
+    ).toBeVisible();
+  },
+};
+
 export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
   ...BaseValidationStory,
   args: {

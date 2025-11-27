@@ -4,6 +4,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const TIME_STRUCTURE_MESSAGE = defineMessage({
   description: 'Validation error describing shape of time format.',
@@ -30,11 +31,13 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, multiple} = componentDefinition;
+  const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, minTime, maxTime, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z
-    .string()
+    .string({
+      message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+    })
     .time({message: intl.formatMessage(TIME_STRUCTURE_MESSAGE)})
     .superRefine((value, ctx) => {
       const min = minTime ? parse(minTime, 'HH:mm', new Date()) : null;
@@ -46,14 +49,14 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
         if (min && parsedValue < min) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(TIME_MIN_MESSAGE, {minTime}),
+            message: errors?.minTime || intl.formatMessage(TIME_MIN_MESSAGE, {minTime}),
           });
         }
 
         if (max && parsedValue > max) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(TIME_MAX_MESSAGE, {maxTime}),
+            message: errors?.maxTime || intl.formatMessage(TIME_MAX_MESSAGE, {maxTime}),
           });
         }
       } else {
@@ -65,7 +68,8 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
           if (isTooEarly || isTooLate) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: intl.formatMessage(TIME_PERIOD_MESSAGE, {minTime, maxTime}),
+              message:
+                errors?.invalid_time || intl.formatMessage(TIME_PERIOD_MESSAGE, {minTime, maxTime}),
             });
           }
         } else {
@@ -73,7 +77,8 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
           if (parsedValue > max && parsedValue < min) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: intl.formatMessage(TIME_PERIOD_MESSAGE, {minTime, maxTime}),
+              message:
+                errors?.invalid_time || intl.formatMessage(TIME_PERIOD_MESSAGE, {minTime, maxTime}),
             });
           }
         }
@@ -98,7 +103,9 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1);
+      schema = schema.min(1, {
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
+      });
     }
   }
 
