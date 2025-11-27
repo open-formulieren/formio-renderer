@@ -1,0 +1,43 @@
+@use '@utrecht/components/form-fieldset';
+
+@use '@/scss/bem';
+@use '@/scss/responsive';
+
+.openforms-customer-profile {
+  @include bem.element('form-field-container') {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(
+      --of-customer-profile-form-field-container-row-gap,
+      var(--of-form-field-container-gap, 24px)
+    );
+  }
+
+  @include bem.element('digital-address-fieldset') {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(
+      --of-customer-profile-digital-address-fieldset-row-gap,
+      var(--of-form-field-container-gap, 24px)
+    );
+  }
+}
+
+.openforms-customer-profile-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-column-gap: var(--of-customer-profile-option-column-gap, 4px);
+  grid-row-gap: var(--of-customer-profile-option-row-gap, 4px);
+
+  // Make sure long labels don't break the layout (like email addresses viewed on mobile)
+  word-break: break-word;
+
+  @include bem.element('description') {
+    color: var(--of-color-fg-muted);
+  }
+
+  @include responsive.mobile-only {
+    // On mobile, show the description below the label
+    grid-template-columns: 1fr;
+  }
+}
