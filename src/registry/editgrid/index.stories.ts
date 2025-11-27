@@ -6,7 +6,7 @@ import type {
   FieldsetComponentSchema,
 } from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, fn, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -725,7 +725,9 @@ export const ValidateRequired: ValidationStory = {
     const canvas = within(canvasElement);
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Array must contain at least 1 element(s)')).toBeVisible();
+    expect(
+      await canvas.findByText('The required field Repeating group must be filled in.')
+    ).toBeVisible();
     expect(context.args.onSubmit).not.toHaveBeenCalled();
 
     await step('Verify item error display', async () => {
@@ -735,6 +737,65 @@ export const ValidateRequired: ValidationStory = {
       // doesn't 'leak' into the item level error because of the index access in keys.
       // Ultimately, this requires verification in Chromatic by accepting the snapshot
       // on the condition of it not "looking weird".
+    });
+  },
+};
+
+export const MutationsTriggerRevalidation: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      validate: {
+        required: true,
+        maxLength: 2,
+      },
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    } satisfies EditGridComponentSchema,
+  },
+  play: async ({canvasElement, context, step}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(
+      await canvas.findByText('The required field Repeating group must be filled in.')
+    ).toBeVisible();
+    expect(context.args.onSubmit).not.toHaveBeenCalled();
+
+    await step('Clear required validation error', async () => {
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+      await waitFor(() => {
+        expect(canvas.queryByText(/The required field/)).not.toBeInTheDocument();
+      });
+    });
+
+    await step('Clear max length validation error', async () => {
+      // add second item
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+      // add third item, triggering error
+      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
+      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+
+      // removing an item should clear the error
+      await userEvent.click(canvas.getByRole('button', {name: 'Remove item 2'}));
+      await waitFor(() => {
+        expect(canvas.queryByText(/number of items/)).not.toBeInTheDocument();
+      });
     });
   },
 };

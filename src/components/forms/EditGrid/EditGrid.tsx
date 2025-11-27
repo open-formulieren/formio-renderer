@@ -3,6 +3,7 @@ import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useId, useMemo} from 'react';
+import {flushSync} from 'react-dom';
 import {FormattedMessage} from 'react-intl';
 import type {ValidationError} from 'zod-formik-adapter';
 
@@ -130,7 +131,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   ...props
 }: EditGridProps<T>) {
   name = useFieldConfig(name);
-  const {getFieldProps, errors, getFieldHelpers} = useFormikContext();
+  const {getFieldProps, errors, getFieldHelpers, validateField} = useFormikContext();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
   const id = useId();
   const labelId = label ? `${id}-label` : undefined;
@@ -195,20 +196,32 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     getItemBody={props.getItemBody}
                     canEditItem={props.canEditItem}
                     saveItemLabel={props.saveItemLabel}
-                    onChange={(newValue: T) => {
-                      arrayHelpers.replace(index, newValue);
-                      // clear any (initial) errors for this item - since this callback
-                      // is invoked, it implies that the schema validation passed. Any
-                      // external (backend) errors will require re-validation of the whole
-                      // form by the backend, so we can safely clear those backend errors.
-                      if (!hasFieldLevelError) {
-                        const {setError} = getFieldHelpers(`${name}.${index}`);
-                        setError(undefined);
-                      }
+                    onChange={async (newValue: T) => {
+                      // force the Formik state update so that the validate call sees
+                      // the up-to-date state for a new validation run
+                      flushSync(() => {
+                        arrayHelpers.replace(index, newValue);
+                        // clear any (initial) errors for this item - since this callback
+                        // is invoked, it implies that the schema validation passed. Any
+                        // external (backend) errors will require re-validation of the whole
+                        // form by the backend, so we can safely clear those backend errors.
+                        if (!hasFieldLevelError) {
+                          const {setError} = getFieldHelpers(`${name}.${index}`);
+                          setError(undefined);
+                        }
+                      });
+                      await validateField(name);
                     }}
                     canRemoveItem={canRemoveItem}
                     removeItemLabel={removeItemLabel}
-                    onRemove={() => arrayHelpers.remove(index)}
+                    onRemove={async () => {
+                      // force the Formik state update so that the validate call sees
+                      // the up-to-date state for a new validation run
+                      flushSync(() => {
+                        arrayHelpers.remove(index);
+                      });
+                      await validateField(name);
+                    }}
                     validate={props.validate}
                   />
                 );

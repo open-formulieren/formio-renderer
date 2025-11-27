@@ -1,17 +1,24 @@
 import type {EditGridComponentSchema} from '@open-formulieren/types';
+import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import {ITEM_EXPANDED_MARKER} from '@/components/forms/EditGrid/constants';
 import type {MarkedEditGridItem} from '@/components/forms/EditGrid/types';
 import type {GetValidationSchema} from '@/registry/types';
 import type {JSONObject} from '@/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
+
+const EDIT_GRID_MAX_LENGTH_MESSAGE = defineMessage({
+  description: 'Validation error for editgrid that exceeds max length.',
+  defaultMessage: 'Ensure the number of items is less than or equal to {maxLength}.',
+});
 
 const getValidationSchema: GetValidationSchema<EditGridComponentSchema> = (
   componentDefinition,
   {intl}
 ) => {
-  const {key, validate = {}} = componentDefinition;
-  const {required} = validate;
+  const {key, label, validate = {}} = componentDefinition;
+  const {required, maxLength} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z.array(
     // editgrid is always an array of objects. The object themselves are validated
@@ -24,7 +31,13 @@ const getValidationSchema: GetValidationSchema<EditGridComponentSchema> = (
     z.object({} satisfies MarkedEditGridItem<JSONObject>).passthrough()
   );
   if (required) {
-    schema = schema.min(1);
+    schema = schema.min(1, {message: buildRequiredMessage(intl, {fieldLabel: label})});
+  }
+
+  if (maxLength !== undefined) {
+    schema = schema.max(maxLength, {
+      message: intl.formatMessage(EDIT_GRID_MAX_LENGTH_MESSAGE, {maxLength}),
+    });
   }
 
   schema = schema.superRefine((val, ctx) => {

@@ -4,6 +4,11 @@
     "description": "Validation error for number greater than maximum value.",
     "originalDefault": "The value must be {max} or less."
   },
+  "+AhGyf": {
+    "defaultMessage": "Ensure the number of items is less than or equal to {maxLength}.",
+    "description": "Validation error for editgrid that exceeds max length.",
+    "originalDefault": "Ensure the number of items is less than or equal to {maxLength}."
+  },
   "+KBbXH": {
     "defaultMessage": "Klik om een veelhoek (polygoon) te tekenen",
     "description": "Draw handler polygon tooltip start.",
