@@ -2,7 +2,7 @@ import type {CheckboxComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = (
   componentDefinition,
@@ -19,12 +19,7 @@ const getValidationSchema: GetValidationSchema<CheckboxComponentSchema> = (
         // a lie, but required for the error map hook
         received: z.ZodParsedType.undefined,
         expected: z.ZodParsedType.boolean,
-        message:
-          errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {
-            field: 'Checkbox',
-            fieldLabel: label,
-          }),
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
     if (plugins.length) {

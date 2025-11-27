@@ -3,7 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const INVALID_EMAIL_ADDRESS_MESSAGE = defineMessage({
   description: 'Validation error for invalid email.',
@@ -19,9 +19,7 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
 
   let baseSchema: z.ZodFirstPartySchemaTypes = z
     .string({
-      required_error:
-        errors?.required ||
-        intl.formatMessage(getErrorMessage('required'), {field: 'Email', fieldLabel: label}),
+      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
     })
     .email({message: intl.formatMessage(INVALID_EMAIL_ADDRESS_MESSAGE)});
   if (!required) {
@@ -49,9 +47,7 @@ const getValidationSchema: GetValidationSchema<EmailComponentSchema> = (
     schema = z.array(schema);
     if (required) {
       schema = schema.min(1, {
-        message:
-          errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {field: 'Email', fieldLabel: label}),
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
   }

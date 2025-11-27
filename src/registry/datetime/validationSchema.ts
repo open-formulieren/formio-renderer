@@ -4,7 +4,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const DATETIME_INVALID_MESSAGE = defineMessage({
   description: 'Invalid input validation error for datetime field',
@@ -69,10 +69,7 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string({
-      required_error:
-        errors?.required ||
-        errors?.minDate ||
-        intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
     })
     .refine(
       value => {
@@ -103,9 +100,7 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
 
     if (required) {
       arraySchema = arraySchema.min(1, {
-        message:
-          errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
 

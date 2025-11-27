@@ -11,7 +11,7 @@ const getValidationSchema: GetValidationSchema<BsnComponentSchema> = (
   const {key, multiple, validate = {}, errors, label} = componentDefinition;
   const {required, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = buildBsnValidationSchema(intl, errors?.required, label);
+  let schema: z.ZodFirstPartySchemaTypes = buildBsnValidationSchema(intl, label, errors?.required);
   if (!required) {
     schema = schema.or(z.literal('')).optional();
   }

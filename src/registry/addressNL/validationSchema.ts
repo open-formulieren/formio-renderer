@@ -4,7 +4,9 @@ import type {IntlShape} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
+
+import {FIELD_LABELS} from './subFields';
 
 const DEFAULT_POSTCODE_PATTERN: PostcodeComponentSchema['validate']['pattern'] =
   '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$';
@@ -45,9 +47,8 @@ const buildPostcodeSchema = (
   const defaultMessage = intl.formatMessage(POSTCODE_INVALID_MESSAGE);
   let postcodeSchema: z.ZodFirstPartySchemaTypes = z
     .string({
-      required_error: intl.formatMessage(getErrorMessage('required'), {
-        field: 'addressNL.postcode',
-        fieldLabel: 'Postcode',
+      required_error: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.postcode),
       }),
     })
     .regex(DEFAULT_POSTCODE_REGEX, {message: defaultMessage});
@@ -70,9 +71,8 @@ const buildHouseNumberSchema = (
 ): z.ZodFirstPartySchemaTypes => {
   let houseNumberSchema: z.ZodFirstPartySchemaTypes = z
     .string({
-      required_error: intl.formatMessage(getErrorMessage('required'), {
-        field: 'addressNL.houseNumber',
-        fieldLabel: 'House number',
+      required_error: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.houseNumber),
       }),
     })
     .regex(HOUSE_NUMBER_REGEX, {
@@ -91,9 +91,8 @@ const buildStreetNameSchema = (
   let streetNameSchema: z.ZodFirstPartySchemaTypes = z.string();
   if (isRequired) {
     streetNameSchema = streetNameSchema.min(1, {
-      message: intl.formatMessage(getErrorMessage('required'), {
-        field: 'addressNL.streetName',
-        fieldLabel: 'Street name',
+      message: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.streetName),
       }),
     });
   } else {
@@ -112,10 +111,10 @@ const buildCitySchema = (
   isRequired: boolean,
   {pattern, message}: CityOptions
 ): z.ZodFirstPartySchemaTypes => {
-  const defaultMessage = intl.formatMessage(getErrorMessage('required'), {
-    field: 'addressNL.city',
-    fieldLabel: 'City',
+  const defaultMessage = buildRequiredMessage(intl, {
+    fieldLabel: intl.formatMessage(FIELD_LABELS.city),
   });
+
   let citySchema: z.ZodFirstPartySchemaTypes = z.string();
   if (pattern) {
     citySchema = citySchema.regex(new RegExp(pattern), {
@@ -206,9 +205,8 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (!val.houseNumber) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(getErrorMessage('required'), {
-              field: 'addressNL.houseNumber',
-              fieldLabel: 'House number',
+            message: buildRequiredMessage(intl, {
+              fieldLabel: intl.formatMessage(FIELD_LABELS.houseNumber),
             }),
             path: ['houseNumber'],
           });
@@ -217,9 +215,8 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (!val.postcode) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(getErrorMessage('required'), {
-              field: 'addressNL.postcode',
-              fieldLabel: 'Postcode',
+            message: buildRequiredMessage(intl, {
+              fieldLabel: intl.formatMessage(FIELD_LABELS.postcode),
             }),
             path: ['postcode'],
           });
@@ -228,9 +225,8 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (deriveAddress && !val.streetName) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(getErrorMessage('required'), {
-              field: 'addressNL.streetName',
-              fieldLabel: 'Street name',
+            message: buildRequiredMessage(intl, {
+              fieldLabel: intl.formatMessage(FIELD_LABELS.streetName),
             }),
             path: ['streetName'],
           });
@@ -239,9 +235,8 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         if (deriveAddress && !val.city) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: intl.formatMessage(getErrorMessage('required'), {
-              field: 'addressNL.city',
-              fieldLabel: 'City',
+            message: buildRequiredMessage(intl, {
+              fieldLabel: intl.formatMessage(FIELD_LABELS.city),
             }),
             path: ['city'],
           });

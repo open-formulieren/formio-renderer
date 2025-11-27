@@ -6,7 +6,9 @@ import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
 import {buildBsnValidationSchema} from '@/validationSchemas/bsn';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
+
+import {FIELD_LABELS} from './subFields';
 
 const DATE_OF_BIRTH_MIN_DATE_MESSAGE = defineMessage({
   description: 'Validation error for children.dateOfBirth that is after the minimum date.',
@@ -41,9 +43,8 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
 
   return z
     .string({
-      required_error: intl.formatMessage(getErrorMessage('required'), {
-        field: 'children.dateOfBirth',
-        fieldLabel: 'Date of birth',
+      required_error: buildRequiredMessage(intl, {
+        fieldLabel: intl.formatMessage(FIELD_LABELS.dateOfBirth),
       }),
     })
     .refine(
@@ -58,12 +59,11 @@ const buildDateOfBirthSchema = (intl: IntlShape): z.ZodFirstPartySchemaTypes => 
 
 const buildChildSchema = (intl: IntlShape): z.ZodSchema => {
   return z.object({
-    bsn: buildBsnValidationSchema(intl),
+    bsn: buildBsnValidationSchema(intl, intl.formatMessage(FIELD_LABELS.bsn)),
     firstNames: z
       .string({
-        required_error: intl.formatMessage(getErrorMessage('required'), {
-          field: 'children.firstNames',
-          fieldLabel: 'First name',
+        required_error: buildRequiredMessage(intl, {
+          fieldLabel: intl.formatMessage(FIELD_LABELS.firstNames),
         }),
       })
       .min(1),

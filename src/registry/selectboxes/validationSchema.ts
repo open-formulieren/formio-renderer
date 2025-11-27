@@ -3,7 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {assertManualValues} from './types';
 
@@ -62,12 +62,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
           code: z.ZodIssueCode.invalid_type,
           received: z.ZodParsedType.undefined,
           expected: z.ZodParsedType.object,
-          message:
-            errors?.required ||
-            intl.formatMessage(getErrorMessage('required'), {
-              field: 'Selectboxes',
-              fieldLabel: label,
-            }),
+          message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
         });
       }
 

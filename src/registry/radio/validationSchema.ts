@@ -2,7 +2,7 @@ import type {RadioComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {assertManualValues} from './types';
 
@@ -30,9 +30,7 @@ const getValidationSchema: GetValidationSchema<RadioComponentSchema> = (
 
   // schema for the bare string base for the option, used for `required` validation
   let baseSchema: z.ZodOptional<z.ZodString> | z.ZodString = z.string({
-    required_error:
-      errors?.required ||
-      intl.formatMessage(getErrorMessage('required'), {field: 'Radio', fieldLabel: label}),
+    required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
   if (!required) {
     baseSchema = baseSchema.optional();

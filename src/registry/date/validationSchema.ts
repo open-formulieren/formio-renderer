@@ -4,7 +4,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const INVALID_INPUT_MESSAGE = defineMessage({
   description: 'Invalid input validation error for date field',
@@ -50,9 +50,7 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
   let schema: z.ZodFirstPartySchemaTypes = z
     .string({
-      required_error:
-        errors?.required ||
-        intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
     })
     .refine(
       value => {
@@ -83,9 +81,7 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
 
     if (required) {
       arraySchema = arraySchema.min(1, {
-        message:
-          errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {field: 'Date', fieldLabel: label}),
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
 

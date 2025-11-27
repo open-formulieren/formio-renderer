@@ -3,7 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const TEXTFIELD_MAX_LENGTH_MESSAGE = defineMessage({
   description: 'Validation error for TEXTFIELD that exceeds max length.',
@@ -23,9 +23,7 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
   const {required, maxLength, pattern, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z.string({
-    required_error:
-      errors?.required ||
-      intl.formatMessage(getErrorMessage('required'), {field: 'Textfield', fieldLabel: label}),
+    required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
   if (maxLength !== undefined)
     schema = schema = schema.max(maxLength, {
@@ -64,11 +62,7 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(
-        1,
-        errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {field: 'Textfield', fieldLabel: label})
-      );
+      schema = schema.min(1, errors?.required || buildRequiredMessage(intl, {fieldLabel: label}));
     }
   }
 

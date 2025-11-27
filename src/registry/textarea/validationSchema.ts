@@ -3,7 +3,7 @@ import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
-import {getErrorMessage} from '@/validationSchemas/errorMessages';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const TEXTAREA_MAX_LENGTH_MESSAGE = defineMessage({
   description: 'Validation error for Textarea that exceeds max length.',
@@ -23,9 +23,7 @@ const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = (
   const {required, maxLength, pattern, plugins = []} = validate;
 
   let schema: z.ZodFirstPartySchemaTypes = z.string({
-    required_error:
-      errors?.required ||
-      intl.formatMessage(getErrorMessage('required'), {field: 'Textarea', fieldLabel: label}),
+    required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
 
   if (maxLength !== undefined)
@@ -64,9 +62,7 @@ const getValidationSchema: GetValidationSchema<TextareaComponentSchema> = (
     schema = z.array(schema);
     if (required) {
       schema = schema.min(1, {
-        message:
-          errors?.required ||
-          intl.formatMessage(getErrorMessage('required'), {field: 'Textarea', fieldLabel: label}),
+        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
       });
     }
   }
