@@ -77,7 +77,7 @@ export default defineConfig(({mode}) => ({
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
     coverage: {
-      provider: 'istanbul',
+      provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src/**/*.d.ts',
