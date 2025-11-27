@@ -41,6 +41,10 @@ export interface CheckboxProps {
    */
   isDisabled?: boolean;
   /**
+   * Whether the checkbox should be disabled or not.
+   */
+  disabled?: boolean;
+  /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
    * information that is contextual/background typically belongs in a tooltip.
@@ -92,6 +96,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         appearance="custom"
         invalid={invalid}
         aria-describedby={ariaDescribedBy || undefined}
+        disabled={isDisabled}
         {...props}
         onBlur={async e => {
           props.onBlur(e);

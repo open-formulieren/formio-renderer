@@ -208,6 +208,40 @@ export const ValidateRequired: ValidationStory = {
     ).toBeVisible();
   },
 };
+
+export const MaxAllowedReached: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: false, option3: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+        {value: 'option3', label: 'Option 3'},
+      ],
+      validate: {
+        maxSelectedCount: 2,
+      },
+      ...extensionBoilerplate,
+    } satisfies ManualSelectboxesValuesSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByLabelText('Option 1'));
+    await userEvent.click(canvas.getByLabelText('Option 2'));
+
+    expect(canvas.getByLabelText('Option 1')).toBeChecked();
+    expect(canvas.getByLabelText('Option 2')).toBeChecked();
+    expect(canvas.getByLabelText('Option 3')).toBeDisabled();
+  },
+};
+
 export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
   ...BaseValidationStory,
   args: {
@@ -323,40 +357,6 @@ export const ValidateMinRequiredWithCustomErrorMessage: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
     expect(canvas.queryByText('Custom error message for min selected count')).toBeInTheDocument();
-  },
-};
-
-export const ValidateMaxRequiredWithCustomErrorMessage: ValidationStory = {
-  ...BaseValidationStory,
-  args: {
-    onSubmit: fn(),
-    componentDefinition: {
-      id: 'component1',
-      type: 'selectboxes',
-      key: 'my.selectboxes',
-      label: 'A selectboxes field',
-      defaultValue: {option1: false, option2: false},
-      values: [
-        {value: 'option1', label: 'Option 1'},
-        {value: 'option2', label: 'Option 2'},
-      ],
-      validate: {
-        required: false,
-        maxSelectedCount: 1,
-      },
-      errors: {maxSelectedCount: 'Custom error message for max selected count'},
-      ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
-  },
-
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    await userEvent.click(canvas.getByLabelText('Option 1'));
-    await userEvent.click(canvas.getByLabelText('Option 2'));
-    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-
-    expect(canvas.queryByText('Custom error message for max selected count')).toBeInTheDocument();
   },
 };
 
