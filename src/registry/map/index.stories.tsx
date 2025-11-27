@@ -409,6 +409,48 @@ export const WithOverlays: Story = {
   },
 };
 
+export const InitialError: Story = {
+  args: {
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      validate: {required: true},
+    } satisfies MapComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          map: 'foobar',
+        },
+      },
+      initialErrors: {
+        my: {
+          map: 'Incorrect value',
+        },
+      },
+      initialTouched: {
+        my: {
+          map: true,
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const map = await canvas.findByTestId('leaflet-map');
+
+    await waitFor(() => {
+      expect(map).not.toBeNull();
+      expect(map).toBeVisible();
+    });
+
+    expect(await canvas.findByText('Incorrect value')).toBeVisible();
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: MapComponentSchema;
   value: undefined | GeoJsonGeometry;

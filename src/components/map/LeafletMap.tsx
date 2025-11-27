@@ -74,10 +74,14 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   const featureGroupRef = useRef<L.FeatureGroup>(null);
   const id = useId();
   const intl = useIntl();
+  let center: L.LatLng | null = null;
 
-  const center: L.LatLng | null = geoJsonGeometry
-    ? L.geoJSON(geoJsonGeometry).getBounds().getCenter()
-    : null;
+  try {
+    center = geoJsonGeometry ? L.geoJSON(geoJsonGeometry).getBounds().getCenter() : null;
+  } catch (Error) {
+    console.log('Invalid GeoJson object');
+    geoJsonGeometry = null;
+  }
   const coordinates: CoordinatePair | null = center ? [center.lat, center.lng] : null;
 
   const withoutControl = !interactions || Object.values(interactions).every(value => !value);
