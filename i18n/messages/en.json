@@ -104,6 +104,11 @@
     "description": "Children component: label for children BSN",
     "originalDefault": "BSN"
   },
+  "46fk1B": {
+    "defaultMessage": "The required field {fieldLabel} must be filled in.",
+    "description": "Validation error for required field.",
+    "originalDefault": "The required field {fieldLabel} must be filled in."
+  },
   "4IX8hk": {
     "defaultMessage": "Loading...",
     "description": "(Async) select options loading message",
@@ -393,11 +398,6 @@
     "defaultMessage": "Your current location cannot be accessed",
     "description": "Leaflet map: use user location button disabled tooltip text.",
     "originalDefault": "Your current location cannot be accessed"
-  },
-  "OOpMyF": {
-    "defaultMessage": "The required field {fieldLabel} must be filled in.",
-    "description": "Validation error for required {field} field.",
-    "originalDefault": "The required field {fieldLabel} must be filled in."
   },
   "Op4orj": {
     "defaultMessage": "No shapes to remove",

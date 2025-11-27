@@ -165,7 +165,9 @@ export const ValidateRequired: ValidationStory = {
     expect(currencyField).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('The required field Currency must be filled in.')).toBeVisible();
+    expect(
+      await canvas.findByText("Het verplichte veld 'Currency' is niet ingevuld.")
+    ).toBeVisible();
   },
 };
 

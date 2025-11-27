@@ -52,7 +52,7 @@ export const ValidateRequired: ValidationStory = {
     // All three fields show a required error
     expect(await canvas.findByText('The required field BSN must be filled in.')).toBeVisible();
     expect(
-      await canvas.findByText('The required field First name must be filled in.')
+      await canvas.findByText('The required field Firstnames must be filled in.')
     ).toBeVisible();
     expect(
       await canvas.findByText('The required field Date of birth must be filled in.')
@@ -89,7 +89,7 @@ export const ValidateInvalid: ValidationStory = {
     await step('Check errors', async () => {
       const bsnError = await canvas.findByText('Invalid BSN.');
       const firstNamesError = await canvas.findByText(
-        'The required field First name must be filled in.'
+        'The required field Firstnames must be filled in.'
       );
       const dateOfBirthError = await canvas.findByText(
         'Date of birth must be within the last 120 years.'

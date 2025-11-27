@@ -177,6 +177,20 @@
       "value": "BSN"
     }
   ],
+  "46fk1B": [
+    {
+      "type": 0,
+      "value": "The required field "
+    },
+    {
+      "type": 1,
+      "value": "fieldLabel"
+    },
+    {
+      "type": 0,
+      "value": " must be filled in."
+    }
+  ],
   "4IX8hk": [
     {
       "type": 0,
@@ -711,20 +725,6 @@
     {
       "type": 0,
       "value": "Your current location cannot be accessed"
-    }
-  ],
-  "OOpMyF": [
-    {
-      "type": 0,
-      "value": "The required field "
-    },
-    {
-      "type": 1,
-      "value": "fieldLabel"
-    },
-    {
-      "type": 0,
-      "value": " must be filled in."
     }
   ],
   "Op4orj": [

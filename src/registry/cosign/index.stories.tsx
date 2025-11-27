@@ -111,7 +111,7 @@ export const ValidateCosignFormat: ValidationStory = {
     await userEvent.type(cosignField, 'invalid');
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Invalid email')).toBeVisible();
+    expect(await canvas.findByText('Invalid email address.')).toBeVisible();
   },
 };
 
