@@ -163,6 +163,63 @@ export const WithDigitalAddressValidationError: Story = {
   },
 };
 
+// A required profile component with pre-populated addresses and multiple digital
+// address types should have clearable dropdowns.
+export const RequiredWithPrepopulatedAddresses: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+      validate: {required: true},
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'phoneNumber', addresses: ['0612345678', '0612387654']},
+          ],
+          portalUrl: 'https://example.com',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+};
+
+// A required profile component with pre-populated addresses and one digital address type
+// should not have a clearable dropdown.
+export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+      validate: {required: true},
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+          ],
+          portalUrl: 'https://example.com',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: CustomerProfileComponentSchema;
   value: CustomerProfileData;

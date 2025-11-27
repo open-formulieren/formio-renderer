@@ -1,5 +1,6 @@
 import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import selectEvent from 'react-select-event';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -51,7 +52,7 @@ const BaseValidationStory: ValidationStory = {
   },
 };
 
-export const ValidateRequired: ValidationStory = {
+export const ValidateRequiredWithMultipleDigitalAddressTypes: ValidationStory = {
   ...BaseValidationStory,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -59,14 +60,77 @@ export const ValidateRequired: ValidationStory = {
     // Submit the empty digital addresses
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
-    // All inputs should show a required error
-    const errors = await canvas.findAllByText('Required');
-    expect(errors).toHaveLength(2);
-    for (const error of errors) {
-      expect(error).toBeVisible();
-    }
+    const error = await canvas.findByText('At least one digital address should be provided.');
+    expect(error).toBeVisible();
   },
 };
+
+export const ValidateRequiredWithOneDigitalAddressType: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      type: 'customerProfile',
+      key: 'customerProfile',
+      id: 'customerProfile',
+      label: 'Profile',
+      shouldUpdateCustomerData: true,
+      digitalAddressTypes: ['email'],
+      validate: {
+        required: true,
+      },
+    } satisfies CustomerProfileComponentSchema,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Submit the empty digital addresses
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    // The input should show a required error
+    const error = await canvas.findByText('The required field Email must be filled in.');
+    expect(error).toBeVisible();
+  },
+};
+
+export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressTypes: ValidationStory =
+  {
+    ...BaseValidationStory,
+    parameters: {
+      formik: {
+        disable: true,
+      },
+      formSettings: {
+        componentParameters: {
+          customerProfile: {
+            fetchDigitalAddresses: async () => [
+              {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+              {type: 'phoneNumber', addresses: ['0612345678', '0612348765']},
+            ],
+            portalUrl: 'https://example.com',
+          },
+        } satisfies FormSettings['componentParameters'],
+      },
+    },
+    play: async ({canvasElement}) => {
+      const canvas = within(canvasElement);
+
+      const emailField = canvas.getByRole('combobox', {name: 'Email'});
+      const phoneNumberField = canvas.getByRole('combobox', {name: 'Phone number'});
+
+      // Clear both dropdowns
+      // eslint-disable-next-line import/no-named-as-default-member
+      await selectEvent.clearAll(emailField);
+      // eslint-disable-next-line import/no-named-as-default-member
+      await selectEvent.clearAll(phoneNumberField);
+
+      // Submit the empty digital addresses
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+      const error = await canvas.findByText('At least one digital address should be provided.');
+      expect(error).toBeVisible();
+    },
+  };
 
 // If the profile component is not required, none of its fields should be required either
 export const ValidateOptional: ValidationStory = {
@@ -124,7 +188,9 @@ export const ValidateInvalid: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
     const emailError = await canvas.findByText('Invalid email address.');
-    const phoneNumberError = await canvas.findByText('Invalid phone number.');
+    const phoneNumberError = await canvas.findByText(
+      'Invalid phone number - a phone number may only contain digits, the + or - sign or spaces.'
+    );
 
     expect(emailError).toBeVisible();
     expect(phoneNumberError).toBeVisible();

@@ -57,6 +57,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
 
   const invalid = touched && !!fieldError;
   const isRequired = validate?.required;
+  const isSubfieldRequired = isRequired && digitalAddressTypes.length === 1;
   const descriptionId = description ? `${id}-description` : undefined;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
 
@@ -86,7 +87,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
               <Component
                 key={digitalAddressType}
                 namePrefix={`${name}.${index}`}
-                isRequired={isRequired}
+                isRequired={isSubfieldRequired}
                 digitalAddressGroup={digitalAddress}
                 errors={subfieldErrors ? getIn(error, `${index}`) : undefined}
               />

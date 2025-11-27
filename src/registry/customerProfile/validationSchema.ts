@@ -19,6 +19,11 @@ const DUPLICATE_DIGITAL_ADDRESS_TYPES_MESSAGE = defineMessage({
   defaultMessage: 'You cannot submit multiple digital addresses for the type {digitalAddressType}.',
 });
 
+const REQUIRED_PROFILE_MESSAGE = defineMessage({
+  description: 'Validation error for required customerProfile without digital addresses',
+  defaultMessage: 'At least one digital address should be provided.',
+});
+
 /**
  * An array with more than one element.
  */
@@ -103,9 +108,13 @@ const getValidationSchema: GetValidationSchema<CustomerProfileComponentSchema> =
   const {key, digitalAddressTypes, validate = {}} = componentDefinition;
   const {required = false} = validate;
 
+  // The subfields are required when the component is required and only one digital
+  // address type is allowed.
+  const requiredSubfields = required && digitalAddressTypes.length === 1;
+
   const digitalAddressSchemas = digitalAddressTypes.map(digitalAddressType => {
     const schemaBuilder = digitalAddressTypeToSchemaBuilder[digitalAddressType];
-    return schemaBuilder(intl, required);
+    return schemaBuilder(intl, requiredSubfields);
   });
 
   let schema: z.ZodFirstPartySchemaTypes;
@@ -121,16 +130,19 @@ const getValidationSchema: GetValidationSchema<CustomerProfileComponentSchema> =
     schema = z.array(z.discriminatedUnion('type', digitalAddressSchemas));
   }
 
-  //
-  if (required) {
-    // When required, a value for each digital address type must be provided
-    schema = schema.length(digitalAddressTypes.length);
-  }
-
   // We have to do the superRefine on the top-level instead of on the individual schemas.
   // The discriminated union schema does not allow ZodEffects, only ZodObjects, so the
   // individual digital address schemas must be plain ZodObjects.
   schema = schema.superRefine((items: DigitalAddress[], ctx) => {
+    // When required, at least one digital address must be provided.
+    const hasAtLeastOneDigitalAddress = items.some(item => !!item.address);
+    if (required && !hasAtLeastOneDigitalAddress) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: intl.formatMessage(REQUIRED_PROFILE_MESSAGE),
+      });
+    }
+
     // Check that each digital address type is used once
     const duplicateAddressTypes = items.reduce<DigitalAddressType[]>((carry, address, index) => {
       // The current type is already in the list, so we don't need to add it again
