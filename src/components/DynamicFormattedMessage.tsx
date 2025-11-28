@@ -1,4 +1,3 @@
-import type {MessageFormatElement} from '@formatjs/icu-messageformat-parser';
 import {formatMessage as coreFormatMessage} from '@formatjs/intl';
 import type {ResolvedIntlConfig} from '@formatjs/intl/src/types';
 import {DEFAULT_INTL_CONFIG} from '@formatjs/intl/src/utils';
@@ -13,7 +12,11 @@ type MessageValues<T = React.ReactNode | PrimitiveType | FormatXMLElementFn<Reac
 
 export interface DynamicFormattedMessageProps {
   description: string | object;
-  defaultMessage: string | MessageFormatElement[];
+  /**
+   * The dynamic message to interpolate/evaluate, typically coming from some source
+   * of user input (like WYSIWYG content) or other injected configuration.
+   */
+  defaultMessage: string;
   values?: MessageValues;
   /**
    * Treat the message as HTML, sanitizing and pre-processing for rich text display.
@@ -66,6 +69,8 @@ const DynamicFormattedMessage: React.FC<DynamicFormattedMessageProps> = ({
       ...intl.defaultRichTextElements,
       ...ALLOWED_HTML_TAGS,
     },
+    messages: {[id]: message},
+    fallbackOnEmptyString: false,
   };
 
   const chunks = coreFormatMessage(

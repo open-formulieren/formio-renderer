@@ -24,7 +24,7 @@ export const Default: Story = {
 
 export const DynamicMessage: Story = {
   render: args => {
-    const [dynamicMessage, setDynamicMessage] = useState<string>(args.defaultMessage as string);
+    const [dynamicMessage, setDynamicMessage] = useState<string>(args.defaultMessage);
     return (
       <>
         <p>
