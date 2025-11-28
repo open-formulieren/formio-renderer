@@ -1,5 +1,9 @@
 # Changes
 
+## 0.14.1 (2025-11-28)
+
+Fixed package export to prevent leaflet from ending up in the main bundle.
+
 ## 0.14.0 (2025-11-28)
 
 Feature release.
