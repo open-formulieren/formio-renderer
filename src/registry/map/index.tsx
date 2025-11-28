@@ -1,6 +1,6 @@
 import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
 import {FormField} from '@utrecht/component-library-react';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 import React, {useId} from 'react';
 
 import {HelpText, Label, ValidationErrors} from '@/components/forms';
@@ -33,6 +33,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
   } = componentDefinition;
   const name = useFieldConfig(key);
   const id = useId();
+  const {validateField} = useFormikContext();
   const [{value}, {touched}, {setTouched, setValue}] = useField<null | GeoJsonGeometry>(name);
   const withoutControl = Object.values(interactions).every(value => !value);
   const error = useFieldError(name, false);
@@ -64,7 +65,16 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
             setValue(geoJsonGeometry, true);
           }}
           onBlur={() => {
-            window.queueMicrotask(() => setTouched(true, true));
+            // unsure why the microtask approach works here, but without the
+            // `DeleteButton` story follows the `#` anchor of the delete button (link)
+            // in storybook. This doesn't seem to happen in production builds.
+            // Using a useCallback approach doesn't seem to make a difference. One
+            // suspicion was also that the `window.confirm` messed up things, but so
+            // far only the microtask approach seems to work :shrug:
+            window.queueMicrotask(async () => {
+              setTouched(true);
+              validateField(name);
+            });
           }}
         />
       </React.Suspense>
