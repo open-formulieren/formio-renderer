@@ -64,7 +64,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
             setValue(geoJsonGeometry, true);
           }}
           onBlur={() => {
-            setTouched(true, true);
+            window.queueMicrotask(() => setTouched(true, true));
           }}
         />
       </React.Suspense>
