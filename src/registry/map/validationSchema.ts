@@ -4,48 +4,57 @@ import {z} from 'zod';
 import type {GetValidationSchema} from '@/registry/types';
 import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
+import {DEFAULT_INTERACTIONS} from './constants';
+
+const coordinatesSchema = z.array(z.number()).length(2);
+
+const pointSchema = z.object({
+  type: z.literal('Point'),
+  coordinates: coordinatesSchema,
+});
+
+const lineStringSchema = z.object({
+  type: z.literal('LineString'),
+  coordinates: z.array(coordinatesSchema).min(2),
+});
+
+const polygonSchema = z.object({
+  type: z.literal('Polygon'),
+  coordinates: z.array(z.array(coordinatesSchema).min(1)).length(1),
+});
+
 const getValidationSchema: GetValidationSchema<MapComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  const {key, label, validate = {}, errors} = componentDefinition;
+  const {
+    key,
+    label,
+    validate = {},
+    interactions = DEFAULT_INTERACTIONS,
+    errors,
+  } = componentDefinition;
   const {required, plugins = []} = validate;
 
-  const coordinates = z.array(z.number()).length(2);
-  const pointValue = coordinates;
-  const lineValue = z.array(coordinates).min(1);
-  const polygonValue = z.array(z.array(coordinates).min(1)).length(1);
-  let schema: z.ZodFirstPartySchemaTypes = z.union([
-    z.object({
-      type: z.literal('Point'),
-      coordinates: pointValue,
-    }),
-    z.object({
-      type: z.literal('LineString'),
-      coordinates: lineValue,
-    }),
-    z.object({
-      type: z.literal('Polygon'),
-      coordinates: polygonValue,
-    }),
-    z.null(),
-  ]);
+  // start with z.null, we check validate.required manually in a refine step.
+  let schema: z.ZodFirstPartySchemaTypes = z.null();
+  // build the schema based on allowed interactions
+  if (interactions.marker) {
+    schema = schema.or(pointSchema);
+  }
+  if (interactions.polyline) {
+    schema = schema.or(lineStringSchema);
+  }
+  if (interactions.polygon) {
+    schema = schema.or(polygonSchema);
+  }
 
   if (required) {
-    schema = schema.superRefine((val, ctx) => {
-      if (!val) {
-        // see open-forms-sdk `src/hooks/useZodErrorMap.jsx`
-        ctx.addIssue({
-          code: z.ZodIssueCode.invalid_type,
-          // a lie, but required for the error map hook
-          received: z.ZodParsedType.undefined,
-          expected: z.ZodParsedType.object,
-          message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-        });
-      }
+    schema = schema.refine(val => !!val, {
+      message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
     });
   } else {
-    schema = schema.optional();
+    schema = schema.or(z.null()).optional();
   }
 
   if (plugins.length) {

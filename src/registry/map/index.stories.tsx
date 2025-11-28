@@ -423,7 +423,10 @@ export const InitialError: Story = {
     formik: {
       initialValues: {
         my: {
-          map: 'foobar',
+          map: {
+            type: 'Point',
+            coordinates: [5.291266, 52.1326332],
+          },
         },
       },
       initialErrors: {
@@ -661,12 +664,18 @@ export const ValidateOnChange: Story = {
     formik: {
       initialValues: {
         my: {
-          map: 'foobar',
+          map: {
+            type: 'LineString',
+            coordinates: [
+              [4.7493255, 52.6405471],
+              [4.6493255, 52.4405471],
+            ],
+          },
         },
       },
       initialErrors: {
         my: {
-          map: 'Incorrect value',
+          map: 'Line not allowed.',
         },
       },
       initialTouched: {
@@ -685,7 +694,7 @@ export const ValidateOnChange: Story = {
       expect(map).toBeVisible();
     });
 
-    expect(await canvas.findByText('Incorrect value')).toBeVisible();
+    expect(await canvas.findByText('Line not allowed.')).toBeVisible();
 
     await step('Draw a marker', async () => {
       // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
@@ -695,7 +704,7 @@ export const ValidateOnChange: Story = {
       expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
 
       // Having a valid value should pass validation and therefore remove the error message
-      expect(canvas.queryByTitle('Incorrect value')).not.toBeInTheDocument();
+      expect(canvas.queryByTitle('Line not allowed.')).not.toBeInTheDocument();
     });
   },
 };

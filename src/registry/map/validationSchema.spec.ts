@@ -51,7 +51,10 @@ describe('map component validation', () => {
       ],
     },
   ])('valid values', value => {
-    const component: MapComponentSchema = BASE_COMPONENT;
+    const component: MapComponentSchema = {
+      ...BASE_COMPONENT,
+      interactions: {marker: true, polyline: true, polygon: true},
+    };
     const schema = buildValidationSchema(component);
 
     const {success} = schema.safeParse(value);

@@ -10,6 +10,7 @@ import {useFieldConfig, useFieldError} from '@/hooks';
 
 import type {RegistryEntry} from '../types';
 import ValueDisplay from './ValueDisplay';
+import {DEFAULT_INTERACTIONS} from './constants';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
@@ -27,14 +28,13 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
     defaultZoom,
     initialCenter,
     tileLayerUrl,
-    interactions,
+    interactions = DEFAULT_INTERACTIONS,
     overlays,
   } = componentDefinition;
-
   const name = useFieldConfig(key);
   const id = useId();
   const [{value}, {touched}, {setTouched, setValue}] = useField<null | GeoJsonGeometry>(name);
-  const withoutControl = !interactions || Object.values(interactions).every(value => !value);
+  const withoutControl = Object.values(interactions).every(value => !value);
   const error = useFieldError(name, false);
 
   const errorMessageId = error ? `${id}-error-message` : undefined;
