@@ -16,7 +16,7 @@
   "+AhGyf": [
     {
       "type": 0,
-      "value": "Ensure the number of items is less than or equal to "
+      "value": "Je mag niet meer dan "
     },
     {
       "type": 1,
@@ -24,7 +24,7 @@
     },
     {
       "type": 0,
-      "value": "."
+      "value": " items opgeven."
     }
   ],
   "+KBbXH": [
