@@ -41,7 +41,7 @@ export const MinimalConfiguration: Story = {
     const canvas = within(canvasElement);
 
     expect(
-      await canvas.queryByText('Not all required fields are filled out. That can get expensive!')
+      canvas.queryByText('Not all required fields are filled out. That can get expensive!')
     ).not.toBeInTheDocument();
   },
 };
