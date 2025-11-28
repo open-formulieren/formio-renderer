@@ -474,7 +474,7 @@ const {custom: DependentFields, reference: DependentFieldsReference} = storyFact
 
     await userEvent.type(field1, 'hidden', {delay: 200});
 
-    const field5 = await canvas.findByLabelText('Field 5');
+    const field5 = await canvas.findByLabelText('Field 5', undefined, {timeout: 500});
     expect(field5).toBeVisible();
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
