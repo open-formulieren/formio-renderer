@@ -580,7 +580,7 @@ export const ValidateRequiredWithoutCustomErrorMessage: ValidationStory = {
     });
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('The required field A map must be filled in.')).toBeVisible();
   },
 };
 
@@ -638,7 +638,7 @@ export const ValidateOnBlur: ValidationStory = {
 
     map.blur();
 
-    expect(await canvas.findByText('Required')).toBeVisible();
+    expect(await canvas.findByText('The required field A map must be filled in.')).toBeVisible();
   },
 };
 

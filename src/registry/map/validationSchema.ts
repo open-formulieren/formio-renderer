@@ -2,12 +2,13 @@ import type {MapComponentSchema} from '@open-formulieren/types';
 import {z} from 'zod';
 
 import type {GetValidationSchema} from '@/registry/types';
+import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 const getValidationSchema: GetValidationSchema<MapComponentSchema> = (
   componentDefinition,
-  {validatePlugins}
+  {intl, validatePlugins}
 ) => {
-  const {key, validate = {}, errors} = componentDefinition;
+  const {key, label, validate = {}, errors} = componentDefinition;
   const {required, plugins = []} = validate;
 
   const coordinates = z.array(z.number()).length(2);
@@ -39,7 +40,7 @@ const getValidationSchema: GetValidationSchema<MapComponentSchema> = (
           // a lie, but required for the error map hook
           received: z.ZodParsedType.undefined,
           expected: z.ZodParsedType.object,
-          message: errors?.required,
+          message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
         });
       }
     });
