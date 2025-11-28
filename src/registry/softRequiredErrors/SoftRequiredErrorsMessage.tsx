@@ -39,12 +39,13 @@ const SoftRequiredErrorsMessage: React.FC<SoftRequiredErrorsMessageProps> = ({
 }) => {
   // The intl formatter expects variables to be wrapped with single curly brackets,
   // so we have to replace the double brackets with single brackets.
-  const parsedHtml = html.replace(/{{\s*missingFields\s*}}/, '{ missingFields }');
+  const convertedHtml = html.replace(/{{\s*missingFields\s*}}/, '{ missingFields }');
 
   return (
     <DynamicFormattedMessage
       description="SoftRequiredErrors missing fields message"
-      defaultMessage={parsedHtml}
+      defaultMessage={convertedHtml}
+      asHtml
       values={{
         missingFields: <SoftRequiredErrorsList missingFields={missingFields} />,
       }}
