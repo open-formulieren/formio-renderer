@@ -62,7 +62,18 @@ export const DynamicMessage: Story = {
 export const RichTextInMessage: Story = {
   args: {
     description: 'message with rich content',
-    defaultMessage: '<p>Hello there, <b>general</b> <u>kenobi</u>.</p>',
+    // using a subset of markup that can be produced by the WYSIWYG editor in the builder.
+    // much more can be used that drives up complexity a lot, but we should rather strip
+    // down the builder. In particular, the style attribute is problematic.
+    defaultMessage: `
+      <p>
+        <strong>Hello</strong> there, <b>general</b> <u>kenobi</u>.
+        <br>
+        Line breaks should not cause issues.
+        <br>
+        Nor should <a href="https://example.com" target="_blank" rel="noopener noreferrer">links</a>.
+      </p>
+    `,
   },
 };
 

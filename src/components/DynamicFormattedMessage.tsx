@@ -14,6 +14,8 @@ export interface DynamicFormattedMessageProps {
 }
 
 // List of HTML tags that are automatically transformed to HTML elements.
+// Note that void elements ("self-closing") require special attention:
+// https://developer.mozilla.org/en-US/docs/Glossary/Void_element
 const ALLOWED_HTML_TAGS: Record<string, (chunks: React.ReactNode[]) => React.ReactNode> = {
   p: chunks => <p>{chunks}</p>,
   b: chunks => <b>{chunks}</b>,
