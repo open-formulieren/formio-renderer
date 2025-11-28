@@ -73,6 +73,10 @@ const DynamicFormattedMessage: React.FC<DynamicFormattedMessageProps> = ({
     fallbackOnEmptyString: false,
   };
 
+  // this produces warnings about missing unique keys for items in an array, which
+  // happens with richt-text interpolation. It's a known issue in react-intl (see
+  // https://github.com/formatjs/formatjs/issues/5135) and the warnings are suppressed
+  // in production builds and *should* be harmless in this case.
   const chunks = coreFormatMessage(
     resolvedConfig,
     intl.formatters,
@@ -84,7 +88,6 @@ const DynamicFormattedMessage: React.FC<DynamicFormattedMessageProps> = ({
     {...values, ...extraValues}
   ) as React.ReactNode | React.ReactNode[];
 
-  // FIXME: warnings about missing key for items in array
   if (Array.isArray(chunks)) {
     return React.Children.toArray(chunks);
   }
