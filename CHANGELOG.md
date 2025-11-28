@@ -1,5 +1,43 @@
 # Changes
 
+## 0.14.0 (2025-11-28)
+
+Feature release.
+
+The next release will start the 1.0.0 release process and will most likely be a beta.
+
+**Features**
+
+- [`#102`][#102] Implemented the `map` component type.
+- [`#77`][#77] Added support custom validation error messages and polished the default messages.
+- [`#36`][#36] Added editgrid item validation for unsaved rows.
+  - The item-level validation errors are now displayed for the item as a whole, which was previously
+    not possible.
+- [`#221`][#221] Unchecked checkboxes in the `selectboxes` component are now disabled when the
+  maximum amount of selections is reached.
+
+**Bugfixes**
+
+- [`#218`][#218] Fixed validation triggering too soon in `radio`, `date` and `datetime` components.
+- Fixed <kbd>Enter</kbd> key not submitting the datetime when the picker is open.
+- [`#36`][#36] Fixed remove/cancel button behaviour for edit grid item in edit mode.
+- Fixed dotted keys not resulting in a nested object structure for empty/new edit grid items.
+- [`SDK#863`][SDK#863] The WYSIWYG content for the `softRequiredErrors` component processing is now
+  more robust and supports additional markup elements.
+
+**Project maintenance**
+
+- Added consistent (type) import checking to the ESLint configuration.
+- Vitest now uses the V8 coverage provider.
+- Addressed some test flakiness.
+
+[#102]: https://github.com/open-formulieren/formio-renderer/issues/102
+[#77]: https://github.com/open-formulieren/formio-renderer/issues/77
+[#218]: https://github.com/open-formulieren/formio-renderer/issues/218
+[#36]: https://github.com/open-formulieren/formio-renderer/issues/36
+[#221]: https://github.com/open-formulieren/formio-renderer/issues/221
+[SDK#863]: https://github.com/open-formulieren/open-forms-sdk/issues/863
+
 ## 0.13.0 (2025-11-20)
 
 Feature release.

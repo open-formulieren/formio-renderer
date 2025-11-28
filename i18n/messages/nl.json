@@ -5,7 +5,7 @@
     "originalDefault": "The value must be {max} or less."
   },
   "+AhGyf": {
-    "defaultMessage": "Ensure the number of items is less than or equal to {maxLength}.",
+    "defaultMessage": "Je mag niet meer dan {maxLength} items opgeven.",
     "description": "Validation error for editgrid that exceeds max length.",
     "originalDefault": "Ensure the number of items is less than or equal to {maxLength}."
   },
