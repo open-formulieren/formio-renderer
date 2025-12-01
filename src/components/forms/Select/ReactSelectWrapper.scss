@@ -12,7 +12,7 @@
  * The utrecht-select component currently only appears to support native HTML selects
  * rather than dynamic-with-search-field select library solutions.
  *
- * See https://nl-design-system.github.io/utrecht/storybook/?path=/docs/css-component-select--docs
+ * See https://nl-design-system.github.io/utrecht/storybook/?path=/docs/css_css-select--docs
  * for the upstream component.
  *
  * We opt for react-select now, but do plan to replace our own usage with the community
@@ -135,5 +135,12 @@
   @include bem.modifier('openforms-is-multi') {
     padding-block-end: var(--of-select-multi-padding-block-end, 8.5px);
     padding-block-start: var(--of-select-multi-padding-block-start, 8.5px);
+
+    // apply margin to the input element, since changing the padding based on :has(.rs-value)
+    // applies the transition from the core styling and looks odd.
+    .rs-input {
+      margin-block-end: var(--of-select-multi-input-margin-block-end, 4px);
+      margin-block-start: var(--of-select-multi-input-margin-block-start, 4px);
+    }
   }
 }

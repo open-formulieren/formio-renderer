@@ -73,6 +73,13 @@ export const MultipleSelectOptions: Story = {
     label: 'test',
     isMulti: true,
   },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: [],
+      },
+    },
+  },
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -85,6 +92,21 @@ export const MultipleSelectOptions: Story = {
     });
     expect(canvas.getByText('Option 1')).toBeVisible();
     expect(canvas.getByText('Option 2')).toBeVisible();
+  },
+};
+
+export const EmptyMultipleSelectOptions: Story = {
+  args: {
+    name: 'test',
+    label: 'test',
+    isMulti: true,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: [],
+      },
+    },
   },
 };
 
