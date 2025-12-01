@@ -19,6 +19,11 @@
     "description": "Children component modal: add child title",
     "originalDefault": "Add child"
   },
+  "+RF9ZR": {
+    "defaultMessage": "Gebruik dit {digitalAddressType, select, email {e-mailadres} phoneNumber {telefoonnummer} other {{digitalAddressType}} } enkel voor dit formulier.",
+    "description": "Profile digital address preferences modal 'useOnlyOnce' option label",
+    "originalDefault": "Use this {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } only for this form."
+  },
   "+W79Dr": {
     "defaultMessage": "Klik om verder te tekenen",
     "description": "Draw handler polyline tooltip continue.",
@@ -64,6 +69,11 @@
     "defaultMessage": "Er ging iets fout bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
+  },
+  "1pxgtB": {
+    "defaultMessage": "Minimaal één digitaal adres moet worden ingevuld.",
+    "description": "Validation error for required customerProfile without digital addresses",
+    "originalDefault": "At least one digital address should be provided."
   },
   "2/wgNH": {
     "defaultMessage": "Het bestand is te klein.",
@@ -162,6 +172,11 @@
     "description": "Placeholder for the minute part of the time",
     "originalDefault": "MM"
   },
+  "6o3CZT": {
+    "defaultMessage": "E-mailadres",
+    "description": "Label for customerProfile email input",
+    "originalDefault": "Email"
+  },
   "8soi1P": {
     "defaultMessage": "De opgegeven waarde voldoet niet aan het formaat: {pattern}.",
     "description": "Validation error for TEXTFIELD that does not match the pattern.",
@@ -218,6 +233,11 @@
     "description": "Edit toolbar remove button tooltip.",
     "originalDefault": "Remove shapes"
   },
+  "BWCtbf": {
+    "defaultMessage": "Je kan niet meerdere digitale adressen van het type {digitalAddressType} invullen.",
+    "description": "Validation error for customerProfile with multiple digital addresses for the same type",
+    "originalDefault": "You cannot submit multiple digital addresses for the type {digitalAddressType}."
+  },
   "BYKDMO": {
     "defaultMessage": "De datum moet een geldig formaat hebben (bijvoorbeeld 30-10-2025).",
     "description": "Invalid input validation error for date field",
@@ -242,6 +262,11 @@
     "defaultMessage": "Voornaam",
     "description": "Children component: children table 'firstNames' header",
     "originalDefault": "First names"
+  },
+  "CGXGUq": {
+    "defaultMessage": "Pas voorkeur aan",
+    "description": "Profile digital address 'Update preferences' button label",
+    "originalDefault": "Update preferences"
   },
   "CTDEh6": {
     "defaultMessage": "Het BSN {bsn} komt meerdere keren voor. Elk kind moet een uniek BSN hebben.",
@@ -283,6 +308,11 @@
     "defaultMessage": "De geboortedatum mag hoogstens 120 jaar geleden zijn.",
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
+  },
+  "E37u5a": {
+    "defaultMessage": "(Wordt het {digitalAddressType, select, email {voorkeurs-e-mailadres} phoneNumber {voorkeurstelefoonnummer} other {voorkeurs {digitalAddressType}} })",
+    "description": "Profile digital address value display: address as new preferred",
+    "originalDefault": "(Will become preferred {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} })"
   },
   "EZ7myd": {
     "defaultMessage": "E-mailadres bevestigen",
@@ -384,6 +414,11 @@
     "description": "Signature value alt text",
     "originalDefault": "Signature"
   },
+  "Lp2KV6": {
+    "defaultMessage": "(Voorkeur)",
+    "description": "CustomerProfile: preferred digital address option description",
+    "originalDefault": "(Preferred)"
+  },
   "LsgvKh": {
     "defaultMessage": "Postcode",
     "description": "Label for addressNL postcode input",
@@ -430,6 +465,11 @@
     "defaultMessage": "Geboortedatum",
     "description": "Children component: label for children dateOfBirth",
     "originalDefault": "Date of birth"
+  },
+  "Q4fCjD": {
+    "defaultMessage": "Je {digitalAddressType, select, email {e-mailadres} phoneNumber {telefoonnummer} other {{digitalAddressType}} } wordt automatisch enkel voor dit formulier gebruikt. Je kunt deze voorkeur aanpassen via de knop hieronder.",
+    "description": "Profile digital address new address: default preference text",
+    "originalDefault": "The {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you provide will automatically only be used for this form. You can update your preferences using the button below."
   },
   "Q6/Lj7": {
     "defaultMessage": "Verwijder het laatst getekende punt",
@@ -506,6 +546,16 @@
     "description": "Validation error for date greater than or equal to minimum date.",
     "originalDefault": "The date must be later than or equal to {min}."
   },
+  "VSf9fx": {
+    "defaultMessage": "Geef het {digitalAddressType, select, email {e-mailadres} phoneNumber {telefoonnummer} other {{digitalAddressType}} } op waarop je gecontacteerd wilt worden.",
+    "description": "Profile digital address: accessible digital address label",
+    "originalDefault": "Provide the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } on which you want to be contacted."
+  },
+  "VTpxKE": {
+    "defaultMessage": "Er zijn meerdere {digitalAddressType, select, email {e-mailadressen} phoneNumber {telefoonnummers} other {{digitalAddressType}} } van u bekend. Open de dropdown om ze te zien. Voor het instellen van contact voorkeuren kunt u naar het <a>portaal</a>.",
+    "description": "Profile digital address multiple addresses: edit preference text",
+    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>."
+  },
   "WpfP0s": {
     "defaultMessage": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB.",
     "description": "Validation error for postcode.",
@@ -526,10 +576,20 @@
     "description": "Draw toolbar undo button message.",
     "originalDefault": "Remove last point"
   },
+  "YZpcRG": {
+    "defaultMessage": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78.",
+    "description": "Validation error for invalid phone number.",
+    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces."
+  },
   "Yg2+vS": {
     "defaultMessage": "Ongeldig e-mailadres.",
     "description": "Validation error for invalid email.",
     "originalDefault": "Invalid email address."
+  },
+  "YnTumB": {
+    "defaultMessage": "Telefoonnummer",
+    "description": "Label for customerProfile phoneNumber input",
+    "originalDefault": "Phone number"
   },
   "ZAq+s7": {
     "defaultMessage": "{hasFirstNames, select, true {Verwijder kind met voornaam: {firstNames}} other {Verwijder kind met BSN: {bsn}}}",
@@ -606,6 +666,11 @@
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "d6CKAg": {
+    "defaultMessage": "Sla mijn gegevens op voor de volgende keer. U kunt deze later altijd nog wijzigen in het <a>portaal</a>.",
+    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
+    "originalDefault": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>."
+  },
   "dNGw+S": {
     "defaultMessage": "Klik om verder te tekenen",
     "description": "Draw handler polygon tooltip continue.",
@@ -646,6 +711,11 @@
     "description": "Children component modal: edit child title",
     "originalDefault": "Edit child"
   },
+  "i3G0QQ": {
+    "defaultMessage": "Pas uw voorkeur aan",
+    "description": "Digital address preferences modal title",
+    "originalDefault": "Update your preferences"
+  },
   "iiVLgn": {
     "defaultMessage": "{multiple, select, false {Sleep een bestand of klik om een bestand te selecteren.} other {Sleep bestanden of klik om {limit, select, 0 {} other {tot {limit}} } bestanden toe te voegen.} } Een bestand mag hoogstens <fileSize></fileSize> groot zijn.",
     "description": "Description/label for upload drop zone.",
@@ -665,6 +735,11 @@
     "defaultMessage": "Het bestand moet {fileMaxSize} of kleiner zijn.",
     "description": "File upload error message: file too large",
     "originalDefault": "The file must be smaller than {fileMaxSize}."
+  },
+  "kpiWvx": {
+    "defaultMessage": "Voeg {digitalAddressType, select, email {e-mailadres} phoneNumber {telefoonnummer} other {{digitalAddressType}} } toe",
+    "description": "Profile digital address 'add digital address' button label",
+    "originalDefault": "Add {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} }"
   },
   "lQY+Zm": {
     "defaultMessage": "Een bevestigingscode invullen",
@@ -741,6 +816,11 @@
     "description": "Validation error for addressNL.houseLetter field.",
     "originalDefault": "House letter must be a single letter."
   },
+  "pitnjr": {
+    "defaultMessage": "Bevestigen",
+    "description": "Save preferences button label",
+    "originalDefault": "Save"
+  },
   "pzR8ui": {
     "defaultMessage": "Er is iets fout gegaan bij het presenteren van de inlogopties. Neem alstublieft contact met ons op.",
     "description": "Co-sign auth option not available on form",
@@ -775,11 +855,6 @@
     "defaultMessage": "Verstuur code",
     "description": "Email verification: send code button text",
     "originalDefault": "Send code"
-  },
-  "sP3xMn": {
-    "defaultMessage": "Ongeldig telefoonnummer - je mag enkel cijfers, de + of - tekens en spaties gebruiken. Bijvoorbeeld +316 123-456-78.",
-    "description": "Validation error for phone number format.",
-    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
   "sSmY1N": {
     "defaultMessage": "Zoek adres",
