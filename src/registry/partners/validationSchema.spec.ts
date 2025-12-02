@@ -202,7 +202,7 @@ describe('Manually added partners validation', () => {
         affixes: '',
         lastName: 'Vis',
         dateOfBirth: '1980-12-12',
-        __addedManually: true,
+        _OF_INTERNAL_addedManually: true,
       },
     ]);
 

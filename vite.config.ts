@@ -11,7 +11,7 @@ import {coverageConfigDefaults} from 'vitest/config';
 
 import {dependencies, peerDependencies} from './package.json';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const _OF_INTERNAL_dirname = dirname(fileURLToPath(import.meta.url));
 
 const externalPackages = [
   ...Object.keys(dependencies || {}),
@@ -49,9 +49,9 @@ export default defineConfig(({mode}) => ({
   ],
   resolve: {
     alias: {
-      '@/components': resolve(__dirname, 'src/components'),
-      '@/registry': resolve(__dirname, 'src/registry'),
-      '@/scss': resolve(__dirname, 'src/scss'),
+      '@/components': resolve(_OF_INTERNAL_dirname, 'src/components'),
+      '@/registry': resolve(_OF_INTERNAL_dirname, 'src/registry'),
+      '@/scss': resolve(_OF_INTERNAL_dirname, 'src/scss'),
     },
   },
   css: {
@@ -61,7 +61,7 @@ export default defineConfig(({mode}) => ({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(_OF_INTERNAL_dirname, 'src/index.ts'),
       formats: ['es'],
     },
     rollupOptions: {

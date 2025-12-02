@@ -8,7 +8,7 @@ export const EMPTY_PARTNER = {
   affixes: '',
   lastName: '',
   dateOfBirth: '',
-  __addedManually: true,
+  _OF_INTERNAL_addedManually: true,
 } satisfies ManuallyAddedPartnerDetails;
 
 export const SUB_FIELD_NAMES: (keyof PartnerDetails)[] = [

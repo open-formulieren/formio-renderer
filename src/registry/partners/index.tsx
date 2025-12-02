@@ -30,9 +30,9 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
 
   const manuallyAddedPartner = partners.find(
     (partner): partner is ManuallyAddedPartnerDetails =>
-      // Because `__addedManually` is only specified on `ManuallyAddedPartnerDetails`,
+      // Because `_OF_INTERNAL_addedManually` is only specified on `ManuallyAddedPartnerDetails`,
       // we need to validate it explicitly as a boolean value to make the linter happy
-      '__addedManually' in partner && !!partner?.__addedManually
+      '_OF_INTERNAL_addedManually' in partner && !!partner?._OF_INTERNAL_addedManually
   );
   const canAddPartner = partners.length === 0;
   const canEditPartner = manuallyAddedPartner !== undefined;

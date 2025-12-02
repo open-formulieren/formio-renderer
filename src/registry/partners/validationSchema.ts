@@ -81,8 +81,8 @@ const getValidationSchema: GetValidationSchema<PartnersComponentSchema> = (
         })
         .min(1),
       dateOfBirth: buildDateOfBirthSchema(intl),
-      // __addedManually must either be true or undefined.
-      __addedManually: z.literal<boolean>(true).optional(),
+      // _OF_INTERNAL_addedManually must either be true or undefined.
+      _OF_INTERNAL_addedManually: z.literal<boolean>(true).optional(),
     })
   );
 

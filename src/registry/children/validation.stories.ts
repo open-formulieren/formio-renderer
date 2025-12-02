@@ -204,8 +204,8 @@ export const ValidateValid: ValidationStory = {
           bsn: '111222333',
           firstNames: 'Joe',
           dateOfBirth: '2025-11-01',
-          __addedManually: true,
-          __id: expect.any(String),
+          _OF_INTERNAL_addedManually: true,
+          _OF_INTERNAL_id: expect.any(String),
         },
       ],
     });
