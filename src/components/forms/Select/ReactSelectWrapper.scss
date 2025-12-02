@@ -130,6 +130,14 @@
       font-style: var(--utrecht-form-control-placeholder-font-style);
       opacity: 100%;
     }
+
+    // our own button wrapper for improved accessibility (keyboard nav)
+    .openforms-select-clear-indicator {
+      padding: 0;
+      border: none;
+      background: none;
+      font-size: 0;
+    }
   }
 
   @include bem.modifier('openforms-is-multi') {
