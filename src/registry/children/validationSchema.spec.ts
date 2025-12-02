@@ -160,8 +160,8 @@ describe('Manually added children validation', () => {
         bsn: '111222333',
         firstNames: 'Joe',
         dateOfBirth: '1980-12-12',
-        __addedManually: true,
-        __id: '9905f081-57c2-4228-8010-77b34ef0e7ab',
+        _OF_INTERNAL_addedManually: true,
+        _OF_INTERNAL_id: '9905f081-57c2-4228-8010-77b34ef0e7ab',
       },
     ]);
 

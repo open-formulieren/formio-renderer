@@ -14,10 +14,10 @@ export type FormValues = {
 export type ExtendedChildDetails = ChildDetails & {
   // this is added only for the renderer and helps us to distinguish partners who are
   // added manually by the user from the authenticated, server fetched, partners.
-  __addedManually?: true;
+  _OF_INTERNAL_addedManually?: true;
   // this is added only for the renderer and serves as a unique identifier for the
   // child. This is only used for manually added children.
-  __id?: string;
+  _OF_INTERNAL_id?: string;
   // distinguish a child selected by the user (checkbox) - this is used in the backend
   // too
   selected?: boolean;

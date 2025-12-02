@@ -145,7 +145,7 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
       </TableHeader>
       <TableBody>
         {values.map((child, index) => (
-          <TableRow key={child.__id || index}>
+          <TableRow key={child._OF_INTERNAL_id || index}>
             {enableSelection && (
               <TableCell>
                 <BareCheckbox
@@ -174,7 +174,9 @@ const ChildrenTable: React.FC<ChildrenTableProps> = ({
               )}
             </TableCell>
 
-            {Boolean('__addedManually' in child && child['__addedManually']) && (
+            {Boolean(
+              '_OF_INTERNAL_addedManually' in child && child['_OF_INTERNAL_addedManually']
+            ) && (
               <TableCell>
                 <EditChildModal
                   child={child}

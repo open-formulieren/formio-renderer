@@ -20,7 +20,7 @@ import type {LeafletMapProps} from './LeafletMap';
 // add our leaflet instrumentation to the global window object
 declare global {
   interface Window {
-    __leafletMap: LMap;
+    _OF_INTERNAL_leafletMap: LMap;
   }
 }
 
@@ -29,7 +29,7 @@ const StorybookLeafletMapExposer = () => {
 
   useEffect(() => {
     if (map) {
-      window.__leafletMap = map;
+      window._OF_INTERNAL_leafletMap = map;
     }
   }, [map]);
   return null;
@@ -323,7 +323,7 @@ export const WithCurrentLocationGranted: Story = {
       expect(map).toBeVisible();
     });
 
-    const mapSetViewSpy = spyOn(window.__leafletMap, 'setView');
+    const mapSetViewSpy = spyOn(window._OF_INTERNAL_leafletMap, 'setView');
 
     // There is a "Current location" button
     const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
@@ -363,7 +363,7 @@ export const WithCurrentLocationDenied: Story = {
       expect(map).toBeVisible();
     });
 
-    const mapSetViewSpy = spyOn(window.__leafletMap, 'setView');
+    const mapSetViewSpy = spyOn(window._OF_INTERNAL_leafletMap, 'setView');
 
     // There is a "Current location" button
     const currentLocationButton = await within(map).findByRole('link', {
@@ -405,7 +405,7 @@ export const WithCurrentLocationManuallyTogglePermission: Story = {
       expect(map).toBeVisible();
     });
 
-    const mapSetViewSpy = spyOn(window.__leafletMap, 'setView');
+    const mapSetViewSpy = spyOn(window._OF_INTERNAL_leafletMap, 'setView');
     const currentLocationButton = await within(map).findByRole('link', {name: 'Current location'});
 
     step('Initially enabled location control', () => {

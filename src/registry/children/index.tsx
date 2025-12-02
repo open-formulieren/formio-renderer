@@ -48,7 +48,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionId = description ? `${id}-description` : undefined;
 
-  const serverFetchedChildren = children.filter(child => !('__addedManually' in child));
+  const serverFetchedChildren = children.filter(child => !('_OF_INTERNAL_addedManually' in child));
   // If there are no server-fetched children, we can add children manually.
   const canAddChildrenManually = serverFetchedChildren.length === 0;
 
@@ -98,7 +98,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                 onSubmit={newChild => {
                   arrayHelpers.push({
                     ...newChild,
-                    __id: crypto.randomUUID(),
+                    _OF_INTERNAL_id: crypto.randomUUID(),
                     selected: enableSelection ? false : undefined,
                   });
 

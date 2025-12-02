@@ -6,7 +6,7 @@ export const EMPTY_CHILD: ExtendedChildDetails = {
   bsn: '',
   firstNames: '',
   dateOfBirth: '',
-  __addedManually: true,
+  _OF_INTERNAL_addedManually: true,
 };
 
 export const SUB_FIELD_NAMES: (keyof ChildDetails)[] = ['bsn', 'firstNames', 'dateOfBirth'];

@@ -25,7 +25,7 @@ const ChildModal: React.FC<ChildModalProps> = ({isOpen, closeModal, data, onSubm
       isOpen={isOpen}
       closeModal={closeModal}
       title={
-        data.__id == undefined ? (
+        data._OF_INTERNAL_id == undefined ? (
           <FormattedMessage
             description="Children component modal: add child title"
             defaultMessage="Add child"
