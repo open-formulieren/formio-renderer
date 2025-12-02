@@ -87,11 +87,4 @@ In practice, you can consider this a hard fork.
 We are very grateful to the team behind Formio.js for open sourcing their software, Open Forms would
 not have been possible without it.
 
-## Status
-
-The renderer is still in development and not yet feature complete.
-
-Most architectural challenges have been solved. We are aiming for a 1.0 release around the end of
-November 2025.
-
 [Storybook]: https://open-formulieren.github.io/formio-renderer/
