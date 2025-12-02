@@ -79,7 +79,7 @@ export const OpenPreferencesModal: Story = {
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
+    const emailField = await canvas.findByLabelText('Email');
 
     await step('Enter email address and open preferences modal', async () => {
       // The "update preferences" button should not yet be visible

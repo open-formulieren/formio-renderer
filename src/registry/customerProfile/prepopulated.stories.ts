@@ -43,8 +43,8 @@ export const WithOnePrepopulatedAddress: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     // Both email and phone number fields are displayed as dropdowns
     expect(emailField).toHaveRole('combobox');
@@ -78,8 +78,8 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     // The email field is displayed as dropdown, phone number field as textfield
     expect(emailField).toHaveRole('combobox');
@@ -110,8 +110,8 @@ export const WithPrepopulatedDigitalAddresses: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     // Both email and phone number fields are displayed as dropdowns
     expect(emailField).toHaveRole('combobox');
@@ -156,8 +156,8 @@ export const WithPreferredDigitalAddresses: Story = {
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     // Both email and phone number fields are displayed as dropdowns
     expect(emailField).toHaveRole('combobox');
@@ -224,7 +224,7 @@ export const ChangeSelection: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const emailField = canvas.getByLabelText('Email');
+    const emailField = await canvas.findByLabelText('Email');
 
     // The email field should be displayed as a combobox, and the first address selected
     expect(emailField).toHaveRole('combobox');
@@ -268,7 +268,7 @@ export const AddNewAddress: Story = {
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
 
-    const emailField = canvas.getByLabelText('Email');
+    const emailField = await canvas.findByLabelText('Email');
     // The email field should start as a combobox
     expect(emailField).toHaveRole('combobox');
 
@@ -349,7 +349,7 @@ export const PrepopulateReturnsUnsupportedAddressTypes: Story = {
     const canvas = within(canvasElement);
 
     // Because there are no pre-populated email addresses, we show email address as textfield
-    const emailField = canvas.getByLabelText('Email');
+    const emailField = await canvas.findByLabelText('Email');
 
     expect(emailField).toBeVisible();
     expect(emailField).toHaveRole('textbox');
@@ -386,8 +386,8 @@ export const LookupFailureSimulation: Story = {
     const canvas = within(canvasElement);
 
     // If pre-populate fails, we simply show the textfields
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     expect(emailField).toBeVisible();
     expect(emailField).toHaveRole('textbox');

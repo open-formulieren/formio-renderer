@@ -115,8 +115,8 @@ export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressT
     play: async ({canvasElement}) => {
       const canvas = within(canvasElement);
 
-      const emailField = canvas.getByRole('combobox', {name: 'Email'});
-      const phoneNumberField = canvas.getByRole('combobox', {name: 'Phone number'});
+      const emailField = await canvas.findByRole('combobox', {name: 'Email'});
+      const phoneNumberField = await canvas.findByRole('combobox', {name: 'Phone number'});
 
       // Clear both dropdowns
       // eslint-disable-next-line import/no-named-as-default-member
@@ -178,8 +178,8 @@ export const ValidateInvalid: ValidationStory = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     await userEvent.type(emailField, 'invalid');
     await userEvent.type(phoneNumberField, 'invalid');
@@ -202,8 +202,8 @@ export const ValidateValid: ValidationStory = {
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
 
-    const emailField = canvas.getByLabelText('Email');
-    const phoneNumberField = canvas.getByLabelText('Phone number');
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
 
     await userEvent.type(emailField, 'test@mail.com');
     await userEvent.type(phoneNumberField, '06 123 456 78');
