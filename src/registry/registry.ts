@@ -1,5 +1,3 @@
-import type {AnyComponentSchema} from '@open-formulieren/types';
-
 import AddressNL from './addressNL';
 import BSN from './bsn';
 import Checkbox from './checkbox';
@@ -31,11 +29,11 @@ import SoftRequiredErrors from './softRequiredErrors';
 import Textarea from './textarea';
 import TextField from './textfield';
 import Time from './time';
-import type {GetRegistryEntry, Registry, RegistryEntry} from './types';
+import type {GetRegistryEntry, Registry, RegistryEntry, SupportedComponentSchema} from './types';
 
 export const getRegistryEntry: GetRegistryEntry = (
-  componentDefinition: AnyComponentSchema
-): RegistryEntry<AnyComponentSchema> | undefined => {
+  componentDefinition: SupportedComponentSchema
+): RegistryEntry<SupportedComponentSchema> | undefined => {
   const entry = REGISTRY[componentDefinition.type];
   return entry;
 };
