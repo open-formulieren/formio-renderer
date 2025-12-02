@@ -1,5 +1,23 @@
 # Changes
 
+## 1.0.0-beta.0 (2025-12-02)
+
+First beta version for the stable 1.0.0 release.
+
+The renderer is now feature complete, entering bug-fixing mode before we release 1.0 final.
+
+**Features**
+
+- [`#178`][#178] Implemented the `customerProfile` component type.
+
+**Bugfixes**
+
+- [`#229`][#229] Fixed the multi-value `select` component having a different height compared to the
+  single-value variant.
+
+[#178]: https://github.com/open-formulieren/formio-renderer/issues/178
+[#229]: https://github.com/open-formulieren/formio-renderer/issues/229
+
 ## 0.14.1 (2025-11-28)
 
 Fixed package export to prevent leaflet from ending up in the main bundle.
