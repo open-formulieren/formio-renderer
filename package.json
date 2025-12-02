@@ -63,7 +63,7 @@
     "@maykinmedia/eslint-config": "^2.0.0",
     "@open-formulieren/design-tokens": "^0.64.0",
     "@open-formulieren/leaflet-tools": "^1.0.0",
-    "@open-formulieren/types": "^0.51.0",
+    "@open-formulieren/types": "^0.52.0",
     "@sinonjs/fake-timers": "^15.0.0",
     "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-docs": "^9.1.1",

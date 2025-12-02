@@ -19,6 +19,11 @@
     "description": "Children component modal: add child title",
     "originalDefault": "Add child"
   },
+  "+RF9ZR": {
+    "defaultMessage": "Use this {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } only for this form.",
+    "description": "Profile digital address preferences modal 'useOnlyOnce' option label",
+    "originalDefault": "Use this {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } only for this form."
+  },
   "+W79Dr": {
     "defaultMessage": "Click to continue drawing line",
     "description": "Draw handler polyline tooltip continue.",
@@ -63,6 +68,11 @@
     "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
     "description": "Co-sign auth option not available on form",
     "originalDefault": "Something went wrong while presenting the login option. Please contact the municipality."
+  },
+  "1pxgtB": {
+    "defaultMessage": "At least one digital address should be provided.",
+    "description": "Validation error for required customerProfile without digital addresses",
+    "originalDefault": "At least one digital address should be provided."
   },
   "2/wgNH": {
     "defaultMessage": "The file is too small.",
@@ -159,6 +169,11 @@
     "description": "Placeholder for the minute part of the time",
     "originalDefault": "MM"
   },
+  "6o3CZT": {
+    "defaultMessage": "Email",
+    "description": "Label for customerProfile email input",
+    "originalDefault": "Email"
+  },
   "8soi1P": {
     "defaultMessage": "The submitted value does not match the pattern: {pattern}.",
     "description": "Validation error for TEXTFIELD that does not match the pattern.",
@@ -214,6 +229,11 @@
     "description": "Edit toolbar remove button tooltip.",
     "originalDefault": "Remove shapes"
   },
+  "BWCtbf": {
+    "defaultMessage": "You cannot submit multiple digital addresses for the type {digitalAddressType}.",
+    "description": "Validation error for customerProfile with multiple digital addresses for the same type",
+    "originalDefault": "You cannot submit multiple digital addresses for the type {digitalAddressType}."
+  },
   "BYKDMO": {
     "defaultMessage": "The date must be in a valid format (e.g., 10/30/2025).",
     "description": "Invalid input validation error for date field",
@@ -238,6 +258,11 @@
     "defaultMessage": "First names",
     "description": "Children component: children table 'firstNames' header",
     "originalDefault": "First names"
+  },
+  "CGXGUq": {
+    "defaultMessage": "Update preferences",
+    "description": "Profile digital address 'Update preferences' button label",
+    "originalDefault": "Update preferences"
   },
   "CTDEh6": {
     "defaultMessage": "The BSN {bsn} is used for multiple children. Each child must have a unique BSN.",
@@ -278,6 +303,11 @@
     "defaultMessage": "Date of birth must be within the last 120 years.",
     "description": "Validation error for partners.dateOfBirth that is after the minimum date.",
     "originalDefault": "Date of birth must be within the last 120 years."
+  },
+  "E37u5a": {
+    "defaultMessage": "(Will become preferred {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} })",
+    "description": "Profile digital address value display: address as new preferred",
+    "originalDefault": "(Will become preferred {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} })"
   },
   "EZ7myd": {
     "defaultMessage": "Email address verification",
@@ -379,6 +409,11 @@
     "description": "Signature value alt text",
     "originalDefault": "Signature"
   },
+  "Lp2KV6": {
+    "defaultMessage": "(Preferred)",
+    "description": "CustomerProfile: preferred digital address option description",
+    "originalDefault": "(Preferred)"
+  },
   "LsgvKh": {
     "defaultMessage": "Postcode",
     "description": "Label for addressNL postcode input",
@@ -423,6 +458,11 @@
     "defaultMessage": "Date of birth",
     "description": "Children component: label for children dateOfBirth",
     "originalDefault": "Date of birth"
+  },
+  "Q4fCjD": {
+    "defaultMessage": "The {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you provide will automatically only be used for this form. You can update your preferences using the button below.",
+    "description": "Profile digital address new address: default preference text",
+    "originalDefault": "The {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you provide will automatically only be used for this form. You can update your preferences using the button below."
   },
   "Q6/Lj7": {
     "defaultMessage": "Remove last drawn point",
@@ -499,6 +539,16 @@
     "description": "Validation error for date greater than or equal to minimum date.",
     "originalDefault": "The date must be later than or equal to {min}."
   },
+  "VSf9fx": {
+    "defaultMessage": "Provide the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } on which you want to be contacted.",
+    "description": "Profile digital address: accessible digital address label",
+    "originalDefault": "Provide the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } on which you want to be contacted."
+  },
+  "VTpxKE": {
+    "defaultMessage": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>.",
+    "description": "Profile digital address multiple addresses: edit preference text",
+    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>."
+  },
   "WpfP0s": {
     "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
     "description": "Validation error for postcode.",
@@ -519,10 +569,20 @@
     "description": "Draw toolbar undo button message.",
     "originalDefault": "Remove last point"
   },
+  "YZpcRG": {
+    "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces.",
+    "description": "Validation error for invalid phone number.",
+    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces."
+  },
   "Yg2+vS": {
     "defaultMessage": "Invalid email address.",
     "description": "Validation error for invalid email.",
     "originalDefault": "Invalid email address."
+  },
+  "YnTumB": {
+    "defaultMessage": "Phone number",
+    "description": "Label for customerProfile phoneNumber input",
+    "originalDefault": "Phone number"
   },
   "ZAq+s7": {
     "defaultMessage": "{hasFirstNames, select, true {Delete child with first name: {firstNames}} other {Delete child with BSN: {bsn}}}",
@@ -599,6 +659,11 @@
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
   },
+  "d6CKAg": {
+    "defaultMessage": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>.",
+    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
+    "originalDefault": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>."
+  },
   "dNGw+S": {
     "defaultMessage": "Click to continue drawing shape",
     "description": "Draw handler polygon tooltip continue.",
@@ -639,6 +704,11 @@
     "description": "Children component modal: edit child title",
     "originalDefault": "Edit child"
   },
+  "i3G0QQ": {
+    "defaultMessage": "Update your preferences",
+    "description": "Digital address preferences modal title",
+    "originalDefault": "Update your preferences"
+  },
   "iiVLgn": {
     "defaultMessage": "{multiple, select, false {Drop, or click to select a file to upload.} other {Drop, or click to select {limit, select, 0 {} other {up to {limit}} } files to upload.} } The maximum size of a single file is <fileSize></fileSize>.",
     "description": "Description/label for upload drop zone.",
@@ -658,6 +728,11 @@
     "defaultMessage": "The file must be smaller than {fileMaxSize}.",
     "description": "File upload error message: file too large",
     "originalDefault": "The file must be smaller than {fileMaxSize}."
+  },
+  "kpiWvx": {
+    "defaultMessage": "Add {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} }",
+    "description": "Profile digital address 'add digital address' button label",
+    "originalDefault": "Add {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} }"
   },
   "lQY+Zm": {
     "defaultMessage": "Enter the verification code",
@@ -734,6 +809,11 @@
     "description": "Validation error for addressNL.houseLetter field.",
     "originalDefault": "House letter must be a single letter."
   },
+  "pitnjr": {
+    "defaultMessage": "Save",
+    "description": "Save preferences button label",
+    "originalDefault": "Save"
+  },
   "pzR8ui": {
     "defaultMessage": "Something went wrong while processing the co-sign results. Please contact the municipality.",
     "description": "Co-sign auth option not available on form",
@@ -768,11 +848,6 @@
     "defaultMessage": "Send code",
     "description": "Email verification: send code button text",
     "originalDefault": "Send code"
-  },
-  "sP3xMn": {
-    "defaultMessage": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces",
-    "description": "Validation error for phone number format.",
-    "originalDefault": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
   },
   "sSmY1N": {
     "defaultMessage": "Enter address, please",

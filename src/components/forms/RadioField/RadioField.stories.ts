@@ -87,6 +87,7 @@ export const WithValidationErrorAndTooltip: Story = {
   args: {
     ...ValidationError.args,
     tooltip: 'Tooltip content.',
+    'aria-describedby': undefined,
   },
 
   play: async ({canvasElement}) => {

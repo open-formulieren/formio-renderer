@@ -245,7 +245,7 @@ export const ValidatePattern: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
     expect(
       await canvas.findByText(
-        'Invalid phone number - a phone number may only contain digits, the + or - sign or spaces'
+        'Invalid phone number - a phone number may only contain digits, the + or - sign or spaces.'
       )
     ).toBeVisible();
   },

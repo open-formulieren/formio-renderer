@@ -3,6 +3,7 @@ import React from 'react';
 
 import type {AddressNLParameters} from './registry/addressNL/types';
 import type {CosignOldParameters} from './registry/cosignOld/types';
+import type {CustomerProfileParameters} from './registry/customerProfile/types';
 import type {EmailParameters} from './registry/email/types';
 import type {FileParameters} from './registry/file/types';
 import type {MapParameters} from './registry/map/types';
@@ -25,6 +26,7 @@ export interface FormSettings {
   componentParameters?: {
     addressNL?: AddressNLParameters;
     coSign?: CosignOldParameters;
+    customerProfile?: CustomerProfileParameters;
     email?: EmailParameters;
     file?: FileParameters;
     map?: MapParameters;

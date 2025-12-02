@@ -39,6 +39,46 @@
       "value": "Add child"
     }
   ],
+  "+RF9ZR": [
+    {
+      "type": 0,
+      "value": "Use this "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " only for this form."
+    }
+  ],
   "+W79Dr": [
     {
       "type": 0,
@@ -113,6 +153,12 @@
     {
       "type": 0,
       "value": "Something went wrong while presenting the login option. Please contact the municipality."
+    }
+  ],
+  "1pxgtB": [
+    {
+      "type": 0,
+      "value": "At least one digital address should be provided."
     }
   ],
   "2/wgNH": [
@@ -283,6 +329,12 @@
       "value": "MM"
     }
   ],
+  "6o3CZT": [
+    {
+      "type": 0,
+      "value": "Email"
+    }
+  ],
   "8soi1P": [
     {
       "type": 0,
@@ -377,6 +429,20 @@
       "value": "Remove shapes"
     }
   ],
+  "BWCtbf": [
+    {
+      "type": 0,
+      "value": "You cannot submit multiple digital addresses for the type "
+    },
+    {
+      "type": 1,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "BYKDMO": [
     {
       "type": 0,
@@ -445,6 +511,12 @@
       "value": "First names"
     }
   ],
+  "CGXGUq": [
+    {
+      "type": 0,
+      "value": "Update preferences"
+    }
+  ],
   "CTDEh6": [
     {
       "type": 0,
@@ -499,6 +571,46 @@
     {
       "type": 0,
       "value": "Date of birth must be within the last 120 years."
+    }
+  ],
+  "E37u5a": [
+    {
+      "type": 0,
+      "value": "(Will become preferred "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": ")"
     }
   ],
   "EZ7myd": [
@@ -711,6 +823,12 @@
       "value": "Signature"
     }
   ],
+  "Lp2KV6": [
+    {
+      "type": 0,
+      "value": "(Preferred)"
+    }
+  ],
   "LsgvKh": [
     {
       "type": 0,
@@ -763,6 +881,46 @@
     {
       "type": 0,
       "value": "Date of birth"
+    }
+  ],
+  "Q4fCjD": [
+    {
+      "type": 0,
+      "value": "The "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " you provide will automatically only be used for this form. You can update your preferences using the button below."
     }
   ],
   "Q6/Lj7": [
@@ -917,6 +1075,134 @@
       "value": "."
     }
   ],
+  "VSf9fx": [
+    {
+      "type": 0,
+      "value": "Provide the "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " on which you want to be contacted."
+    }
+  ],
+  "VTpxKE": [
+    {
+      "type": 0,
+      "value": "There are multiple "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email addresses"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone numbers"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " associated with your account. Use the dropdown to select the "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
+    },
+    {
+      "type": 0,
+      "value": " you want to use for this form. To update your preferences, use the online "
+    },
+    {
+      "children": [
+        {
+          "type": 0,
+          "value": "portal"
+        }
+      ],
+      "type": 8,
+      "value": "a"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "WpfP0s": [
     {
       "type": 0,
@@ -941,10 +1227,22 @@
       "value": "Remove last point"
     }
   ],
+  "YZpcRG": [
+    {
+      "type": 0,
+      "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces."
+    }
+  ],
   "Yg2+vS": [
     {
       "type": 0,
       "value": "Invalid email address."
+    }
+  ],
+  "YnTumB": [
+    {
+      "type": 0,
+      "value": "Phone number"
     }
   ],
   "ZAq+s7": [
@@ -1083,6 +1381,26 @@
       "value": "."
     }
   ],
+  "d6CKAg": [
+    {
+      "type": 0,
+      "value": "Save my data for the future forms. You can edit your preferences in the online "
+    },
+    {
+      "children": [
+        {
+          "type": 0,
+          "value": "portal"
+        }
+      ],
+      "type": 8,
+      "value": "a"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "dNGw+S": [
     {
       "type": 0,
@@ -1137,6 +1455,12 @@
     {
       "type": 0,
       "value": "Edit child"
+    }
+  ],
+  "i3G0QQ": [
+    {
+      "type": 0,
+      "value": "Update your preferences"
     }
   ],
   "iiVLgn": [
@@ -1235,6 +1559,42 @@
     {
       "type": 0,
       "value": "."
+    }
+  ],
+  "kpiWvx": [
+    {
+      "type": 0,
+      "value": "Add "
+    },
+    {
+      "options": {
+        "email": {
+          "value": [
+            {
+              "type": 0,
+              "value": "email address"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 1,
+              "value": "digitalAddressType"
+            }
+          ]
+        },
+        "phoneNumber": {
+          "value": [
+            {
+              "type": 0,
+              "value": "phone number"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "digitalAddressType"
     }
   ],
   "lQY+Zm": [
@@ -1343,6 +1703,12 @@
       "value": "House letter must be a single letter."
     }
   ],
+  "pitnjr": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
   "pzR8ui": [
     {
       "type": 0,
@@ -1399,12 +1765,6 @@
     {
       "type": 0,
       "value": "Send code"
-    }
-  ],
-  "sP3xMn": [
-    {
-      "type": 0,
-      "value": "Invalid phone number - a phone number may only contain digits, the + or - sign or spaces"
     }
   ],
   "sSmY1N": [

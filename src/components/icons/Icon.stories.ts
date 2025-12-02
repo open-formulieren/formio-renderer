@@ -43,3 +43,9 @@ export const Close: Story = {
     icon: 'close',
   },
 };
+
+export const ArrowRight: Story = {
+  args: {
+    icon: 'arrow-right',
+  },
+};
