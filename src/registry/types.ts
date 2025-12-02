@@ -216,7 +216,14 @@ export type RegistryEntry<S> = [S] extends [AnyComponentSchema] // prevent distr
     }
   : never;
 
+// these are either experimental or have no renderer counterpart
+type UnsupportedComponentTypes = 'npFamilyMembers' | 'productPrice';
+
+export type SupportedComponentSchema = Exclude<
+  AnyComponentSchema,
+  {type: UnsupportedComponentTypes}
+>;
+
 export type Registry = {
-  // TODO: drop the '?' once all component types are implemented
-  [S in AnyComponentSchema as S['type']]?: RegistryEntry<S>;
+  [S in SupportedComponentSchema as S['type']]: RegistryEntry<S>;
 };
