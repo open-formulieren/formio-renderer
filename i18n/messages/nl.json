@@ -436,6 +436,11 @@
     "description": "Validation error for TEXTFIELD that exceeds max length.",
     "originalDefault": "There are too many characters provided."
   },
+  "MmjiYz": {
+    "defaultMessage": "Verwijder keuze(s)",
+    "description": "Select: accessible label for clear-value label",
+    "originalDefault": "Clear selection"
+  },
   "MrlKEu": {
     "defaultMessage": "De geboortedatum mag niet in de toekomst liggen.",
     "description": "Validation error for children.dateOfBirth that is after the maximum date.",

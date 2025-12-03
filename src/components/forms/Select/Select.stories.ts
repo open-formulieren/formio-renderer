@@ -224,3 +224,48 @@ export const AutoSelectOnlyOption: Story = {
     expect(await canvas.findByText('Only available option')).toBeVisible();
   },
 };
+
+export const KeyboardNavigationToClear: Story = {
+  args: {
+    name: 'test',
+    label: 'Keyboard nav',
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: 'option-2',
+      },
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    expect(await canvas.findByText('Option 2')).toBeVisible();
+
+    const selectInput = canvas.getByLabelText('Keyboard nav');
+    await userEvent.click(selectInput);
+    // wait for dropdown to open
+    const option1 = await canvas.findByRole('option', {name: 'Option 1'});
+    expect(option1).toBeVisible();
+    await userEvent.keyboard('{Tab}');
+    // wait for the listbox to close
+    await waitFor(() => {
+      expect(option1).not.toBeVisible();
+    });
+
+    const clearButton = canvas.getByRole('button', {name: 'Clear selection'});
+    expect(clearButton).toBeVisible();
+    expect(clearButton).not.toHaveFocus();
+
+    // tab-navigate to the 'clear' icon
+    await userEvent.keyboard('{Tab}');
+    expect(clearButton).toHaveFocus();
+
+    // Entering must clear the value
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(canvas.queryByText('Option 2')).not.toBeInTheDocument();
+    });
+  },
+};

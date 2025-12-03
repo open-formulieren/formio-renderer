@@ -1,7 +1,7 @@
 import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
 import Select, {components} from 'react-select';
-import type {GroupBase, InputProps, Props} from 'react-select';
+import type {ClearIndicatorProps, GroupBase, InputProps, Props} from 'react-select';
 
 import './ReactSelectWrapper.scss';
 
@@ -56,6 +56,42 @@ const Input = <O extends BaseOption = BaseOption>(props: InputProps<O>) => {
   ].filter(b => !!b);
   const describedby = describedByBits.length ? describedByBits.join(' ') : undefined;
   return <components.Input<O, boolean, GroupBase<O>> {...props} aria-describedby={describedby} />;
+};
+
+/**
+ * A keyboard-navigation accessible clear indicator.
+ *
+ * @see {@link https://react-select.com/components} for the upstream documentation.
+ * @see {@link https://github.com/JedWatson/react-select/blob/052e864b4990a67c4ee416851c34d1eb7b58267b/packages/react-select/src/components/indicators.tsx#L134}
+ *   the default implementation.
+ */
+const CustomClearIndicator = <O extends BaseOption = BaseOption>(props: ClearIndicatorProps<O>) => {
+  const {children, getStyles, innerProps} = props;
+  return (
+    <div
+      {...innerProps}
+      style={getStyles('clearIndicator', props) as React.CSSProperties}
+      aria-hidden="false"
+    >
+      <button
+        className="openforms-select-clear-indicator"
+        type="button"
+        onKeyDown={event => {
+          if (event.code === 'Enter') {
+            props.clearValue();
+          }
+        }}
+      >
+        <span className="sr-only">
+          <FormattedMessage
+            description="Select: accessible label for clear-value label"
+            defaultMessage="Clear selection"
+          />
+        </span>
+        {children || <components.CrossIcon />}
+      </button>
+    </div>
+  );
 };
 
 /**
@@ -140,7 +176,11 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
         }
       }}
       {...props}
-      components={{Input: Input<O>, ...props.components}}
+      components={{
+        Input: Input<O>,
+        ClearIndicator: CustomClearIndicator<O>,
+        ...props.components,
+      }}
       value={value}
     />
   );
