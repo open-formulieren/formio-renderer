@@ -1,0 +1,94 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
+import {Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
+
+<Meta title="Component registry / basic / file / Theming" />
+
+# Theming the file upload component
+
+The appearance of the `file` component can be tweaked through the documented design tokens. The
+token values are the values used in the default Open Forms theme.
+
+## File upload component
+
+The outer component that brings all the subcomponents together, encapsulating the whole upload
+behaviour. It manages the layout of the UI elements:
+
+- dropzone
+- description (help text)
+- uploads list
+- errors
+
+<TokensTable container={ofTokens} limitTo="of.file-upload." autoExpand />
+
+## Uploaded files list
+
+The container for the individual uploads display.
+
+<TokensTable container={ofTokens} limitTo="of.uploaded-files-list." autoExpand />
+
+## Uploaded file
+
+The UI for a single uploaded file, providing a summary, remove control and possible file-level
+validation errors.
+
+<TokensTable container={ofTokens} limitTo="of.uploaded-file." autoExpand />
+
+## Upload input
+
+The UI element for the upload button and dropzone for drag and drop.
+
+<TokensTable container={ofTokens} limitTo="of.upload-input." autoExpand />
+
+## Example tokens configuration
+
+```json
+{
+  "of": {
+    "file-upload": {
+      "grid-areas": {"value": "'dropzone' 'uploads' 'description' 'errors'"},
+      "row-gap": {"value": 0},
+      "uploads": {
+        "padding-block-end": {"value": 0},
+        "padding-block-start": {"value": 0}
+      }
+    },
+    "uploaded-file-list": {
+      "row-gap": {"value": "8px"}
+    },
+    "uploaded-file": {
+      "row-gap": {"value": "8px"},
+      "column-gap": {"value": "8px"},
+      "padding-block-end": {"value": "8px"},
+      "padding-block-start": {"value": "8px"},
+      "padding-inline-end": {"value": "4px"},
+      "padding-inline-start": {"value": "16px"},
+      "border-width": {"value": "1px"},
+      "border-style": {"value": "solid"},
+      "border-color": {"value": "{of.color.border}"},
+      "border-radius": {"value": "2px"},
+      "metadata": {
+        "color": {"value": "{of.color.fg-muted}"}
+      },
+      "errors": {
+        "border-color": {"value": "{of.color.danger}"}
+      }
+    },
+    "upload-input": {
+      "padding-block-end": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-block-start": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-inline-end": {"value": "{of.file-upload.drop-area.padding}"},
+      "padding-inline-start": {"value": "{of.file-upload.drop-area.padding}"},
+      "border-width": {"value": "3px"},
+      "border-style": {"value": "dashed"},
+      "border-color": {"value": "{of.color.border}"},
+      "drag-over": {
+        "border-color": {"value": "{of.color.primary}"}
+      },
+      "drag-reject": {
+        "border-color": {"value": "{of.color.danger}"}
+      }
+    }
+  }
+}
+```

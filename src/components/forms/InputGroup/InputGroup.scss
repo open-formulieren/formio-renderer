@@ -21,7 +21,7 @@
   }
 }
 
-// XXX: move to upstream @utrecht/components when the input group is moved there.
+// XXX: move to upstream @utrecht/components if the input group is moved there.
 .utrecht-form-field {
   @include bem.modifier('openforms') {
     .utrecht-form-fieldset {

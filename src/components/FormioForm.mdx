@@ -1,4 +1,6 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
 import {ArgTypes, Canvas, Controls, Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
 
 import * as FormioFormStories from './FormioForm.stories';
 
@@ -13,6 +15,7 @@ import * as FormioFormStories from './FormioForm.stories';
 - [Programmatically setting form errors](#programmatically-setting-form-errors)
 - [Providing the `validatePluginCallback`](#providing-the-validateplugincallback)
 - [Props](#props)
+- [Theming](#theming)
 
 The `FormioForm` component is high level API of this package. Given a formio form definition (as a
 list of component definitions), it renders the form fields for it.
@@ -185,3 +188,9 @@ from silently allowing invalid values.
 ## Props
 
 <ArgTypes />
+
+## Theming
+
+The `FormioForm` component itself has no styling, but other components exist that may be relevant.
+
+<TokensTable container={ofTokens} limitTo="of.form-field-container." autoExpand />
