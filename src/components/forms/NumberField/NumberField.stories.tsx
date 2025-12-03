@@ -1,6 +1,8 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {useFormikContext} from 'formik';
 import {expect, userEvent, within} from 'storybook/test';
 
+import {SecondaryActionButton} from '@/components/Button';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import NumberField from './NumberField';
@@ -261,5 +263,51 @@ export const NoAsterisks: Story = {
     name: 'number',
     label: 'Required without asterisks',
     isRequired: true,
+  },
+};
+
+export const FieldValueNull: Story = {
+  name: 'Setting field value to `null` clears the display value',
+  decorators: [
+    (Story, {args: {name}}) => {
+      const {setFieldValue} = useFormikContext();
+      return (
+        <>
+          <Story />
+          <SecondaryActionButton
+            type="button"
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+              event.preventDefault();
+              setFieldValue(name, null);
+            }}
+            style={{marginBlockStart: '20px'}}
+          >
+            Set value to null
+          </SecondaryActionButton>
+        </>
+      );
+    },
+  ],
+  args: {
+    name: 'number',
+    label: 'Number',
+    isReadonly: false,
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      initialValues: {number: 42},
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+
+    // Check initial value
+    expect(number).toHaveDisplayValue('42');
+
+    // Set field value to null and ensure it is cleared
+    await userEvent.click(canvas.getByRole('button', {name: 'Set value to null'}));
+    expect(number).toHaveDisplayValue('');
   },
 };
