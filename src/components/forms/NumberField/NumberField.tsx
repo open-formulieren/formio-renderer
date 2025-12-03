@@ -159,7 +159,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
       <InputContainer prefix={prefix} suffix={suffix}>
         <NumericFormat
           name={name}
-          value={value}
+          value={value ?? ''}
           onBlur={async e => {
             onBlur(e);
             await validateField(name);
