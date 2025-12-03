@@ -1,0 +1,50 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
+import {Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
+
+<Meta title="Internal API / Forms / RadioField / Theming" />
+
+# RadioField theming
+
+The `RadioField` form field component is implemented on top of some Utrecht community components:
+
+- `utrecht-radio-button`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-radio-button--design-tokens)
+- `utrecht-form-field`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field--design-tokens)
+- `utrecht-form-fieldset`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-fieldset--design-tokens)
+- `utrecht-form-label`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/html_html-form-label--design-tokens)
+- `utrecht-form-field-description`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field-description--design-tokens)
+
+## Open Forms overrides
+
+### Extensions
+
+Open Forms extends the `utrecht-radio` component, targetting the `utrecht-form-field--openforms`
+modifier, using a number of custom design tokens. These are available to all themes.
+
+<TokensTable container={ofTokens} limitTo="of.utrecht-form-field.radio" autoExpand />
+
+<TokensTable container={ofTokens} limitTo="of.utrecht-form-label.radio" autoExpand />
+
+### Theme-specific overrides
+
+The default Open Forms theme overrides some checkbox styles. You don't get these overrides unless
+you use the `.openforms-theme` or implement similar CSS-level overrides.
+
+- Layout arrangement.
+- Focus outline management to handle the altered layout arrangement.
+
+All the styles are scoped to Open Forms extensions on elements and should not affect elements
+rendered by other means than Open Forms.
+
+## Tokens
+
+The tokens set for the default Open Forms theme.
+
+<TokensTable container={ofTokens} limitTo="utrecht.radio" autoExpand />
+
+<TokensTable container={ofTokens} limitTo="utrecht.form-field" autoExpand />

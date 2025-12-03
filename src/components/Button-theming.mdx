@@ -1,0 +1,20 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Internal API / Button / Theming" />
+
+# Button theming
+
+The `button` component uses the `utrecht-button` component under the hood, implying you can use
+those
+[design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-button--design-tokens).
+
+## Open Forms overrides
+
+The default Open Forms theme overrides the button styles. You don't get these overrides unless you
+use the `.openforms-theme`.
+
+- Top and left border are transparent for a "3D-effect".
+- Buttons inside tables have their background color and padding removed.
+- On mobile viewports, the button is made full-width with centered content.
+
+There are no additional design tokens.

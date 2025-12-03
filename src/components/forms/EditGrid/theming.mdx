@@ -1,0 +1,19 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
+import {Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
+
+<Meta title="Internal API / Forms / EditGrid / Theming" />
+
+# EditGrid theming
+
+The `EditGrid` form field component is implemented with some Utrecht community components:
+
+- `utrecht-button`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-button--design-tokens)
+- `utrecht-button-group`
+- `utrecht-form-fieldset`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-fieldset--design-tokens)
+
+## Tokens
+
+<TokensTable container={ofTokens} limitTo="of.editgrid" autoExpand />

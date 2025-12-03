@@ -1,0 +1,29 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
+import {Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
+
+<Meta title="Internal API / Forms / DateTimeField / Theming" />
+
+# DateTimeField theming
+
+The `DateTimeField` form field component is implemented on top of some Utrecht community components:
+
+- `utrecht-textbox`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-textbox--design-tokens)
+- `utrecht-form-field`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field--design-tokens)
+- `utrecht-form-label`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/html_html-form-label--design-tokens)
+- `utrecht-form-field-description`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field-description--design-tokens)
+- `utrecht-calendar`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/react_react-calendar--design-tokens)
+
+## Tokens
+
+<TokensTable container={ofTokens} limitTo="utrecht.textbox" autoExpand />
+<TokensTable container={ofTokens} limitTo="utrecht.form-control" autoExpand />
+<TokensTable container={ofTokens} limitTo="utrecht.form-field" autoExpand />
+<TokensTable container={ofTokens} limitTo="utrecht.form-label" autoExpand />
+<TokensTable container={ofTokens} limitTo="utrecht.form-field-description" autoExpand />
+<TokensTable container={ofTokens} limitTo="utrecht.calendar" autoExpand />

@@ -1,0 +1,38 @@
+import ofTokens from '@open-formulieren/design-tokens/dist/tokens';
+import {Meta} from '@storybook/addon-docs/blocks';
+import TokensTable from 'design-token-editor/lib/esm/TokensTable';
+
+<Meta title="Internal API / Forms / Select / Theming" />
+
+# Select theming
+
+The `Select` form field component is implemented on top of some Utrecht community components and the
+react-select library:
+
+- `utrecht-select`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-select--design-tokens)
+- `utrecht-textbox`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-textbox--design-tokens)
+- `utrecht-form-field`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field--design-tokens)
+- `utrecht-form-fieldset`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-fieldset--design-tokens)
+- `utrecht-form-label`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/html_html-form-label--design-tokens)
+- `utrecht-form-field-description`
+  [design tokens](https://nl-design-system.github.io/utrecht/storybook/?path=/story/css_css-form-field-description--design-tokens)
+
+## Open Forms extensions
+
+Open Forms extends the `utrecht-select` component, targetting the `utrecht-select--openforms`
+modifier, using a number of custom design tokens. These are available to all themes.
+
+<TokensTable container={ofTokens} limitTo="of.select" autoExpand />
+
+## Tokens
+
+The tokens set for the default Open Forms theme.
+
+<TokensTable container={ofTokens} limitTo="utrecht.select" autoExpand />
+
+<TokensTable container={ofTokens} limitTo="utrecht.form-field" autoExpand />
