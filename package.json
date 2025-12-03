@@ -92,6 +92,7 @@
     "ajv": "^8.17.1",
     "babel-plugin-formatjs": "^10.5.34",
     "date-fns": "^4.1.0",
+    "design-token-editor": "^0.6.0",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",

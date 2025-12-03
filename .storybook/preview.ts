@@ -5,6 +5,7 @@ import type {Preview} from '@storybook/react-vite';
 import '@utrecht/components/dist/document/css/index.css';
 
 import {utrechtDocumentDecorator, withModal} from './decorators';
+import './dte-theme.scss';
 import {reactIntl} from './reactIntl';
 
 const preview: Preview = {

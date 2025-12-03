@@ -1,0 +1,6 @@
+@use 'design-token-editor/lib/css/dte.css';
+@use 'design-token-editor/lib/css/root.css';
+
+.sb-show-main {
+  --dte-tokens-block-context-row-color: var(--of-color-primary);
+}
