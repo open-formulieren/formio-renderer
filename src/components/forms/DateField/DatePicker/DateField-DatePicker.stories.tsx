@@ -306,3 +306,37 @@ export const NoErrorWhileFocus: Story = {
     expect(input).not.toHaveFocus();
   },
 };
+
+export const TypedDateAndDatePickerUpdate: Story = {
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'Date',
+    isDisabled: false,
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const widget = canvas.queryByRole('dialog');
+
+    expect(widget).toBeNull();
+    const date = canvas.getByLabelText('Date');
+    await userEvent.type(date, '29-08-2025');
+    expect(date).toHaveDisplayValue('29-08-2025');
+
+    // Ensure that the date is properly highlighted/shown in the calendar without
+    // loosing focus
+    await userEvent.click(date);
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+    const selectedEventButton = await canvas.findByRole('button', {
+      name: 'vrijdag 29 augustus 2025',
+    });
+    expect(selectedEventButton).toBeVisible();
+    expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
+  },
+};

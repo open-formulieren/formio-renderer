@@ -217,6 +217,48 @@ export const TypeDateManually: Story = {
   },
 };
 
+export const TypedDatetimeAndDatePickerUpdate: Story = {
+  args: {
+    name: 'datetime',
+    label: 'Datetime',
+    isDisabled: false,
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      onSubmit: fn(),
+    },
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const widget = canvas.queryByRole('dialog');
+
+    expect(widget).toBeNull();
+
+    const datetime = canvas.getByLabelText('Datetime');
+    await userEvent.type(datetime, '29-08-2025 12:34');
+    expect(datetime).toHaveDisplayValue('29-08-2025 12:34');
+
+    // Ensure that the date and time are properly highlighted/shown in the calendar without
+    // loosing focus
+    await userEvent.click(datetime);
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+    const selectedEventButton = await canvas.findByRole('button', {
+      name: 'vrijdag 29 augustus 2025',
+    });
+    expect(selectedEventButton).toBeVisible();
+    expect(selectedEventButton).toHaveClass('utrecht-calendar__table-days-item-day--selected');
+
+    if (widget) {
+      const dialog = within(widget);
+      const time = dialog.getByRole('textbox', {name: 'time'});
+
+      expect(time).toHaveValue('12:34');
+    }
+  },
+};
+
 export const TypeDateManuallyEnglishLocale: Story = {
   args: {
     name: 'datetime',

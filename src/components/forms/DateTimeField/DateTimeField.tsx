@@ -112,8 +112,9 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
-  const [{value, onBlur, onChange}, {touched}, {setTouched, setValue}] = useField<string>(name);
+  const [{value, onBlur}, {touched}, {setTouched, setValue}] = useField<string>(name);
   const error = useFieldError(name, isMultiValue);
+  const [rawValue, setRawValue] = useState(value ?? '');
   const {
     refs,
     floatingStyles,
@@ -149,6 +150,17 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   const dateTimePartsFromValue = dateObjectToParts(currentDateTime);
   const [{date, time}, setDateTimeParts] = useState<DateTimePartValues>(dateTimePartsFromValue);
 
+  // format a datetime according to the current locale
+  const formatDatetime = (datetimeValue: string | Date): string => {
+    return formatDate(datetimeValue, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    }).replace(',', '');
+  };
+
   // Synchronize with external changes if we have a value and our date parts don't
   // reflect it
   useEffect(
@@ -183,22 +195,13 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       // object. This is possible, because the date picker and time input return a date and time
       // ISO-8601 string, respectively.
       const date_ = parseDateTime(`${newDateParts.date}T${newDateParts.time}:00`)!;
-      setValue(formatISO(date_!));
+      const formattedDate = formatISO(date_!);
+      setValue(formattedDate);
+      // Now we have a date object, format it according to the locale (and remove
+      // comma) and use as the textbox value.
+      setRawValue(formatDatetime(formattedDate));
     }
   };
-
-  // If we have a date object, format it according to the locale (and remove comma) and use as the
-  // textbox value. Otherwise, just use the field value directly.
-  const textboxValue =
-    currentDateTime !== null
-      ? formatDate(currentDateTime, {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-        }).replace(',', '')
-      : value;
 
   const referenceProps = getReferenceProps();
   return (
@@ -214,17 +217,25 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       <Paragraph className="openforms-datepicker-textbox">
         <Textbox
           name={name}
-          value={textboxValue}
-          onChange={onChange}
+          value={rawValue && parseDateTime(rawValue) ? formatDatetime(rawValue) : rawValue}
+          onChange={event => {
+            // Set the raw value in the textbox and update the formik value depending on
+            // if we have a valid date or not
+            const newRaw = event.target.value;
+            const parsed = parseDateTime(newRaw, dateLocaleMeta);
+            setRawValue(newRaw);
+            setValue(parsed ? formatISO(parsed, {representation: 'complete'}) : newRaw);
+          }}
           onBlur={async event => {
-            const value = event.target.value;
             // Attempt to create a date object using the locale meta
-            const date = parseDateTime(value, dateLocaleMeta);
-            // If we were able to create a date object, format it to an ISO-8601 string and set it
-            // as the field value. Otherwise, just set the entered value to the field directly.
-            // It's up to the validation libraries to check it.
-            const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
-            await setValue(newValue);
+            const parsed = parseDateTime(rawValue, dateLocaleMeta);
+            if (parsed) {
+              // We have a date object, format it according to the locale (and remove
+              // comma) and use as the textbox value.
+              setRawValue(formatDatetime(parsed));
+              // Format the parsed date to an ISO-8601 string and set it as the field value.
+              setValue(formatISO(parsed, {representation: 'complete'}));
+            }
             onBlur(event);
             // only run validation while the picker is not opened
             if (!isOpen) {

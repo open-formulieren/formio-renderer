@@ -1,7 +1,7 @@
 import {Paragraph, Textbox} from '@utrecht/component-library-react';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
-import {useId} from 'react';
+import {useId, useState} from 'react';
 import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
@@ -79,8 +79,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
-  const [{value, onBlur, onChange}, {error, touched}, {setTouched, setValue}] =
-    useField<string>(name);
+  const [{value, onBlur}, {error, touched}, {setTouched, setValue}] = useField<string>(name);
+  const [rawValue, setRawValue] = useState(value ?? '');
+
   const {
     refs,
     floatingStyles,
@@ -102,19 +103,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
     .map(part => placeholderMap[part])
     .join(dateLocaleMeta.separator);
 
+  // format a date according to the current locale
+  const _formatDate = (dateValue: string | Date): string => {
+    return formatDate(dateValue, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+  };
   // Value could be anything, but we only try to parse as an ISO-8601 string, because this is what
-  // we set to the field on blur if the date was correctly parsed using the locale meta. If it was
-  // successfully parsed into a date object, format it according to the locale and use as the
-  // textbox value. Otherwise, just use the field value directly.
+  // we set to the field on blur if the date was correctly parsed using the locale meta.
   const currentDate = parseDate(value);
-  const textboxValue =
-    currentDate !== null
-      ? formatDate(currentDate, {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-        })
-      : value;
 
   const calendarEvents: React.ComponentProps<typeof DatePickerCalendar>['events'] = disabledDates
     ? disabledDates.map(date => ({
@@ -139,17 +138,25 @@ const DatePicker: React.FC<DatePickerProps> = ({
       <Paragraph className="openforms-datepicker-textbox">
         <Textbox
           name={name}
-          value={textboxValue}
-          onChange={onChange}
+          value={rawValue && parseDate(rawValue) ? _formatDate(rawValue) : rawValue}
+          onChange={event => {
+            // Set the raw value in the textbox and update the formik value depending on
+            // if we have a valid date or not
+            const newRaw = event.target.value;
+            setRawValue(newRaw);
+            const parsed = parseDate(newRaw, dateLocaleMeta);
+            setValue(parsed ? formatISO(parsed, {representation: 'date'}) : newRaw);
+          }}
           onBlur={async event => {
-            const value = event.target.value;
             // Attempt to create a date object using the locale meta
-            const date = parseDate(value, dateLocaleMeta);
-            // If we were able to create a date object, format it to an ISO-8601 string and set it
-            // as the field value. Otherwise, just set the entered value to the field directly.
-            // It's up to the validation libraries to check it.
-            const newValue = date ? formatISO(date, {representation: 'date'}) : value;
-            await setValue(newValue);
+            const parsed = parseDate(rawValue, dateLocaleMeta);
+            if (parsed) {
+              // We have a date object, format it according to the locale and use it as
+              // the textbox value.
+              setRawValue(_formatDate(parsed));
+              // Format the parsed date to an ISO-8601 string and set it as the field value.
+              setValue(formatISO(parsed, {representation: 'date'}));
+            }
             onBlur(event);
             // only run validation while the picker is not opened
             if (!isOpen) {
@@ -194,6 +201,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
               // Need to truncate, because the selected date is in datetime format
               const truncated = selectedDate.substring(0, 10);
               setValue(truncated);
+              // Set the raw value in the textbox after we apply the format based on locale
+              setRawValue(_formatDate(truncated));
               setIsOpen(false, {keepDismissed: true});
             });
             await setTouched(true);
