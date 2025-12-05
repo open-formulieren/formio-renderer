@@ -354,3 +354,30 @@ export const NoErrorWhileFocus: Story = {
     expect(input).not.toHaveFocus();
   },
 };
+
+export const KeyboardNavigation: Story = {
+  args: {
+    name: 'test',
+    label: 'Logical tab navigation',
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // open the date picker and shift focus to it
+    const input = canvas.getByLabelText('Logical tab navigation');
+    await userEvent.click(input);
+    const dialog = await canvas.findByRole('dialog');
+    expect(dialog).toBeVisible();
+    expect(dialog).not.toHaveFocus();
+
+    // tab navigation shifts focus to dialog
+    await userEvent.keyboard('{Tab}');
+    await waitFor(() => {
+      const focusedElemented = document.activeElement;
+      expect(focusedElemented).not.toBeNull();
+      expect(focusedElemented).toBeInstanceOf(HTMLElement);
+      expect(dialog).toContainElement(focusedElemented as HTMLElement);
+    });
+  },
+};
