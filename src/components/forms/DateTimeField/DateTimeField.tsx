@@ -248,10 +248,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
             description: 'Datepicker: accessible calendar toggle label',
             defaultMessage: 'Toggle calendar',
           })}
-          aria-hidden="false"
-          aria-controls={referenceProps['aria-controls']}
-          aria-expanded={referenceProps['aria-expanded']}
-          aria-haspopup={referenceProps['aria-haspopup']}
+          aria-hidden
           onClick={() => !isOpen && setIsOpen(true)}
         />
       </Paragraph>

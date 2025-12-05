@@ -1,4 +1,5 @@
 import {clsx} from 'clsx';
+import {forwardRef} from 'react';
 
 import type {RendererIcon} from './types';
 
@@ -33,40 +34,48 @@ interface FontAwesomeSolidIconProps {
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
-  onClick?: () => void;
+  onClick?: (event: React.UIEvent<HTMLElement>) => void;
 }
 
-const FontAwesomeSolidIcon: React.FC<FontAwesomeSolidIconProps> = ({
-  className: extraClassName,
-  ['aria-hidden']: ariaHidden = true,
-  ['aria-label']: ariaLabel,
-  ['aria-describedby']: ariaDescribedBy,
-  icon,
-  onClick,
-  ...props
-}) => {
-  const iconName = FA_MAP[icon] ?? icon;
-  const className = clsx('fa-solid', `fa-${iconName}`, extraClassName);
-  const interactionProps: React.ComponentProps<'i'> | undefined = onClick
-    ? {
-        onClick,
-        role: 'button',
-        tabIndex: 0,
-        onKeyDown: event => {
-          if (event.key === 'Enter') onClick();
-        },
-      }
-    : undefined;
-  return (
-    <i
-      className={className}
-      aria-hidden={ariaHidden}
-      aria-label={ariaLabel || undefined}
-      aria-describedby={ariaDescribedBy || undefined}
-      {...interactionProps}
-      {...props}
-    />
-  );
-};
+const FontAwesomeSolidIcon = forwardRef<HTMLElement, FontAwesomeSolidIconProps>(
+  (
+    {
+      className: extraClassName,
+      ['aria-hidden']: ariaHidden = true,
+      ['aria-label']: ariaLabel,
+      ['aria-describedby']: ariaDescribedBy,
+      icon,
+      onClick,
+      ...props
+    },
+    ref
+  ) => {
+    const iconName = FA_MAP[icon] ?? icon;
+    const className = clsx('fa-solid', `fa-${iconName}`, extraClassName);
+    const interactionProps: React.ComponentProps<'i'> | undefined = onClick
+      ? {
+          onClick,
+          role: 'button',
+          tabIndex: 0,
+          onKeyDown: event => {
+            if (event.key === 'Enter') onClick(event);
+          },
+        }
+      : undefined;
+    return (
+      <i
+        ref={ref}
+        className={className}
+        aria-hidden={ariaHidden}
+        aria-label={ariaLabel || undefined}
+        aria-describedby={ariaDescribedBy || undefined}
+        {...interactionProps}
+        {...props}
+      />
+    );
+  }
+);
+
+FontAwesomeSolidIcon.displayName = 'FontAwesomeSolidIcon';
 
 export {FontAwesomeSolidIcon};
