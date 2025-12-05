@@ -1,5 +1,6 @@
 import type {DateTimeComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import isChromatic from 'chromatic/isChromatic';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -85,6 +86,9 @@ export const Multiple: Story = {
   },
 
   play: async ({canvasElement}) => {
+    // skip interaction test on Chromatic where we don't control the browser timezone
+    if (isChromatic()) return;
+
     const canvas = within(canvasElement);
     const inputs = canvas.getAllByRole('textbox');
     expect(inputs).toHaveLength(3);

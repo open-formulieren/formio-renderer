@@ -91,6 +91,7 @@
     "@vitest/coverage-v8": "^3.2.4",
     "ajv": "^8.17.1",
     "babel-plugin-formatjs": "^10.5.34",
+    "chromatic": "^13.3.4",
     "date-fns": "^4.1.0",
     "design-token-editor": "^0.6.0",
     "eslint": "^9.37.0",
