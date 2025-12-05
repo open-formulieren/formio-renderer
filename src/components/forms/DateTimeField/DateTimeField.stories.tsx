@@ -101,7 +101,7 @@ export const LimitedRange: Story = {
 
     // Calendar is by default not visible, until you focus the field
     expect(canvas.queryByRole('dialog')).toBeNull();
-    await userEvent.click(canvas.getByText('Datetime'));
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
     expect(await canvas.findByRole('dialog')).toBeVisible();
   },
 };
@@ -135,7 +135,7 @@ export const SelectDateAndTimeInDateTimePicker: Story = {
 
     // Open the floating widget
     const datetime = canvas.getByLabelText('Datetime');
-    await userEvent.click(datetime);
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
 
     // Pick a date
     const date = await canvas.findByRole('button', {name: 'woensdag 22 oktober 2025'});
@@ -198,7 +198,7 @@ export const TypeDateManually: Story = {
     expect(datetime).toHaveDisplayValue('29-8-2025 12:34');
 
     // Ensure that the date is properly highlighted in the calendar
-    await userEvent.click(datetime);
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
     expect(await canvas.findByRole('dialog')).toBeVisible();
     const selectedEventButton = await canvas.findByRole('button', {
       name: 'vrijdag 29 augustus 2025',
@@ -257,7 +257,7 @@ export const TypeDateManuallyEnglishLocale: Story = {
     expect(datetime).toHaveDisplayValue('8/29/2025 12:34 AM');
 
     // Ensure that the date is properly highlighted in the calendar
-    await userEvent.click(datetime);
+    await userEvent.click(canvas.getByRole('button', {name: 'Toggle calendar'}));
     expect(await canvas.findByRole('dialog')).toBeVisible();
     const selectedEventButton = await canvas.findByRole('button', {
       name: 'Friday 29 August 2025',
@@ -344,7 +344,7 @@ export const NoErrorWhileFocus: Story = {
 
     // open the datetime picker and shift focus to it
     const input = canvas.getByLabelText('No error displayed while picker is open');
-    await userEvent.click(input);
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
 
     const dialog = await canvas.findByRole('dialog');
     expect(dialog).toBeVisible();
@@ -365,11 +365,12 @@ export const KeyboardNavigation: Story = {
     const canvas = within(canvasElement);
 
     // open the date picker and shift focus to it
-    const input = canvas.getByLabelText('Logical tab navigation');
-    await userEvent.click(input);
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
     const dialog = await canvas.findByRole('dialog');
     expect(dialog).toBeVisible();
-    expect(dialog).not.toHaveFocus();
+    await waitFor(() => {
+      expect(dialog).toHaveFocus();
+    });
 
     // tab navigation shifts focus to dialog
     await userEvent.keyboard('{Tab}');

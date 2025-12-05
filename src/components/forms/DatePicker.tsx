@@ -158,17 +158,20 @@ DatePickerContext.displayName = 'DatePickerContext';
 
 interface RenderFuncArgs {
   refs: FloatingRootContext['refs'];
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 export interface DatePickerRootProps {
   children: (args: RenderFuncArgs) => React.ReactNode;
+  onOpen?: () => void;
 }
 
 /**
  * Root for the datepicker that manages the open/closed state and exposes the event
  * handlers.
  */
-export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderFunc}) => {
+export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderFunc, onOpen}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [trigger, setTrigger] = useState<HTMLElement | null>(null);
@@ -176,7 +179,10 @@ export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderF
 
   const context = useFloatingRootContext({
     open: isOpen,
-    onOpenChange: setIsOpen,
+    onOpenChange: (open: boolean) => {
+      setIsOpen(open);
+      if (open) onOpen?.();
+    },
     elements: {
       reference: trigger,
       floating: floating,
@@ -185,7 +191,7 @@ export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderF
 
   return (
     <DatePickerContext.Provider value={{...context, setTrigger, setFloating}}>
-      {renderFunc({refs: context.refs})}
+      {renderFunc({refs: context.refs, isOpen, setIsOpen})}
     </DatePickerContext.Provider>
   );
 };
