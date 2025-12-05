@@ -42,8 +42,7 @@ export const parseDateTime = (value: string, meta?: LocaleMeta): Date | null => 
   // '1999-12-31T23:00:00.000Z'
   if (meta === undefined) {
     if (!value.match(RE_ISO8601)) return null;
-    // Remove timezone information to localize it to the user's timezone
-    const parsed = parseISO(value.slice(0, 19));
+    const parsed = parseISO(value);
     return isValidDate(parsed) ? parsed : null;
   }
 
