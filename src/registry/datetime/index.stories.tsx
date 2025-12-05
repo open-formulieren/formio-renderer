@@ -74,10 +74,24 @@ export const Multiple: Story = {
     formik: {
       initialValues: {
         date: {
-          time: ['2025-10-22T16:00:00+02:00', '2025-11-22T07:07:00+00:00'],
+          time: [
+            '2025-10-22T16:00:00+02:00',
+            '2025-11-22T07:07:00+00:00',
+            '2025-12-05T15:00:00+01:00',
+          ],
         },
       },
     },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const inputs = canvas.getAllByRole('textbox');
+    expect(inputs).toHaveLength(3);
+
+    expect(inputs[0]).toHaveDisplayValue('22-10-2025 16:00');
+    expect(inputs[1]).toHaveDisplayValue('22-11-2025 8:07');
+    expect(inputs[2]).toHaveDisplayValue('5-12-2025 15:00');
   },
 };
 
@@ -532,6 +546,12 @@ export const MultiValueDisplay: ValueDisplayStory = {
       label: 'Datetime',
       multiple: true,
     } satisfies DateTimeComponentSchema,
-    value: ['1980-01-01T12:34:56', '', '2025-10-08T14:09:44'],
+    value: [
+      '1980-01-01T12:34:56',
+      '',
+      '2025-10-08T14:09:44',
+      '2025-12-05T15:10:00+00:00',
+      '2024-08-05T14:45:00+02:00',
+    ],
   },
 };
