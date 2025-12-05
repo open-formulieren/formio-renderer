@@ -57,7 +57,9 @@ export const DatePicker: Story = {
 
     // Ensure clicking the icon opens the calendar
     expect(canvas.queryByRole('dialog')).toBeNull();
-    await userEvent.click(canvas.getByLabelText('Toon/verberg de kalender'));
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    expect(trigger).toBeVisible();
+    await userEvent.click(trigger);
     expect(canvas.getByRole('dialog')).toBeVisible();
   },
 };
@@ -105,9 +107,9 @@ export const DatePickerLimitedRange: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Calendar is by default not visible, until you focus the field
+    // Calendar is by default not visible, until you click the trigger
     expect(canvas.queryByRole('dialog')).toBeNull();
-    await userEvent.click(canvas.getByText('Date'));
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
     expect(await canvas.findByRole('dialog')).toBeVisible();
   },
 };
@@ -134,9 +136,9 @@ export const DatePickerDisabledDates: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    // calendar is by default not visible, until you focus the field
+    // calendar is by default not visible, until you click the trigger
     expect(canvas.queryByRole('dialog')).toBeNull();
-    await userEvent.click(canvas.getByText('Today disabled'));
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
 
     expect(await canvas.findByRole('dialog')).toBeVisible();
 
@@ -159,9 +161,15 @@ export const DatePickerKeyboardNavigation: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Calendar is by default not visible, until you focus the field
+    // Calendar is by default not visible, until you click the trigger
     expect(canvas.queryByRole('dialog')).toBeNull();
     await userEvent.click(canvas.getByText('Date'));
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    expect(trigger).toBeVisible();
+
+    await userEvent.keyboard('{Tab}');
+    expect(trigger).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
     expect(await canvas.findByRole('dialog')).toBeVisible();
 
     // Ensure ESC key closes the dialog again
@@ -204,12 +212,12 @@ export const DatePickerTypeDateManually: Story = {
     // Ensure formatting is applied on blur
     date.blur();
     await waitFor(() => {
-      expect(canvas.queryByRole('dialog')).toBeNull();
+      expect(date).toHaveDisplayValue('29-8-2025');
     });
-    expect(date).toHaveDisplayValue('29-8-2025');
 
     // Ensure that the date is properly highlighted in the calendar
-    await userEvent.click(date);
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    await userEvent.click(trigger);
     expect(await canvas.findByRole('dialog')).toBeVisible();
     const selectedEventButton = await canvas.findByRole('button', {
       name: 'vrijdag 29 augustus 2025',
@@ -295,7 +303,8 @@ export const NoErrorWhileFocus: Story = {
 
     // open the date picker and shift focus to it
     const input = canvas.getByLabelText('No error displayed while picker is open');
-    await userEvent.click(input);
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    await userEvent.click(trigger);
 
     const dialog = await canvas.findByRole('dialog');
     expect(dialog).toBeVisible();
