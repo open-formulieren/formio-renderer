@@ -90,6 +90,13 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
     expect(canvas.getByText('foo@test.com')).not.toHaveRole('option');
     // The phone number field should be empty.
     expect(phoneNumberField).toHaveValue('');
+
+    // Because the portal URL is set, we mention it in the description.
+    expect(emailField).toHaveAccessibleDescription(
+      'There are multiple email addresses associated with your account. ' +
+        'Use the dropdown to select the email address you want to use for this form. ' +
+        'To update your preferences, use the online portal.'
+    );
   },
 };
 
@@ -192,6 +199,44 @@ export const WithPreferredDigitalAddresses: Story = {
       // The preferred address is displayed as a special option.
       expect(preferredOption).toHaveTextContent('preferred.long.email.address@test.com(Preferred)');
     });
+  },
+};
+
+export const WithoutPortalUrl: Story = {
+  name: 'Without portal URL',
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
+              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+            },
+            {
+              type: 'phoneNumber',
+              addresses: ['0612345678', '0687654321', '0612387645'],
+            },
+          ],
+          portalUrl: '',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
+
+    // Because the portal URL is an empty string, we don't mention it in the description.
+    expect(emailField).toHaveAccessibleDescription(
+      'There are multiple email addresses associated with your account. ' +
+        'Use the dropdown to select the email address you want to use for this form.'
+    );
+    expect(phoneNumberField).toHaveAccessibleDescription(
+      'There are multiple phone numbers associated with your account. ' +
+        'Use the dropdown to select the phone number you want to use for this form.'
+    );
   },
 };
 
