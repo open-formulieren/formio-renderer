@@ -101,15 +101,59 @@ export const OpenPreferencesModal: Story = {
       // Open preferences modal
       const modal = within(await canvas.findByRole('dialog'));
       const forFutureUseRadio = modal.getByRole('radio', {
-        name: /save my data for the future forms/i,
+        name: 'Save my preferences for the next time. You can always change them again later in the portal.',
       });
       const oneTimeUseRadio = modal.getByRole('radio', {
-        name: /Use this email address only for this form/i,
+        name: 'Use this email address only for this form.',
       });
 
       // By default, the "use only for this form" radio button is checked
       expect(forFutureUseRadio).not.toBeChecked();
       expect(oneTimeUseRadio).toBeChecked();
+    });
+  },
+};
+
+export const OpenPreferencesModalWithoutPortalUrl: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [],
+          portalUrl: '',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const emailField = await canvas.findByLabelText('Email');
+
+    await step('Enter email address and open preferences modal', async () => {
+      await userEvent.type(emailField, 'test@mail.com');
+      await emailField.blur();
+
+      await userEvent.click(await canvas.findByRole('button', {name: 'Update preferences'}));
+    });
+
+    await step('In preferences modal', async () => {
+      const modal = within(await canvas.findByRole('dialog'));
+
+      // The portal URL is not set, so the "Save my preferences for the next time" doesn't mention the portal.
+      const forFutureUseRadio = modal.getByRole('radio', {
+        name: 'Save my preferences for the next time.',
+      });
+      expect(forFutureUseRadio).toBeVisible();
     });
   },
 };

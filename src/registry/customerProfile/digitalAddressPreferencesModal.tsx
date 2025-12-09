@@ -12,6 +12,7 @@ import type {ModalProps} from '@/components/modal/Modal';
 import Modal from '@/components/modal/Modal';
 
 import PortalUrl from './PortalUrl';
+import {useCustomerProfileComponentParameters} from './hooks';
 
 interface DigitalAddressPreferencesModalProps extends Pick<ModalProps, 'closeModal' | 'isOpen'> {
   onSubmit: (preference: PreferenceUpdateOptions) => void;
@@ -28,6 +29,7 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
   digitalAddressType,
 }) => {
   const id = useId();
+  const {portalUrl} = useCustomerProfileComponentParameters();
   const titleId = `${id}-title`;
   return (
     <Modal
@@ -57,9 +59,14 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
                     label: (
                       <FormattedMessage
                         description="Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label"
-                        defaultMessage={`Save my data for the future forms.
-                          You can edit your preferences in the online <a>portal</a>.`}
+                        defaultMessage={`Save my preferences for the next time.
+                          {hasPortalUrl, select,
+                            true {You can always change them again later in the <a>portal</a>.}
+                            other {}
+                          }
+                        `}
                         values={{
+                          hasPortalUrl: portalUrl !== '',
                           a: chunks => <PortalUrl>{chunks}</PortalUrl>,
                         }}
                       />

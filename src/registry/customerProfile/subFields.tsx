@@ -19,6 +19,7 @@ import Icon from '@/components/icons';
 import PortalUrl from './PortalUrl';
 import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
+import {useCustomerProfileComponentParameters} from './hooks';
 import type {DigitalAddressGroup} from './types';
 
 export const FIELD_LABELS = defineMessages<DigitalAddressType>({
@@ -86,6 +87,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
   onAddDigitalAddress,
 }) => {
   const intl = useIntl();
+  const {portalUrl} = useCustomerProfileComponentParameters();
   const options = getDigitalAddressOptions(intl, digitalAddressGroup);
   return (
     <>
@@ -108,10 +110,15 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
               email {email address}
               phoneNumber {phone number}
               other {{digitalAddressType}}
-            } you want to use for this form. To update your preferences, use the online <a>portal</a>.
+            } you want to use for this form.
+            {hasPortalUrl, select,
+              true {To update your preferences, use the <a>portal</a>.}
+              other {}
+            }
           `}
               values={{
                 digitalAddressType: type,
+                hasPortalUrl: portalUrl !== '',
                 a: chunks => <PortalUrl>{chunks}</PortalUrl>,
               }}
             />
