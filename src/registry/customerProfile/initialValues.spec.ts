@@ -32,3 +32,37 @@ test('initialValues should return digital addresses for each supported digital a
     ],
   });
 });
+
+/**
+ * The initialValues function should accept the defaultValue `null`.
+ * `null` isn't allowed by the type definition, but its the empty value returned by formio.
+ */
+test('initialValues should accept defaultValue of `null`', () => {
+  const component: CustomerProfileComponentSchema = {
+    type: 'customerProfile',
+    id: 'customerProfile',
+    key: 'customerProfile',
+    label: 'customerProfile',
+    // @ts-expect-error null isn't allowed by the TypeScript definition,
+    // but is the defaultValue that's set by formio.
+    defaultValue: null,
+    shouldUpdateCustomerData: false,
+    digitalAddressTypes: ['email', 'phoneNumber'],
+  };
+
+  const initialValues = getInitialValues(component, getRegistryEntry);
+  expect(initialValues).toEqual({
+    customerProfile: [
+      {
+        type: 'email',
+        address: '',
+        preferenceUpdate: 'useOnlyOnce',
+      },
+      {
+        type: 'phoneNumber',
+        address: '',
+        preferenceUpdate: 'useOnlyOnce',
+      },
+    ],
+  });
+});

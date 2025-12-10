@@ -23,11 +23,14 @@ const getInitialValues: GetInitialValues<
   defaultValue = [] satisfies CustomerProfileData,
   digitalAddressTypes,
 }: CustomerProfileComponentSchema) => {
-  // side-effect of the generic types in formio components, but realistically we don't
-  // expect any defaultValue to ever be set.
-  assertNotArrayOfArray(defaultValue);
+  // Only validate when the value is non-null
+  if (defaultValue != null) {
+    // side-effect of the generic types in formio components, but realistically we don't
+    // expect any defaultValue to ever be set.
+    assertNotArrayOfArray(defaultValue);
+  }
 
-  if (defaultValue === undefined || !defaultValue?.length) {
+  if (defaultValue == null || !defaultValue?.length) {
     defaultValue = digitalAddressTypes.map(
       type =>
         ({
