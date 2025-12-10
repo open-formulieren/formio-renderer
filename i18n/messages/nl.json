@@ -44,6 +44,11 @@
     "description": "Draw toolbar cancel button tooltip.",
     "originalDefault": "Cancel drawing"
   },
+  "008V0z": {
+    "defaultMessage": "Sla mijn gegevens op voor de volgende keer. {hasPortalUrl, select, true {U kunt deze later altijd nog wijzigen in het <a>portaal</a>.} other {} }",
+    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
+    "originalDefault": "Save my preferences for the next time. {hasPortalUrl, select, true {You can always change them again later in the <a>portal</a>.} other {} }"
+  },
   "0EdUXi": {
     "defaultMessage": "Opslaan",
     "description": "Edit grid item default save button label",
@@ -461,6 +466,11 @@
     "description": "Edit toolbar remove button disabled tooltip.",
     "originalDefault": "No shapes to remove"
   },
+  "OqrBsx": {
+    "defaultMessage": "Er zijn meerdere {digitalAddressType, select, email {e-mailadressen} phoneNumber {telefoonnummers} other {{digitalAddressType}} } van u bekend. Open de dropdown om ze te zien. {hasPortalUrl, select, true {Voor het instellen van contact voorkeuren kunt u naar het <a>portaal</a>.} other {} }",
+    "description": "Profile digital address multiple addresses: edit preference text",
+    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. {hasPortalUrl, select, true {To update your preferences, use the <a>portal</a>.} other {} }"
+  },
   "PCv4sQ": {
     "defaultMessage": "Huisnummer",
     "description": "Label for addressNL houseNumber input",
@@ -555,11 +565,6 @@
     "defaultMessage": "Geef het {digitalAddressType, select, email {e-mailadres} phoneNumber {telefoonnummer} other {{digitalAddressType}} } op waarop je gecontacteerd wilt worden.",
     "description": "Profile digital address: accessible digital address label",
     "originalDefault": "Provide the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } on which you want to be contacted."
-  },
-  "VTpxKE": {
-    "defaultMessage": "Er zijn meerdere {digitalAddressType, select, email {e-mailadressen} phoneNumber {telefoonnummers} other {{digitalAddressType}} } van u bekend. Open de dropdown om ze te zien. Voor het instellen van contact voorkeuren kunt u naar het <a>portaal</a>.",
-    "description": "Profile digital address multiple addresses: edit preference text",
-    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>."
   },
   "WpfP0s": {
     "defaultMessage": "De ingediende waarde voldoet niet aan het postcode formaat: 1234 AB.",
@@ -670,11 +675,6 @@
     "defaultMessage": "De datum en tijd moet gelijk aan of na {min} zijn.",
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
-  },
-  "d6CKAg": {
-    "defaultMessage": "Sla mijn gegevens op voor de volgende keer. U kunt deze later altijd nog wijzigen in het <a>portaal</a>.",
-    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
-    "originalDefault": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>."
   },
   "dNGw+S": {
     "defaultMessage": "Klik om verder te tekenen",
