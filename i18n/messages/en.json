@@ -49,6 +49,11 @@
     "description": "Edit grid item default save button label",
     "originalDefault": "Save"
   },
+  "0grNLk": {
+    "defaultMessage": "Save my data for the future forms. {hasPortalUrl, select, true {You can edit your preferences in the online <a>portal</a>.} other {} }",
+    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
+    "originalDefault": "Save my data for the future forms. {hasPortalUrl, select, true {You can edit your preferences in the online <a>portal</a>.} other {} }"
+  },
   "0tH+u2": {
     "defaultMessage": "{label} {index}",
     "description": "Multi-field individual item label at $index. The index variable here is 1-indexed.",
@@ -549,11 +554,6 @@
     "description": "Profile digital address: accessible digital address label",
     "originalDefault": "Provide the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } on which you want to be contacted."
   },
-  "VTpxKE": {
-    "defaultMessage": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>.",
-    "description": "Profile digital address multiple addresses: edit preference text",
-    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. To update your preferences, use the online <a>portal</a>."
-  },
   "WpfP0s": {
     "defaultMessage": "The submitted value does not match the postcode pattern: 1234 AB",
     "description": "Validation error for postcode.",
@@ -663,11 +663,6 @@
     "defaultMessage": "The datetime must be later than or equal to {min}.",
     "description": "Validation error for datetime greater than or equal to minimum date.",
     "originalDefault": "The datetime must be later than or equal to {min}."
-  },
-  "d6CKAg": {
-    "defaultMessage": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>.",
-    "description": "Profile digital address preferences modal preferenceUpdate 'isNewPreferred' option label",
-    "originalDefault": "Save my data for the future forms. You can edit your preferences in the online <a>portal</a>."
   },
   "dNGw+S": {
     "defaultMessage": "Click to continue drawing shape",
@@ -903,6 +898,11 @@
     "defaultMessage": "{single, select, true {Uploaded file} other {Uploaded files}}",
     "description": "Accessible label for uploads list",
     "originalDefault": "{single, select, true {Uploaded file} other {Uploaded files}}"
+  },
+  "x9TZTz": {
+    "defaultMessage": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. {hasPortalUrl, select, true {To update your preferences, use the online <a>portal</a>.} other {} }",
+    "description": "Profile digital address multiple addresses: edit preference text",
+    "originalDefault": "There are multiple {digitalAddressType, select, email {email addresses} phoneNumber {phone numbers} other {{digitalAddressType}} } associated with your account. Use the dropdown to select the {digitalAddressType, select, email {email address} phoneNumber {phone number} other {{digitalAddressType}} } you want to use for this form. {hasPortalUrl, select, true {To update your preferences, use the online <a>portal</a>.} other {} }"
   },
   "xHVrv5": {
     "defaultMessage": "The value must be {min} or greater.",
