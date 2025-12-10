@@ -7,7 +7,7 @@ const isEmpty: IsEmpty<SelectboxesComponentSchema, Record<string, boolean> | nul
   value
 ) => {
   // Based on Formio selectboxes isEmpty implementation: https://github.com/formio/formio.js/blob/master/src/components/selectboxes/SelectBoxes.js
-  if (value === undefined) {
+  if (value == null) {
     return true;
   }
 

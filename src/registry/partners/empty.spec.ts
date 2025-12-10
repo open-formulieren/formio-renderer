@@ -1,6 +1,7 @@
 import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getRegistryEntry} from '../registry';
 import isEmpty from './empty';
 
 test.each([
@@ -36,7 +37,7 @@ test.each([
       label: 'partners',
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );

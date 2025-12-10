@@ -8,7 +8,7 @@ const isEmpty: IsEmpty<AddressNLComponentSchema, Partial<AddressData> | null> = 
   _componentDefinition,
   value
 ) => {
-  if (value == null) return true;
+  if (value == null || Object.keys(value).length === 0) return true;
   // output is not empty as soon as one sub field is not empty
   for (const key of SUB_FIELD_NAMES) {
     if (value[key]) return false;

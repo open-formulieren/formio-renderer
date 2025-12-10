@@ -1,11 +1,14 @@
 import type {CheckboxComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getRegistryEntry} from '@/registry';
+
 import isEmpty from './empty';
 
 test.each([
   // Empty states
   [undefined, true],
+  [null, true],
   [false, true],
   // Non-empty state
   [true, false],
@@ -20,7 +23,7 @@ test.each([
       defaultValue: false,
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );

@@ -980,6 +980,10 @@ test.each([
     } as JSONObject,
     expected: [
       {
+        label: 'Editgrid with empty children',
+        pathToComponent: 'editgrid',
+      },
+      {
         pathToComponent: 'editgrid.0.textfield',
         label: 'Editgrid with empty children > Editgrid item 1 > Textfield',
       },

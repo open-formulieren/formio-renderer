@@ -6,7 +6,13 @@ const isEmpty: IsEmpty<SelectComponentSchema, string | string[]> = (
   _componentDefinition,
   value
 ) => {
-  return Array.isArray(value) ? value.length === 0 : !value;
+  if (value == null) return true;
+
+  const isFalsy = (valueToCheck: unknown) =>
+    valueToCheck == null || valueToCheck.toString().trim().length === 0;
+  const isEmptyArray = Array.isArray(value) && value.every(isFalsy);
+
+  return Array.isArray(value) ? value.length === 0 || isEmptyArray : isFalsy(value || '');
 };
 
 export default isEmpty;
