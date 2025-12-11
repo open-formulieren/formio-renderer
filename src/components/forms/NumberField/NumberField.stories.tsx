@@ -181,6 +181,13 @@ export const WithPrefixAndSuffix: Story = {
       },
     },
   },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const number = canvas.getByLabelText('Number');
+
+    expect(number).toHaveDisplayValue('123');
+    expect(number).toHaveAccessibleName('Number CO2 m2');
+  },
 };
 
 export const WithValuePrefixAndValueSuffix: Story = {
