@@ -134,6 +134,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   const [{value, onBlur}, {touched}, {setValue}] = useField<number | null>(name);
   const {locale} = useIntl();
   const id = useId();
+  const labelId = `${id}-label`;
   const error = useFieldError(name, isMultiValue);
 
   const invalid = touched && !!error;
@@ -149,6 +150,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
       <Label
         id={id}
+        labelId={labelId}
         isRequired={isRequired}
         isDisabled={isReadonly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
@@ -156,36 +158,43 @@ const NumberField: React.FC<NumberFieldProps> = ({
         {label}
       </Label>
 
-      <InputContainer prefix={prefix} suffix={suffix}>
-        <NumericFormat
-          name={name}
-          value={value ?? ''}
-          onBlur={async e => {
-            onBlur(e);
-            await validateField(name);
-          }}
-          id={id}
-          onValueChange={async values => {
-            const value = values.floatValue !== undefined ? values.floatValue : null;
-            await setValue(value);
-          }}
-          className="utrecht-textbox--openforms"
-          readOnly={isReadonly}
-          invalid={invalid}
-          allowNegative={allowNegative}
-          type="text"
-          decimalScale={decimalLimit}
-          decimalSeparator={decimalSeparator}
-          thousandSeparator={useThousandSeparator ? thousandSeparator : undefined}
-          valueIsNumericString={valueIsNumericString}
-          customInput={Textbox}
-          aria-describedby={errorMessageId}
-          prefix={valuePrefix}
-          suffix={valueSuffix}
-          fixedDecimalScale={fixedDecimalScale}
-          {...extraProps}
-        />
-      </InputContainer>
+      <InputContainer
+        inputId={id}
+        labelId={labelId}
+        prefix={prefix}
+        suffix={suffix}
+        renderInput={ariaLabelledBy => (
+          <NumericFormat
+            name={name}
+            value={value ?? ''}
+            onBlur={async e => {
+              onBlur(e);
+              await validateField(name);
+            }}
+            id={id}
+            onValueChange={async values => {
+              const value = values.floatValue !== undefined ? values.floatValue : null;
+              await setValue(value);
+            }}
+            className="utrecht-textbox--openforms"
+            readOnly={isReadonly}
+            invalid={invalid}
+            allowNegative={allowNegative}
+            type="text"
+            decimalScale={decimalLimit}
+            decimalSeparator={decimalSeparator}
+            thousandSeparator={useThousandSeparator ? thousandSeparator : undefined}
+            valueIsNumericString={valueIsNumericString}
+            customInput={Textbox}
+            aria-labelledby={ariaLabelledBy}
+            aria-describedby={errorMessageId}
+            prefix={valuePrefix}
+            suffix={valueSuffix}
+            fixedDecimalScale={fixedDecimalScale}
+            {...extraProps}
+          />
+        )}
+      />
 
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
