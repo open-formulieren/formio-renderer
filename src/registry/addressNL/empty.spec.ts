@@ -1,6 +1,8 @@
 import type {AddressData, AddressNLComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getRegistryEntry} from '@/registry';
+
 import isEmpty from './empty';
 
 test.each([
@@ -57,7 +59,7 @@ test.each([
       layout: 'singleColumn',
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );

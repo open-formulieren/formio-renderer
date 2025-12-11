@@ -97,13 +97,8 @@ export const getMissingFields = (
     const isEmpty = registry?.isEmpty;
     const componentValue = getIn(values, pathParts.join('.'));
 
-    const isComponentEmpty =
-      // Component registry isEmpty deems the value as empty
-      isEmpty?.(component, componentValue) ??
-      // no value present at all
-      (componentValue === undefined ||
-        // components with multiple: true are arrays of their intrinsic value type
-        (Array.isArray(componentValue) && componentValue.length === 0));
+    const isComponentEmpty = // Component registry isEmpty deems the value as empty
+      isEmpty?.(component, componentValue, getRegistryEntry);
 
     switch (component.type) {
       case 'fieldset':
@@ -139,11 +134,6 @@ export const getMissingFields = (
             label: labelParts.join(LABEL_SEPARATOR),
             pathToComponent: pathParts.join('.'),
           });
-        }
-
-        // If editgrid has empty soft-required children, add them to the list.
-        if (isComponentEmpty || !Array.isArray(componentValue)) {
-          break;
         }
 
         for (let childIndex = 0; childIndex < componentValue.length; childIndex++) {

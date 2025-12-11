@@ -1,6 +1,8 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getRegistryEntry} from '@/registry';
+
 import isEmpty from './empty';
 import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
@@ -8,9 +10,10 @@ import type {FormikFileUpload} from './types';
 test.each([
   // Empty states
   [undefined, true],
+  [null, true],
   [[], true],
+  [[{}], true],
   // Non-empty states
-  [[{}], false],
   [[buildFile({name: 'not-empty.pdf', type: 'application/pdf', size: 1, state: undefined})], false],
 ])(
   'file isEmpty compares against defined, non-empty array state of value',
@@ -24,7 +27,7 @@ test.each([
       label: 'Attachments',
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );

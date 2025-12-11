@@ -1,11 +1,14 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getRegistryEntry} from '@/registry';
+
 import isEmpty from './empty';
 
 test.each([
   // Empty states
   [undefined, true],
+  [null, true],
   ['', true],
   // Non-empty state
   ['1970-01-01', false],
@@ -19,7 +22,7 @@ test.each([
       label: 'date',
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );
@@ -27,11 +30,17 @@ test.each([
 test.each([
   // Empty states
   [undefined, true],
+  [null, true],
   [[], true],
   [[''], true],
+  [['', ''], true],
   [['      '], true],
+  [[undefined], true],
+  [[null], true],
   // Non-empty state
   [['1970-01-01'], false],
+  [['1970-01-01', '1980-01-01'], false],
+  [['', '1970-01-01'], false],
 ])(
   'Multiple date isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: string[] | undefined, expected: boolean) => {
@@ -43,7 +52,7 @@ test.each([
       multiple: true,
     };
 
-    const result = isEmpty(component, valueToTest);
+    const result = isEmpty(component, valueToTest, getRegistryEntry);
     expect(result).toBe(expected);
   }
 );

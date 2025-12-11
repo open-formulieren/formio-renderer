@@ -21,8 +21,8 @@ import {processVisibility} from '@/visibility';
 import FormFieldContainer from './FormFieldContainer';
 import FormSettingsProvider from './FormSettingsProvider';
 import FormioComponent from './FormioComponent';
-import {merge} from './utils';
 import type {JSONObjectWithUndefined, JSONValuePlusUndefined, NestedObject} from './utils';
+import {merge} from './utils';
 
 export type Errors = NestedObject<string | string[]>;
 
