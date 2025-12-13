@@ -162,7 +162,7 @@ export const WithValidationErrorAndTooltip: Story = {
     const input = canvas.getByLabelText(args.label as string);
     // the tooltip gets announced by itself and we do not expect it to be in the input
     // description too, as otherwise screenreaders encounter it twice.
-    expect(input).toHaveAccessibleDescription('Select... invalid');
+    expect(input).toHaveAccessibleDescription('Select... Description above the errors invalid');
   },
 };
 

@@ -102,6 +102,7 @@ const Select: React.FC<SelectProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
+  const descriptionId = description ? `${id}-description` : undefined;
 
   // ensure that missing single values are converted to null, missing multi values are
   // converted to an empty array and otherwise we pass the value along as is.
@@ -171,10 +172,10 @@ const Select: React.FC<SelectProps> = ({
           await setTouched(true);
           await validateField(name);
         }}
-        aria-describedby={errorMessageId}
+        aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ')}
         aria-invalid={invalid ? invalid : undefined}
       />
-      <HelpText>{description}</HelpText>
+      <HelpText id={descriptionId}>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );
