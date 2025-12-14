@@ -5,13 +5,11 @@ import {useEffect, useId, useState} from 'react';
 import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
-import DatePickerCalendar from '@/components/forms/DatePickerCalendar';
-import {FloatingWidget, useFloatingWidget} from '@/components/forms/FloatingWidget';
+import {DatePicker, DatePickerRoot, DatePickerTrigger} from '@/components/forms/DatePicker';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import Icon from '@/components/icons';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
 import './DateTimeField.scss';
@@ -114,16 +112,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   const {validateField} = useFormikContext();
   const [{value, onBlur, onChange}, {touched}, {setTouched, setValue}] = useField<string>(name);
   const error = useFieldError(name, isMultiValue);
-  const {
-    refs,
-    floatingStyles,
-    context,
-    getFloatingProps,
-    getReferenceProps,
-    isOpen,
-    setIsOpen,
-    arrowRef,
-  } = useFloatingWidget();
+
   const dateLocaleMeta = useDateLocaleMeta();
 
   const isInvalid = touched && !!error;
@@ -200,7 +189,6 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         }).replace(',', '')
       : value;
 
-  const referenceProps = getReferenceProps();
   return (
     <FormField invalid={isInvalid} className="utrecht-form-field--openforms">
       <Label
@@ -211,95 +199,78 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       >
         {label}
       </Label>
-      <Paragraph className="openforms-datepicker-textbox">
-        <Textbox
-          name={name}
-          value={textboxValue}
-          onChange={onChange}
-          onBlur={async event => {
-            const value = event.target.value;
-            // Attempt to create a date object using the locale meta
-            const date = parseDateTime(value, dateLocaleMeta);
-            // If we were able to create a date object, format it to an ISO-8601 string and set it
-            // as the field value. Otherwise, just set the entered value to the field directly.
-            // It's up to the validation libraries to check it.
-            const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
-            await setValue(newValue);
-            onBlur(event);
-            // only run validation while the picker is not opened
-            if (!isOpen) {
-              await validateField(name);
-            }
-          }}
-          className="utrecht-textbox--openforms"
-          id={id}
-          disabled={isDisabled}
-          invalid={touched && !!error}
-          aria-describedby={ariaDescribedBy}
-          placeholder={placeholder}
-          ref={refs.setReference}
-          autoComplete="off"
-          {...referenceProps}
-        />
-        <Icon
-          icon="calendar"
-          className="openforms-datepicker-textbox__calendar-toggle"
-          aria-label={formatMessage({
-            description: 'Datepicker: accessible calendar toggle label',
-            defaultMessage: 'Toggle calendar',
-          })}
-          aria-hidden="false"
-          aria-controls={referenceProps['aria-controls']}
-          aria-expanded={referenceProps['aria-expanded']}
-          aria-haspopup={referenceProps['aria-haspopup']}
-          onClick={() => !isOpen && setIsOpen(true)}
-        />
-      </Paragraph>
-      <FloatingWidget
-        isOpen={isOpen}
-        context={context}
-        setFloating={refs.setFloating}
-        floatingStyles={floatingStyles}
-        getFloatingProps={getFloatingProps}
-        arrowRef={arrowRef}
-        returnFocus={false}
-      >
-        <DatePickerCalendar
-          onCalendarClick={async selectedDate => {
-            flushSync(() => {
-              // Need to truncate, because the selected date is in datetime format
-              const truncated = selectedDate.substring(0, 10);
-              const e = {
-                target: {name: 'date', value: truncated},
-              } as React.ChangeEvent<HTMLInputElement>;
-              onPartChange(e);
-            });
-            await setTouched(true);
-          }}
-          currentDate={currentDateTime ?? undefined}
-          minDate={minDate}
-          maxDate={maxDate}
-        />
-        <Textbox
-          type="time"
-          step="60" // Ensures no seconds are displayed
-          aria-label={formatMessage({
-            description: 'Datetime picker: accessible time input field label',
-            defaultMessage: 'Time',
-          })}
-          name="time"
-          onChange={onPartChange}
-          value={time}
-          className="utrecht-textbox--openforms"
-          onKeyDown={async (event: React.KeyboardEvent) => {
-            // treat enter key as a submit
-            if (event.key === 'Enter') {
-              setIsOpen(false);
-              await validateField(name);
-            }
-          }}
-        />
-      </FloatingWidget>
+
+      <DatePickerRoot onOpen={() => setTouched(true)}>
+        {({refs, setIsOpen}) => (
+          <>
+            <Paragraph className="openforms-datepicker-textbox">
+              <Textbox
+                ref={refs.setPositionReference}
+                name={name}
+                value={textboxValue}
+                onChange={onChange}
+                onBlur={async event => {
+                  const value = event.target.value;
+                  // Attempt to create a date object using the locale meta
+                  const date = parseDateTime(value, dateLocaleMeta);
+                  // If we were able to create a date object, format it to an ISO-8601 string and set it
+                  // as the field value. Otherwise, just set the entered value to the field directly.
+                  // It's up to the validation libraries to check it.
+                  const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
+                  await setValue(newValue);
+                  onBlur(event);
+                  await validateField(name);
+                }}
+                className="utrecht-textbox--openforms"
+                id={id}
+                disabled={isDisabled}
+                invalid={touched && !!error}
+                aria-describedby={ariaDescribedBy}
+                placeholder={placeholder}
+                autoComplete="off"
+              />
+              <DatePickerTrigger className="openforms-datepicker-textbox__calendar-toggle" />
+            </Paragraph>
+            <DatePicker
+              onCalendarClick={async selectedDate => {
+                flushSync(() => {
+                  // Need to truncate, because the selected date is in datetime format
+                  const truncated = selectedDate.substring(0, 10);
+                  const e = {
+                    target: {name: 'date', value: truncated},
+                  } as React.ChangeEvent<HTMLInputElement>;
+                  onPartChange(e);
+                });
+                await setTouched(true);
+              }}
+              currentDate={currentDateTime ?? undefined}
+              minDate={minDate}
+              maxDate={maxDate}
+            >
+              <Textbox
+                type="time"
+                step="60" // Ensures no seconds are displayed
+                aria-label={formatMessage({
+                  description: 'Datetime picker: accessible time input field label',
+                  defaultMessage: 'Time',
+                })}
+                name="time"
+                onChange={onPartChange}
+                value={time}
+                className="utrecht-textbox--openforms"
+                onKeyDown={async (event: React.KeyboardEvent) => {
+                  // treat enter key as a submit
+                  if (event.key === 'Enter') {
+                    setIsOpen(false);
+                    await validateField(name);
+                  }
+                }}
+              />
+            </DatePicker>
+          </>
+        )}
+      </DatePickerRoot>
+
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
