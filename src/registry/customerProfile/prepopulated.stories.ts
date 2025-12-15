@@ -233,13 +233,13 @@ export const WithoutPortalUrl: Story = {
     const canvas = within(canvasElement);
     // Because the portal URL is an empty string, we don't mention it in the description.
     expect(
-      canvas.getByText(
+      await canvas.findByText(
         'There are multiple email addresses associated with your account. ' +
           'Use the dropdown to select the email address you want to use for this form.'
       )
     ).toBeVisible();
     expect(
-      canvas.getByText(
+      await canvas.findByText(
         'There are multiple phone numbers associated with your account. ' +
           'Use the dropdown to select the phone number you want to use for this form.'
       )
@@ -335,7 +335,7 @@ export const AddNewAddress: Story = {
 
       // Set email address, blur to trigger validation
       await userEvent.type(emailField, 'test@mail.com');
-      await emailField.blur();
+      emailField.blur();
     });
 
     await step('update preference', async () => {

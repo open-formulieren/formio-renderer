@@ -87,7 +87,7 @@ export const OpenPreferencesModal: Story = {
 
       // Enter an email address
       await userEvent.type(emailField, 'test@mail.com');
-      await emailField.blur();
+      emailField.blur();
 
       // The "update preferences" button should now be visible
       await userEvent.click(
@@ -141,7 +141,7 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
 
     await step('Enter email address and open preferences modal', async () => {
       await userEvent.type(emailField, 'test@mail.com');
-      await emailField.blur();
+      emailField.blur();
 
       await userEvent.click(await canvas.findByRole('button', {name: 'Update preferences'}));
     });
