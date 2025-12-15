@@ -68,7 +68,7 @@
     "@open-formulieren/design-tokens": "^0.66.0",
     "@open-formulieren/leaflet-tools": "^1.0.0",
     "@open-formulieren/types": "^0.52.0",
-    "@react-leaflet/core": "^3.0.0",
+    "@react-leaflet/core": "^2.1.0",
     "@sinonjs/fake-timers": "^15.0.0",
     "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-docs": "^9.1.1",

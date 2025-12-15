@@ -76,6 +76,11 @@ jobs:
           npm run build:typecheck
           npm run build
 
+          if [ -d "./dist/node_modules" ]; then
+            echo "Unexpected 'node_modules' in dist directory!"
+            exit 1
+          fi
+
       - name: Store build artifact
         uses: actions/upload-artifact@v4
         with:
