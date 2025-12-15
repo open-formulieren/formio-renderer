@@ -90,6 +90,19 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
     expect(canvas.getByText('foo@test.com')).not.toHaveRole('option');
     // The phone number field should be empty.
     expect(phoneNumberField).toHaveValue('');
+
+    // Because the portal URL is set, we mention it in the description.
+    expect(
+      canvas.getByText(
+        // Because there are html element within this text message,
+        // we need to use a function to target it.
+        (_, element) =>
+          element?.textContent ===
+          'There are multiple email addresses associated with your account. ' +
+            'Use the dropdown to select the email address you want to use for this form. ' +
+            'To update your preferences, use the portal.'
+      )
+    ).toBeVisible();
   },
 };
 
@@ -195,6 +208,45 @@ export const WithPreferredDigitalAddresses: Story = {
   },
 };
 
+export const WithoutPortalUrl: Story = {
+  name: 'Without portal URL',
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
+              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+            },
+            {
+              type: 'phoneNumber',
+              addresses: ['0612345678', '0687654321', '0612387645'],
+            },
+          ],
+          portalUrl: '',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    // Because the portal URL is an empty string, we don't mention it in the description.
+    expect(
+      await canvas.findByText(
+        'There are multiple email addresses associated with your account. ' +
+          'Use the dropdown to select the email address you want to use for this form.'
+      )
+    ).toBeVisible();
+    expect(
+      await canvas.findByText(
+        'There are multiple phone numbers associated with your account. ' +
+          'Use the dropdown to select the phone number you want to use for this form.'
+      )
+    ).toBeVisible();
+  },
+};
+
 export const ChangeSelection: Story = {
   name: 'Change selection',
   args: {
@@ -283,7 +335,7 @@ export const AddNewAddress: Story = {
 
       // Set email address, blur to trigger validation
       await userEvent.type(emailField, 'test@mail.com');
-      await emailField.blur();
+      emailField.blur();
     });
 
     await step('update preference', async () => {
@@ -294,10 +346,10 @@ export const AddNewAddress: Story = {
       const modal = within(modalElement);
 
       const forFutureUseRadio = modal.getByRole('radio', {
-        name: /save my data for the future forms/i,
+        name: 'Save my preferences for the next time. You can always change them again later in the portal.',
       });
       const oneTimeUseRadio = modal.getByRole('radio', {
-        name: /Use this email address only for this form/i,
+        name: 'Use this email address only for this form.',
       });
 
       // The "use only for this form" radio button is checked
