@@ -1,5 +1,42 @@
 # Changes
 
+## 1.0.0-beta.1 (2025-12-15)
+
+Second beta version for the stable 1.0.0 release.
+
+**Bugfixes**
+
+- [`#231`][#231] Fixed accessibility issues in the `select` component:
+  - The "clear" button is now accessible with keyboard navigation.
+  - The "clear" button focus outline contrast issue is resolved.
+- [`#237`][#237] Fixed clearing the `number` and `currency` display value when the field value is
+  cleared.
+- [`#245`][#245] Fixed timezone information in `datetime` fields being ignored.
+- Fixed crash in `customerProfile` component when the `defaultValue` is `null`.
+- [`#186`][#186] Fixed inconsistent `isEmpty` behaviour across different component types.
+- [`#244`][#244] Fixed accesible label regression in the `number` component when a prefix or suffix
+  are used.
+- [`SDK#863`][SDK#863] Fixed the user interaction for `date` and `datetime` components with the
+  datepicker. Focusing the input no longer opens the dialog - the calendar icon must now be used as
+  trigger.
+
+**Project maintenance**
+
+- The registry types now ensure all component types from `@open-formulieren/types` are implemented.
+- Updated project status in the README.
+- [`#224`][#224] Internal/private properties now have a consistent naming style.
+- Documented the available design tokens for theme designers.
+- [`#217`][#217] Configured coverage status to be informational so that it doesn't fail the build.
+
+[#224]: https://github.com/open-formulieren/formio-renderer/issues/224
+[#231]: https://github.com/open-formulieren/formio-renderer/issues/231
+[#237]: https://github.com/open-formulieren/formio-renderer/issues/237
+[#245]: https://github.com/open-formulieren/formio-renderer/issues/245
+[#186]: https://github.com/open-formulieren/formio-renderer/issues/186
+[#244]: https://github.com/open-formulieren/formio-renderer/issues/244
+[SDK#863]: https://github.com/open-formulieren/open-forms-sdk/issues/863
+[#217]: https://github.com/open-formulieren/formio-renderer/issues/217
+
 ## 1.0.0-beta.0 (2025-12-02)
 
 First beta version for the stable 1.0.0 release.
