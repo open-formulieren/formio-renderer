@@ -1,5 +1,15 @@
 # Changes
 
+## 1.0.0-beta.2 (2025-12-16)
+
+Third beta version for the stable 1.0.0 release.
+
+**Bugfixes**
+
+- Fixed (peer) dependencies not being correctly specified, which messed up the package build.
+- Fixed `leaflet` import in `LeafletMap` component to ensure that `L.Draw` is not undefined.
+- Fixed `customerProfile` component incorrectly displaying a portal URL when nothing is configured.
+
 ## 1.0.0-beta.1 (2025-12-15)
 
 Second beta version for the stable 1.0.0 release.
