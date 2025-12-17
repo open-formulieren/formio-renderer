@@ -272,6 +272,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   const intl = useIntl();
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const fieldName = `${namePrefix}.address`;
+  const {value: address} = getFieldMeta<DigitalAddress['address']>(fieldName);
   const {setValue: setAddress} = getFieldHelpers<DigitalAddress['address']>(fieldName);
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
     `${namePrefix}.preferenceUpdate`
@@ -279,7 +280,10 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
 
   // When the digital addresses are loaded, we check if we need to show a text input.
   const hasAddresses = !!digitalAddressGroup?.options?.length;
-  const [useTextInput, setUseTextInput] = useState(!hasAddresses);
+  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a === address);
+  // If there are pre-populated addresses and the current address value is of a
+  // pre-populated address, then we show a select input. Otherwise, we show a text input.
+  const [useSelectInput, setUseSelectInput] = useState(hasAddresses && usesPrePopulatedAddress);
 
   const fieldError = typeof errors === 'string' && errors;
 
@@ -311,12 +315,12 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
       )}
       aria-describedby={errorMessageId}
     >
-      {hasAddresses && !useTextInput ? (
+      {hasAddresses && useSelectInput ? (
         <DigitalAddressesSelect
           type={type}
           fieldName={fieldName}
           onAddDigitalAddress={() => {
-            setUseTextInput(true);
+            setUseSelectInput(false);
             setAddress('');
             setPreference('useOnlyOnce');
           }}
