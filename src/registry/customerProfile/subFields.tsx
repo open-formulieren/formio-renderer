@@ -48,7 +48,7 @@ const getDigitalAddressOptions = (
   intl: IntlShape,
   digitalAddressGroup: DigitalAddressGroup
 ): Option[] =>
-  digitalAddressGroup.addresses.map(address => ({
+  digitalAddressGroup.options.map(address => ({
     label: address,
     value: address,
     description:
@@ -278,7 +278,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   );
 
   // When the digital addresses are loaded, we check if we need to show a text input.
-  const hasAddresses = !!digitalAddressGroup?.addresses?.length;
+  const hasAddresses = !!digitalAddressGroup?.options?.length;
   const [useTextInput, setUseTextInput] = useState(!hasAddresses);
 
   const fieldError = typeof errors === 'string' && errors;

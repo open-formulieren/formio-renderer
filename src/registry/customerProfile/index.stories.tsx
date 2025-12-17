@@ -226,8 +226,8 @@ export const RequiredWithPrepopulatedAddresses: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', addresses: ['0612345678', '0612387654']},
+            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'phoneNumber', options: ['0612345678', '0612387654']},
           ],
           portalUrl: 'https://example.com',
         },
@@ -255,7 +255,7 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
           ],
           portalUrl: 'https://example.com',
         },

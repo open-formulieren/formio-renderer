@@ -33,8 +33,8 @@ export const WithOnePrepopulatedAddress: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com']},
-            {type: 'phoneNumber', addresses: ['0612345678']},
+            {type: 'email', options: ['foo@test.com']},
+            {type: 'phoneNumber', options: ['0612345678']},
           ],
           portalUrl: 'https://example.com',
         },
@@ -68,8 +68,8 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', addresses: []},
+            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'phoneNumber', options: []},
           ],
           portalUrl: 'https://example.com',
         },
@@ -113,8 +113,8 @@ export const WithPrepopulatedDigitalAddresses: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', addresses: ['0612345678', '0687654321', '0612387645']},
+            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {type: 'phoneNumber', options: ['0612345678', '0687654321', '0612387645']},
           ],
           portalUrl: 'https://example.com',
         },
@@ -153,12 +153,12 @@ export const WithPreferredDigitalAddresses: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              options: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
               preferred: 'preferred.long.email.address@test.com',
             },
             {
               type: 'phoneNumber',
-              addresses: ['0612345678', '0687654321', '0612387645'],
+              options: ['0612345678', '0687654321', '0612387645'],
               preferred: '0612387645',
             },
           ],
@@ -217,11 +217,11 @@ export const WithoutPortalUrl: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              addresses: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              options: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
             },
             {
               type: 'phoneNumber',
-              addresses: ['0612345678', '0687654321', '0612387645'],
+              options: ['0612345678', '0687654321', '0612387645'],
             },
           ],
           portalUrl: '',
@@ -266,7 +266,7 @@ export const ChangeSelection: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              addresses: ['foo@test.com', 'baz@test.com'],
+              options: ['foo@test.com', 'baz@test.com'],
             },
           ],
           portalUrl: 'https://example.com',
@@ -309,7 +309,7 @@ export const AddNewAddress: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              addresses: ['foo@test.com', 'baz@test.com'],
+              options: ['foo@test.com', 'baz@test.com'],
             },
           ],
           portalUrl: 'https://example.com',
@@ -389,7 +389,7 @@ export const PrepopulateReturnsUnsupportedAddressTypes: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'phoneNumber',
-              addresses: ['06 123 456 78'],
+              options: ['06 123 456 78'],
             },
           ],
           portalUrl: 'https://example.com',

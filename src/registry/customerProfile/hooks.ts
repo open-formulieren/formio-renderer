@@ -32,7 +32,7 @@ export const useDigitalAddresses = (
       const addressData = result.find(address => address.type === type);
       // The default value is the preferred address or the first address in the list.
       // If neither is present, the default value is an empty string.
-      const defaultAddress = addressData?.preferred || addressData?.addresses?.[0] || '';
+      const defaultAddress = addressData?.preferred || addressData?.options?.[0] || '';
 
       setValue({
         address: defaultAddress,
