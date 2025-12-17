@@ -104,8 +104,8 @@ export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressT
         componentParameters: {
           customerProfile: {
             fetchDigitalAddresses: async () => [
-              {type: 'email', addresses: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-              {type: 'phoneNumber', addresses: ['0612345678', '0612348765']},
+              {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+              {type: 'phoneNumber', options: ['0612345678', '0612348765']},
             ],
             portalUrl: 'https://example.com',
           },

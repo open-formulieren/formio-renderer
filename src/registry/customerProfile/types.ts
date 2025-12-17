@@ -13,7 +13,7 @@ export type FormValues = {
 
 export interface DigitalAddressGroup {
   type: DigitalAddressType;
-  addresses: string[];
+  options: string[];
   preferred?: string;
 }
 
