@@ -194,6 +194,40 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
   },
 };
 
+export const WithUpdatePreferencesModalEnabledSetToFalse: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      description:
+        'The "update preferences" button should never be visible because `updatePreferencesModalEnabled` is set to `false`.',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [],
+          portalUrl: '',
+          updatePreferencesModalEnabled: false,
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const emailField = await canvas.findByLabelText('Email');
+
+    // Enter an email address
+    await userEvent.type(emailField, 'test@mail.com');
+    emailField.blur();
+  },
+};
+
 export const WithComponentValidationError: Story = {
   parameters: {
     formik: {
