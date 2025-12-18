@@ -28,6 +28,7 @@ export default {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -165,6 +166,7 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
           portalUrl: '',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -267,6 +269,7 @@ export const RequiredWithPrepopulatedAddresses: Story = {
             {type: 'phoneNumber', options: ['0612345678', '0612387654']},
           ],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -295,6 +298,7 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
             {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
           ],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
