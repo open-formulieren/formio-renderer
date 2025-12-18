@@ -356,9 +356,13 @@ export const NoErrorWhileFocus: Story = {
 };
 
 export const KeyboardNavigation: Story = {
+  decorators: [withMockDate],
   args: {
     name: 'test',
     label: 'Logical tab navigation',
+  },
+  parameters: {
+    mockDate: new Date('2025-12-17T12:00:00+01:00'),
   },
 
   play: async ({canvasElement}) => {
