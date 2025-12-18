@@ -238,6 +238,9 @@ export const WithDigitalAddressValidationError: Story = {
     expect(
       await canvas.findByText('Generic error message from digital address validation.')
     ).toBeVisible();
+
+    // The "update preferences" button should not be visible, because of the validation error.
+    expect(canvas.queryByRole('button', {name: 'Update preferences'})).not.toBeInTheDocument();
   },
 };
 

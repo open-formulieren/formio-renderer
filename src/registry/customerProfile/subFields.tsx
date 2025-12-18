@@ -160,10 +160,11 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
     `${namePrefix}.preferenceUpdate`
   );
 
-  const {value, touched, error} = getFieldMeta<DigitalAddress['address']>(fieldName);
+  const {value, touched} = getFieldMeta<DigitalAddress['address']>(fieldName);
+  const {error: fieldError} = getFieldMeta<DigitalAddress>(namePrefix);
 
   // Only show the preference button if the field is touched, has a value and has no error
-  const showPreferencesButton = touched && !error && value !== '';
+  const showPreferencesButton = touched && !fieldError && value !== '';
 
   return (
     <>
