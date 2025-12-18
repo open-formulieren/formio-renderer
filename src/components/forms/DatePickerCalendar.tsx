@@ -1,6 +1,6 @@
 // Calendar component documentation:
 // https://nl-design-system.github.io/utrecht/storybook-react/index.html?path=/docs/react-component-calendar--docs
-import {Calendar} from '@utrecht/component-library-react';
+import {Calendar} from '@utrecht/calendar-react';
 import type {Locale} from 'date-fns';
 import {useEffect, useState} from 'react';
 import {useIntl} from 'react-intl';
@@ -24,7 +24,7 @@ const loadCalendarLocale = async (locale: string): Promise<Locale> => {
   }
 };
 
-const DatePickerCalendar: typeof Calendar = props => {
+const DatePickerCalendar: React.FC<React.ComponentProps<typeof Calendar>> = props => {
   const intl = useIntl();
   const [calendarLocale, setCalendarLocale] = useState<Locale | null>(null);
 

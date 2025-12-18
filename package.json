@@ -140,6 +140,7 @@
     "vitest": "^3.0.7"
   },
   "dependencies": {
+    "@utrecht/calendar-react": "^1.0.15",
     "@utrecht/component-library-react": "1.0.0-alpha.353",
     "clsx": "^2.1.0",
     "dompurify": "^3.2.6",

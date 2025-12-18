@@ -2,6 +2,8 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Paragraph} from '@utrecht/component-library-react';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 
+import {withMockDate} from '@/sb-decorators';
+
 import {DatePicker, DatePickerRoot, DatePickerTrigger} from './DatePicker';
 
 export default {
@@ -36,6 +38,7 @@ export default {
         </>
       );
     },
+    withMockDate,
   ],
   args: {
     children: null,
@@ -45,6 +48,7 @@ export default {
   },
   parameters: {
     layout: 'centered',
+    mockDate: new Date('2025-12-17T12:00:00+01:00'),
   },
 } satisfies Meta<typeof DatePicker>;
 
