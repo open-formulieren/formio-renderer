@@ -158,14 +158,17 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
 }) => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {updatePreferencesModalEnabled} = useCustomerProfileComponentParameters();
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
     `${namePrefix}.preferenceUpdate`
   );
 
   const {value, error} = getFieldMeta<DigitalAddress['address']>(fieldName);
 
-  // Only show the preference button if the field is touched, has a value and has no error
-  const showPreferencesButton = !isFieldInvalid && !error && !!value;
+  // Only show the preference button if `updatePreferencesModalEnabled` is true,
+  // the field has a value and no error
+  const showPreferencesButton =
+    updatePreferencesModalEnabled && !isFieldInvalid && !error && !!value;
 
   return (
     <>

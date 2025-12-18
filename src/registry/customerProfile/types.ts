@@ -35,4 +35,5 @@ export interface CustomerProfileParameters {
     profileComponentName: string
   ) => Promise<DigitalAddressesResponseBody | null>;
   portalUrl: string;
+  updatePreferencesModalEnabled: boolean;
 }

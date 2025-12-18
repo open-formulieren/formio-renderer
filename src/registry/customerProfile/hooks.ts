@@ -64,6 +64,7 @@ export const useCustomerProfileComponentParameters = () => {
       the FormioForm call.`
     );
   }
-  const {fetchDigitalAddresses, portalUrl} = componentParameters.customerProfile;
-  return {fetchDigitalAddresses, portalUrl};
+  const {fetchDigitalAddresses, portalUrl, updatePreferencesModalEnabled} =
+    componentParameters.customerProfile;
+  return {fetchDigitalAddresses, portalUrl, updatePreferencesModalEnabled};
 };
