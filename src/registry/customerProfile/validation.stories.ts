@@ -46,6 +46,7 @@ const BaseValidationStory: ValidationStory = {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -108,6 +109,7 @@ export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressT
               {type: 'phoneNumber', options: ['0612345678', '0612348765']},
             ],
             portalUrl: 'https://example.com',
+            updatePreferencesModalEnabled: true,
           },
         } satisfies FormSettings['componentParameters'],
       },

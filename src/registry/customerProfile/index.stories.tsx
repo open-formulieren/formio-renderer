@@ -28,6 +28,7 @@ export default {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -165,6 +166,7 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
           portalUrl: '',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -189,6 +191,40 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
       });
       expect(forFutureUseRadio).toBeVisible();
     });
+  },
+};
+
+export const WithUpdatePreferencesModalEnabledSetToFalse: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      description:
+        'The "update preferences" button should never be visible because `updatePreferencesModalEnabled` is set to `false`.',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [],
+          portalUrl: '',
+          updatePreferencesModalEnabled: false,
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const emailField = await canvas.findByLabelText('Email');
+
+    // Enter an email address
+    await userEvent.type(emailField, 'test@mail.com');
+    emailField.blur();
   },
 };
 
@@ -267,6 +303,7 @@ export const RequiredWithPrepopulatedAddresses: Story = {
             {type: 'phoneNumber', options: ['0612345678', '0612387654']},
           ],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -295,6 +332,7 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
             {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
           ],
           portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
         },
       } satisfies FormSettings['componentParameters'],
     },

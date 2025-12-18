@@ -37,6 +37,7 @@ interface DigitalAddressSubFieldProps {
   type: DigitalAddressType;
   fieldName: string;
   isRequired?: boolean;
+  isFieldInvalid: boolean;
 }
 
 /**
@@ -153,18 +154,21 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   fieldName,
   isRequired,
   textfieldProps,
+  isFieldInvalid,
 }) => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {updatePreferencesModalEnabled} = useCustomerProfileComponentParameters();
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
     `${namePrefix}.preferenceUpdate`
   );
 
-  const {value, touched} = getFieldMeta<DigitalAddress['address']>(fieldName);
-  const {error: fieldError} = getFieldMeta<DigitalAddress>(namePrefix);
+  const {value, error} = getFieldMeta<DigitalAddress['address']>(fieldName);
 
-  // Only show the preference button if the field is touched, has a value and has no error
-  const showPreferencesButton = touched && !fieldError && value !== '';
+  // Only show the preference button if `updatePreferencesModalEnabled` is true,
+  // the field has a value and no error
+  const showPreferencesButton =
+    updatePreferencesModalEnabled && !isFieldInvalid && !error && !!value;
 
   return (
     <>
@@ -327,6 +331,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           }}
           digitalAddressGroup={digitalAddressGroup}
           isRequired={isRequired}
+          isFieldInvalid={invalid}
         />
       ) : (
         <DigitalAddressTextfield
@@ -335,6 +340,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           fieldName={fieldName}
           isRequired={isRequired}
           textfieldProps={textfieldProps}
+          isFieldInvalid={invalid}
         />
       )}
       {errorMessageId && fieldError && <ValidationErrors id={errorMessageId} error={fieldError} />}
