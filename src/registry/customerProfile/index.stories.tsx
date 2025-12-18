@@ -53,6 +53,40 @@ export const WithTooltipAndDescription: Story = {
   },
 };
 
+export const WithInitialValue: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [
+          {
+            type: 'email',
+            address: 'test@mail.com',
+          },
+        ],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
+
+    expect(emailField).toHaveValue('test@mail.com');
+    expect(phoneNumberField).toHaveValue('');
+  },
+};
+
 export const OnlyEmailDigitalAddressType: Story = {
   args: {
     componentDefinition: {
@@ -204,6 +238,9 @@ export const WithDigitalAddressValidationError: Story = {
     expect(
       await canvas.findByText('Generic error message from digital address validation.')
     ).toBeVisible();
+
+    // The "update preferences" button should not be visible, because of the validation error.
+    expect(canvas.queryByRole('button', {name: 'Update preferences'})).not.toBeInTheDocument();
   },
 };
 

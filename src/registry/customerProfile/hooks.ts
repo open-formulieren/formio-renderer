@@ -16,7 +16,7 @@ export const useDigitalAddresses = (
   profileComponentName: string,
   digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
 ): UseDigitalAddresses => {
-  const {getFieldHelpers} = useFormikContext<JSONObject>();
+  const {getFieldHelpers, getFieldMeta} = useFormikContext<JSONObject>();
   const {fetchDigitalAddresses} = useCustomerProfileComponentParameters();
 
   const {value: digitalAddresses, loading} = useAsync(async () => {
@@ -27,7 +27,11 @@ export const useDigitalAddresses = (
 
     digitalAddressTypes.forEach((type, index) => {
       const profileComponentKey = `${profileComponentName}.${index}`;
+      const {value} = getFieldMeta<DigitalAddress>(profileComponentKey);
       const {setValue} = getFieldHelpers<DigitalAddress>(profileComponentKey);
+
+      // If there already is a value, we shouldn't set a default value.
+      if (value?.address) return;
 
       const addressData = result.find(address => address.type === type);
       // The default value is the preferred address or the first address in the list.

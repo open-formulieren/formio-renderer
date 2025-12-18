@@ -160,10 +160,11 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
     `${namePrefix}.preferenceUpdate`
   );
 
-  const {value, touched, error} = getFieldMeta<DigitalAddress['address']>(fieldName);
+  const {value, touched} = getFieldMeta<DigitalAddress['address']>(fieldName);
+  const {error: fieldError} = getFieldMeta<DigitalAddress>(namePrefix);
 
   // Only show the preference button if the field is touched, has a value and has no error
-  const showPreferencesButton = touched && !error && value !== '';
+  const showPreferencesButton = touched && !fieldError && value !== '';
 
   return (
     <>
@@ -272,6 +273,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   const intl = useIntl();
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const fieldName = `${namePrefix}.address`;
+  const {value: address} = getFieldMeta<DigitalAddress['address']>(fieldName);
   const {setValue: setAddress} = getFieldHelpers<DigitalAddress['address']>(fieldName);
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
     `${namePrefix}.preferenceUpdate`
@@ -279,7 +281,10 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
 
   // When the digital addresses are loaded, we check if we need to show a text input.
   const hasAddresses = !!digitalAddressGroup?.options?.length;
-  const [useTextInput, setUseTextInput] = useState(!hasAddresses);
+  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a === address);
+  // If there are pre-populated addresses and the current address value is of a
+  // pre-populated address, then we show a select input. Otherwise, we show a text input.
+  const [useSelectInput, setUseSelectInput] = useState(hasAddresses && usesPrePopulatedAddress);
 
   const fieldError = typeof errors === 'string' && errors;
 
@@ -311,12 +316,12 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
       )}
       aria-describedby={errorMessageId}
     >
-      {hasAddresses && !useTextInput ? (
+      {hasAddresses && useSelectInput ? (
         <DigitalAddressesSelect
           type={type}
           fieldName={fieldName}
           onAddDigitalAddress={() => {
-            setUseTextInput(true);
+            setUseSelectInput(false);
             setAddress('');
             setPreference('useOnlyOnce');
           }}

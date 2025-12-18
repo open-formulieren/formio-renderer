@@ -366,6 +366,124 @@ export const AddNewAddress: Story = {
   },
 };
 
+export const PrepopulateDoesNotChangeUserData: Story = {
+  name: 'Pre-populate does not change user data',
+  args: {
+    componentDefinition: {
+      type: 'customerProfile',
+      key: 'customerProfile',
+      id: 'customerProfile',
+      label: 'Profile',
+      shouldUpdateCustomerData: false,
+      digitalAddressTypes: ['email', 'phoneNumber'],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [
+          {
+            type: 'email',
+            address: 'manually-entered@mail.com',
+          },
+          {
+            type: 'phoneNumber',
+            address: '',
+          },
+        ],
+      },
+    },
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {type: 'email', options: ['fetched@mail.com']},
+            {type: 'phoneNumber', options: ['0612345678']},
+          ],
+          portalUrl: 'https://example.com',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
+
+    // Because email already has a value, we shouldn't overwrite it.
+    // Applicable for cases of entering a value before the pre-populate endpoint is called,
+    // or going back to a previous step.
+    expect(emailField).toHaveRole('textbox');
+    expect(emailField).toHaveValue('manually-entered@mail.com');
+
+    // As phone number is empty, we should overwrite it and show the pre-populated value.
+    expect(phoneNumberField).toHaveRole('combobox');
+    expect(await canvas.findByText('0612345678')).toBeVisible();
+  },
+};
+
+export const PrepopulateWithUserDataIncludedInPopulation: Story = {
+  name: 'Pre-populate with user data that is included in population',
+  args: {
+    componentDefinition: {
+      type: 'customerProfile',
+      key: 'customerProfile',
+      id: 'customerProfile',
+      label: 'Profile',
+      shouldUpdateCustomerData: false,
+      digitalAddressTypes: ['email', 'phoneNumber'],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [
+          {
+            type: 'email',
+            address: 'initial@mail.com',
+          },
+          {
+            type: 'phoneNumber',
+            address: '0612345678',
+          },
+        ],
+      },
+    },
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [
+            {
+              type: 'email',
+              options: ['initial@mail.com', 'preferred@mail.com'],
+              preferred: 'preferred@mail.com',
+            },
+            {type: 'phoneNumber', options: ['0612345678', '0631313131']},
+          ],
+          portalUrl: 'https://example.com',
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emailField = await canvas.findByLabelText('Email');
+    const phoneNumberField = await canvas.findByLabelText('Phone number');
+
+    // Even though there is a preferred email address, we should still show the initial
+    // user value.
+    expect(emailField).toHaveRole('combobox');
+    expect(await canvas.findByText('initial@mail.com')).toBeVisible();
+
+    // Because the value of the phone number field is present in the pre-populate data,
+    // we should display it as dropdown.
+    expect(phoneNumberField).toHaveRole('combobox');
+    expect(await canvas.findByText('0612345678')).toBeVisible();
+  },
+};
+
 export const PrepopulateReturnsUnsupportedAddressTypes: Story = {
   name: 'Pre-populate returns unsupported address types',
   args: {
