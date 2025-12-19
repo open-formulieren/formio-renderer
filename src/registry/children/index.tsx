@@ -9,6 +9,7 @@ import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import Icon from '@/components/icons';
 import {useFieldConfig} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
@@ -116,6 +117,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 
       {canAddChildrenManually && (
         <SecondaryActionButton type="button" onClick={() => setIsModalOpen(true)}>
+          <Icon icon="add" />
           <FormattedMessage
             description="Children component modal: add child button label"
             defaultMessage="Add child"

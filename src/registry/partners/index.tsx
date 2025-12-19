@@ -7,6 +7,7 @@ import FormFieldContainer from '@/components/FormFieldContainer';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
+import Icon from '@/components/icons';
 import type {RegistryEntry} from '@/registry/types';
 
 import PartnersPreview from './PartnersPreview';
@@ -74,6 +75,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
 
       {canAddPartner && (
         <SecondaryActionButton onClick={() => setFieldValue(key, [EMPTY_PARTNER])}>
+          <Icon icon="add" />
           <FormattedMessage
             description="Partners component: 'add partner' button label"
             defaultMessage="Add partner details"
