@@ -182,3 +182,22 @@ export const NoErrorWhileFocus: Story = {
     expect(secondRadio).toHaveFocus();
   },
 };
+
+export const WithOptionDescriptions: Story = {
+  args: {
+    options: [
+      {value: 'sherlock', label: 'Sherlock', description: 'I am an option description'},
+      {value: 'watson', label: 'Watson'},
+      {value: 'ziggy', label: 'Ziggy', description: 'Me too'},
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const firstDescription = await canvas.findByText('I am an option description');
+    expect(firstDescription).toBeInTheDocument();
+
+    const secondDescription = await canvas.findByText('Me too');
+    expect(secondDescription).toBeInTheDocument();
+  },
+};
