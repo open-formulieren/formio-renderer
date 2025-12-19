@@ -386,3 +386,21 @@ export const KeyboardNavigation: Story = {
     });
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    name: 'datetime',
+    label: 'Disabled datetime',
+    isDisabled: true,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Trigger and input should be disabled
+    const input = canvas.getByLabelText('Disabled datetime');
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    expect(input).toBeDisabled();
+    expect(trigger).toHaveAttribute('aria-disabled', 'true');
+    expect(trigger).toHaveAttribute('tabIndex', '-1');
+  },
+};

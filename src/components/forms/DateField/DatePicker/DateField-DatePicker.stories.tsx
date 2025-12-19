@@ -315,3 +315,22 @@ export const NoErrorWhileFocus: Story = {
     expect(input).not.toHaveFocus();
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'Disabled date',
+    isDisabled: true,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Trigger and input should be disabled
+    const input = canvas.getByLabelText('Disabled date');
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    expect(input).toBeDisabled();
+    expect(trigger).toHaveAttribute('aria-disabled', 'true');
+    expect(trigger).toHaveAttribute('tabIndex', '-1');
+  },
+};
