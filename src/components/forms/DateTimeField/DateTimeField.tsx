@@ -229,7 +229,10 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 placeholder={placeholder}
                 autoComplete="off"
               />
-              <DatePickerTrigger className="openforms-datepicker-textbox__calendar-toggle" />
+              <DatePickerTrigger
+                className="openforms-datepicker-textbox__calendar-toggle"
+                disabled={isDisabled}
+              />
             </Paragraph>
             <DatePicker
               onCalendarClick={async selectedDate => {

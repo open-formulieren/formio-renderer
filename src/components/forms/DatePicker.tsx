@@ -123,12 +123,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({children, ...props}) => {
 
 export interface DatePickerTriggerProps {
   className?: string;
+  disabled?: boolean;
 }
 
 /**
  * Interactive element to trigger opening/closing the date picker dialog.
  */
-export const DatePickerTrigger: React.FC<DatePickerTriggerProps> = ({className}) => {
+export const DatePickerTrigger: React.FC<DatePickerTriggerProps> = ({className, disabled}) => {
   const intl = useIntl();
   const {setTrigger, getReferenceProps} = useDatePicker();
   const label = intl.formatMessage({
@@ -142,6 +143,7 @@ export const DatePickerTrigger: React.FC<DatePickerTriggerProps> = ({className})
       className={className}
       aria-label={label}
       aria-hidden="false"
+      aria-disabled={disabled}
       {...getReferenceProps()}
       title={label}
     />
