@@ -1,5 +1,24 @@
 # Changes
 
+## 1.0.0-beta.3 (2025-12-19)
+
+Fourth beta version for the stable 1.0.0 release.
+
+**Bugfixes**
+
+- [`OF#5823`][OF#5823] Fixed mismatch in expected API interaction for `customerProfile` component.
+- [`#242`][#242] Fixed incorrect year being displayed in the datepicker calendar.
+- Fixed missing date mock causing Chromatic to detect changes every build.
+- [`OF#5829`][OF#5829] Fixed the `customerProfile` input not properly being displayed between
+  re-mounts.
+- [`OF#5824`][OF#5824] Fixed the preferences modal being show in the `customerProfile` for
+  non-logged in users.
+
+[OF#5823]: https://github.com/open-formulieren/open-forms/issues/5823
+[#242]: https://github.com/open-formulieren/formio-renderer/issues/242
+[OF#5829]: https://github.com/open-formulieren/open-forms/issues/5829
+[OF#5824]: https://github.com/open-formulieren/open-forms/issues/5824
+
 ## 1.0.0-beta.2 (2025-12-16)
 
 Third beta version for the stable 1.0.0 release.
