@@ -5,6 +5,7 @@ export interface RadioOptionProps {
   name: string;
   value: string;
   label: React.ReactNode;
+  description?: string;
   id: string;
   index: number;
   ['aria-describedby']?: string;
@@ -15,6 +16,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   name,
   value,
   label,
+  description,
   id,
   index,
   ['aria-describedby']: ariaDescribedBy,
@@ -41,6 +43,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
           {label}
         </FormLabel>
       </div>
+      {description && <div className="utrecht-form-description--openforms">{description}</div>}
     </FormField>
   );
 };

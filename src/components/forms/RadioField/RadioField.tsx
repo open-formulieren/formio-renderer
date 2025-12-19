@@ -15,6 +15,7 @@ import RadioOption from './RadioOption';
 export interface RadioOption {
   value: string;
   label: React.ReactNode;
+  description?: string;
 }
 
 interface BasicRadioFieldProps {
@@ -183,12 +184,13 @@ const RadioField: React.FC<RadioFieldProps> = ({
         </FieldsetLegend>
       )}
 
-      {options.map(({value, label: optionLabel}, index) => (
+      {options.map(({value, label: optionLabel, description}, index) => (
         <RadioOption
           key={value}
           name={name}
           value={value}
           label={optionLabel}
+          description={description}
           id={id}
           index={index}
           aria-describedby={errorMessageId}
