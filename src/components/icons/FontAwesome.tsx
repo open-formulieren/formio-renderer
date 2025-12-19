@@ -1,6 +1,7 @@
 import {clsx} from 'clsx';
 import {forwardRef} from 'react';
 
+import './FontAwesomeSolidIcon.scss';
 import type {RendererIcon} from './types';
 
 /**
@@ -34,6 +35,7 @@ interface FontAwesomeSolidIconProps {
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
+  'aria-disabled'?: boolean | 'true' | 'false';
   onClick?: (event: React.UIEvent<HTMLElement>) => void;
 }
 
@@ -44,19 +46,26 @@ const FontAwesomeSolidIcon = forwardRef<HTMLElement, FontAwesomeSolidIconProps>(
       ['aria-hidden']: ariaHidden = true,
       ['aria-label']: ariaLabel,
       ['aria-describedby']: ariaDescribedBy,
+      ['aria-disabled']: ariaDisabled = false,
       icon,
       onClick,
       ...props
     },
     ref
   ) => {
+    const isDisabled = [true, 'true'].includes(ariaDisabled);
     const iconName = FA_MAP[icon] ?? icon;
-    const className = clsx('fa-solid', `fa-${iconName}`, extraClassName);
+    const className = clsx(
+      'fa-solid',
+      `fa-${iconName}`,
+      isDisabled && 'icon-disabled',
+      extraClassName
+    );
     const interactionProps: React.ComponentProps<'i'> | undefined = onClick
       ? {
           onClick,
           role: 'button',
-          tabIndex: 0,
+          tabIndex: isDisabled ? -1 : 0,
           onKeyDown: event => {
             if (event.key === 'Enter') onClick(event);
           },
@@ -69,6 +78,7 @@ const FontAwesomeSolidIcon = forwardRef<HTMLElement, FontAwesomeSolidIconProps>(
         aria-hidden={ariaHidden}
         aria-label={ariaLabel || undefined}
         aria-describedby={ariaDescribedBy || undefined}
+        aria-disabled={ariaDisabled || undefined}
         {...interactionProps}
         {...props}
       />

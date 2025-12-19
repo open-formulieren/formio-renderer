@@ -39,6 +39,7 @@ interface BaseIconProps {
    */
   'aria-label'?: string;
   'aria-describedby'?: string;
+  'aria-disabled'?: boolean | 'true' | 'false';
   title?: string;
 }
 
@@ -52,6 +53,7 @@ const Icon = forwardRef<HTMLElement, IconProps>(
       ['aria-hidden']: ariaHidden = true,
       ['aria-label']: ariaLabel,
       ['aria-describedby']: ariaDescribedBy,
+      ['aria-disabled']: ariaDisabled,
       icon,
       onClick,
       ...props
@@ -68,6 +70,7 @@ const Icon = forwardRef<HTMLElement, IconProps>(
             aria-hidden={ariaHidden}
             aria-label={ariaLabel}
             aria-describedby={ariaDescribedBy}
+            aria-disabled={ariaDisabled}
             onClick={onClick}
             {...props}
           />
