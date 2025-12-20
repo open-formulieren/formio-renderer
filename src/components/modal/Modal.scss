@@ -42,6 +42,7 @@ body:has(.openforms-modal[open]) {
 
   &[open] {
     display: flex;
+    position: fixed;
   }
 
   &::backdrop {
