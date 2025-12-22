@@ -30,9 +30,9 @@ export interface TextareaProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -73,7 +73,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   label = '',
   isRequired = false,
   description = '',
-  isDisabled = false,
+  isReadOnly = false,
   autoExpand = false,
   placeholder,
   tooltip,
@@ -115,7 +115,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
       <Label
         id={id}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -135,7 +135,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
             'utrecht-textarea--openforms-no-resize': autoExpand,
           })}
           id={id}
-          disabled={isDisabled}
+          readOnly={isReadOnly}
           invalid={invalid}
           aria-describedby={
             [errorMessageId, showCharCount && characterCountId].filter(Boolean).join(' ') ||
