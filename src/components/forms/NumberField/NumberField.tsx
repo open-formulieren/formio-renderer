@@ -35,7 +35,7 @@ export interface NumberFieldProps {
    * a read-only field so we use the readOnly prop internally.
    *
    */
-  isReadonly?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -114,7 +114,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   label,
   isRequired = false,
   description = '',
-  isReadonly = false,
+  isReadOnly = false,
   tooltip,
   decimalLimit,
   allowNegative = false,
@@ -152,7 +152,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
         id={id}
         labelId={labelId}
         isRequired={isRequired}
-        isDisabled={isReadonly}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -177,7 +177,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
               await setValue(value);
             }}
             className="utrecht-textbox--openforms"
-            readOnly={isReadonly}
+            readOnly={isReadOnly}
             invalid={invalid}
             allowNegative={allowNegative}
             type="text"
