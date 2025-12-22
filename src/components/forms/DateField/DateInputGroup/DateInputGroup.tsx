@@ -43,9 +43,9 @@ export interface DateInputGroupProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Any valid autocomplete attribute.
    */
@@ -69,7 +69,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   label,
   tooltip,
   isRequired,
-  isDisabled,
+  isReadOnly,
   autoComplete,
   'aria-describedby': ariaDescribedBy,
 }) => {
@@ -130,7 +130,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
       label={label}
       tooltip={tooltip}
       isRequired={isRequired}
-      isDisabled={isDisabled}
+      isReadOnly={isReadOnly}
       isInvalid={touched && !!error}
       aria-describedby={ariaDescribedBy}
       name={name}
@@ -139,7 +139,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
         year={year}
         month={month}
         day={day}
-        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
         onChange={onPartChange}
         onBlur={async () => {
           setTouched(true);

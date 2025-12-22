@@ -12,7 +12,7 @@ export interface InputGroupProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   isRequired?: boolean;
   isInvalid?: boolean;
   'aria-describedby'?: string;
@@ -24,13 +24,12 @@ const InputGroup: React.FC<InputGroupProps> = ({
   label,
   tooltip,
   isRequired = false,
-  isDisabled = false,
+  isReadOnly = false,
   isInvalid = false,
   'aria-describedby': ariaDescribedBy,
   name,
 }) => (
   <Fieldset
-    disabled={isDisabled}
     invalid={isInvalid}
     className="utrecht-form-fieldset--openforms"
     aria-describedby={ariaDescribedBy}
@@ -40,7 +39,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
     <FieldsetLegend
       className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
     >
-      <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
+      <LabelContent isDisabled={isReadOnly} isRequired={isRequired} noLabelTag>
         {label}
       </LabelContent>
       {tooltip && <Tooltip>{tooltip}</Tooltip>}

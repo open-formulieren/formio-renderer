@@ -24,21 +24,21 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
 
   const sharedProps: Pick<
     React.ComponentProps<typeof DateField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
-    isDisabled: disabled,
+    isReadOnly: disabled,
   };
 
   return componentDefinition.multiple ? (
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label}) => (
+      renderField={({name, label, isReadOnly}) => (
         <DateField
           name={name}
           label={label}
@@ -51,6 +51,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
                 }
               : undefined
           }
+          isReadOnly={isReadOnly}
           isMultiValue
         />
       )}

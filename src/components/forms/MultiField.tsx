@@ -138,7 +138,6 @@ function MultiField<T extends MultiFieldValue>({
   return (
     <Fieldset
       className="utrecht-form-fieldset--openforms openforms-multifield-container"
-      aria-readonly={isReadOnly}
       invalid={hasAnyError}
       aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ')}
       ref={containerRef}

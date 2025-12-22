@@ -37,9 +37,9 @@ interface DatePickerFieldProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   'aria-describedby'?: string;
   /**
    * Dates before this value will be unavailable for selection.
@@ -69,7 +69,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   label,
   tooltip,
   isRequired,
-  isDisabled,
+  isReadOnly,
   'aria-describedby': ariaDescribedBy,
   minDate,
   maxDate,
@@ -119,7 +119,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       <Label
         id={id}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -148,7 +148,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                 }}
                 className="utrecht-textbox--openforms"
                 id={id}
-                disabled={isDisabled}
+                readOnly={isReadOnly}
                 invalid={touched && !!error}
                 aria-describedby={ariaDescribedBy}
                 placeholder={placeholder}
@@ -156,7 +156,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
               />
               <DatePickerTrigger
                 className="openforms-datepicker-textbox__calendar-toggle"
-                disabled={isDisabled}
+                disabled={isReadOnly}
               />
             </Paragraph>
             <DatePicker
