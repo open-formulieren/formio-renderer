@@ -137,7 +137,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
           description={description}
           descriptionAsHelpText={false}
           ignoreRequired
-          isDisabled={limitReached && !selectedValues.includes(value)}
+          isReadOnly={limitReached && !selectedValues.includes(value)}
         />
       ))}
 
