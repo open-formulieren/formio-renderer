@@ -23,6 +23,7 @@ export interface ReactSelectWrapperProps<
   formikValue: IsMulti extends true ? string[] : string | null;
   isRequired?: boolean;
   isInvalid?: boolean;
+  isReadOnly?: boolean;
 }
 
 /**
@@ -100,7 +101,7 @@ const CustomClearIndicator = <O extends BaseOption = BaseOption>(props: ClearInd
 function ReactSelectWrapper<O extends BaseOption = BaseOption>({
   inputId,
   isRequired,
-  isDisabled,
+  isReadOnly,
   isInvalid,
   options,
   formikValue,
@@ -116,7 +117,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
           clsx('utrecht-select', 'utrecht-select--openforms', {
             'utrecht-select--focus': state.isFocused,
             'utrecht-select--focus-visible': state.isFocused,
-            'utrecht-select--disabled': isDisabled,
+            'utrecht-select--disabled': isReadOnly,
             'utrecht-select--invalid': isInvalid,
             'utrecht-select--required': isRequired,
             'utrecht-select--openforms-is-multi': state.isMulti,
@@ -142,7 +143,11 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
       }}
       unstyled
       getOptionValue={opt => opt.value}
-      isDisabled={isDisabled}
+      isSearchable={isReadOnly ? false : undefined}
+      openMenuOnClick={isReadOnly ? false : undefined}
+      openMenuOnFocus={isReadOnly ? false : undefined}
+      menuIsOpen={isReadOnly ? false : undefined}
+      aria-readonly={isReadOnly}
       loadingMessage={() => (
         <FormattedMessage
           description="(Async) select options loading message"
@@ -178,7 +183,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
       {...props}
       components={{
         Input: Input<O>,
-        ClearIndicator: CustomClearIndicator<O>,
+        ClearIndicator: isReadOnly ? undefined : CustomClearIndicator<O>,
         ...props.components,
       }}
       value={value}

@@ -98,7 +98,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
         options={options}
         isRequired={isRequired}
         optionComponent={OptionWithDescription}
-        isDisabled={options.length === 1}
+        isReadOnly={options.length === 1}
         description={
           options.length > 1 && (
             <FormattedMessage
