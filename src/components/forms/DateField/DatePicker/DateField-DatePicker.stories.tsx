@@ -326,7 +326,7 @@ export const ReadOnlyDatePicker: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Trigger and input should be disabled
+    // Trigger and input should be disabled/readonly
     const input = canvas.getByLabelText('Read only date');
     const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
     expect(input).toHaveAttribute('readonly');
