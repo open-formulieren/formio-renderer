@@ -1,5 +1,21 @@
 # Changes
 
+## 1.0.0-beta.4 (2025-12-22)
+
+Fifth beta version for the stable 1.0.0 release.
+
+**Bugfixes**
+
+- [`#265`][#265] Fixed disabled date/datetime fields not disabling the date picker trigger.
+- [`#268`][#268] Fixed missing "add" icon in the `partners` and `children` component's "add button".
+- [`#270`][#270] Fixed option descriptions not being displayed in `radio` components.
+- [`#267`][#267] Fixed modals opening scrolling the page to the top.
+
+[#265]: https://github.com/open-formulieren/formio-renderer/issues/265
+[#268]: https://github.com/open-formulieren/formio-renderer/issues/268
+[#270]: https://github.com/open-formulieren/formio-renderer/issues/270
+[#267]: https://github.com/open-formulieren/formio-renderer/issues/267
+
 ## 1.0.0-beta.3 (2025-12-19)
 
 Fourth beta version for the stable 1.0.0 release.
