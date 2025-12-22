@@ -132,7 +132,9 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           {...extraProps}
         />
       </Paragraph>
-      {showCharCount && <CharCount id={characterCountId} text={value} limit={maxLength} />}
+      {showCharCount && (value?.length ?? 0) > 0 && (
+        <CharCount id={characterCountId} text={value} limit={maxLength} />
+      )}
       {children}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}

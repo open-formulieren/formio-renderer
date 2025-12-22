@@ -164,6 +164,9 @@ export const ShowCharCountWithoutLimit: Story = {
     const canvas = within(canvasElement);
     const input = await canvas.findByLabelText('Show char count');
 
+    // The character count should not be shown with empty value
+    expect(canvas.queryByText('0 karakters.')).not.toBeInTheDocument();
+
     await userEvent.type(input, 'I am an example text.');
 
     // Expect the 'X characters' text to be shown, with the right amount of used
@@ -202,6 +205,9 @@ export const ShowCharCountWithLimit: Story = {
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
     const input = await canvas.findByLabelText('Show char count');
+
+    // The character count should not be shown with empty value
+    expect(canvas.queryByText('0 karakters.')).not.toBeInTheDocument();
 
     // The character limit should not be set to the html component.
     // Conform the current setup, we limit the amount of characters via custom validation
