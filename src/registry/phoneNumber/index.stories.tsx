@@ -152,6 +152,39 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'phoneNumber',
+      key: 'my.phoneNumber',
+      label: 'A simple phone number',
+      inputMask: null,
+      multiple: true,
+      disabled: true,
+    } satisfies PhoneNumberComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          phoneNumber: ['06-12345678', '123456789'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: PhoneNumberComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

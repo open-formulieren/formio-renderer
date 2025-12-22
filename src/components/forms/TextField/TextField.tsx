@@ -29,9 +29,9 @@ export interface TextFieldProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -78,7 +78,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   label = '',
   isRequired = false,
   description = '',
-  isDisabled = false,
+  isReadOnly = false,
   placeholder,
   tooltip,
   maxLength,
@@ -105,7 +105,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       <Label
         id={id}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -122,7 +122,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           }}
           className="utrecht-textbox--openforms"
           id={id}
-          disabled={isDisabled}
+          readOnly={isReadOnly}
           invalid={invalid}
           aria-describedby={
             [errorMessageId, showCharCount && characterCountId].filter(Boolean).join(' ') ||

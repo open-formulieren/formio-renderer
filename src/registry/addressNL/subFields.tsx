@@ -83,29 +83,29 @@ export const HouseNumberAddition: React.FC<HouseNumberAdditionProps> = ({namePre
 interface StreetNameProps {
   namePrefix: string;
   isRequired?: boolean;
-  isDisabled: boolean;
+  isReadOnly: boolean;
 }
 
-export const StreetName: React.FC<StreetNameProps> = ({namePrefix, isRequired, isDisabled}) => (
+export const StreetName: React.FC<StreetNameProps> = ({namePrefix, isRequired, isReadOnly}) => (
   <TextField
     name={`${namePrefix}.streetName`}
     label={<FormattedMessage {...FIELD_LABELS.streetName} />}
     isRequired={isRequired}
-    isDisabled={isDisabled}
+    isReadOnly={isReadOnly}
   />
 );
 
 interface CityProps {
   namePrefix: string;
   isRequired?: boolean;
-  isDisabled: boolean;
+  isReadOnly: boolean;
 }
 
-export const City: React.FC<CityProps> = ({namePrefix, isRequired, isDisabled}) => (
+export const City: React.FC<CityProps> = ({namePrefix, isRequired, isReadOnly}) => (
   <TextField
     name={`${namePrefix}.city`}
     label={<FormattedMessage {...FIELD_LABELS.city} />}
     isRequired={isRequired}
-    isDisabled={isDisabled}
+    isReadOnly={isReadOnly}
   />
 );

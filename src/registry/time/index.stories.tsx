@@ -122,6 +122,41 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'my.time',
+      id: 'timefield',
+      label: 'timefield',
+      inputType: 'text',
+      format: 'HH:mm',
+      validateOn: 'blur',
+      multiple: true,
+      disabled: true,
+    } satisfies TimeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          time: ['08:15:00', '17:00'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByLabelText(/timefield [0-9]/);
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

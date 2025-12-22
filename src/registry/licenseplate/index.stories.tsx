@@ -119,6 +119,40 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      validateOn: 'blur',
+      multiple: true,
+      disabled: true,
+    } satisfies LicensePlateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: LicensePlateComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

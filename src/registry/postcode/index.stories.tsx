@@ -130,6 +130,43 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'postcode',
+      key: 'my.postcode',
+      label: 'A simple postcode field',
+      inputMask: '9999 AA',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      validateOn: 'blur',
+      multiple: true,
+      disabled: true,
+    } satisfies PostcodeComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          postcode: ['4-67-ABC', '123-ABC-789'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: PostcodeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

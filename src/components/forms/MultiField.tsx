@@ -25,6 +25,7 @@ export interface RenderFieldProps {
   name: string;
   index: number;
   label: React.ReactNode;
+  isReadOnly: boolean;
 }
 
 export interface MultiFieldProps<T extends MultiFieldValue> {
@@ -52,9 +53,9 @@ export interface MultiFieldProps<T extends MultiFieldValue> {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -105,7 +106,7 @@ function MultiField<T extends MultiFieldValue>({
   renderField,
   label,
   isRequired,
-  isDisabled,
+  isReadOnly,
   description,
   tooltip,
   getAutoFocusQuerySelector,
@@ -137,7 +138,7 @@ function MultiField<T extends MultiFieldValue>({
   return (
     <Fieldset
       className="utrecht-form-fieldset--openforms openforms-multifield-container"
-      disabled={isDisabled}
+      aria-readonly={isReadOnly}
       invalid={hasAnyError}
       aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ')}
       ref={containerRef}
@@ -147,7 +148,7 @@ function MultiField<T extends MultiFieldValue>({
           'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip,
         })}
       >
-        <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
+        <LabelContent isDisabled={isReadOnly} isRequired={isRequired} noLabelTag>
           {label}
         </LabelContent>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
@@ -171,6 +172,7 @@ function MultiField<T extends MultiFieldValue>({
                         values={{label, index: index + 1}}
                       />
                     ),
+                    isReadOnly: !!isReadOnly,
                   })}
                   <span className="openforms-multifield__remove-button">
                     <Button
@@ -184,6 +186,7 @@ function MultiField<T extends MultiFieldValue>({
                         // it. A fresh submit attempt will re-run validation.
                         setFieldError(name, undefined);
                       }}
+                      disabled={isReadOnly}
                     >
                       <UtrechtIcon>
                         <Icon icon="remove" />
@@ -201,7 +204,11 @@ function MultiField<T extends MultiFieldValue>({
               ))}
             </ol>
             <ButtonGroup>
-              <SecondaryActionButton type="button" onClick={() => arrayHelpers.push(newItemValue)}>
+              <SecondaryActionButton
+                type="button"
+                onClick={() => arrayHelpers.push(newItemValue)}
+                disabled={isReadOnly}
+              >
                 <Icon icon="add" />
                 <FormattedMessage
                   description="Multi-field add button label text"

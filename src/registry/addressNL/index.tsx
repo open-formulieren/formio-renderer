@@ -101,12 +101,12 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
           <>
             <StreetName
               namePrefix={key}
-              isDisabled={!enableManualEntry}
+              isReadOnly={!enableManualEntry}
               isRequired={areCityAndStreetNameRequired}
             />
             <City
               namePrefix={key}
-              isDisabled={!enableManualEntry}
+              isReadOnly={!enableManualEntry}
               isRequired={areCityAndStreetNameRequired}
             />
           </>
