@@ -9,7 +9,7 @@ export interface RadioOptionProps {
   id: string;
   index: number;
   ['aria-describedby']?: string;
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
 }
 
 const RadioOption: React.FC<RadioOptionProps> = ({
@@ -20,7 +20,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   id,
   index,
   ['aria-describedby']: ariaDescribedBy,
-  isDisabled,
+  isReadOnly,
 }) => {
   const [props] = useField({name, value, type: 'radio'});
 
@@ -30,13 +30,20 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         className="utrecht-form-field__input"
         id={`${id}-opt-${index}`}
         aria-describedby={ariaDescribedBy}
+        aria-readonly={isReadOnly}
         {...props}
+        onChange={e => {
+          // block form value changes if readonly - radio inputs don't support `readonly`
+          // out of the box
+          if (isReadOnly) return;
+          props.onChange(e);
+        }}
         value={value}
       />
       <div className="utrecht-form-field__label utrecht-form-field__label--radio">
         <FormLabel
           htmlFor={`${id}-opt-${index}`}
-          disabled={isDisabled}
+          disabled={isReadOnly}
           type="radio"
           className="utrecht-form-label--openforms"
         >

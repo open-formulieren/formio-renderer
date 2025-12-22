@@ -1,7 +1,7 @@
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
-import {useEffect, useId, useRef} from 'react';
+import {useEffect, useId, useLayoutEffect, useRef} from 'react';
 
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
@@ -28,9 +28,9 @@ interface BasicRadioFieldProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -83,7 +83,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   ['aria-describedby']: ariaDescribedby,
   isRequired = false,
   description = '',
-  isDisabled = false,
+  isReadOnly = false,
   options = [],
   tooltip,
 }) => {
@@ -94,6 +94,15 @@ const RadioField: React.FC<RadioFieldProps> = ({
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null);
   const lastValidatedValueRef = useRef<string>('');
+
+  // we can't set the aria-readonly prop on the Fieldset component, as it's not forwarded
+  // to the underlying fieldset element - see:
+  // https://github.com/nl-design-system/utrecht/issues/3006
+  useLayoutEffect(() => {
+    const fieldsetElement = fieldsetRef.current?.querySelector('fieldset');
+    if (!fieldsetElement) return;
+    fieldsetElement.ariaReadOnly = isReadOnly ? 'true' : null;
+  }, [isReadOnly]);
 
   // track the focus state of the fieldset and its radio children - when the field(set)
   // as a whole loses focus we can validate the field 'on blur'. Validating on blur of
@@ -168,7 +177,6 @@ const RadioField: React.FC<RadioFieldProps> = ({
     <Fieldset
       ref={fieldsetRef}
       className="utrecht-form-fieldset--openforms"
-      disabled={isDisabled}
       invalid={invalid}
       role="radiogroup"
       aria-describedby={[descriptionId, ariaDescribedby].filter(Boolean).join(' ')}
@@ -177,7 +185,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
         <FieldsetLegend
           className={clsx({'utrecht-form-fieldset__legend--openforms-tooltip': !!tooltip})}
         >
-          <LabelContent isDisabled={isDisabled} isRequired={isRequired} noLabelTag>
+          <LabelContent isDisabled={isReadOnly} isRequired={isRequired} noLabelTag>
             {label}
           </LabelContent>
           {tooltip && <Tooltip>{tooltip}</Tooltip>}
@@ -194,7 +202,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
           id={id}
           index={index}
           aria-describedby={errorMessageId}
-          isDisabled={isDisabled}
+          isReadOnly={isReadOnly}
         />
       ))}
 

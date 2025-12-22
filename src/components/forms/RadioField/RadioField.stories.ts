@@ -14,7 +14,7 @@ export default {
     name: 'test',
     label: 'Radio field',
     description: 'A field description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
     options: [
       {value: 'sherlock', label: 'Sherlock'},
@@ -199,5 +199,25 @@ export const WithOptionDescriptions: Story = {
 
     const secondDescription = await canvas.findByText('Me too');
     expect(secondDescription).toBeInTheDocument();
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    isReadOnly: true,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const radioFieldset = canvas.getByRole('radiogroup');
+
+    expect(radioFieldset).toHaveAttribute('aria-readonly', 'true');
+
+    // ensure that clicking a radio doesn't select it
+    const watson = canvas.getByLabelText('Watson');
+    expect(watson).not.toBeChecked();
+    expect(watson).not.toBeDisabled();
+    await userEvent.click(watson);
+    expect(watson).not.toBeChecked();
   },
 };
