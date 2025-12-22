@@ -145,7 +145,9 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
           {...extraProps}
         />
       </Paragraph>
-      {showCharCount && <CharCount id={characterCountId} text={value} limit={maxLength} />}
+      {showCharCount && (value?.length ?? 0) > 0 && (
+        <CharCount id={characterCountId} text={value} limit={maxLength} />
+      )}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
