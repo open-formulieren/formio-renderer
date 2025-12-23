@@ -14,7 +14,7 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import {createContext, useContext, useRef, useState} from 'react';
+import {createContext, useContext, useEffect, useRef, useState} from 'react';
 import {useIntl} from 'react-intl';
 
 import DatePickerCalendar from '@/components/forms/DatePickerCalendar';
@@ -167,17 +167,23 @@ interface RenderFuncArgs {
 export interface DatePickerRootProps {
   children: (args: RenderFuncArgs) => React.ReactNode;
   onOpen?: () => void;
+  onFocusOut?: () => void;
 }
 
 /**
  * Root for the datepicker that manages the open/closed state and exposes the event
  * handlers.
  */
-export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderFunc, onOpen}) => {
+export const DatePickerRoot: React.FC<DatePickerRootProps> = ({
+  children: renderFunc,
+  onOpen,
+  onFocusOut,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [trigger, setTrigger] = useState<HTMLElement | null>(null);
   const [floating, setFloating] = useState<HTMLElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const context = useFloatingRootContext({
     open: isOpen,
@@ -191,9 +197,56 @@ export const DatePickerRoot: React.FC<DatePickerRootProps> = ({children: renderF
     },
   });
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !onFocusOut) return;
+
+    const handleClick = (event: MouseEvent) => {
+      const clickedElement = event.target;
+      // ignore clicking inputs or labels, as they result in focus events which we
+      // already listen to.
+      // Clicking within the container (like clicking the datepicker calendar trigger)
+      // should also not trigger validation.
+      if (
+        clickedElement instanceof HTMLLabelElement ||
+        clickedElement instanceof HTMLInputElement ||
+        container.contains(clickedElement as Node)
+      )
+        return;
+
+      // any other element (anywhere) being clicked triggers validation, as focus loss
+      // is implied
+      onFocusOut();
+    };
+
+    /**
+     * Detect focus events on anything other than elements inside the div container.
+     *
+     * Receiving this event means that some node got focus - if it's outside of our
+     * container we can trigger validation because we're 100% certain that the container
+     * does not have focus.
+     */
+    const handleFocusIn = (event: FocusEvent) => {
+      const focusedElement = event.target;
+      if (container.contains(focusedElement as Node)) return;
+      onFocusOut();
+    };
+
+    // we subscribe to global events because we need to know whether the focus shifted
+    // away from our component
+    document.addEventListener('click', handleClick);
+    document.addEventListener('focusin', handleFocusIn);
+    // no focusout event support to detect focus shift because of programmatic blurs,
+    // as browser support is only partial and it's quite a theoretical edge case
+    return () => {
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, [onFocusOut]);
+
   return (
     <DatePickerContext.Provider value={{...context, setTrigger, setFloating}}>
-      {renderFunc({refs: context.refs, isOpen, setIsOpen})}
+      <div ref={containerRef}>{renderFunc({refs: context.refs, isOpen, setIsOpen})}</div>
     </DatePickerContext.Provider>
   );
 };

@@ -316,6 +316,44 @@ export const NoErrorWhileFocus: Story = {
   },
 };
 
+export const NoErrorWhileFocusInContainer: Story = {
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'No error displayed while focus is within the component',
+    isReadOnly: false,
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      renderSubmitButton: true,
+      initialValues: {
+        date: '',
+      },
+      zodSchema: z.object({
+        date: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const datepicker = canvas.getByLabelText(
+      'No error displayed while focus is within the component'
+    );
+
+    // Place focus on the input, and tab to the "date picker" trigger
+    await userEvent.click(datepicker);
+    await userEvent.tab();
+    // Because the focus is still within the bounds of the component,
+    // there should be no error message.
+    expect(canvas.queryByText('Always invalid')).not.toBeInTheDocument();
+
+    // Move focus to the submit button. This should trigger validation on the datepicker.
+    await userEvent.tab();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+  },
+};
+
 export const ReadOnlyDatePicker: Story = {
   args: {
     widget: 'datePicker',
