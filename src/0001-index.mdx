@@ -6,9 +6,15 @@ import {Meta} from '@storybook/addon-docs/blocks';
 
 `@open-formulieren/formio-renderer` is a pure React based renderer for Formio form definitions.
 
+[![NPM](https://img.shields.io/npm/v/@open-formulieren/formio-renderer.svg)](https://www.npmjs.com/package/@open-formulieren/formio-renderer)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)](#)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff)](#)
+
 ## Quickstart
 
-**NOTE** - this library is still in active development and public API _may_ change.
+As of version 1.0, the public API is stable, and Semantic Versioning applies. The
+[changelog](https://github.com/open-formulieren/formio-renderer/blob/main/CHANGELOG.md) is on
+Github.
 
 **High level API**
 
@@ -121,7 +127,13 @@ Forms.
 
 ## Roadmap
 
-See [Github](https://github.com/open-formulieren/open-forms/issues/5133)
+The port from Formio.js to our own implementation is complete, which was the scope for 1.0.
+
+We now want to realize improvements that were not possible before, in particular:
+
+- improve the `editgrid` component
+- improve the `addressNL` component
+- re-evaluate past deprecations and check if simplifications are possible
 
 ## Design goals
 
@@ -165,9 +177,18 @@ The code base is structured so that:
 - we build on top of `@open-formulieren/types` so that we only worry about the features that Open
   Forms provides/supports.
 
+## Developer mantras
+
+- Your code must be readable for other developers. Double check with them to make sure.
+- Avoid pulling in unnecessary dependencies - check if native HTML features exist. If large
+  dependencies are necessary, see if you can lazy-load them.
+- Similar code is not the same - sometimes repeating/duplicating code is the better approach.
+- Keep final bundle size in mind - use lazy-loading to facilate bundle splitting.
+- Dare to say "no" when something does not fit our design goals or design decisions.
+
 ## Design decisions
 
-Decisions made while ipmlementing the renderer.
+Decisions made while implementing the renderer.
 
 **Backend API interaction**
 
