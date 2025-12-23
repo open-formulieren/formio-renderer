@@ -4,6 +4,8 @@
 [![Storybook](https://img.shields.io/badge/docs-Storybook-FF4785?style=flat)][Storybook]
 [![Coverage](https://codecov.io/github/open-formulieren/formio-renderer/graph/badge.svg?token=446OCQXNUG)](https://codecov.io/github/open-formulieren/formio-renderer)
 ![Code formatting with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)](#)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff)](#)
 
 The "renderer" is the React render engine used in Open Forms, responsible for displaying the form
 fields for the user to fill out and capturing the input data.
