@@ -27,7 +27,7 @@ export const Default: Story = {
     name: 'number',
     label: 'Number',
     description: 'This is a custom description for the number field',
-    isReadonly: false,
+    isReadOnly: false,
     isRequired: false,
   },
   play: async ({canvasElement}) => {
@@ -50,7 +50,7 @@ export const Readonly: Story = {
     name: 'number',
     label: 'Number',
     description: 'This is a custom description for the number field',
-    isReadonly: true,
+    isReadOnly: true,
   },
   parameters: {
     formik: {
@@ -59,6 +59,14 @@ export const Readonly: Story = {
       },
     },
   },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textbox = canvas.getByRole('textbox');
+    expect(textbox).toBeVisible();
+    expect(textbox).not.toBeDisabled();
+    expect(textbox).toHaveAttribute('readonly');
+  },
 };
 
 export const LocalisedWithDecimals: Story = {
@@ -66,7 +74,7 @@ export const LocalisedWithDecimals: Story = {
     name: 'number',
     label: 'Number',
     description: 'This is a decimal number formatted using the Dutch locale',
-    isReadonly: false,
+    isReadOnly: false,
     isRequired: true,
   },
   parameters: {
@@ -98,7 +106,7 @@ export const LocalisedWithThousandSeparator: Story = {
     name: 'number',
     label: 'Number',
     description: 'This is a custom description for the number field',
-    isReadonly: false,
+    isReadOnly: false,
     isRequired: true,
     useThousandSeparator: true,
   },
@@ -250,7 +258,7 @@ export const ValidationError: Story = {
     name: 'number',
     label: 'Number',
     description: 'Description above the errors',
-    isReadonly: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement}) => {
@@ -298,7 +306,7 @@ export const FieldValueNull: Story = {
   args: {
     name: 'number',
     label: 'Number',
-    isReadonly: false,
+    isReadOnly: false,
     isRequired: false,
   },
   parameters: {

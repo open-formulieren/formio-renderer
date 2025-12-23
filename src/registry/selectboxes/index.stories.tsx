@@ -238,7 +238,7 @@ export const MaxAllowedReached: ValidationStory = {
 
     expect(canvas.getByLabelText('Option 1')).toBeChecked();
     expect(canvas.getByLabelText('Option 2')).toBeChecked();
-    expect(canvas.getByLabelText('Option 3')).toBeDisabled();
+    expect(canvas.getByLabelText('Option 3')).toHaveAttribute('aria-readonly', 'true');
   },
 };
 

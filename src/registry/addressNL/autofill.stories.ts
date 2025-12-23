@@ -72,10 +72,10 @@ export const HappyFlow: Story = {
 
     await step('Verify initial state', async () => {
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
 
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
 
     await step('Enter postcode', async () => {
@@ -83,9 +83,9 @@ export const HappyFlow: Story = {
       postcodeField.blur();
 
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
 
     await step('Enter house number', async () => {
@@ -97,8 +97,8 @@ export const HappyFlow: Story = {
       expect(cityField).toHaveDisplayValue('Amsterdam');
     });
 
-    expect(streetNameField).toBeDisabled();
-    expect(cityField).toBeDisabled();
+    expect(streetNameField).toHaveAttribute('readonly');
+    expect(cityField).toHaveAttribute('readonly');
   },
 };
 
@@ -167,8 +167,8 @@ export const ModifyInputAfterAutofill: Story = {
         expect(cityField).toHaveDisplayValue('');
       });
 
-      expect(streetNameField).toBeDisabled();
-      expect(cityField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
+      expect(cityField).toHaveAttribute('readonly');
     });
   },
 };
@@ -230,10 +230,10 @@ export const AddressDoesNotResolve: Story = {
 
     await step('Verify initial state', async () => {
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
 
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
 
     await step('Enter bad postcode and house number', async () => {
@@ -241,9 +241,9 @@ export const AddressDoesNotResolve: Story = {
       await userEvent.type(houseNumberField, '99999');
 
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
   },
 };
@@ -301,10 +301,10 @@ export const LookupFailureSimulation: Story = {
 
     await step('Verify initial state', async () => {
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
 
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
 
     await step('Enter postcode', async () => {
@@ -312,17 +312,17 @@ export const LookupFailureSimulation: Story = {
       postcodeField.blur();
 
       expect(streetNameField).toHaveDisplayValue('');
-      expect(streetNameField).toBeDisabled();
+      expect(streetNameField).toHaveAttribute('readonly');
       expect(cityField).toHaveDisplayValue('');
-      expect(cityField).toBeDisabled();
+      expect(cityField).toHaveAttribute('readonly');
     });
 
     await step('Enter house number', async () => {
       await userEvent.type(houseNumberField, '151');
 
       await waitFor(async () => {
-        expect(streetNameField).not.toBeDisabled();
-        expect(cityField).not.toBeDisabled();
+        expect(streetNameField).not.toHaveAttribute('readonly');
+        expect(cityField).not.toHaveAttribute('readonly');
       });
     });
 

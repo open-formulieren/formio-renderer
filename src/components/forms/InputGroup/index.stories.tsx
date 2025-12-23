@@ -18,7 +18,12 @@ const render = ({labels, ...args}: StoryArgs) => (
         <FormLabel className="openforms-input-group__label" htmlFor={`input-${index}`}>
           {label}
         </FormLabel>
-        <Textbox type="text" name={`input-${index}`} id={`input-${index}`} />
+        <Textbox
+          type="text"
+          name={`input-${index}`}
+          id={`input-${index}`}
+          readOnly={args.isReadOnly}
+        />
       </InputGroupItem>
     ))}
   </InputGroup>
@@ -30,7 +35,7 @@ export default {
     label: 'Input group',
     labels: ['Input 1', 'Input 2', 'Input 3'],
     isRequired: true,
-    isDisabled: false,
+    isReadOnly: false,
     isInvalid: false,
   },
   argTypes: {
@@ -49,9 +54,9 @@ export const WithTooltip: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const ReadOnly: Story = {
   args: {
-    isDisabled: true,
+    isReadOnly: true,
   },
 };
 

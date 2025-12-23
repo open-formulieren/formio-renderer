@@ -185,6 +185,39 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      autoExpand: false,
+      multiple: true,
+      disabled: true,
+    } satisfies TextareaComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: ['lorem ipsum', 'dolor sed quiscat'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: TextareaComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

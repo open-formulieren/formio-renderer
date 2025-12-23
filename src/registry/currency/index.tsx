@@ -39,7 +39,7 @@ export const FormioCurrencyField: React.FC<FormioCurrencyFieldProps> = ({
     currency,
     decimalLimit = 2,
     allowNegative,
-    disabled: isReadonly,
+    disabled: isReadOnly,
   },
 }) => {
   const {locale} = useIntl();
@@ -55,7 +55,7 @@ export const FormioCurrencyField: React.FC<FormioCurrencyFieldProps> = ({
       isRequired={validate?.required}
       decimalLimit={decimalLimit}
       allowNegative={allowNegative}
-      isReadonly={isReadonly}
+      isReadOnly={isReadOnly}
       valuePrefix={currencySymbol}
       useThousandSeparator
       fixedDecimalScale

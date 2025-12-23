@@ -19,26 +19,27 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
 
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
-    isDisabled: disabled,
+    isReadOnly: disabled,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label}) => (
+      renderField={({name, label, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
           placeholder={placeholder}
           showCharCount={showCharCount}
           maxLength={validate?.maxLength}
+          isReadOnly={isReadOnly}
           isMultiValue
         />
       )}

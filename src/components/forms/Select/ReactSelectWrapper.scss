@@ -138,6 +138,35 @@
       background: none;
       font-size: 0;
     }
+
+    // focus + disabled modifiers -> focus wins, but it shouldn't. This is beacuse we
+    // use the disabled modifier for readonly state, as there's no native :readonly for
+    // selects and no associated CSS so this combination of states normally wouldn't
+    // happen.
+    &.utrecht-select--disabled {
+      cursor: var(--utrecht-action-disabled-cursor, not-allowed);
+
+      &.utrecht-select--focus-visible {
+        background-color: var(
+          --utrecht-select-disabled-background-color,
+          var(
+            --utrecht-form-control-disabled-background-color,
+            var(--utrecht-select-background-color, var(--utrecht-form-control-background-color))
+          )
+        );
+      }
+
+      .rs-value--multi {
+        background-color: var(
+          --of-select-value-multi-read-only-background-color,
+          var(--of-color-fg-muted, #767676)
+        );
+
+        [role='button'] {
+          cursor: var(--utrecht-action-disabled-cursor, not-allowed);
+        }
+      }
+    }
   }
 
   @include bem.modifier('openforms-is-multi') {

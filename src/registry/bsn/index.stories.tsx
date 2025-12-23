@@ -123,6 +123,40 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'bsn',
+      key: 'my.bsn',
+      label: 'A BSN field',
+      inputMask: '999999999',
+      validateOn: 'blur',
+      multiple: true,
+      disabled: true,
+    } satisfies BsnComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          bsn: ['111222333', '999888777'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: BsnComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

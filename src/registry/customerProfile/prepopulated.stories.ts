@@ -57,8 +57,8 @@ export const WithOnePrepopulatedAddress: Story = {
 
     // Because only one email and phone number where returned,
     // both dropdowns should be disabled.
-    expect(emailField).toBeDisabled();
-    expect(phoneNumberField).toBeDisabled();
+    expect(emailField).toHaveAttribute('aria-readonly', 'true');
+    expect(phoneNumberField).toHaveAttribute('aria-readonly', 'true');
   },
 };
 
@@ -143,7 +143,9 @@ export const WithPrepopulatedDigitalAddresses: Story = {
     // Because multiple email addresses and phone numbers where returned,
     // both dropdowns are active
     expect(emailField).not.toBeDisabled();
+    expect(emailField).not.toHaveAttribute('aria-readonly');
     expect(phoneNumberField).not.toBeDisabled();
+    expect(phoneNumberField).not.toHaveAttribute('aria-readonly');
   },
 };
 

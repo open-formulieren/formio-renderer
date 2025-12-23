@@ -16,7 +16,7 @@ export default {
     name: 'test',
     label: 'Test date field',
     isRequired: true,
-    isDisabled: false,
+    isReadOnly: false,
     description: '',
     widget: 'inputGroup',
   },
@@ -38,7 +38,7 @@ export const InputGroup: Story = {
     label: 'Test date field',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement, step}) => {
@@ -82,7 +82,7 @@ export const InputGroupSubmit: Story = {
     widget: 'inputGroup',
     name: 'test',
     label: 'Test date field',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   decorators: [
@@ -204,7 +204,7 @@ export const LeavesInvalidInputAlone: Story = {
     widget: 'inputGroup',
     name: 'test',
     label: 'Test invalid inputs',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   decorators: [
@@ -277,5 +277,22 @@ export const ValidateOnBlur: Story = {
     yearInput.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(container).toHaveAttribute('aria-invalid', 'true');
+  },
+};
+
+export const ReadOnlyInputGroup: Story = {
+  args: {
+    widget: 'inputGroup',
+    name: 'test',
+    label: 'Read only date',
+    isReadOnly: true,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Trigger and input should be disabled
+    expect(canvas.getByLabelText('Month')).toHaveAttribute('readonly');
+    expect(canvas.getByLabelText('Day')).toHaveAttribute('readonly');
+    expect(canvas.getByLabelText('Year')).toHaveAttribute('readonly');
   },
 };

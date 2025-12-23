@@ -26,7 +26,7 @@ export const Default: Story = {
     name: 'test',
     label: 'test',
     description: 'This is a custom description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement}) => {
@@ -46,7 +46,7 @@ export const WithTooltip: Story = {
     name: 'test',
     label: 'test',
     description: 'This is a custom description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
     tooltip: 'Example short tooltip.',
   },
@@ -71,7 +71,7 @@ export const ValidationError: Story = {
     name: 'textinput',
     label: 'Text field',
     description: 'Description above the errors',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement}) => {

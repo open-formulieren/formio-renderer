@@ -14,7 +14,7 @@ export default {
     name: 'test',
     label: 'Checkbox',
     description: 'This is a custom description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   parameters: {
@@ -143,6 +143,29 @@ export const ValidateOnBlur: Story = {
     checkbox.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
     expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+    expect(checkbox).not.toBeChecked();
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    isReadOnly: true,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: false,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const checkbox = canvas.getByLabelText('Checkbox');
+    expect(checkbox).not.toBeDisabled();
+    expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+    expect(checkbox).not.toBeChecked();
+    await userEvent.click(checkbox);
     expect(checkbox).not.toBeChecked();
   },
 };

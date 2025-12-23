@@ -35,7 +35,7 @@ export const Default: Story = {
     name: 'test',
     label: 'test',
     description: 'This is a custom description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement}) => {
@@ -115,7 +115,7 @@ export const WithTooltip: Story = {
     name: 'test',
     label: 'test',
     description: 'This is a custom description',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
     tooltip: 'Example short tooltip.',
   },
@@ -140,7 +140,7 @@ export const ValidationError: Story = {
     name: 'select',
     label: 'Select',
     description: 'Description above the errors',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   play: async ({canvasElement}) => {
@@ -267,5 +267,53 @@ export const KeyboardNavigationToClear: Story = {
     await waitFor(() => {
       expect(canvas.queryByText('Option 2')).not.toBeInTheDocument();
     });
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    name: 'test',
+    label: 'test',
+    description: 'This is a custom description',
+    isReadOnly: true,
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: 'option-2',
+      },
+    },
+  },
+};
+
+export const MultipleReadOnly: Story = {
+  args: {
+    name: 'test',
+    label: 'test',
+    description: 'This is a custom description',
+    isReadOnly: true,
+    isRequired: false,
+    isMulti: true,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: ['option-2'],
+      },
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const clearButton = canvas.queryByRole('button', {name: 'Clear selection'});
+    expect(clearButton).not.toBeInTheDocument();
+
+    const removeOptionButton = canvas.getByRole('button', {name: 'Remove Option 2'});
+    expect(removeOptionButton).toBeVisible();
+    await userEvent.click(removeOptionButton);
+    // we expect the option to not be cleared
+    expect(canvas.getByText('Option 2')).toBeVisible();
   },
 };

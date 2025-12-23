@@ -158,6 +158,39 @@ export const MultipleInputGroupAutofocus: Story = {
   },
 };
 
+export const MultipleInputGroupReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'inputGroup'},
+      multiple: true,
+      disabled: true,
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: ['2025-10-23', '2000-01-01'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 export const MultipleDatePicker: Story = {
   args: {
     componentDefinition: {
@@ -177,6 +210,39 @@ export const MultipleDatePicker: Story = {
         },
       },
     },
+  },
+};
+
+export const MultipleDatePickerReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      multiple: true,
+      disabled: true,
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: ['2025-10-23', '2000-01-01'],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
   },
 };
 

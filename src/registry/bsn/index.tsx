@@ -17,21 +17,21 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
   const {key, label, tooltip, description, validate, disabled} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
-    isDisabled: disabled,
+    isReadOnly: disabled,
   };
 
   return componentDefinition.multiple ? (
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label}) => (
+      renderField={({name, label, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -39,6 +39,7 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
           pattern="[0-9]{9}"
           inputMode="numeric"
           placeholder="XXXXXXXXX"
+          isReadOnly={isReadOnly}
           isMultiValue
         />
       )}

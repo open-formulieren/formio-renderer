@@ -37,9 +37,9 @@ export interface CheckboxProps {
    */
   ignoreRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Whether the checkbox should be disabled or not.
    */
@@ -68,7 +68,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   isRequired = false,
   description = '',
   descriptionAsHelpText = true,
-  isDisabled = false,
+  isReadOnly = false,
   ignoreRequired = false,
   tooltip,
 }) => {
@@ -96,8 +96,14 @@ const Checkbox: React.FC<CheckboxProps> = ({
         appearance="custom"
         invalid={invalid}
         aria-describedby={ariaDescribedBy || undefined}
-        disabled={isDisabled}
+        aria-readonly={isReadOnly}
         {...props}
+        onChange={e => {
+          // block form value changes if readonly - checkbox inputs don't support `readonly`
+          // out of the box
+          if (isReadOnly) return;
+          props.onChange(e);
+        }}
         onBlur={async e => {
           props.onBlur(e);
           await validateField(name);
@@ -111,7 +117,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         <LabelContent
           type="checkbox"
           id={id}
-          isDisabled={isDisabled}
+          isDisabled={isReadOnly}
           isRequired={isRequired}
           noOptionalSuffix={ignoreRequired}
         >

@@ -27,7 +27,7 @@ export interface DatePartInputProps {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   autoComplete?: string;
 }
 
@@ -42,7 +42,7 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
   name,
   value,
   onChange,
-  isDisabled,
+  isReadOnly,
   onBlur,
   autoComplete,
 }) => {
@@ -69,7 +69,7 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
 
   return (
     <>
-      <FormLabel htmlFor={id} disabled={isDisabled} className="openforms-input-group__label">
+      <FormLabel htmlFor={id} disabled={isReadOnly} className="openforms-input-group__label">
         <FormattedMessage {...PART_LABELS[name]} />
       </FormLabel>
       <Textbox
@@ -79,7 +79,7 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
         value={value}
         onChange={onChange}
         className={`utrecht-textbox--openforms utrecht-textbox--openforms-date-${name}`}
-        disabled={isDisabled}
+        readOnly={isReadOnly}
         placeholder={intl.formatMessage(PART_PLACEHOLDERS[name])}
         onBlur={onBlur}
         autoComplete={autoComplete}

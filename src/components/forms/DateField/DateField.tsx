@@ -54,9 +54,9 @@ interface DateFieldCommonProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -95,7 +95,7 @@ const DateField: React.FC<DateFieldProps> = ({
   name,
   label,
   isRequired,
-  isDisabled,
+  isReadOnly,
   description,
   tooltip,
   autoComplete,
@@ -120,7 +120,7 @@ const DateField: React.FC<DateFieldProps> = ({
           label={label}
           tooltip={tooltip}
           isRequired={isRequired}
-          isDisabled={isDisabled}
+          isReadOnly={isReadOnly}
           autoComplete={autoComplete}
           aria-describedby={errorMessageId}
         />
@@ -134,7 +134,7 @@ const DateField: React.FC<DateFieldProps> = ({
           label={label}
           tooltip={tooltip}
           isRequired={isRequired}
-          isDisabled={isDisabled}
+          isReadOnly={isReadOnly}
           aria-describedby={errorMessageId}
           {...props.widgetProps}
         />

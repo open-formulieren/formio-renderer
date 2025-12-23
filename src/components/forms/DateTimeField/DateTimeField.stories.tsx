@@ -16,7 +16,7 @@ export default {
     name: 'datetime',
     label: 'Datetime field',
     isRequired: true,
-    isDisabled: false,
+    isReadOnly: false,
     description: '',
   },
   parameters: {
@@ -40,7 +40,7 @@ export const Default: Story = {
     label: 'Datetime',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   parameters: {
@@ -66,7 +66,7 @@ export const EnglishLocale: Story = {
     label: 'Datetime',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   globals: {
@@ -88,7 +88,7 @@ export const LimitedRange: Story = {
   args: {
     name: 'datetime',
     label: 'Datetime',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
     minDate: subDays(sept29th, 3),
     maxDate: addDays(sept29th, 3),
@@ -110,7 +110,7 @@ export const SelectDateAndTimeInDateTimePicker: Story = {
   args: {
     name: 'datetime',
     label: 'Datetime',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   decorators: [
@@ -163,7 +163,7 @@ export const TypeDateManually: Story = {
   args: {
     name: 'datetime',
     label: 'Datetime',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   decorators: [
@@ -221,7 +221,7 @@ export const TypeDateManuallyEnglishLocale: Story = {
   args: {
     name: 'datetime',
     label: 'Datetime',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   decorators: [
@@ -280,7 +280,7 @@ export const InitialValueAndValidationError: Story = {
   args: {
     name: 'datetime',
     label: 'Datetime',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   parameters: {
@@ -324,7 +324,7 @@ export const NoErrorWhileFocus: Story = {
   args: {
     name: 'datetime',
     label: 'No error displayed while picker is open',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   parameters: {
@@ -387,19 +387,19 @@ export const KeyboardNavigation: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const ReadOnly: Story = {
   args: {
     name: 'datetime',
-    label: 'Disabled datetime',
-    isDisabled: true,
+    label: 'Read only datetime',
+    isReadOnly: true,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Trigger and input should be disabled
-    const input = canvas.getByLabelText('Disabled datetime');
+    // Trigger and input should be disabled/readonly
+    const input = canvas.getByLabelText('Read only datetime');
     const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
-    expect(input).toBeDisabled();
+    expect(input).toHaveAttribute('readonly');
     expect(trigger).toHaveAttribute('aria-disabled', 'true');
     expect(trigger).toHaveAttribute('tabIndex', '-1');
   },

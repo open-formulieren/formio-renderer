@@ -130,6 +130,42 @@ export const MultipleWithItemErrors: Story = {
   },
 };
 
+export const MultipleReadOnly: Story = {
+  args: {
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'date.time',
+      label: 'Datetime',
+      multiple: true,
+      disabled: true,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        date: {
+          time: [
+            '2025-10-22T16:00:00+02:00',
+            '2025-11-22T07:07:00+00:00',
+            '2025-12-05T15:00:00+01:00',
+          ],
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: DateTimeComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

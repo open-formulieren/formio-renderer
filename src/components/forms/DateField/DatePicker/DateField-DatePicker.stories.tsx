@@ -16,7 +16,7 @@ export default {
     name: 'date',
     label: 'Date field',
     isRequired: true,
-    isDisabled: false,
+    isReadOnly: false,
     description: '',
     widget: 'datePicker',
   },
@@ -42,7 +42,7 @@ export const DatePicker: Story = {
     label: 'Date',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   parameters: {
@@ -71,7 +71,7 @@ export const DatePickerWithEnglishLocale: Story = {
     label: 'Date with English locale',
     description: 'This is a custom description',
     tooltip: 'A short tooltip',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   globals: {
@@ -94,7 +94,7 @@ export const DatePickerLimitedRange: Story = {
     widget: 'datePicker',
     name: 'date',
     label: 'Date',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
     widgetProps: {
       minDate: subDays(sept29th, 3),
@@ -121,7 +121,7 @@ export const DatePickerDisabledDates: Story = {
     label: 'Today disabled',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
     widgetProps: {
       disabledDates: ['2023-05-20', new Date().toISOString(), addDays(new Date(), 3).toISOString()],
@@ -155,7 +155,7 @@ export const DatePickerKeyboardNavigation: Story = {
     widget: 'datePicker',
     name: 'date',
     label: 'Date',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   play: async ({canvasElement}) => {
@@ -183,7 +183,7 @@ export const DatePickerTypeDateManually: Story = {
     widget: 'datePicker',
     name: 'date',
     label: 'Date',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   decorators: [
@@ -237,7 +237,7 @@ export const DatePickerWithInitialValueAndValidationError: Story = {
     widget: 'datePicker',
     name: 'date',
     label: 'Date',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: false,
   },
   parameters: {
@@ -283,7 +283,7 @@ export const NoErrorWhileFocus: Story = {
     widget: 'datePicker',
     name: 'date',
     label: 'No error displayed while picker is open',
-    isDisabled: false,
+    isReadOnly: false,
     isRequired: true,
   },
   parameters: {
@@ -316,20 +316,20 @@ export const NoErrorWhileFocus: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const ReadOnlyDatePicker: Story = {
   args: {
     widget: 'datePicker',
     name: 'date',
-    label: 'Disabled date',
-    isDisabled: true,
+    label: 'Read only date',
+    isReadOnly: true,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Trigger and input should be disabled
-    const input = canvas.getByLabelText('Disabled date');
+    // Trigger and input should be disabled/readonly
+    const input = canvas.getByLabelText('Read only date');
     const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
-    expect(input).toBeDisabled();
+    expect(input).toHaveAttribute('readonly');
     expect(trigger).toHaveAttribute('aria-disabled', 'true');
     expect(trigger).toHaveAttribute('tabIndex', '-1');
   },

@@ -13,12 +13,12 @@ export default {
   args: {
     name: 'test',
     newItemValue: '',
-    renderField: ({name, label}) => (
-      <TextField name={name} label={label} placeholder="..." isMultiValue />
+    renderField: ({name, label, isReadOnly}) => (
+      <TextField name={name} label={label} placeholder="..." isReadOnly={isReadOnly} isMultiValue />
     ),
     label: 'Multi-value field',
     isRequired: false,
-    isDisabled: false,
+    isReadOnly: false,
     description: '',
     tooltip: '',
   },
@@ -146,5 +146,46 @@ export const RemoveItem: Story = {
     await userEvent.click(canvas.getByRole('button', {name: "Remove 'Multi-value field 1'"}));
     expect(canvas.queryAllByRole('textbox')).toHaveLength(1);
     expect(canvas.queryByRole('textbox')).toHaveDisplayValue('Second');
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    isReadOnly: true,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: ['First', 'Second'],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // the add button should be visually disabled
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    expect(addButton).toBeVisible();
+    expect(addButton).not.toBeDisabled();
+    expect(addButton).toHaveAttribute('aria-disabled', 'true');
+
+    // remove buttons should be (visually) disabled
+    const removeButtons = canvas.getAllByRole('button', {
+      name: /Remove 'Multi-value field [0-9]'/,
+    });
+    expect(removeButtons).toHaveLength(2);
+    for (const btn of removeButtons) {
+      expect(btn).toBeVisible();
+      expect(btn).not.toBeDisabled();
+      expect(btn).toHaveAttribute('aria-disabled', 'true');
+    }
+
+    // text boxes should apply the isReadOnly (via our arg)
+    const textboxes = canvas.getAllByRole('textbox');
+    for (const textbox of textboxes) {
+      expect(textbox).toBeVisible();
+      expect(textbox).not.toBeDisabled();
+      expect(textbox).toHaveAttribute('readonly');
+    }
   },
 };

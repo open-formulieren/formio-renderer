@@ -34,9 +34,9 @@ export interface DateTimeFieldProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -98,7 +98,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   name,
   label,
   isRequired,
-  isDisabled,
+  isReadOnly,
   description,
   tooltip,
   minDate,
@@ -194,7 +194,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       <Label
         id={id}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -223,7 +223,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 }}
                 className="utrecht-textbox--openforms"
                 id={id}
-                disabled={isDisabled}
+                readOnly={isReadOnly}
                 invalid={touched && !!error}
                 aria-describedby={ariaDescribedBy}
                 placeholder={placeholder}
@@ -231,7 +231,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
               />
               <DatePickerTrigger
                 className="openforms-datepicker-textbox__calendar-toggle"
-                disabled={isDisabled}
+                disabled={isReadOnly}
               />
             </Paragraph>
             <DatePicker

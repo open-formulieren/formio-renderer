@@ -21,7 +21,7 @@ export interface DateInputItemsProps {
   year: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   autoComplete?: string;
 }
 
@@ -29,13 +29,13 @@ const DateInputItems: React.FC<DateInputItemsProps> = ({
   day,
   month,
   year,
-  isDisabled,
+  isReadOnly,
   onChange,
   onBlur,
   autoComplete,
 }) => {
   const {partsOrder} = useDateLocaleMeta();
-  const commonProps = {isDisabled, onChange, onBlur, autoComplete};
+  const commonProps = {isReadOnly, onChange, onBlur, autoComplete};
 
   const parts: Record<DatePart, React.ReactElement> = {
     day: <DatePartInput name="day" value={day} {...commonProps} />,

@@ -26,20 +26,20 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
     componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isDisabled'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
-    isDisabled: disabled,
+    isReadOnly: disabled,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label}) => (
+      renderField={({name, label, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -47,6 +47,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
           pattern="^[+0-9][\- 0-9]+$"
           inputMode="tel"
           autoComplete={autocomplete}
+          isReadOnly={isReadOnly}
           isMultiValue
         />
       )}

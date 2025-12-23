@@ -51,9 +51,9 @@ export interface SelectProps {
    */
   isRequired?: boolean;
   /**
-   * Disabled fields get marked as such in an accessible manner.
+   * Readonly fields get marked as such in an accessible manner.
    */
-  isDisabled?: boolean;
+  isReadOnly?: boolean;
   /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
@@ -87,7 +87,7 @@ const Select: React.FC<SelectProps> = ({
   autoSelectOnlyOption,
   isMulti = false,
   isRequired,
-  isDisabled,
+  isReadOnly,
   description,
   tooltip,
   noOptionSelectedValue = undefined,
@@ -131,7 +131,7 @@ const Select: React.FC<SelectProps> = ({
       <Label
         id={id}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isDisabled={isReadOnly}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >
         {label}
@@ -144,12 +144,13 @@ const Select: React.FC<SelectProps> = ({
         isMulti={isMulti}
         isClearable={!isRequired && !(autoSelectOnlyOption && options.length === 1)}
         isRequired={isRequired}
-        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
         formikValue={wrapperValue}
         components={{
           ...(optionComponent ? {Option: optionComponent} : undefined),
         }}
         onChange={optionOrOptions => {
+          if (isReadOnly) return;
           let rawValue: string | string[] | undefined;
           // need to cast here because type narrowing doesn't work for the SingleValue | MultiValue
           // construct
