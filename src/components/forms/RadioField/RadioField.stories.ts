@@ -206,6 +206,13 @@ export const ReadOnly: Story = {
   args: {
     isReadOnly: true,
   },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: 'ziggy',
+      },
+    },
+  },
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);

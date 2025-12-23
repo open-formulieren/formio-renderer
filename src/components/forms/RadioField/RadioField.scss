@@ -24,6 +24,18 @@
       .utrecht-radio-button {
         margin-block-start: var(--of-utrecht-form-label-radio-padding-block-start);
         margin-inline-start: var(--of-utrecht-form-label-radio-padding-inline-start);
+
+        // adapted from utrecht radio disabled states/storybook
+        &[aria-readonly='true'] {
+          --_utrecht-radio-button-color: var(
+            --of-utrecht-radio-button-read-only-checked-color,
+            #767676
+          );
+          --_utrecht-radio-button-background-color: var(
+            --utrecht-radio-button-disabled-background-color,
+            var(--utrecht-form-control-read-only-background-color)
+          );
+        }
       }
 
       .utrecht-form-label--radio {
