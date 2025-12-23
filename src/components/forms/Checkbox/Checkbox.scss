@@ -37,6 +37,29 @@
         &:focus ~ .utrecht-form-field__label--checkbox {
           outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
         }
+
+        // more specific - overrides the hover/focus styles *as intended*
+        &[aria-readonly='true'] {
+          cursor: var(--utrecht-action-disabled-cursor, not-allowed);
+          background-color: var(
+            --utrecht-checkbox-disabled-background-color,
+            var(--utrecht-form-control-read-only-background-color)
+          );
+          background-image: none;
+
+          // adapted from utrecht "checked + disabled" stories/styles
+          &:checked {
+            border-color: var(
+              --utrecht-checkbox-disabled-border-color,
+              var(--utrecht-checkbox-border-color)
+            );
+
+            background-image: var(
+              --of-utrecht-checkbox-read-only-background-image,
+              url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23767676' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e")
+            );
+          }
+        }
       }
 
       .utrecht-form-field__label {
