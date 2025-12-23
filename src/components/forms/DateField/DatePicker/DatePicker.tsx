@@ -125,7 +125,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         {label}
       </Label>
 
-      <DatePickerRoot onOpen={() => setTouched(true)}>
+      <DatePickerRoot onOpen={() => setTouched(true)} onFocusOut={() => validateField(name)}>
         {({refs, setIsOpen}) => (
           <>
             <Paragraph className="openforms-datepicker-textbox">
@@ -144,7 +144,6 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                   const newValue = date ? formatISO(date, {representation: 'date'}) : value;
                   await setValue(newValue);
                   onBlur(event);
-                  await validateField(name);
                 }}
                 className="utrecht-textbox--openforms"
                 id={id}
@@ -168,7 +167,6 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                   setIsOpen(false);
                 });
                 await setTouched(true);
-                await validateField(name);
               }}
               currentDate={currentDate ?? undefined}
               minDate={minDate}
