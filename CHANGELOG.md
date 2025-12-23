@@ -1,5 +1,29 @@
 # Changes
 
+## 1.0.0-rc.0 (2025-12-23)
+
+First release candidate for the stable 1.0.0 release.
+
+**API changes**
+
+- [`#138`][#138] Internal components now use explicit `isReadOnly` semantics rather than
+  `isDisabled`. This should vastly improve the experience for screen reader users.
+
+**Bugfixes**
+
+- [`#263`][#263] Fixed char count being displayed if no text was entered yet.
+- [`#274`][#274] Fixed the date and datepicker fields triggering validation too soon on blur.
+
+**Project maintenance**
+
+- Updated the documentation (storybook) landing page.
+- Added contributing guidelines.
+- Defined codeowners in Github (initial pass).
+
+[#263]: https://github.comm/open-formulieren/formio-renderer/issues/263
+[#138]: https://github.comm/open-formulieren/formio-renderer/issues/138
+[#274]: https://github.comm/open-formulieren/formio-renderer/issues/274
+
 ## 1.0.0-beta.4 (2025-12-22)
 
 Fifth beta version for the stable 1.0.0 release.
@@ -11,7 +35,6 @@ Fifth beta version for the stable 1.0.0 release.
 - [`#270`][#270] Fixed option descriptions not being displayed in `radio` components.
 - [`#267`][#267] Fixed modals opening scrolling the page to the top.
 
-[#265]: https://github.com/open-formulieren/formio-renderer/issues/265
 [#268]: https://github.com/open-formulieren/formio-renderer/issues/268
 [#270]: https://github.com/open-formulieren/formio-renderer/issues/270
 [#267]: https://github.com/open-formulieren/formio-renderer/issues/267
