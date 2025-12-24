@@ -6,7 +6,10 @@ import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {DEFAULT_INTERACTIONS} from './constants';
 
-const coordinatesSchema = z.array(z.number()).length(2);
+// The coordinates must be in the order of lng/lat, use the WGS84 projection,
+// and must be within the bounds of the Netherlands.
+// https://epsg.io/28992
+const coordinatesSchema = z.tuple([z.number().gte(3).lte(7.5), z.number().gt(50.5).lte(54)]);
 
 const pointSchema = z.object({
   type: z.literal('Point'),

@@ -30,7 +30,7 @@ describe('map component validation', () => {
     null,
     {
       type: 'Point',
-      coordinates: [52.3857386, 4.8417475],
+      coordinates: [4.8417475, 52.3857386],
     },
     {
       type: 'LineString',
@@ -186,10 +186,221 @@ describe('map component validation', () => {
 
     const value = {
       type: 'Point',
-      coordinates: [52.3857386, 4.8417475],
+      coordinates: [4.8417475, 52.3857386],
     };
     const {success} = await schema.safeParseAsync(value);
 
     expect(success).toBe(valid);
+  });
+});
+
+describe('map component coordinates bounds validation', () => {
+  test.each([
+    [
+      // Latitude and longitude in wrong order
+      {
+        type: 'Point',
+        coordinates: [52.3857386, 4.8417475],
+      },
+      false,
+    ],
+    [
+      // Latitude out of Dutch bounds
+      {
+        type: 'Point',
+        coordinates: [4.8417475, 56.3857386],
+      },
+      false,
+    ],
+    [
+      // Longitude out of Dutch bounds
+      {
+        type: 'Point',
+        coordinates: [9.8417475, 52.3857386],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude out of Dutch bounds
+      {
+        type: 'Point',
+        coordinates: [9.8417475, 56.3857386],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude in Dutch bounds
+      {
+        type: 'Point',
+        coordinates: [4.8417475, 52.3857386],
+      },
+      true,
+    ],
+  ])('Point geometry coordinate bounds %s (expected %s)', (value, expected) => {
+    const component: MapComponentSchema = {
+      ...BASE_COMPONENT,
+      interactions: {marker: true, polyline: true, polygon: true},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(expected);
+  });
+
+  test.each([
+    [
+      // Latitude and longitude in wrong order
+      {
+        type: 'LineString',
+        coordinates: [
+          [52.6405471, 4.7493255],
+          [52.4405471, 4.6493255],
+          [52.2405471, 4.5493255],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude out of Dutch bounds
+      {
+        type: 'LineString',
+        coordinates: [
+          [4.7493255, 56.6405471],
+          [4.6493255, 56.4405471],
+          [4.5493255, 56.2405471],
+        ],
+      },
+      false,
+    ],
+    [
+      // Longitude out of Dutch bounds
+      {
+        type: 'LineString',
+        coordinates: [
+          [9.7493255, 52.6405471],
+          [9.6493255, 52.4405471],
+          [9.5493255, 52.2405471],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude out of Dutch bounds
+      {
+        type: 'LineString',
+        coordinates: [
+          [9.7493255, 56.6405471],
+          [9.6493255, 56.4405471],
+          [9.5493255, 56.2405471],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude in Dutch bounds
+      {
+        type: 'LineString',
+        coordinates: [
+          [4.7493255, 52.6405471],
+          [4.6493255, 52.4405471],
+          [4.5493255, 52.2405471],
+        ],
+      },
+      true,
+    ],
+  ])('Line geometry coordinate bounds %s (expected %s)', (value, expected) => {
+    const component: MapComponentSchema = {
+      ...BASE_COMPONENT,
+      interactions: {marker: true, polyline: true, polygon: true},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(expected);
+  });
+
+  test.each([
+    [
+      // Latitude and longitude in wrong order
+      {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [52.1326332, 5.291266],
+            [52.128332, 5.091266],
+            [52.48332, 5.591266],
+          ],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude out of Dutch bounds
+      {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [5.291266, 56.1326332],
+            [5.091266, 56.128332],
+            [5.591266, 56.48332],
+          ],
+        ],
+      },
+      false,
+    ],
+    [
+      // Longitude out of Dutch bounds
+      {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [9.291266, 52.1326332],
+            [9.091266, 52.128332],
+            [9.591266, 52.48332],
+          ],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude out of Dutch bounds
+      {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [9.291266, 56.1326332],
+            [9.091266, 56.128332],
+            [9.591266, 56.48332],
+          ],
+        ],
+      },
+      false,
+    ],
+    [
+      // Latitude and longitude in Dutch bounds
+      {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [5.291266, 52.1326332],
+            [5.091266, 52.128332],
+            [5.591266, 52.48332],
+          ],
+        ],
+      },
+      true,
+    ],
+  ])('Polygon geometry coordinate bounds %s (expected %s)', (value, expected) => {
+    const component: MapComponentSchema = {
+      ...BASE_COMPONENT,
+      interactions: {marker: true, polyline: true, polygon: true},
+    };
+    const schema = buildValidationSchema(component);
+
+    const {success} = schema.safeParse(value);
+
+    expect(success).toBe(expected);
   });
 });
