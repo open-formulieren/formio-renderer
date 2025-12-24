@@ -14,18 +14,20 @@ import Modal from '@/components/modal/Modal';
 import PortalUrl from './PortalUrl';
 import {useCustomerProfileComponentParameters} from './hooks';
 
+type FormValues = {preference: PreferenceUpdateOptions};
+type PreferenceRadioOption = RadioOption & {value: PreferenceUpdateOptions};
+
 interface DigitalAddressPreferencesModalProps extends Pick<ModalProps, 'closeModal' | 'isOpen'> {
   onSubmit: (preference: PreferenceUpdateOptions) => void;
   digitalAddressType: DigitalAddressType;
+  initialValue: FormValues;
 }
-
-type FormValues = {preference: PreferenceUpdateOptions};
-type PreferenceRadioOption = RadioOption & {value: PreferenceUpdateOptions};
 
 const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalProps> = ({
   closeModal,
   isOpen,
   onSubmit,
+  initialValue,
   digitalAddressType,
 }) => {
   const id = useId();
@@ -44,8 +46,7 @@ const DigitalAddressPreferencesModal: React.FC<DigitalAddressPreferencesModalPro
       closeModal={closeModal}
     >
       <Formik<FormValues>
-        // By default, use the 'useOnlyOnce' option
-        initialValues={{preference: 'useOnlyOnce'}}
+        initialValues={initialValue}
         onSubmit={({preference}) => onSubmit(preference)}
       >
         <Form>

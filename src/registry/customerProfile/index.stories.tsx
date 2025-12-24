@@ -149,6 +149,61 @@ export const OpenPreferencesModal: Story = {
   },
 };
 
+export const OpenPreferencesModalWithInitialValue: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email'],
+      shouldUpdateCustomerData: false,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [
+          {
+            type: 'email',
+            address: 'test@mail.com',
+            preferenceUpdate: 'isNewPreferred',
+          },
+        ],
+      },
+    },
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+    const emailField = await canvas.findByLabelText('Email');
+
+    // Initial value is set
+    expect(emailField).toHaveValue('test@mail.com');
+
+    // Open preferences modal
+    await userEvent.click(
+      await canvas.findByRole('button', {
+        name: 'Update preferences',
+      })
+    );
+
+    await step('In preferences modal', async () => {
+      // Open preferences modal
+      const modal = within(await canvas.findByRole('dialog'));
+      const forFutureUseRadio = modal.getByRole('radio', {
+        name: 'Save my preferences for the next time. You can always change them again later in the portal.',
+      });
+      const oneTimeUseRadio = modal.getByRole('radio', {
+        name: 'Use this email address only for this form.',
+      });
+
+      // Expect the preference from the initial value to be checked
+      expect(forFutureUseRadio).toBeChecked();
+      expect(oneTimeUseRadio).not.toBeChecked();
+    });
+  },
+};
+
 export const OpenPreferencesModalWithoutPortalUrl: Story = {
   args: {
     componentDefinition: {

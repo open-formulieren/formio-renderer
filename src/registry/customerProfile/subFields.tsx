@@ -159,9 +159,12 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {updatePreferencesModalEnabled} = useCustomerProfileComponentParameters();
-  const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
-    `${namePrefix}.preferenceUpdate`
-  );
+
+  const preferenceUpdateFieldName = `${namePrefix}.preferenceUpdate`;
+  const {value: preference} =
+    getFieldMeta<DigitalAddress['preferenceUpdate']>(preferenceUpdateFieldName);
+  const {setValue: setPreference} =
+    getFieldHelpers<DigitalAddress['preferenceUpdate']>(preferenceUpdateFieldName);
 
   const {value, error} = getFieldMeta<DigitalAddress['address']>(fieldName);
 
@@ -205,6 +208,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
           </ButtonGroup>
           <DigitalAddressPreferencesModal
             isOpen={isModalOpen}
+            initialValue={{preference: preference || 'useOnlyOnce'}}
             closeModal={() => setIsModalOpen(false)}
             onSubmit={newPreference => {
               // Update the preference field
