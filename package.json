@@ -120,7 +120,6 @@
     "proj4leaflet": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-formio": "~4.3.0",
     "react-intl": "^7.1.5",
     "react-leaflet": "^4.2.1",
     "react-leaflet-draw": "^0.20.6",
