@@ -1,5 +1,18 @@
 # Changes
 
+## 1.0.0-rc.1 (2025-12-29)
+
+Second release candidate for the stable 1.0.0 release.
+
+**Bugfixes**
+
+- [`OF#5247`][OF#5247] Fix map component coordinates validation to be constrained to NL boundaries.
+- [`OF#5817`][OF#5817] Fixed the preferences modal in the customer profile not correctly displaying
+  the previous choice.
+
+[OF#5247]: https://github.com/open-formulieren/open-forms/issues/5247
+[OF#5817]: https://github.com/open-formulieren/open-forms/issues/5817
+
 ## 1.0.0-rc.0 (2025-12-23)
 
 First release candidate for the stable 1.0.0 release.
