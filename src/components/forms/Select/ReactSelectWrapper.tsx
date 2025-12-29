@@ -128,6 +128,7 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
             'rs-menu__option--focus': state.isFocused,
             'rs-menu__option--visible-focus': state.isFocused,
           }),
+        valueContainer: () => 'rs-value-container',
         singleValue: () => 'rs-value rs-value--single',
         multiValue: () => 'rs-value rs-value--multi',
         noOptionsMessage: () => 'rs-no-options',

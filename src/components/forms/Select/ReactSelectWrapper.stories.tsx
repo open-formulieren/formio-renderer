@@ -39,6 +39,30 @@ export const MultiValue: Story = {
   },
 };
 
+export const MultiValueLongOptions: Story = {
+  decorators: [
+    Story => (
+      <div style={{maxInlineSize: '400px'}}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    isMulti: true,
+    options: [
+      {
+        value: 'option-1',
+        label: 'Option 1 with a very long label that we expect to wrap or be truncated',
+      },
+      {
+        value: 'option-2',
+        label: 'Option 2, also with a very long label that we expect to wrap or be truncated',
+      },
+    ],
+    formikValue: ['option-1', 'option-2'],
+  },
+};
+
 export const ForceMenuOpen: Story = {
   args: {
     menuIsOpen: true,

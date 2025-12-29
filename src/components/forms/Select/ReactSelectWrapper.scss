@@ -73,6 +73,10 @@
       }
     }
 
+    .rs-value-container {
+      row-gap: var(--of-select-value-container-row-gap, 4px);
+    }
+
     .rs-value--multi {
       background-color: var(
         --of-select-value-multi-background-color,
