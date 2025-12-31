@@ -1,5 +1,14 @@
 # Changes
 
+## 1.0.0 (2025-12-31)
+
+First stable release of the renderer.
+
+**Bugfixes**
+
+- Fixed missing vertical spacing between selected multi-select options when the options wrap over
+  multiple lines.
+
 ## 1.0.0-rc.1 (2025-12-29)
 
 Second release candidate for the stable 1.0.0 release.
