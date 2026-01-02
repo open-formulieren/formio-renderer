@@ -5,13 +5,8 @@ import type {JSONValue} from '@/types';
 
 const getInitialValues: GetInitialValues<PartnersComponentSchema, JSONValue[]> = ({
   key,
-  defaultValue,
 }: PartnersComponentSchema) => {
-  // if no default value is explicitly specified, return the empty value
-  if (defaultValue === undefined) {
-    defaultValue = [];
-  }
-  return {[key]: defaultValue as unknown as JSONValue[]};
+  return {[key]: []};
 };
 
 export default getInitialValues;

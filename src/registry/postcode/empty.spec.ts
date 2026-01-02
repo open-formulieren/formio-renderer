@@ -23,9 +23,7 @@ test.each([
       key: 'postcode',
       id: 'postcode',
       label: 'Postcode',
-      inputMask: '9999 AA',
       validate: {pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$'},
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -60,9 +58,7 @@ test.each([
       key: 'postcode',
       id: 'postcode',
       label: 'Postcode',
-      inputMask: '9999 AA',
       validate: {pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$'},
-      validateOn: 'blur',
       multiple: true,
     };
 

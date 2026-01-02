@@ -4,7 +4,7 @@ import type {GetInitialValues} from '@/registry/types';
 
 const getInitialValues: GetInitialValues<RadioComponentSchema, string | null> = ({
   key,
-  defaultValue,
+  defaultValue = '',
 }) => ({[key]: defaultValue});
 
 export default getInitialValues;

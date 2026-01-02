@@ -13,7 +13,6 @@ const BASE_COMPONENT: LicensePlateComponentSchema = {
   id: 'licenseplate',
   key: 'licenseplate',
   label: 'License plate',
-  validateOn: 'blur',
   validate: {
     pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
   },

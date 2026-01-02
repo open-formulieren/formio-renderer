@@ -1,12 +1,7 @@
-import type {
-  AnyComponentSchema,
-  ChildrenComponentSchema,
-  TextFieldComponentSchema,
-} from '@open-formulieren/types';
+import type {TextFieldComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
-import getInitialValues from '@/registry/children/initialValues';
 import type {JSONObject} from '@/types';
 
 import {processVisibility} from './visibility';
@@ -148,58 +143,4 @@ test('processVisibility does not pollute the evaluation scope', () => {
 
   expect(visibleComponents).toEqual(itemComponents);
   expect(updatedValues).toEqual({text1: 'keep', text2: 'keep'});
-});
-
-// hidden prefilled children and selection enabled should have `selected=false` when appearing
-test('processVisibility respects initialValues for children component with prefilled children', () => {
-  const components: AnyComponentSchema[] = [
-    {
-      type: 'children',
-      id: 'children',
-      key: 'children',
-      label: 'Children',
-      enableSelection: true,
-      defaultValue: [
-        {
-          bsn: '111222333',
-          firstNames: 'johny',
-          dateOfBirth: '2000-10-10',
-        },
-      ],
-      hidden: true,
-      conditional: {
-        show: true,
-        when: 'textfieldVisible',
-        eq: 'show second',
-      },
-      clearOnHide: true,
-    } satisfies ChildrenComponentSchema,
-  ];
-
-  const initialValues = {
-    textfieldVisible: '',
-    ...getInitialValues(components[0] as ChildrenComponentSchema, getRegistryEntry),
-  };
-
-  const values: JSONObject = {textfieldVisible: 'show second'};
-
-  const {visibleComponents, updatedValues} = processVisibility(components, values, {
-    parentHidden: false,
-    initialValues,
-    getRegistryEntry,
-    componentsMap: {},
-  });
-
-  expect(visibleComponents).toEqual(components);
-  expect(updatedValues).toEqual({
-    textfieldVisible: 'show second',
-    children: [
-      {
-        bsn: '111222333',
-        firstNames: 'johny',
-        dateOfBirth: '2000-10-10',
-        selected: false,
-      },
-    ],
-  });
 });

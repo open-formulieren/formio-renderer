@@ -1,4 +1,5 @@
-import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
+import type {PartnersComponentSchema} from '@open-formulieren/types';
+import type {PartnerDetails} from '@open-formulieren/types/dist/components/partners';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '../registry';

@@ -40,7 +40,6 @@ export const SimpleContent: Story = {
       proident, sunt in culpa qui officia deserunt mollit anim id
       <a href="https://example.com" target="_blank" rel="external">est laborum</a>.</p>
       <p>Second paragraph</p>`,
-      label: 'A Content field',
       customClass: '',
     } satisfies ContentComponentSchema,
   },
@@ -57,7 +56,6 @@ export const ContentWithVariant: Story = {
         magna, quis vehicula nulla justo sed urna. <strong>Integer</strong> maximus
         tempus tellus vel commodo. <br>Orci varius <i>natoque</i> penatibus et magnis
         dis parturient montes.</p>`,
-      label: 'A Content field',
       customClass: 'success',
     } satisfies ContentComponentSchema,
   },

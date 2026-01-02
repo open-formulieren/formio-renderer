@@ -25,8 +25,6 @@ export const MinimalConfiguration: Story = {
       type: 'select',
       key: 'my.select',
       label: 'A simple select',
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -55,8 +53,6 @@ export const Multiple: Story = {
       key: 'my.select',
       label: 'A simple select',
       multiple: true,
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -85,8 +81,6 @@ export const WithTooltip: Story = {
       key: 'my.select',
       label: 'A simple select',
       tooltip: 'Surprise!',
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -135,8 +129,6 @@ export const ValidateRequired: ValidationStory = {
       validate: {
         required: true,
       },
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -169,8 +161,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       validate: {
         required: true,
       },
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -201,8 +191,6 @@ export const PassesAllValidations: ValidationStory = {
       validate: {
         required: true,
       },
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -249,8 +237,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       key: 'my.select',
       label: 'A select',
       multiple: false,
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},
@@ -272,8 +258,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       key: 'my.select',
       label: 'A select',
       multiple: true,
-      dataType: 'string',
-      dataSrc: 'values',
       data: {
         values: [
           {value: '1', label: 'First'},

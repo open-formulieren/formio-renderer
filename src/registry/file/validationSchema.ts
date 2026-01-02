@@ -91,6 +91,8 @@ export const transformReactDropzoneErrors = (
     .join('\n');
 };
 
+type MimeTypeStr = FileComponentSchema['file']['type'][number];
+
 /**
  * Build the validation schema for a single file in the uploads array.
  */
@@ -117,11 +119,14 @@ const buildFileValidationSchema = (
   let typeSchema: z.ZodString | z.ZodEffects<z.ZodString> = z.string();
   // empty mime types array or wildcard inside it imply that any file type is allowed
   if (allowedMimeTypes.length !== 0 && !allowedMimeTypes.includes('*')) {
-    typeSchema = typeSchema.refine(mimeType => allowedMimeTypes.includes(mimeType.toLowerCase()), {
-      message: intl.formatMessage(INVALID_TYPE_ERROR, {
-        allowedTypes: formattedTypeLabels(intl, allowedTypesLabels),
-      }),
-    });
+    typeSchema = typeSchema.refine(
+      mimeType => allowedMimeTypes.includes(mimeType.toLowerCase() as MimeTypeStr),
+      {
+        message: intl.formatMessage(INVALID_TYPE_ERROR, {
+          allowedTypes: formattedTypeLabels(intl, allowedTypesLabels),
+        }),
+      }
+    );
   }
 
   return (

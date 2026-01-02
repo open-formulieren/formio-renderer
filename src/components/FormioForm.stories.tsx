@@ -594,7 +594,6 @@ export const WithMultipleAndConditional: Story = {
         type: 'email',
         key: 'email',
         label: 'Conditionally displayed email',
-        validateOn: 'blur',
         conditional: {
           show: true,
           when: 'nested.textfield',

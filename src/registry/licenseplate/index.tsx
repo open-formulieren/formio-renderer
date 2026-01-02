@@ -14,7 +14,7 @@ export interface FormioLicensePlateProps {
 }
 
 export const FormioLicensePlate: React.FC<FormioLicensePlateProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, disabled} = componentDefinition;
+  const {key, label, tooltip, description, validate} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
     'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
@@ -24,7 +24,6 @@ export const FormioLicensePlate: React.FC<FormioLicensePlateProps> = ({component
     description,
     tooltip,
     isRequired: validate?.required,
-    isReadOnly: disabled,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

@@ -1,10 +1,10 @@
-import type {ChildDetails} from '@open-formulieren/types';
+import type {ChildDetails} from '@open-formulieren/types/dist/components/children';
 import {FormattedMessage, defineMessages} from 'react-intl';
 
 import DateField from '@/components/forms/DateField';
 import TextField from '@/components/forms/TextField';
 
-export const FIELD_LABELS = defineMessages<keyof ChildDetails>({
+export const FIELD_LABELS = defineMessages<Exclude<keyof ChildDetails, 'selected'>>({
   bsn: {description: 'Children component: label for children BSN', defaultMessage: 'BSN'},
   firstNames: {
     description: 'Children component: label for children firstNames',

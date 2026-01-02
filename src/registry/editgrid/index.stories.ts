@@ -1,10 +1,10 @@
 import type {
-  AddressData,
   ColumnsComponentSchema,
   ContentComponentSchema,
   EditGridComponentSchema,
   FieldsetComponentSchema,
 } from '@open-formulieren/types';
+import type {AddressData} from '@open-formulieren/types/dist/components/addressNL';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
@@ -177,14 +177,12 @@ export const DisplayComponentValues: Story = {
           type: 'email',
           key: 'emailSingle',
           label: 'email single',
-          validateOn: 'blur',
         },
         {
           id: 'emailMultiple',
           type: 'email',
           key: 'emailMultiple',
           label: 'Email multiple',
-          validateOn: 'blur',
           multiple: true,
         },
         {
@@ -205,14 +203,12 @@ export const DisplayComponentValues: Story = {
           type: 'phoneNumber',
           key: 'phoneNumberSingle',
           label: 'Phone number single',
-          inputMask: null,
         },
         {
           id: 'phoneNumberMultiple',
           type: 'phoneNumber',
           key: 'phoneNumberMultiple',
           label: 'Phone number multiple',
-          inputMask: null,
           multiple: true,
         },
         {
@@ -241,16 +237,12 @@ export const DisplayComponentValues: Story = {
           type: 'bsn',
           key: 'bsnSingle',
           label: 'BSN single',
-          inputMask: '999999999',
-          validateOn: 'blur',
         },
         {
           id: 'bsnMultiple',
           type: 'bsn',
           key: 'bsnMultiple',
           label: 'BSN multiple',
-          inputMask: '999999999',
-          validateOn: 'blur',
           multiple: true,
         },
         {
@@ -374,7 +366,6 @@ export const WithLayoutComponents: Story = {
           id: 'content',
           type: 'content',
           key: 'content',
-          label: 'I should not be visible',
           html: '<p>I may not be shown in the values display.</p>',
         } satisfies ContentComponentSchema,
         {
@@ -494,13 +485,11 @@ export const NestedWithSimpleConditionals: Story = {
           },
         },
         {
-          id: 'component3',
-          type: 'editgrid',
-          key: 'child',
-          label: 'Nested repeating group',
-          disableAddingRemovingRows: false,
-          groupLabel: 'Child',
-          clearOnHide: false,
+          id: 'fieldsetForConditional',
+          type: 'fieldset',
+          key: 'fieldsetForConditional',
+          label: '',
+          hideHeader: true,
           conditional: {
             show: false,
             when: 'parent.textField1',
@@ -508,29 +497,40 @@ export const NestedWithSimpleConditionals: Story = {
           },
           components: [
             {
-              id: 'component4',
-              type: 'textfield',
-              key: 'textField2',
-              label: 'Nested 1',
+              id: 'component3',
+              type: 'editgrid',
+              key: 'child',
+              label: 'Nested repeating group',
+              disableAddingRemovingRows: false,
+              groupLabel: 'Child',
               clearOnHide: false,
-              conditional: {
-                show: false,
-                when: 'root',
-                eq: 'hide nested 1',
-              },
-            },
-            {
-              id: 'component5',
-              type: 'textfield',
-              key: 'textField3',
-              label: 'Nested 2',
-              clearOnHide: false,
-              conditional: {
-                show: true,
-                when: 'parent.child.textField2',
-                eq: 'ggg',
-              },
-            },
+              components: [
+                {
+                  id: 'component4',
+                  type: 'textfield',
+                  key: 'textField2',
+                  label: 'Nested 1',
+                  clearOnHide: false,
+                  conditional: {
+                    show: false,
+                    when: 'root',
+                    eq: 'hide nested 1',
+                  },
+                },
+                {
+                  id: 'component5',
+                  type: 'textfield',
+                  key: 'textField3',
+                  label: 'Nested 2',
+                  clearOnHide: false,
+                  conditional: {
+                    show: true,
+                    when: 'parent.child.textField2',
+                    eq: 'ggg',
+                  },
+                },
+              ],
+            } satisfies EditGridComponentSchema,
           ],
         },
       ],

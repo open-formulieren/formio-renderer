@@ -4,14 +4,13 @@ import {describe, expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry/registry';
 
-import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
+import {buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
 import getValidationSchema from './validationSchema';
 
 const intl = createIntl({locale: 'en', messages: {}});
 
 const BASE_COMPONENT: FileComponentSchema = {
-  ...FILE_COMPONENT_BOILERPLATE,
   ...getFileConfiguration(['application/pdf', 'image/png', 'image/jpeg']),
   type: 'file',
   id: 'file',

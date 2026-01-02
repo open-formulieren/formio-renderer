@@ -1,4 +1,7 @@
-import type {DigitalAddress, DigitalAddressType} from '@open-formulieren/types';
+import type {
+  DigitalAddress,
+  DigitalAddressType,
+} from '@open-formulieren/types/dist/components/customerProfile';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';

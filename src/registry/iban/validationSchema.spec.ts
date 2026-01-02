@@ -13,7 +13,6 @@ const BASE_COMPONENT: IbanComponentSchema = {
   id: 'iban',
   key: 'iban',
   label: 'IBAN',
-  validateOn: 'blur',
 };
 
 const buildValidationSchema = (component: IbanComponentSchema) => {

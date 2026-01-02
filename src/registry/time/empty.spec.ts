@@ -21,9 +21,6 @@ test.each([
       key: 'time',
       id: 'timefield',
       label: 'timefield',
-      inputType: 'text',
-      format: 'HH:mm',
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -54,9 +51,6 @@ test.each([
       key: 'time',
       id: 'timefield',
       label: 'timefield',
-      inputType: 'text',
-      format: 'HH:mm',
-      validateOn: 'blur',
       multiple: true,
     };
 

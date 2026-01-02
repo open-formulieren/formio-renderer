@@ -22,7 +22,6 @@ export const MinimalConfiguration: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
     },
@@ -38,32 +37,11 @@ export const MinimalConfiguration: Story = {
   },
 };
 
-export const WithPlaceholder: Story = {
-  args: {
-    componentDefinition: {
-      id: 'component1',
-      type: 'email',
-      validateOn: 'blur', // ignored but required in the types
-      key: 'email',
-      label: 'Your email',
-      placeholder: 'geralt@kaer.moh.en',
-    },
-  },
-  parameters: {
-    formik: {
-      initialValues: {
-        email: '',
-      },
-    },
-  },
-};
-
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'email',
       label: 'Your email',
       tooltip: 'Surprise!',
@@ -83,7 +61,6 @@ export const WithAutoComplete: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'email',
       label: 'Your email',
       autocomplete: 'email',
@@ -103,7 +80,6 @@ export const Multiple: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       multiple: true,
@@ -125,7 +101,6 @@ export const MultipleWithItemErrors: Story = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       multiple: true,
@@ -175,7 +150,6 @@ export const ValidateEmailFormat: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
     },
@@ -198,7 +172,6 @@ export const ValidateEmailRequired: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       validate: {
@@ -226,7 +199,6 @@ export const ValidateEmailRequiredWithCustomErrorMessage: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       validate: {
@@ -250,7 +222,6 @@ export const PassesAllValidations: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       validate: {
@@ -276,7 +247,6 @@ export const ValidationMultiple: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       multiple: true,
@@ -314,7 +284,6 @@ export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
     componentDefinition: {
       id: 'component1',
       type: 'email',
-      validateOn: 'blur', // ignored but required in the types
       key: 'my.email',
       label: 'Your email',
       multiple: true,
@@ -369,7 +338,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'email',
       key: 'my.email',
       label: 'An email',
-      validateOn: 'blur',
       multiple: false,
     } satisfies EmailComponentSchema,
     value: 'openforms@example.com',
@@ -384,7 +352,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       type: 'email',
       key: 'my.email',
       label: 'An email',
-      validateOn: 'blur',
       multiple: true,
     } satisfies EmailComponentSchema,
     value: ['openforms1@example.com', 'openforms2@example.com'],

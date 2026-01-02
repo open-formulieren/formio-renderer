@@ -13,8 +13,6 @@ const BASE_COMPONENT: SelectComponentSchema = {
   key: 'select',
   label: 'Select field',
   openForms: {dataSrc: 'manual', translations: {}},
-  dataSrc: 'values',
-  dataType: 'string',
   data: {
     values: [
       {

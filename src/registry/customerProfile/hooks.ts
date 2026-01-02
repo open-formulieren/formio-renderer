@@ -1,4 +1,5 @@
-import type {CustomerProfileProperties, DigitalAddress} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
+import type {DigitalAddress} from '@open-formulieren/types/dist/components/customerProfile';
 import {useFormikContext} from 'formik';
 import {useAsync} from 'react-use';
 
@@ -14,7 +15,7 @@ interface UseDigitalAddresses {
 
 export const useDigitalAddresses = (
   profileComponentName: string,
-  digitalAddressTypes: CustomerProfileProperties['digitalAddressTypes']
+  digitalAddressTypes: CustomerProfileComponentSchema['digitalAddressTypes']
 ): UseDigitalAddresses => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<JSONObject>();
   const {fetchDigitalAddresses} = useCustomerProfileComponentParameters();

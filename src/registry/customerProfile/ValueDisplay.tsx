@@ -1,4 +1,4 @@
-import type {CustomerProfileComponentSchema, CustomerProfileData} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import {
   DataList,
   DataListItem,
@@ -11,6 +11,7 @@ import {FormattedMessage} from 'react-intl';
 
 import './ValueDisplay.scss';
 import {FIELD_LABELS} from './subFields';
+import type {CustomerProfileData} from './types';
 
 export interface ValueDisplayProps {
   componentDefinition: CustomerProfileComponentSchema;

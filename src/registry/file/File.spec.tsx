@@ -11,11 +11,10 @@ import {afterAll, afterEach, beforeAll, beforeEach, expect, test, vi} from 'vite
 import FormSettingsProvider from '@/components/FormSettingsProvider';
 
 import {useFileUploads} from './hooks';
-import {FILE_COMPONENT_BOILERPLATE, getFileConfiguration} from './test-utils';
+import {getFileConfiguration} from './test-utils';
 import type {FileParameters, FormikFileUpload} from './types';
 
 const BASE_COMPONENT: FileComponentSchema = {
-  ...FILE_COMPONENT_BOILERPLATE,
   ...getFileConfiguration(['application/pdf']),
   id: 'component1',
   type: 'file',

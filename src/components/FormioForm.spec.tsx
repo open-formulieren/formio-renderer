@@ -543,7 +543,6 @@ describe('onChange prop', () => {
             key: 'email',
             label: 'Email',
             defaultValue: 'info@example.com',
-            validateOn: 'blur',
             clearOnHide: true,
             conditional: {
               show: false,
@@ -702,11 +701,6 @@ describe('Regressions', () => {
               groupLabel: 'Outer item',
               disableAddingRemovingRows: true,
               clearOnHide: clearOnHide,
-              conditional: {
-                show: false,
-                when: 'outerTrigger',
-                eq: 'hide',
-              },
               components: [
                 {
                   type: 'textfield',
@@ -781,11 +775,6 @@ describe('Regressions', () => {
                   groupLabel: 'Inner item',
                   disableAddingRemovingRows: true,
                   clearOnHide: clearOnHide,
-                  conditional: {
-                    show: false,
-                    when: 'outerTrigger',
-                    eq: 'hide',
-                  },
                   components: [
                     {
                       type: 'textfield',

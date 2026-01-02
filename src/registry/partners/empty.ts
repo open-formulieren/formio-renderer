@@ -1,4 +1,5 @@
-import type {PartnerDetails, PartnersComponentSchema} from '@open-formulieren/types';
+import type {PartnersComponentSchema} from '@open-formulieren/types';
+import type {PartnerDetails} from '@open-formulieren/types/dist/components/partners';
 
 import type {IsEmpty} from '@/registry/types';
 

@@ -1,15 +1,12 @@
 import type {SelectComponentSchema} from '@open-formulieren/types';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 
-import {assertManualValues} from './types';
-
 export interface ValueDisplayProps {
   componentDefinition: SelectComponentSchema;
   value: string | string[];
 }
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({componentDefinition, value}) => {
-  assertManualValues(componentDefinition);
   const {
     data: {values: options},
   } = componentDefinition;

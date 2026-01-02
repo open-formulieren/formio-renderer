@@ -45,7 +45,6 @@ describe('Soft required components without parents', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -104,7 +103,6 @@ describe('Soft required components without parents', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -150,7 +148,6 @@ describe('Soft required components without parents', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -204,7 +201,6 @@ describe('Soft required components without parents', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -268,7 +264,6 @@ describe('Soft required components without parents', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -336,7 +331,6 @@ describe('Soft required components nested in fieldset', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -392,7 +386,6 @@ describe('Soft required components nested in fieldset', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -460,7 +453,6 @@ describe('Soft required components nested in fieldset', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -535,7 +527,6 @@ describe('Soft required components nested in columns', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -613,7 +604,6 @@ describe('Soft required components nested in columns', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -708,7 +698,6 @@ describe('Soft required components nested in columns', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -763,7 +752,6 @@ describe('Soft required components nested in editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -822,7 +810,6 @@ describe('Soft required components nested in editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -888,7 +875,6 @@ describe('Soft required components nested in editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -968,7 +954,6 @@ describe('Soft required components nested in editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -1038,7 +1023,6 @@ describe('Soft required components nested in nested editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -1135,7 +1119,6 @@ describe('Soft required components nested in nested editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -1205,7 +1188,6 @@ describe('Soft required components nested in nested editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 
@@ -1317,7 +1299,6 @@ describe('Soft required components nested in nested editgrid', () => {
             id: 'softRequiredErrors',
             type: 'softRequiredErrors',
             key: 'softRequiredErrors',
-            label: 'Soft required errors',
             html: `
         <p>Not all required fields are filled out. That can get expensive!</p>
 

@@ -1,4 +1,4 @@
-import type {ChildDetails} from '@open-formulieren/types';
+import type {ChildDetails} from '@open-formulieren/types/dist/components/children';
 
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the Children

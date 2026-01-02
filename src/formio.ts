@@ -4,16 +4,19 @@
  * These are helpers around Formio.js concepts which we implement ourselves rather than
  * depending on formio.js or @formio/js packages.
  */
-import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {Conditional} from '@open-formulieren/types/dist/extensions';
 import {getIn} from 'formik';
 
 import type {GetRegistryEntry, TestConditional} from '@/registry/types';
 
 import type {JSONObject, JSONValue} from './types';
 
+type ConditionalOptions = NonNullable<Conditional['conditional']>;
+
 export const getConditional = (
   component: AnyComponentSchema
-): Required<OFConditionalOptions> | null => {
+): Required<ConditionalOptions> | null => {
   // component must support the construct in the first place
   if (!('conditional' in component)) return null;
   // undefined or null -> nothing to extract
@@ -41,7 +44,7 @@ const defaultTestConditional: TestConditional<AnyComponentSchema | undefined> = 
   /**
    * The reference value specified in `conditional.eq`.
    */
-  compareValue: Required<OFConditionalOptions>['eq'],
+  compareValue: Required<ConditionalOptions>['eq'],
   /**
    * The current value of the referenced component to compare against.
    */

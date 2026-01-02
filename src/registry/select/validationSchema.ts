@@ -4,15 +4,12 @@ import {z} from 'zod';
 import type {GetValidationSchema} from '@/registry/types';
 import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
-import {assertManualValues} from './types';
-
 type ValuesEnum = z.ZodEnum<[string, ...string[]]>;
 
 const getValidationSchema: GetValidationSchema<SelectComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  assertManualValues(componentDefinition);
   const {
     key,
     validate = {},

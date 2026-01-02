@@ -6,7 +6,6 @@ import type {RegistryEntry} from '@/registry/types';
 import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
-import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
 
 export interface FormioSelectProps {
@@ -14,7 +13,6 @@ export interface FormioSelectProps {
 }
 
 export const FormioSelect: React.FC<FormioSelectProps> = ({componentDefinition}) => {
-  assertManualValues(componentDefinition);
   const {
     key,
     label,

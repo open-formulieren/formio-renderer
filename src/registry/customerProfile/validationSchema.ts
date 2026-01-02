@@ -1,8 +1,8 @@
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {
-  CustomerProfileComponentSchema,
   DigitalAddress,
   DigitalAddressType,
-} from '@open-formulieren/types';
+} from '@open-formulieren/types/dist/components/customerProfile';
 import type {IntlShape} from 'react-intl';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';

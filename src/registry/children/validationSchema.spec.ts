@@ -1,4 +1,5 @@
-import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildDetails} from '@open-formulieren/types/dist/components/children';
 import {addYears, subDays, subYears} from 'date-fns';
 import {createIntl} from 'react-intl';
 import {describe, expect, test} from 'vitest';

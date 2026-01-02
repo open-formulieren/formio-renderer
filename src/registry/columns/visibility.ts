@@ -1,4 +1,5 @@
-import type {Column, ColumnsComponentSchema} from '@open-formulieren/types';
+import type {ColumnsComponentSchema} from '@open-formulieren/types';
+import type {Column} from '@open-formulieren/types/dist/components/columns';
 import {setIn} from 'formik';
 
 import type {ApplyVisibility} from '@/registry/types';

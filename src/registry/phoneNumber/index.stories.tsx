@@ -24,7 +24,6 @@ export const MinimalConfiguration: Story = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A simple phone number',
-      inputMask: null,
     },
   },
   parameters: {
@@ -38,26 +37,6 @@ export const MinimalConfiguration: Story = {
   },
 };
 
-export const WithPlaceholder: Story = {
-  args: {
-    componentDefinition: {
-      id: 'component1',
-      type: 'phoneNumber',
-      key: 'phoneNumber',
-      label: 'A simple phone number',
-      placeholder: '123-456 789',
-      inputMask: null,
-    },
-  },
-  parameters: {
-    formik: {
-      initialValues: {
-        phoneNumber: '',
-      },
-    },
-  },
-};
-
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {
@@ -66,7 +45,6 @@ export const WithTooltip: Story = {
       key: 'phoneNumber',
       label: 'A simple phone number',
       tooltip: 'Surprise!',
-      inputMask: null,
     },
   },
   parameters: {
@@ -86,7 +64,6 @@ export const WithAutocomplete: Story = {
       key: 'phoneNumber',
       label: 'A simple phone number',
       autocomplete: 'tel',
-      inputMask: null,
     },
   },
   parameters: {
@@ -105,7 +82,6 @@ export const Multiple: Story = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A simple phone number',
-      inputMask: null,
       multiple: true,
     } satisfies PhoneNumberComponentSchema,
   },
@@ -127,7 +103,6 @@ export const MultipleWithItemErrors: Story = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A simple phone number',
-      inputMask: null,
       multiple: true,
     },
   },
@@ -149,39 +124,6 @@ export const MultipleWithItemErrors: Story = {
         },
       },
     },
-  },
-};
-
-export const MultipleReadOnly: Story = {
-  args: {
-    componentDefinition: {
-      id: 'component1',
-      type: 'phoneNumber',
-      key: 'my.phoneNumber',
-      label: 'A simple phone number',
-      inputMask: null,
-      multiple: true,
-      disabled: true,
-    } satisfies PhoneNumberComponentSchema,
-  },
-  parameters: {
-    formik: {
-      initialValues: {
-        my: {
-          phoneNumber: ['06-12345678', '123456789'],
-        },
-      },
-    },
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    const textboxes = canvas.getAllByRole('textbox');
-    for (const textbox of textboxes) {
-      expect(textbox).toBeVisible();
-      expect(textbox).not.toBeDisabled();
-      expect(textbox).toHaveAttribute('readonly');
-    }
   },
 };
 
@@ -210,7 +152,6 @@ export const ValidateRequired: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: true,
       },
@@ -238,7 +179,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: true,
       },
@@ -262,7 +202,6 @@ export const ValidatePattern: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: false,
       },
@@ -293,7 +232,6 @@ export const ValidatePatternWithCustomErrorMessage: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: false,
         pattern: '06-[0-9]+',
@@ -322,7 +260,6 @@ export const ValidationMultiple: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: true,
       },
@@ -360,7 +297,6 @@ export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
       type: 'phoneNumber',
       key: 'my.phoneNumber',
       label: 'A phone number',
-      inputMask: null,
       validate: {
         required: true,
       },
@@ -414,7 +350,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       key: 'my.phoneNumber',
       label: 'A phone number',
       multiple: false,
-      inputMask: null,
     } satisfies PhoneNumberComponentSchema,
     value: '06 123 456 78',
   },
@@ -429,7 +364,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       key: 'my.phoneNumber',
       label: 'A phone number',
       multiple: true,
-      inputMask: null,
     } satisfies PhoneNumberComponentSchema,
     value: ['06 123 456 78', '+3120 123 456'],
   },

@@ -26,7 +26,6 @@ export default {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -65,7 +64,6 @@ export const EmptyValue: Story = {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -88,7 +86,6 @@ export const NotVerified: Story = {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -118,7 +115,6 @@ export const VerificationFlow: Story = {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -178,7 +174,6 @@ const BaseErrorFlowStory: Story = {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -253,7 +248,6 @@ export const Multiple: Story = {
         requireVerification: true,
         translations: {},
       },
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -311,7 +305,6 @@ export const InEditGrid: StoryObj<InEditGridArgs> = {
             requireVerification: true,
             translations: {},
           },
-          validateOn: 'blur', // ignored but required in the types
         },
       ],
     },

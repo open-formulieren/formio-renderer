@@ -25,7 +25,6 @@ test.each([
       validate: {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
       },
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -63,7 +62,6 @@ test.each([
       validate: {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
       },
-      validateOn: 'blur',
       multiple: true,
     };
 

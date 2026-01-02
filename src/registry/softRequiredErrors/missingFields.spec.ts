@@ -22,16 +22,10 @@ const SOFT_REQUIRED_FILE_COMPONENT = {
   key: 'file',
   type: 'file',
   label: 'File upload',
-  webcam: false,
-  storage: 'url',
-  url: '',
   file: {
     name: '',
     type: [],
     allowedTypesLabels: [],
-  },
-  options: {
-    withCredentials: true,
   },
   filePattern: '.jpg',
   multiple: false,

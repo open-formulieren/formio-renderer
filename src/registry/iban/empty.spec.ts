@@ -20,7 +20,6 @@ test.each([
       key: 'iban',
       id: 'iban',
       label: 'Iban',
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -52,7 +51,6 @@ test.each([
       key: 'iban',
       id: 'iban',
       label: 'Iban',
-      validateOn: 'blur',
       multiple: true,
     };
 

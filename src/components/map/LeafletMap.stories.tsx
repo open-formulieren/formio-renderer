@@ -1,4 +1,4 @@
-import type {GeoJsonGeometry} from '@open-formulieren/types';
+import type {GeoJsonGeometry} from '@open-formulieren/types/dist/components/map';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import type {Map as LMap} from 'leaflet';
 import {useEffect, useState} from 'react';
@@ -71,6 +71,7 @@ export const Polygon: Story = {
           [5.291266, 52.1326332],
           [5.091266, 52.128332],
           [5.591266, 52.48332],
+          [5.291266, 52.1326332],
         ],
       ],
     },

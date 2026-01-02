@@ -1,4 +1,4 @@
-import type {PartnerDetails} from '@open-formulieren/types';
+import type {PartnerDetails} from '@open-formulieren/types/dist/components/partners';
 import {DataList, DataListItem, DataListKey, DataListValue} from '@utrecht/component-library-react';
 import {Fragment} from 'react';
 import {FormattedDate, FormattedMessage} from 'react-intl';

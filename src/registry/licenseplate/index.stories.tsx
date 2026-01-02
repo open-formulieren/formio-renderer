@@ -25,7 +25,6 @@ export const MinimalConfiguration: Story = {
       key: 'license.plate',
       label: 'License plate',
       validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -48,7 +47,6 @@ export const WithTooltip: Story = {
       key: 'license.plate',
       label: 'License plate',
       validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
-      validateOn: 'blur',
       tooltip: 'Hello, I am a tooltip',
     },
   },
@@ -71,7 +69,6 @@ export const Multiple: Story = {
       key: 'license.plate',
       label: 'License plate',
       validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
-      validateOn: 'blur',
       multiple: true,
     } satisfies LicensePlateComponentSchema,
   },
@@ -94,7 +91,6 @@ export const MultipleWithItemErrors: Story = {
       key: 'license.plate',
       label: 'License plate',
       validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
-      validateOn: 'blur',
       multiple: true,
     },
   },
@@ -116,40 +112,6 @@ export const MultipleWithItemErrors: Story = {
         },
       },
     },
-  },
-};
-
-export const MultipleReadOnly: Story = {
-  args: {
-    componentDefinition: {
-      id: 'component1',
-      type: 'licenseplate',
-      key: 'license.plate',
-      label: 'License plate',
-      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
-      validateOn: 'blur',
-      multiple: true,
-      disabled: true,
-    } satisfies LicensePlateComponentSchema,
-  },
-  parameters: {
-    formik: {
-      initialValues: {
-        license: {
-          plate: ['4-67-ABC', '123-ABC-789'],
-        },
-      },
-    },
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    const textboxes = canvas.getAllByRole('textbox');
-    for (const textbox of textboxes) {
-      expect(textbox).toBeVisible();
-      expect(textbox).not.toBeDisabled();
-      expect(textbox).toHaveAttribute('readonly');
-    }
   },
 };
 
@@ -182,7 +144,6 @@ export const ValidateRequired: ValidationStory = {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
         required: true,
       },
-      validateOn: 'blur',
     } satisfies LicensePlateComponentSchema,
   },
   play: async ({canvasElement}) => {
@@ -211,7 +172,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
         required: true,
       },
-      validateOn: 'blur',
       errors: {required: 'Custom error message for required'},
     } satisfies LicensePlateComponentSchema,
   },
@@ -235,7 +195,6 @@ export const ValidatePattern: ValidationStory = {
       validate: {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
       },
-      validateOn: 'blur',
     } satisfies LicensePlateComponentSchema,
   },
   play: async ({canvasElement}) => {
@@ -262,7 +221,6 @@ export const PassesValidation: ValidationStory = {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
         required: true,
       },
-      validateOn: 'blur',
     } satisfies LicensePlateComponentSchema,
   },
   play: async ({canvasElement, args}) => {
@@ -289,7 +247,6 @@ export const ValidationMultiple: ValidationStory = {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
         required: true,
       },
-      validateOn: 'blur',
       multiple: true,
     } satisfies LicensePlateComponentSchema,
   },
@@ -328,7 +285,6 @@ export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
         required: true,
       },
-      validateOn: 'blur',
       multiple: true,
       errors: {required: 'Custom error message for required with multiple: true'},
     } satisfies LicensePlateComponentSchema,
@@ -381,7 +337,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       validate: {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
       },
-      validateOn: 'blur',
     } satisfies LicensePlateComponentSchema,
     value: 'AA-AA-12',
   },
@@ -398,7 +353,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       validate: {
         pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$',
       },
-      validateOn: 'blur',
     } satisfies LicensePlateComponentSchema,
     value: ['AA-AA-12', '1-AAA-23'],
   },

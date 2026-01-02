@@ -1,4 +1,4 @@
-import type {ChildDetails} from '@open-formulieren/types';
+import type {ChildDetails} from '@open-formulieren/types/dist/components/children';
 
 import type {ExtendedChildDetails} from './types';
 

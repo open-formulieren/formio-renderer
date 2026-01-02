@@ -1,9 +1,10 @@
-import type {CustomerProfileComponentSchema, CustomerProfileData} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
 
 import isEmpty from './empty';
+import type {CustomerProfileData} from './types';
 
 test.each([
   // Empty states

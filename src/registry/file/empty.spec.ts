@@ -4,7 +4,7 @@ import {expect, test} from 'vitest';
 import {getRegistryEntry} from '@/registry';
 
 import isEmpty from './empty';
-import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
+import {buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
 
 test.each([
@@ -19,7 +19,6 @@ test.each([
   'file isEmpty compares against defined, non-empty array state of value',
   (valueToTest: FormikFileUpload[] | undefined, expected: boolean) => {
     const component: FileComponentSchema = {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf']),
       id: 'component1',
       type: 'file',

@@ -13,7 +13,6 @@ const BASE_COMPONENT: EmailComponentSchema = {
   id: 'email',
   key: 'email',
   label: 'Email',
-  validateOn: 'blur',
 };
 
 const buildValidationSchema = (component: EmailComponentSchema) => {

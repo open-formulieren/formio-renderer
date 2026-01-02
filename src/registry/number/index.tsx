@@ -23,7 +23,6 @@ export const FormioNumberField: React.FC<FormioNumberFieldProps> = ({
     allowNegative,
     prefix,
     suffix,
-    disabled: isReadOnly,
   },
 }) => {
   return (
@@ -35,7 +34,6 @@ export const FormioNumberField: React.FC<FormioNumberFieldProps> = ({
       isRequired={validate?.required}
       decimalLimit={decimalLimit}
       allowNegative={allowNegative}
-      isReadOnly={isReadOnly}
       prefix={prefix}
       suffix={suffix}
     />
