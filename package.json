@@ -67,7 +67,6 @@
     "@maykinmedia/eslint-config": "^2.0.0",
     "@open-formulieren/design-tokens": "^0.66.0",
     "@open-formulieren/leaflet-tools": "^1.0.0",
-    "@open-formulieren/types": "^0.52.0",
     "@react-leaflet/core": "^2.1.0",
     "@sinonjs/fake-timers": "^15.0.0",
     "@storybook/addon-coverage": "^2.0.0",
@@ -140,6 +139,7 @@
     "vitest": "^3.0.7"
   },
   "dependencies": {
+    "@open-formulieren/types": "^1.0.0",
     "@utrecht/calendar-react": "^1.0.15",
     "@utrecht/component-library-react": "1.0.0-alpha.353",
     "clsx": "^2.1.0",
