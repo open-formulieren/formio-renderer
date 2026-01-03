@@ -1,4 +1,5 @@
-import type {AnyComponentSchema, OFConditionalOptions} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {Conditional} from '@open-formulieren/types/dist/extensions';
 import type {IntlShape} from 'react-intl';
 import type {z} from 'zod';
 
@@ -107,9 +108,11 @@ export interface VisibilityContext {
   componentsMap: Partial<Record<string, AnyComponentSchema>>;
 }
 
+type ConditionalOptions = NonNullable<Conditional['conditional']>;
+
 export type TestConditional<
   S,
-  V extends Required<OFConditionalOptions>['eq'] = Required<OFConditionalOptions>['eq'],
+  V extends Required<ConditionalOptions>['eq'] = Required<ConditionalOptions>['eq'],
 > = (
   /**
    * The component definition referenced by `conditional.when`.

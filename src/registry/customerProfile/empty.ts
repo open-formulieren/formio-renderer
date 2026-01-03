@@ -1,8 +1,9 @@
-import type {CustomerProfileComponentSchema, CustomerProfileData} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 
 import type {IsEmpty} from '@/registry/types';
 
 import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
+import type {CustomerProfileData} from './types';
 
 const isEmpty: IsEmpty<CustomerProfileComponentSchema, CustomerProfileData | null> = (
   _componentDefinition,

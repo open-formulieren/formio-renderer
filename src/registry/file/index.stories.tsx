@@ -10,7 +10,7 @@ import type {JSONObject} from '@/types';
 
 import FormioFile from './File';
 import ValueDisplay from './ValueDisplay';
-import {FILE_COMPONENT_BOILERPLATE, buildFile, getFileConfiguration} from './test-utils';
+import {buildFile, getFileConfiguration} from './test-utils';
 import type {FormikFileUpload} from './types';
 
 export default {
@@ -40,7 +40,6 @@ type Story = StoryObj<typeof FormioFile>;
 export const MinimalConfiguration: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf', 'application/msword']),
       id: 'component1',
       type: 'file',
@@ -62,7 +61,6 @@ export const MinimalConfiguration: Story = {
 export const WithDescriptionAndTooltip: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf', 'application/msword']),
       id: 'component1',
       type: 'file',
@@ -86,7 +84,6 @@ export const WithDescriptionAndTooltip: Story = {
 export const SingleFileUpload: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf', 'application/msword']),
       id: 'component1',
       type: 'file',
@@ -118,7 +115,6 @@ export const SingleFileUpload: Story = {
 export const MultipleFilesUpload: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf', 'application/msword']),
       id: 'component1',
       type: 'file',
@@ -155,7 +151,6 @@ export const MultipleFilesUpload: Story = {
 export const WithRestrictions: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
       id: 'component1',
       type: 'file',
@@ -188,7 +183,6 @@ export const WithRestrictions: Story = {
 export const MaxFilesLimitReached: Story = {
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['image/jpeg', 'image/png', 'image/heic']),
       id: 'component1',
       type: 'file',
@@ -347,7 +341,6 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration([
         'application/pdf',
         'application/msword',
@@ -419,7 +412,6 @@ export const ValidateRequired: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf']),
       id: 'component1',
       type: 'file',
@@ -451,7 +443,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration(['application/pdf']),
       id: 'component1',
       type: 'file',
@@ -482,7 +473,6 @@ export const ValidateNoPendingOrErroredUploads: ValidationStory = {
   args: {
     onSubmit: fn(),
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration([
         'application/pdf',
         'application/msword',
@@ -538,7 +528,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
   ...BaseValueDisplayStory,
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration([
         'application/pdf',
         'application/msword',
@@ -565,7 +554,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
   ...BaseValueDisplayStory,
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration([
         'application/pdf',
         'application/msword',
@@ -599,7 +587,6 @@ export const EmptyValueDisplay: ValueDisplayStory = {
   ...BaseValueDisplayStory,
   args: {
     componentDefinition: {
-      ...FILE_COMPONENT_BOILERPLATE,
       ...getFileConfiguration([
         'application/pdf',
         'application/msword',

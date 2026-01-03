@@ -1,4 +1,4 @@
-import type {CustomerProfileComponentSchema, CustomerProfileData} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, within} from 'storybook/test';
 
@@ -7,6 +7,7 @@ import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import ValueDisplay from './ValueDisplay';
 import {FormioCustomerProfile} from './index';
+import type {CustomerProfileData} from './types';
 
 export default {
   title: 'Component registry / special / profile / presentation',

@@ -13,9 +13,6 @@ const BASE_COMPONENT: TimeComponentSchema = {
   id: 'timefield',
   key: 'timefield',
   label: 'Text field',
-  inputType: 'text',
-  format: 'HH:mm',
-  validateOn: 'blur',
 };
 
 const MIN_TIME_COMPONENT = {...BASE_COMPONENT, validate: {minTime: '09:00'}};

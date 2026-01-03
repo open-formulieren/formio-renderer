@@ -15,14 +15,7 @@ const BASE_COMPONENT: DateTimeComponentSchema = {
   label: 'Datetime field',
 };
 
-const BASE_DATEPICKER: DateTimeComponentSchema['datePicker'] = {
-  showWeeks: false,
-  startingDay: 0,
-  initDate: '',
-  minMode: 'day',
-  maxMode: 'day',
-  yearRows: 0,
-  yearColumns: 0,
+const BASE_DATEPICKER: NonNullable<DateTimeComponentSchema['datePicker']> = {
   minDate: null,
   maxDate: null,
 };
@@ -156,7 +149,7 @@ describe('datetime component validation', () => {
   ])('Maximum date: %s (valid: %s)', (maxDate, valid) => {
     const component: DateTimeComponentSchema = {
       ...BASE_COMPONENT,
-      datePicker: {...BASE_DATEPICKER, maxDate},
+      datePicker: {...BASE_DATEPICKER, maxDate} satisfies typeof BASE_DATEPICKER,
     };
     const schema = buildValidationSchema(component);
 
@@ -168,7 +161,10 @@ describe('datetime component validation', () => {
   test('max date with custom error message', () => {
     const component: DateTimeComponentSchema = {
       ...BASE_COMPONENT,
-      datePicker: {...BASE_DATEPICKER, maxDate: '2024-01-01T00:00'},
+      datePicker: {
+        ...BASE_DATEPICKER,
+        maxDate: '2024-01-01T00:00',
+      } satisfies typeof BASE_DATEPICKER,
       errors: {maxDate: 'Custom error message for max date'},
     };
     const schema = buildValidationSchema(component);

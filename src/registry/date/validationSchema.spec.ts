@@ -15,14 +15,7 @@ const BASE_COMPONENT: DateComponentSchema = {
   label: 'Date field',
 };
 
-const BASE_DATEPICKER: DateComponentSchema['datePicker'] = {
-  showWeeks: false,
-  startingDay: 0,
-  initDate: '',
-  minMode: 'day',
-  maxMode: 'day',
-  yearRows: 0,
-  yearColumns: 0,
+const BASE_DATEPICKER: NonNullable<DateComponentSchema['datePicker']> = {
   minDate: null,
   maxDate: null,
 };

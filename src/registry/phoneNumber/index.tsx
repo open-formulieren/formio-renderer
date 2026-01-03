@@ -22,8 +22,7 @@ export interface PhoneNumberFieldProps {
  * validators.
  */
 export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, placeholder, autocomplete, disabled} =
-    componentDefinition;
+  const {key, label, tooltip, description, validate, autocomplete} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
     'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
@@ -33,7 +32,6 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
     description,
     tooltip,
     isRequired: validate?.required,
-    isReadOnly: disabled,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>
@@ -43,7 +41,6 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
         <TextField
           name={name}
           label={label}
-          placeholder={placeholder}
           pattern="^[+0-9][\- 0-9]+$"
           inputMode="tel"
           autoComplete={autocomplete}
@@ -55,7 +52,6 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
   ) : (
     <TextField
       {...sharedProps}
-      placeholder={placeholder}
       pattern="^[+0-9][\- 0-9]+$"
       inputMode="tel"
       autoComplete={autocomplete}

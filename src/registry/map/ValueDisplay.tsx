@@ -1,4 +1,5 @@
-import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
+import type {MapComponentSchema} from '@open-formulieren/types';
+import type {GeoJsonGeometry} from '@open-formulieren/types/dist/components/map';
 import {Suspense} from 'react';
 
 import LeafletMap from '@/components/map';

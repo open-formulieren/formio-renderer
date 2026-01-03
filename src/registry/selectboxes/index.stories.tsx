@@ -1,3 +1,4 @@
+import type {SelectboxesComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, waitForElementToBeRemoved, within} from 'storybook/test';
 
@@ -7,7 +8,6 @@ import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 
 import {FormioSelectboxes} from './';
 import ValueDisplay from './ValueDisplay';
-import type {ManualSelectboxesValuesSchema} from './types';
 
 export default {
   title: 'Component registry / basic / selectboxes',
@@ -17,7 +17,7 @@ export default {
 
 type Story = StoryObj<typeof FormioSelectboxes>;
 
-const extensionBoilerplate: Pick<ManualSelectboxesValuesSchema, 'openForms'> = {
+const extensionBoilerplate: Pick<SelectboxesComponentSchema, 'openForms'> = {
   openForms: {
     dataSrc: 'manual',
     translations: {},
@@ -43,7 +43,7 @@ export const MinimalConfiguration: Story = {
       ],
       defaultValue: {referenceLists: false, formVariable: false},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   parameters: {
     formik: {
@@ -80,7 +80,7 @@ export const WithTooltip: Story = {
       ],
       defaultValue: {terra: true, ziggy: true},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   parameters: {
     formik: {
@@ -117,7 +117,7 @@ export const WithOptionDescriptions: Story = {
       ],
       defaultValue: {referenceLists: false, formVariable: false},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
 };
 
@@ -141,7 +141,7 @@ export const NoAsterisks: Story = {
       ],
       defaultValue: {referenceLists: false, formVariable: false},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   parameters: {
     formik: {
@@ -161,7 +161,7 @@ export const NoAsterisks: Story = {
 };
 
 interface ValidationStoryArgs {
-  componentDefinition: ManualSelectboxesValuesSchema;
+  componentDefinition: SelectboxesComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
 }
 
@@ -194,7 +194,7 @@ export const ValidateRequired: ValidationStory = {
         required: true,
       },
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -228,7 +228,7 @@ export const MaxAllowedReached: ValidationStory = {
         maxSelectedCount: 2,
       },
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -261,7 +261,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       },
       errors: {required: 'Custom error message for required'},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -291,7 +291,7 @@ export const ValidateMinRequiredOnBlur: ValidationStory = {
         minSelectedCount: 2,
       },
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
 
   play: async ({canvasElement, args, step}) => {
@@ -347,7 +347,7 @@ export const ValidateMinRequiredWithCustomErrorMessage: ValidationStory = {
       },
       errors: {minSelectedCount: 'Custom error message for min selected count'},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
 
   play: async ({canvasElement}) => {
@@ -378,7 +378,7 @@ export const SillyOptionValues: ValidationStory = {
       ],
       defaultValue: {},
       ...extensionBoilerplate,
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
   },
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
@@ -397,7 +397,7 @@ export const SillyOptionValues: ValidationStory = {
 };
 
 interface ValueDisplayStoryArgs {
-  componentDefinition: ManualSelectboxesValuesSchema;
+  componentDefinition: SelectboxesComponentSchema;
   value: Record<string, boolean>;
 }
 
@@ -427,7 +427,7 @@ export const ValueDisplayStory: ValueDisplayStory = {
         {value: 'option1', label: 'Option 1'},
         {value: 'option2', label: 'Option 2'},
       ],
-    } satisfies ManualSelectboxesValuesSchema,
+    } satisfies SelectboxesComponentSchema,
     value: {option1: true, option2: true},
   },
 };

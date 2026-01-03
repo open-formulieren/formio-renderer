@@ -43,7 +43,6 @@ test.each([
         id: 'email',
         key: 'email',
         label: 'Textfield',
-        validateOn: 'blur',
       } satisfies EmailComponentSchema,
     ],
   ],
@@ -61,7 +60,6 @@ test.each([
         id: 'email',
         key: 'email',
         label: 'Textfield',
-        validateOn: 'blur',
         conditional: {
           show: false,
           when: 'textfield',
@@ -78,7 +76,6 @@ test.each([
         id: 'email',
         key: 'email',
         label: 'Textfield',
-        validateOn: 'blur',
         conditional: {
           show: false,
           when: 'textfield',
@@ -116,7 +113,6 @@ test.each([
         id: 'email',
         key: 'email',
         label: 'Textfield',
-        validateOn: 'blur',
         conditional: {
           show: false,
           when: 'textfield',
@@ -149,8 +145,6 @@ test.each([
           when: 'textfield',
           eq: 'some-value',
         },
-        validateOn: 'blur',
-        inputMask: '999999999',
       } satisfies BsnComponentSchema,
       {
         type: 'fieldset',
@@ -164,7 +158,6 @@ test.each([
             id: 'email',
             key: 'email',
             label: 'Textfield',
-            validateOn: 'blur',
             conditional: {
               show: false,
               when: 'bsn',
@@ -338,7 +331,6 @@ describe('The getComponentsMap utility', () => {
             key: 'my.email',
             id: 'email1',
             label: 'An email field',
-            validateOn: 'blur',
           } satisfies EmailComponentSchema,
           {
             type: 'columns',

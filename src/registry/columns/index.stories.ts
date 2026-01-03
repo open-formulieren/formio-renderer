@@ -127,7 +127,6 @@ export const ValidatesNestedComponents: ValidationStory = {
             key: 'email',
             type: 'email',
             label: 'Email address',
-            validateOn: 'blur',
             validate: {
               required: true,
             },

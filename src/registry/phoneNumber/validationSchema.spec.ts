@@ -13,7 +13,6 @@ const BASE_COMPONENT: PhoneNumberComponentSchema = {
   id: 'phoneNumber',
   key: 'phoneNumber',
   label: 'Phone number',
-  inputMask: null,
 };
 
 const buildValidationSchema = (component: PhoneNumberComponentSchema) => {

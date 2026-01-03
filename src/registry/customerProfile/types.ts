@@ -1,4 +1,9 @@
-import type {CustomerProfileData, DigitalAddressType} from '@open-formulieren/types';
+import type {
+  DigitalAddress,
+  DigitalAddressType,
+} from '@open-formulieren/types/dist/components/customerProfile';
+
+export type CustomerProfileData = DigitalAddress[];
 
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the

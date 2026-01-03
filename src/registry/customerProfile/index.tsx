@@ -1,8 +1,5 @@
-import type {
-  CustomerProfileComponentSchema,
-  CustomerProfileData,
-  DigitalAddress,
-} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
+import type {DigitalAddress} from '@open-formulieren/types/dist/components/customerProfile';
 import type {FormikErrors} from 'formik';
 import {getIn, useFormikContext} from 'formik';
 import {useId} from 'react';
@@ -23,7 +20,7 @@ import isEmpty from './empty';
 import {useDigitalAddresses} from './hooks';
 import getInitialValues from './initialValues';
 import {DigitalAddressFields} from './subFields';
-import type {FormValues} from './types';
+import type {CustomerProfileData, FormValues} from './types';
 import getValidationSchema from './validationSchema';
 
 export interface FormioCustomerProfileProps {

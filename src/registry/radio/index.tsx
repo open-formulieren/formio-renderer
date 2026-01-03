@@ -6,7 +6,6 @@ import type {RegistryEntry} from '@/registry/types';
 import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
-import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
 
 export interface FormioRadioFieldProps {
@@ -14,7 +13,6 @@ export interface FormioRadioFieldProps {
 }
 
 export const FormioRadioField: React.FC<FormioRadioFieldProps> = ({componentDefinition}) => {
-  assertManualValues(componentDefinition);
   const {key, label, tooltip, description, validate = {}, values} = componentDefinition;
   const {required = false} = validate;
   return (

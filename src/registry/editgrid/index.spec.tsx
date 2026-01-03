@@ -390,8 +390,6 @@ test('defaultValue: null does not crash', async () => {
           addAnother: 'Add item',
           disableAddingRemovingRows: false,
           components: [],
-          // @ts-expect-error type definitions and actual formio.js builder behaviour don't
-          // match!
           defaultValue: null,
         },
       ]}

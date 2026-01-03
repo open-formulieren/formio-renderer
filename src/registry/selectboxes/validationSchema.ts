@@ -5,8 +5,6 @@ import {z} from 'zod';
 import type {GetValidationSchema} from '@/registry/types';
 import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
-import {assertManualValues} from './types';
-
 const MIN_COUNT_MESSAGE = defineMessage({
   description: 'Selectboxes minimum selected count error message',
   defaultMessage: `You must select at least {minSelectedCount, plural,
@@ -30,7 +28,6 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
   componentDefinition,
   {intl, validatePlugins}
 ) => {
-  assertManualValues(componentDefinition);
   const {key, validate = {}, values: options, errors, label} = componentDefinition;
   const {required, minSelectedCount, maxSelectedCount, plugins = []} = validate;
 

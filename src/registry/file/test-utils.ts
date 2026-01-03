@@ -2,18 +2,6 @@ import type {FileComponentSchema} from '@open-formulieren/types';
 
 import type {FormikFileUpload} from './types';
 
-export const FILE_COMPONENT_BOILERPLATE: Pick<
-  FileComponentSchema,
-  'webcam' | 'options' | 'storage' | 'url'
-> = {
-  webcam: false,
-  options: {
-    withCredentials: true,
-  },
-  storage: 'url',
-  url: 'https://example.com/ignored/upload/dummy',
-};
-
 type ExampleMimeType =
   | 'application/pdf'
   | 'application/msword'

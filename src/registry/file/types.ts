@@ -1,4 +1,4 @@
-import type {FileUploadData} from '@open-formulieren/types';
+import type {FileUploadData} from '@open-formulieren/types/dist/components/file';
 
 /**
  * Backend `FileUploadData` data structure enriched with local client-side state for the

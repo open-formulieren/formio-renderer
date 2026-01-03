@@ -27,7 +27,6 @@ export const MinimalConfiguration: Story = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -52,7 +51,6 @@ export const MinimalConfigurationWithEnglishLocale: Story = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -80,7 +78,6 @@ export const WithTooltip: Story = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
       description: 'A description',
       tooltip: 'A tooltip',
     },
@@ -101,7 +98,6 @@ export const AdditionalConfiguration: Story = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
       allowNegative: true,
       suffix: 'm<sup>2</sup>',
       decimalLimit: 2,
@@ -150,7 +146,6 @@ export const ValidateRequired: ValidationStory = {
       validate: {
         required: true,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -176,7 +171,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       validate: {
         required: true,
       },
-      validateOn: 'blur',
       errors: {required: 'Custom errom message for required'},
     },
   },
@@ -200,7 +194,6 @@ export const ValidateMax: ValidationStory = {
       validate: {
         max: 10,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -240,7 +233,6 @@ export const ValidateMaxWithCustomErrorMessage: ValidationStory = {
       validate: {
         max: 10,
       },
-      validateOn: 'blur',
       errors: {max: 'Custom error message for max value'},
     },
   },
@@ -269,7 +261,6 @@ export const ValidateMin: ValidationStory = {
       validate: {
         min: 10,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -309,7 +300,6 @@ export const ValidateMinWithCustomErrorMessage: ValidationStory = {
       validate: {
         min: 10,
       },
-      validateOn: 'blur',
       errors: {min: 'Custom error message for min value'},
     },
   },
@@ -350,7 +340,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
       decimalLimit: 4,
     },
     value: 12.3456789,
@@ -370,7 +359,6 @@ export const SingleValueDisplayWithEnglishLocale: ValueDisplayStory = {
       type: 'number',
       key: 'number',
       label: 'Number',
-      validateOn: 'blur',
       decimalLimit: 2,
     },
     value: 12.345678,

@@ -20,7 +20,6 @@ test.each([
       key: 'cosign',
       id: 'cosign',
       label: 'Cosign',
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);

@@ -24,7 +24,6 @@ export const MinimalConfiguration: Story = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   parameters: {
@@ -43,7 +42,6 @@ export const WithTooltip: Story = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
       tooltip: 'Surprise!',
     },
   },
@@ -63,7 +61,6 @@ export const WithAutoComplete: Story = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
       autocomplete: 'email',
     },
   },
@@ -101,7 +98,6 @@ export const ValidateCosignFormat: ValidationStory = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
     },
   },
   play: async ({canvasElement}) => {
@@ -124,7 +120,6 @@ export const ValidateCosignRequired: ValidationStory = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
       validate: {
         required: true,
       },
@@ -152,7 +147,6 @@ export const ValidateCosignRequiredWithCustomErrors: ValidationStory = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
       validate: {
         required: true,
       },
@@ -176,7 +170,6 @@ export const PassesAllValidations: ValidationStory = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
       validate: {
         required: true,
       },
@@ -217,7 +210,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'cosign',
       key: 'cosign',
       label: 'Co-signer email address',
-      validateOn: 'blur', // ignored but required in the types
     },
     value: 'openforms@example.com',
   },

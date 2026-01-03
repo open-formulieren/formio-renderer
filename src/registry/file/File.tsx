@@ -1,4 +1,5 @@
-import type {FileComponentSchema, FileUploadData} from '@open-formulieren/types';
+import type {FileComponentSchema} from '@open-formulieren/types';
+import type {FileUploadData} from '@open-formulieren/types/dist/components/file';
 import {FormField} from '@utrecht/component-library-react';
 import {FieldArray, useFormikContext} from 'formik';
 import type {ArrayHelpers, FormikErrors} from 'formik';

@@ -21,7 +21,6 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
     label,
     description,
     tooltip,
-    placeholder,
     validate,
     autocomplete,
     openForms = {translations: {}},
@@ -45,14 +44,7 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
       {...sharedProps}
       newItemValue=""
       renderField={({name, label}) => (
-        <TextField
-          name={name}
-          label={label}
-          type="email"
-          placeholder={placeholder}
-          autoComplete={autocomplete}
-          isMultiValue
-        >
+        <TextField name={name} label={label} type="email" autoComplete={autocomplete} isMultiValue>
           {isVerificationRequired && (
             <VerificationStatus prefixedComponentKey={prefixedKey} name={name} />
           )}
@@ -60,7 +52,7 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
       )}
     />
   ) : (
-    <TextField {...sharedProps} type="email" placeholder={placeholder} autoComplete={autocomplete}>
+    <TextField {...sharedProps} type="email" autoComplete={autocomplete}>
       {isVerificationRequired && (
         <VerificationStatus prefixedComponentKey={prefixedKey} name={prefixedKey} />
       )}

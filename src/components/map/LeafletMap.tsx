@@ -1,4 +1,5 @@
-import type {CoordinatePair, GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
+import type {MapComponentSchema} from '@open-formulieren/types';
+import type {CoordinatePair, GeoJsonGeometry} from '@open-formulieren/types/dist/components/map';
 import L from 'leaflet';
 import {useEffect, useId, useRef} from 'react';
 import {useIntl} from 'react-intl';

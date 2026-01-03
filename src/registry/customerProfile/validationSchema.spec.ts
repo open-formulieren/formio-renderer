@@ -1,13 +1,11 @@
-import type {
-  CustomerProfileComponentSchema,
-  CustomerProfileData,
-  DigitalAddressType,
-} from '@open-formulieren/types';
+import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
+import type {DigitalAddressType} from '@open-formulieren/types/dist/components/customerProfile';
 import {createIntl} from 'react-intl';
 import {describe, expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry/registry';
 
+import type {CustomerProfileData} from './types';
 import getValidationSchema from './validationSchema';
 
 const intl = createIntl({locale: 'en', messages: {}});

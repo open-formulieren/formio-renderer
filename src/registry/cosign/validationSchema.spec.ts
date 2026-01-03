@@ -13,7 +13,6 @@ const BASE_COMPONENT: CosignV2ComponentSchema = {
   id: 'cosign',
   key: 'cosign',
   label: 'cosign',
-  validateOn: 'blur',
 };
 
 const buildValidationSchema = (component: CosignV2ComponentSchema) => {

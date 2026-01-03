@@ -1,4 +1,7 @@
-import type {DigitalAddressType, PreferenceUpdateOptions} from '@open-formulieren/types';
+import type {
+  DigitalAddressType,
+  PreferenceUpdateOptions,
+} from '@open-formulieren/types/dist/components/customerProfile';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Form, Formik} from 'formik';
 import {useId} from 'react';

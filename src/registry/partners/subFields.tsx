@@ -1,4 +1,4 @@
-import type {PartnerDetails} from '@open-formulieren/types';
+import type {PartnerDetails} from '@open-formulieren/types/dist/components/partners';
 import {FormattedMessage, defineMessages} from 'react-intl';
 
 import DateField from '@/components/forms/DateField';

@@ -1,4 +1,4 @@
-import type {AddressData} from '@open-formulieren/types';
+import type {AddressData} from '@open-formulieren/types/dist/components/addressNL';
 import {useFormikContext} from 'formik';
 import {useEffect, useState} from 'react';
 import {useAsync} from 'react-use';

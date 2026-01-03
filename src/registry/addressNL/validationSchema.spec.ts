@@ -1,4 +1,5 @@
-import type {AddressData, AddressNLComponentSchema} from '@open-formulieren/types';
+import type {AddressNLComponentSchema} from '@open-formulieren/types';
+import type {AddressData} from '@open-formulieren/types/dist/components/addressNL';
 import {createIntl} from 'react-intl';
 import {describe, expect, test} from 'vitest';
 

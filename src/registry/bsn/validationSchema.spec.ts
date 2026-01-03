@@ -13,8 +13,6 @@ const BASE_COMPONENT: BsnComponentSchema = {
   id: 'bsn',
   key: 'bsn',
   label: 'BSN',
-  validateOn: 'blur',
-  inputMask: '999999999',
 };
 
 const buildValidationSchema = (component: BsnComponentSchema) => {

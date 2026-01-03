@@ -296,13 +296,6 @@ export const MinMaxValidation: ValidationStory = {
       datePicker: {
         minDate: '2025-10-08T12:00', // this is how the value is set in the form builder
         maxDate: '2025-10-10T19:00',
-        showWeeks: false,
-        startingDay: 0,
-        initDate: '',
-        minMode: 'day',
-        maxMode: 'day',
-        yearRows: 0,
-        yearColumns: 0,
       },
     } satisfies DateTimeComponentSchema,
   },
@@ -360,13 +353,6 @@ export const MinMaxValidationInputGroupWithCustomErrorMessage: ValidationStory =
       datePicker: {
         minDate: '2025-10-08T12:00', // this is how the value is set in the form builder
         maxDate: '2025-10-10T19:00',
-        showWeeks: false,
-        startingDay: 0,
-        initDate: '',
-        minMode: 'day',
-        maxMode: 'day',
-        yearRows: 0,
-        yearColumns: 0,
       },
       errors: {minDate: 'Custom error for min date', maxDate: 'Custom error for max date'},
     } satisfies DateTimeComponentSchema,
@@ -410,13 +396,6 @@ export const MinMaxValidationWithEnglishLocale: ValidationStory = {
       datePicker: {
         minDate: '2025-10-08T12:00', // this is how the value is set in the form builder
         maxDate: '2025-10-10T19:00',
-        showWeeks: false,
-        startingDay: 0,
-        initDate: '',
-        minMode: 'day',
-        maxMode: 'day',
-        yearRows: 0,
-        yearColumns: 0,
       },
     } satisfies DateTimeComponentSchema,
   },

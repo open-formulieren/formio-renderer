@@ -14,7 +14,6 @@ const BASE_COMPONENT: CurrencyComponentSchema = {
   key: 'currency',
   currency: 'EUR',
   label: 'Currency',
-  validateOn: 'blur',
   validate: {
     min: 5,
     max: 10,

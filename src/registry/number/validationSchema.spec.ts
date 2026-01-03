@@ -13,7 +13,6 @@ const BASE_COMPONENT: NumberComponentSchema = {
   id: 'number',
   key: 'number',
   label: 'Number',
-  validateOn: 'blur',
   validate: {
     min: 5,
     max: 10,

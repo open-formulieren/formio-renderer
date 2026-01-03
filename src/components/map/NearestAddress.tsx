@@ -1,4 +1,4 @@
-import type {CoordinatePair} from '@open-formulieren/types';
+import type {CoordinatePair} from '@open-formulieren/types/dist/components/map';
 import type React from 'react';
 import {FormattedMessage} from 'react-intl';
 import {useAsync} from 'react-use';

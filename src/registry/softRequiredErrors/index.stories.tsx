@@ -20,7 +20,6 @@ export default {
       id: 'softRequiredErrors',
       type: 'softRequiredErrors',
       key: 'softRequiredErrors',
-      label: 'Soft required errors',
       html: `
       <p>Not all required fields are filled out. That can get expensive!</p>
 

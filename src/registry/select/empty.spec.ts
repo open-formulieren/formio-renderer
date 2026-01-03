@@ -29,8 +29,6 @@ test.each([
       key: 'select',
       id: 'select',
       label: 'select',
-      dataSrc: 'values',
-      dataType: 'string',
       data: {
         values: [
           {

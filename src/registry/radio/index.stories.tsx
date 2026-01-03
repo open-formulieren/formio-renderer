@@ -1,3 +1,4 @@
+import type {RadioComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
@@ -7,7 +8,6 @@ import {withFormik} from '@/sb-decorators';
 
 import {FormioRadioField} from './';
 import ValueDisplay from './ValueDisplay';
-import type {ManualRadioValuesSchema} from './types';
 
 export default {
   title: 'Component registry / basic / radio',
@@ -17,7 +17,7 @@ export default {
 
 type Story = StoryObj<typeof FormioRadioField>;
 
-const extensionBoilerplate: Pick<ManualRadioValuesSchema, 'openForms'> = {
+const extensionBoilerplate: Pick<RadioComponentSchema, 'openForms'> = {
   openForms: {
     dataSrc: 'manual',
     translations: {},
@@ -43,7 +43,7 @@ export const MinimalConfiguration: Story = {
       ],
       defaultValue: null,
       ...extensionBoilerplate,
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
   },
   parameters: {
     formik: {
@@ -77,7 +77,7 @@ export const WithTooltip: Story = {
       ],
       defaultValue: null,
       ...extensionBoilerplate,
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
   },
   parameters: {
     formik: {
@@ -91,7 +91,7 @@ export const WithTooltip: Story = {
 };
 
 interface ValidationStoryArgs {
-  componentDefinition: ManualRadioValuesSchema;
+  componentDefinition: RadioComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
 }
 
@@ -124,7 +124,7 @@ export const ValidateRequired: ValidationStory = {
         required: true,
       },
       ...extensionBoilerplate,
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -158,7 +158,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       },
       errors: {required: 'Custom error message for required'},
       ...extensionBoilerplate,
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -186,7 +186,7 @@ export const ValidateOptionalNull: ValidationStory = {
         required: false,
       },
       ...extensionBoilerplate,
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
   },
   play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
@@ -200,7 +200,7 @@ export const ValidateOptionalNull: ValidationStory = {
 };
 
 interface ValueDisplayStoryArgs {
-  componentDefinition: ManualRadioValuesSchema;
+  componentDefinition: RadioComponentSchema;
   value: string;
 }
 
@@ -230,7 +230,7 @@ export const ValueDisplayStory: ValueDisplayStory = {
         {value: 'option1', label: 'Option 1'},
         {value: 'option2', label: 'Option 2'},
       ],
-    } satisfies ManualRadioValuesSchema,
+    } satisfies RadioComponentSchema,
     value: 'option1',
   },
 };

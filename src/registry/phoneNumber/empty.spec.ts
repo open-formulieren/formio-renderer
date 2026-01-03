@@ -22,7 +22,6 @@ test.each([
       key: 'phoneNumber',
       id: 'phoneNumber',
       label: 'phoneNumber',
-      inputMask: null,
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -57,7 +56,6 @@ test.each([
       key: 'phoneNumber',
       id: 'phoneNumber',
       label: 'phoneNumber',
-      inputMask: null,
       multiple: true,
     };
 

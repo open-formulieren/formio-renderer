@@ -1,4 +1,4 @@
-import type {PartnerDetails} from '@open-formulieren/types';
+import type {PartnerDetails} from '@open-formulieren/types/dist/components/partners';
 
 import type {ManuallyAddedPartnerDetails} from '@/registry/partners/types';
 

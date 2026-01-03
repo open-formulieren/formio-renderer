@@ -24,7 +24,6 @@ export const MinimalConfiguration: Story = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN field',
-      validateOn: 'blur',
     } satisfies IbanComponentSchema,
   },
   parameters: {
@@ -47,7 +46,6 @@ export const WithTooltip: Story = {
       label: 'An IBAN',
       tooltip: 'Surprise!',
       description: 'A description',
-      validateOn: 'blur',
     } satisfies IbanComponentSchema,
   },
   parameters: {
@@ -68,7 +66,6 @@ export const Multiple: Story = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN field',
-      validateOn: 'blur',
       multiple: true,
     } satisfies IbanComponentSchema,
   },
@@ -90,7 +87,6 @@ export const MultipleWithItemErrors: Story = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN field',
-      validateOn: 'blur',
       multiple: true,
     },
   },
@@ -140,7 +136,6 @@ export const ValidateRequired: ValidationStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN',
-      validateOn: 'blur',
       validate: {
         required: true,
       },
@@ -166,7 +161,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN',
-      validateOn: 'blur',
       validate: {
         required: true,
       },
@@ -190,7 +184,6 @@ export const ValidateIBAN: ValidationStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN',
-      validateOn: 'blur',
       validate: {
         required: false,
       },
@@ -217,7 +210,6 @@ export const ValidationMultiple: ValidationStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN field',
-      validateOn: 'blur',
       multiple: true,
       validate: {
         required: true,
@@ -257,7 +249,6 @@ export const ValidationMultipleWithCustomErrorMessage: ValidationStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN field',
-      validateOn: 'blur',
       multiple: true,
       validate: {
         required: true,
@@ -311,7 +302,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN',
-      validateOn: 'blur',
       multiple: false,
     } satisfies IbanComponentSchema,
     value: 'NL91ABNA0417164300',
@@ -326,7 +316,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       type: 'iban',
       key: 'my.iban',
       label: 'An IBAN',
-      validateOn: 'blur',
       multiple: true,
     } satisfies IbanComponentSchema,
     value: ['IE64 IRCE 9205 0112 3456 78', 'BI1320001100010000123456789'],

@@ -1,4 +1,5 @@
-import type {ChildDetails, ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildrenComponentSchema} from '@open-formulieren/types';
+import type {ChildDetails} from '@open-formulieren/types/dist/components/children';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';

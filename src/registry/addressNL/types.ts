@@ -1,4 +1,4 @@
-import type {AddressData} from '@open-formulieren/types';
+import type {AddressData} from '@open-formulieren/types/dist/components/addressNL';
 
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the AddressNL

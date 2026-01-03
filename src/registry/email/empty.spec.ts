@@ -20,7 +20,6 @@ test.each([
       key: 'email',
       id: 'email',
       label: 'Email',
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -52,7 +51,6 @@ test.each([
       key: 'email',
       id: 'email',
       label: 'Email',
-      validateOn: 'blur',
       multiple: true,
     };
 

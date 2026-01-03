@@ -5,7 +5,6 @@ import type {JSONObject} from '@/types';
 
 const getInitialValues: GetInitialValues<MapComponentSchema, JSONObject | null> = ({
   key,
-  defaultValue = null,
-}: MapComponentSchema) => ({[key]: defaultValue as unknown as JSONObject});
+}: MapComponentSchema) => ({[key]: null});
 
 export default getInitialValues;

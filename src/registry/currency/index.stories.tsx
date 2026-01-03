@@ -28,7 +28,6 @@ export const MinimalConfiguration: Story = {
       key: 'currency',
       label: 'Currency',
       currency: 'EUR',
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -55,7 +54,6 @@ export const MinimalConfigurationWithEnglishLocale: Story = {
       key: 'currency',
       label: 'Currency',
       currency: 'EUR',
-      validateOn: 'blur',
     },
   },
   parameters: {
@@ -84,7 +82,6 @@ export const WithTooltip: Story = {
       key: 'currency',
       label: 'Currency',
       currency: 'EUR',
-      validateOn: 'blur',
       description: 'A description',
       tooltip: 'A tooltip',
     },
@@ -106,7 +103,6 @@ export const AdditionalConfiguration: Story = {
       key: 'currency',
       label: 'Currency',
       currency: 'EUR',
-      validateOn: 'blur',
       allowNegative: true,
       decimalLimit: 3,
     },
@@ -155,7 +151,6 @@ export const ValidateRequired: ValidationStory = {
       validate: {
         required: true,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -184,7 +179,6 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       validate: {
         required: true,
       },
-      validateOn: 'blur',
       errors: {required: 'Custom error message for required'},
     },
   },
@@ -209,7 +203,6 @@ export const ValidateMax: ValidationStory = {
       validate: {
         max: 10,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -250,7 +243,6 @@ export const ValidateMaxWithCustomErrorMessage: ValidationStory = {
       validate: {
         max: 10,
       },
-      validateOn: 'blur',
       errors: {max: 'Custom error message for max value'},
     },
   },
@@ -279,7 +271,6 @@ export const ValidateMin: ValidationStory = {
       validate: {
         min: 10,
       },
-      validateOn: 'blur',
     },
   },
   play: async ({canvasElement}) => {
@@ -320,7 +311,6 @@ export const ValidateMinWithCustomErrorMessage: ValidationStory = {
       validate: {
         min: 10,
       },
-      validateOn: 'blur',
       errors: {min: 'Custom error message for min value'},
     },
   },
@@ -361,7 +351,6 @@ export const SingleValueDisplay: ValueDisplayStory = {
       key: 'currency',
       label: 'currency',
       currency: 'EUR',
-      validateOn: 'blur',
     },
     value: 12.34,
   },
@@ -381,7 +370,6 @@ export const SingleValueDisplayWithEnglishLocale: ValueDisplayStory = {
       key: 'currency',
       label: 'currency',
       currency: 'EUR',
-      validateOn: 'blur',
       decimalLimit: 3,
     },
     value: 12.3456,

@@ -20,8 +20,6 @@ test.each([
       key: 'bsn',
       id: 'bsn',
       label: 'BSN',
-      inputMask: '999999999',
-      validateOn: 'blur',
     };
 
     const result = isEmpty(component, valueToTest, getRegistryEntry);
@@ -49,8 +47,6 @@ test.each([
       key: 'bsn',
       id: 'bsn',
       label: 'BSN',
-      inputMask: '999999999',
-      validateOn: 'blur',
       multiple: true,
     };
 

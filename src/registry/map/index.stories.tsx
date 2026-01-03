@@ -1,4 +1,5 @@
-import type {GeoJsonGeometry, MapComponentSchema} from '@open-formulieren/types';
+import type {MapComponentSchema} from '@open-formulieren/types';
+import type {GeoJsonGeometry} from '@open-formulieren/types/dist/components/map';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
@@ -492,6 +493,7 @@ export const PolygonDisplay: ValueDisplayStory = {
           [5.291266, 52.1326332],
           [5.091266, 52.128332],
           [5.591266, 52.48332],
+          [5.291266, 52.1326332],
         ],
       ],
     },

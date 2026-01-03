@@ -15,7 +15,6 @@ import ValueDisplay from './ValueDisplay';
 import testConditional from './conditional';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
-import {assertManualValues} from './types';
 import getValidationSchema from './validationSchema';
 
 export interface FormioSelectboxesProps {
@@ -23,7 +22,6 @@ export interface FormioSelectboxesProps {
 }
 
 export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDefinition}) => {
-  assertManualValues(componentDefinition);
   const {key, label, tooltip, description, validate = {}, values: options} = componentDefinition;
   const {required = false, maxSelectedCount} = validate;
   const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
