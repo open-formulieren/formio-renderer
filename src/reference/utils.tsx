@@ -1,7 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
-// @ts-expect-error no TS definitions included
-import {Form as ReactFormioForm} from 'react-formio';
 import {fn} from 'storybook/test';
 
 import {PrimaryActionButton} from '@/components/Button';
@@ -21,16 +19,7 @@ export interface ReferenceStoryArgs {
   onSubmit?: (values: JSONObject) => void;
 }
 
-export type ReferenceMeta = Meta<ReferenceStoryArgs> & {
-  title: `Internal API / Reference behaviour / ${string}`;
-};
-
-export type Story = StoryObj<ReferenceStoryArgs>;
-
-// usage: await sleep(3000);
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const renderCustom = (args: ReferenceStoryArgs) => {
+export const render = (args: ReferenceStoryArgs) => {
   const {onSubmit = fn(), submissionData = undefined, ...props} = args;
   return (
     <FormioForm
@@ -46,65 +35,8 @@ const renderCustom = (args: ReferenceStoryArgs) => {
   );
 };
 
-const renderReference = (args: ReferenceStoryArgs) => (
-  <>
-    {/*
-      NOTE: in development with Storybook, this triggers "Rendered more hooks than
-      during the previous render." errors. YOu can simply re-mount the story and then
-      it's fine again. We have no option at the moment for a different solution.
-    */}
-    <ReactFormioForm
-      form={{
-        display: 'form',
-        components: [
-          ...args.components,
-          {
-            type: 'button',
-            key: 'submit',
-            label: 'Submit',
-            input: true,
-          },
-        ],
-      }}
-      submission={{data: args.submissionData ?? {}}}
-      options={{noAlerts: true}}
-      onSubmit={(event: {data: JSONObject}) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {submit, ...values} = event.data;
-        args.onSubmit?.(values);
-      }}
-    />
-    <div
-      style={{
-        fontStyle: 'italic',
-        fontSize: '0.75em',
-        textAlign: 'center',
-        background: '#CDCDCDAA',
-        padding: '0.5em',
-        marginBlockStart: '1em',
-      }}
-    >
-      Formio.js SDK reference
-    </div>
-  </>
-);
-
-export const storyFactory = (story: Story): {custom: Story; reference: Story} => {
-  const play = story.play;
-  const ourStory: Story = {...story, render: renderCustom};
-  const referenceStory: Story = {
-    ...story,
-    render: renderReference,
-    play: play
-      ? // wrap play function with a timer because Formio takes time to initialize
-        async (...args) => {
-          await sleep(100);
-          await play(...args);
-        }
-      : undefined,
-  };
-  return {
-    custom: ourStory,
-    reference: referenceStory,
-  };
+export type ReferenceMeta = Meta<ReferenceStoryArgs> & {
+  title: `Internal API / Reference behaviour / ${string}`;
 };
+
+export type Story = StoryObj<ReferenceStoryArgs>;

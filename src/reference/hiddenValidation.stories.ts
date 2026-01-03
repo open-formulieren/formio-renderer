@@ -1,8 +1,8 @@
 import type {EditGridComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
-import type {ReferenceMeta} from './utils';
-import {hideSpinner, storyFactory} from './utils';
+import type {ReferenceMeta, Story} from './utils';
+import {hideSpinner, render} from './utils';
 
 /**
  * Stories to guard the 'clear on hide' feature behaviour against the Formio.js
@@ -13,11 +13,12 @@ import {hideSpinner, storyFactory} from './utils';
  */
 export default {
   title: 'Internal API / Reference behaviour / Validation hidden components',
+  render,
   decorators: [hideSpinner],
 } satisfies ReferenceMeta;
 
 // Ensure that a hidden component doesn't block validation
-const {custom: NoValidateHidden, reference: NoValidateHiddenReference} = storyFactory({
+export const NoValidateHidden: Story = {
   args: {
     components: [
       {
@@ -58,14 +59,9 @@ const {custom: NoValidateHidden, reference: NoValidateHiddenReference} = storyFa
     // we expect validation not to block
     expect(args.onSubmit).toHaveBeenCalledOnce();
   },
-});
+};
 
-export {NoValidateHidden, NoValidateHiddenReference};
-
-const {
-  custom: NoValidateHiddenWithoutValueClearing,
-  reference: NoValidateHiddenWithoutValueClearingReference,
-} = storyFactory({
+export const NoValidateHiddenWithoutValueClearing: Story = {
   args: {
     components: [
       {
@@ -115,11 +111,9 @@ const {
     // we expect validation not to block
     expect(args.onSubmit).toHaveBeenCalledOnce();
   },
-});
+};
 
-export {NoValidateHiddenWithoutValueClearing, NoValidateHiddenWithoutValueClearingReference};
-
-const {custom: NestedEditGrids, reference: NestedEditGridsReference} = storyFactory({
+export const NestedEditGrids: Story = {
   args: {
     components: [
       {
@@ -205,6 +199,4 @@ const {custom: NestedEditGrids, reference: NestedEditGridsReference} = storyFact
     // we expect validation not to block
     expect(args.onSubmit).toHaveBeenCalledOnce();
   },
-});
-
-export {NestedEditGrids, NestedEditGridsReference};
+};
