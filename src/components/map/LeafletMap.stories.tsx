@@ -258,6 +258,10 @@ export const SingleInteractionMode: Story = {
     });
     expect(currentLocationButton).toBeInTheDocument();
 
+    // The pin "map interaction" button is shown
+    const pinButton = await within(map).findByRole('link', {name: 'Marker'});
+    expect(pinButton).toBeVisible();
+
     const deleteButton = canvas.queryByTitle('No shapes to remove');
     expect(deleteButton).toBeInTheDocument();
   },

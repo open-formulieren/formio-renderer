@@ -320,12 +320,12 @@ export const WithSearch: Story = {
       expect(map).toBeVisible();
     });
 
-    await step('None of the interactions are shown', async () => {
+    await step('Only the marker interaction is shown', async () => {
       const pin = canvas.queryByTitle('Marker');
       const polygon = canvas.queryByTitle('Shape (polygon)');
       const line = canvas.queryByTitle('Line');
 
-      expect(pin).not.toBeInTheDocument();
+      expect(pin).toBeVisible();
       expect(polygon).not.toBeInTheDocument();
       expect(line).not.toBeInTheDocument();
     });
@@ -344,11 +344,8 @@ export const WithSearch: Story = {
 
       await userEvent.click(searchResult);
 
-      const buttons = await canvas.findAllByRole('button', {name: 'Marker'});
-      // The interactive marker, seen while hovering over the map
-      expect(buttons[0]).toBeVisible();
       // The pinned marker, indicating the current value
-      expect(buttons[1]).toBeVisible();
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
     });
   },
 };
@@ -699,6 +696,9 @@ export const ValidateOnChange: Story = {
     expect(await canvas.findByText('Line not allowed.')).toBeVisible();
 
     await step('Draw a marker', async () => {
+      // Click the "marker" button, to enter "interaction" mode
+      await userEvent.click(canvas.getByRole('link', {name: 'Marker'}));
+
       // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
       await userEvent.click(map, {x: 100, y: 100});
 

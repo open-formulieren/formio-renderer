@@ -178,10 +178,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
                   draw={{
                     rectangle: false,
                     circle: false,
-                    // Add the draw buttons when there is more than 1 active interaction.
-                    polyline: !singleInteractionMode && !!interactions?.polyline,
-                    polygon: !singleInteractionMode && !!interactions?.polygon,
-                    marker: !singleInteractionMode && !!interactions?.marker,
+                    polyline: !!interactions?.polyline,
+                    polygon: !!interactions?.polygon,
+                    marker: !!interactions?.marker,
                     circlemarker: false,
                   }}
                 />
