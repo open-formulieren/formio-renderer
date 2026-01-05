@@ -1,7 +1,7 @@
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
-import type {ReferenceMeta} from './utils';
-import {hideSpinner, storyFactory} from './utils';
+import type {ReferenceMeta, Story} from './utils';
+import {hideSpinner, render} from './utils';
 
 /**
  * Stories to guard the 'clear on hide' feature behaviour against the Formio.js
@@ -13,10 +13,11 @@ import {hideSpinner, storyFactory} from './utils';
 export default {
   title: 'Internal API / Reference behaviour / Clear On Hide',
   decorators: [hideSpinner],
+  render,
 } satisfies ReferenceMeta;
 
 // Ensure that a hidden component with existing submission data is cleared.
-const {custom: ClearExisting, reference: ClearExistingReference} = storyFactory({
+export const ClearExisting: Story = {
   args: {
     components: [
       {
@@ -42,11 +43,8 @@ const {custom: ClearExisting, reference: ClearExistingReference} = storyFactory(
     },
     onSubmit: fn(),
   },
-  play: async ({canvasElement, args, id}) => {
+  play: async ({canvasElement, args}) => {
     const canvas = within(canvasElement);
-
-    const isOwnImplementation =
-      id === 'internal-api-reference-behaviour-clear-on-hide--clear-existing';
 
     const visibleField = await canvas.findByLabelText('Textfield visible');
     expect(visibleField).toBeVisible();
@@ -56,25 +54,14 @@ const {custom: ClearExisting, reference: ClearExistingReference} = storyFactory(
 
     // here we diverge from the reference behaviour because the reference does not make
     // much sense
-    if (isOwnImplementation) {
-      expect(args.onSubmit).toHaveBeenCalledWith({
-        textfieldVisible: 'keep me',
-      });
-    } else {
-      // This is already some odd behaviour by Formio :/ It seems to only clear values
-      // if the field has been touched?
-      expect(args.onSubmit).toHaveBeenCalledWith({
-        textfieldVisible: 'keep me',
-        textfieldHidden: 'clear me',
-      });
-    }
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      textfieldVisible: 'keep me',
+    });
   },
-});
-
-export {ClearExisting, ClearExistingReference};
+};
 
 // An initially visible component becomes hidden.
-const {custom: ClearInitiallyVisible, reference: ClearInitiallyVisibleReference} = storyFactory({
+export const ClearInitiallyVisible: Story = {
   args: {
     components: [
       {
@@ -123,12 +110,10 @@ const {custom: ClearInitiallyVisible, reference: ClearInitiallyVisibleReference}
       textfieldVisible: 'hide second',
     });
   },
-});
-
-export {ClearInitiallyVisible, ClearInitiallyVisibleReference};
+};
 
 // nested components are cleared when the fieldset parent becomes hidden
-const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference} = storyFactory({
+export const ParentComponentHidden: Story = {
   args: {
     components: [
       {
@@ -194,76 +179,70 @@ const {custom: ParentComponentHidden, reference: ParentComponentHiddenReference}
       nestedTextfield2: 'keep me',
     });
   },
-});
-
-export {ParentComponentHidden, ParentComponentHiddenReference};
+};
 
 // nested component in layout component becomes hidden & clears value
-const {custom: HiddenComponentInLayout, reference: HiddenComponentInLayoutReference} = storyFactory(
-  {
-    args: {
-      components: [
-        {
-          type: 'textfield',
-          id: 'textfieldVisible',
-          key: 'textfieldVisible',
-          label: 'Textfield visible',
-          hidden: false,
-        },
-        {
-          type: 'fieldset',
-          id: 'fieldset',
-          key: 'fieldset',
-          label: 'Fieldset',
-          hideHeader: false,
-          components: [
-            {
-              type: 'textfield',
-              id: 'nestedTextfield',
-              key: 'nestedTextfield',
-              label: 'Nested textfield',
-              clearOnHide: true,
-              conditional: {
-                show: false,
-                when: 'textfieldVisible',
-                eq: 'hide nested',
-              },
-            },
-          ],
-        },
-      ],
-      submissionData: {
-        textfieldVisible: 'keep me',
-        nestedTextfield: 'clear me',
+export const HiddenComponentInLayout: Story = {
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'textfieldVisible',
+        key: 'textfieldVisible',
+        label: 'Textfield visible',
+        hidden: false,
       },
-      onSubmit: fn(),
+      {
+        type: 'fieldset',
+        id: 'fieldset',
+        key: 'fieldset',
+        label: 'Fieldset',
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            id: 'nestedTextfield',
+            key: 'nestedTextfield',
+            label: 'Nested textfield',
+            clearOnHide: true,
+            conditional: {
+              show: false,
+              when: 'textfieldVisible',
+              eq: 'hide nested',
+            },
+          },
+        ],
+      },
+    ],
+    submissionData: {
+      textfieldVisible: 'keep me',
+      nestedTextfield: 'clear me',
     },
-    play: async ({canvasElement, args}) => {
-      const canvas = within(canvasElement);
+    onSubmit: fn(),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
 
-      const fieldToHide = await canvas.findByLabelText('Nested textfield');
-      expect(fieldToHide).toBeVisible();
+    const fieldToHide = await canvas.findByLabelText('Nested textfield');
+    expect(fieldToHide).toBeVisible();
 
-      const visibleField = canvas.getByLabelText('Textfield visible');
-      await userEvent.clear(visibleField);
-      await userEvent.type(visibleField, 'hide nested', {delay: 50});
+    const visibleField = canvas.getByLabelText('Textfield visible');
+    await userEvent.clear(visibleField);
+    await userEvent.type(visibleField, 'hide nested', {delay: 50});
 
-      await waitFor(() => {
-        expect(canvas.queryByLabelText('Nested textfield')).not.toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(canvas.queryByLabelText('Nested textfield')).not.toBeInTheDocument();
+    });
 
-      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-      expect(args.onSubmit).toHaveBeenCalledWith({
-        textfieldVisible: 'hide nested',
-      });
-    },
-  }
-);
-
-export {HiddenComponentInLayout, HiddenComponentInLayoutReference};
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      textfieldVisible: 'hide nested',
+    });
+  },
+};
 
 // the default is to clear components when hidden when clearOnHide is not specified
-const {custom: ClearOnHideDefault, reference: ClearOnHideDefaultReference} = storyFactory({
+export const ClearOnHideDefault: Story = {
   args: {
     components: [
       {
@@ -308,13 +287,11 @@ const {custom: ClearOnHideDefault, reference: ClearOnHideDefaultReference} = sto
       textfieldVisible: 'hide',
     });
   },
-});
-
-export {ClearOnHideDefault, ClearOnHideDefaultReference};
+};
 
 // items inside an edit grid are independent from each other and nested
 // components clear their value when hidden
-const {custom: Editgrid, reference: EditgridReference} = storyFactory({
+export const Editgrid: Story = {
   args: {
     components: [
       {
@@ -386,12 +363,10 @@ const {custom: Editgrid, reference: EditgridReference} = storyFactory({
       editgrid: [{trigger: 'show', follower: 'keep me'}, {trigger: 'hide'}],
     });
   },
-});
-
-export {Editgrid, EditgridReference};
+};
 
 // Component dependencies resolve irrespective of where they are in the component tree
-const {custom: DependentFields, reference: DependentFieldsReference} = storyFactory({
+export const DependentFields: Story = {
   args: {
     components: [
       {
@@ -483,6 +458,4 @@ const {custom: DependentFields, reference: DependentFieldsReference} = storyFact
       field5: '',
     });
   },
-});
-
-export {DependentFields, DependentFieldsReference};
+};

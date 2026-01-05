@@ -7,8 +7,8 @@ import type {
 } from '@open-formulieren/types';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 
-import type {ReferenceMeta} from './utils';
-import {storyFactory} from './utils';
+import type {ReferenceMeta, Story} from './utils';
+import {render} from './utils';
 
 /**
  * Stories to guard the 'hidden' feature behaviour against the Formio.js reference.
@@ -18,9 +18,10 @@ import {storyFactory} from './utils';
  */
 export default {
   title: 'Internal API / Reference behaviour / Hidden',
+  render,
 } satisfies ReferenceMeta;
 
-const {custom: Hidden, reference: HiddenReference} = storyFactory({
+export const Hidden: Story = {
   args: {
     components: [
       {
@@ -48,11 +49,9 @@ const {custom: Hidden, reference: HiddenReference} = storyFactory({
     const hiddenField = canvas.queryByLabelText('Textfield hidden');
     expect(hiddenField).not.toBeInTheDocument();
   },
-});
+};
 
-export {Hidden, HiddenReference};
-
-const {custom: ConditionallyHidden, reference: ConditionallyHiddenReference} = storyFactory({
+export const ConditionallyHidden: Story = {
   args: {
     components: [
       {
@@ -90,14 +89,9 @@ const {custom: ConditionallyHidden, reference: ConditionallyHiddenReference} = s
       expect(canvas.queryAllByRole('textbox')).toHaveLength(1);
     });
   },
-});
+};
 
-export {ConditionallyHidden, ConditionallyHiddenReference};
-
-const {
-  custom: ConditionallyHiddenWithOddComponents,
-  reference: ConditionallyHiddenWithOddComponentsReference,
-} = storyFactory({
+export const ConditionallyHiddenWithOddComponents: Story = {
   args: {
     components: [
       // selectboxes has an odd data shape
@@ -230,11 +224,9 @@ const {
       expect(await canvas.findByText('Number not equal to 10')).toBeVisible();
     });
   },
-});
+};
 
-export {ConditionallyHiddenWithOddComponents, ConditionallyHiddenWithOddComponentsReference};
-
-const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
+export const NestedHidden: Story = {
   args: {
     components: [
       {
@@ -282,154 +274,146 @@ const {custom: NestedHidden, reference: NestedHiddenReference} = storyFactory({
     expect(canvas.queryByLabelText('Hidden textfield')).not.toBeInTheDocument();
     expect(canvas.queryByLabelText('Hidden textfield in columns')).not.toBeInTheDocument();
   },
-});
+};
 
-export {NestedHidden, NestedHiddenReference};
-
-const {custom: ConditionallyNestedVisible, reference: ConditionallyNestedVisibleReference} =
-  storyFactory({
-    args: {
-      components: [
-        {
-          type: 'fieldset',
-          id: 'fieldset',
-          key: 'fieldset',
-          label: 'Layout container',
-          hideHeader: false,
-          components: [
-            {
-              type: 'textfield',
-              id: 'textfieldTrigger',
-              key: 'textfieldTrigger',
-              label: 'Trigger',
+export const ConditionallyNestedVisible: Story = {
+  args: {
+    components: [
+      {
+        type: 'fieldset',
+        id: 'fieldset',
+        key: 'fieldset',
+        label: 'Layout container',
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            id: 'textfieldTrigger',
+            key: 'textfieldTrigger',
+            label: 'Trigger',
+          },
+          {
+            type: 'textfield',
+            id: 'textfieldHide',
+            key: 'textfieldHide',
+            label: 'Dynamically visible',
+            conditional: {
+              when: 'textfieldTrigger',
+              eq: 'show other field',
+              show: true,
             },
-            {
-              type: 'textfield',
-              id: 'textfieldHide',
-              key: 'textfieldHide',
-              label: 'Dynamically visible',
-              conditional: {
-                when: 'textfieldTrigger',
-                eq: 'show other field',
-                show: true,
-              },
+          },
+        ],
+      },
+    ],
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const triggerField = await canvas.findByLabelText('Trigger');
+    expect(canvas.queryByLabelText('Dynamically visible')).not.toBeInTheDocument();
+
+    await userEvent.type(triggerField, 'show other field');
+    expect(triggerField).toHaveDisplayValue('show other field');
+
+    const followerField = await canvas.findByLabelText('Dynamically visible');
+    expect(followerField).toBeVisible();
+  },
+};
+
+export const ConditionallyVisibleInEditGrid: Story = {
+  args: {
+    components: [
+      {
+        type: 'textfield',
+        id: 'externalTrigger',
+        key: 'externalTrigger',
+        label: 'Trigger outside editgrid',
+      },
+      {
+        type: 'editgrid',
+        id: 'editgrid',
+        key: 'editgrid',
+        label: 'Edit grid',
+        disableAddingRemovingRows: false,
+        groupLabel: 'Item',
+        hideLabel: false,
+        // @ts-expect-error option not defined in our TS types, but required for Formio.js
+        inlineEdit: false,
+        components: [
+          {
+            type: 'textfield',
+            id: 'nestedTrigger',
+            key: 'nestedTrigger',
+            label: 'Trigger inside editgrid',
+          },
+          {
+            type: 'textfield',
+            id: 'follower1',
+            key: 'follower1',
+            label: 'Follower 1',
+            conditional: {
+              when: 'externalTrigger',
+              eq: 'show follower 1',
+              show: true,
             },
-          ],
-        },
-      ],
-    },
-
-    play: async ({canvasElement}) => {
-      const canvas = within(canvasElement);
-
-      const triggerField = await canvas.findByLabelText('Trigger');
-      expect(canvas.queryByLabelText('Dynamically visible')).not.toBeInTheDocument();
-
-      await userEvent.type(triggerField, 'show other field');
-      expect(triggerField).toHaveDisplayValue('show other field');
-
-      const followerField = await canvas.findByLabelText('Dynamically visible');
-      expect(followerField).toBeVisible();
-    },
-  });
-
-export {ConditionallyNestedVisible, ConditionallyNestedVisibleReference};
-
-const {custom: ConditionallyVisibleInEditGrid, reference: ConditionallyVisibleInEditGridReference} =
-  storyFactory({
-    args: {
-      components: [
-        {
-          type: 'textfield',
-          id: 'externalTrigger',
-          key: 'externalTrigger',
-          label: 'Trigger outside editgrid',
-        },
-        {
-          type: 'editgrid',
-          id: 'editgrid',
-          key: 'editgrid',
-          label: 'Edit grid',
-          disableAddingRemovingRows: false,
-          groupLabel: 'Item',
-          hideLabel: false,
-          // @ts-expect-error option not defined in our TS types, but required for Formio.js
-          inlineEdit: false,
-          components: [
-            {
-              type: 'textfield',
-              id: 'nestedTrigger',
-              key: 'nestedTrigger',
-              label: 'Trigger inside editgrid',
+          },
+          {
+            type: 'textfield',
+            id: 'follower2',
+            key: 'follower2',
+            label: 'Follower 2',
+            conditional: {
+              when: 'editgrid.nestedTrigger',
+              eq: 'show follower 2',
+              show: true,
             },
-            {
-              type: 'textfield',
-              id: 'follower1',
-              key: 'follower1',
-              label: 'Follower 1',
-              conditional: {
-                when: 'externalTrigger',
-                eq: 'show follower 1',
-                show: true,
-              },
-            },
-            {
-              type: 'textfield',
-              id: 'follower2',
-              key: 'follower2',
-              label: 'Follower 2',
-              conditional: {
-                when: 'editgrid.nestedTrigger',
-                eq: 'show follower 2',
-                show: true,
-              },
-            },
-          ],
-          defaultValue: [],
-        },
-      ],
-    },
-    play: async ({canvasElement, step}) => {
-      const canvas = within(canvasElement);
+          },
+        ],
+        defaultValue: [],
+      },
+    ],
+  },
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
 
-      const externalTriggerField = await canvas.findByLabelText('Trigger outside editgrid');
-      expect(externalTriggerField).toBeVisible();
+    const externalTriggerField = await canvas.findByLabelText('Trigger outside editgrid');
+    expect(externalTriggerField).toBeVisible();
 
-      // Add two items to the edit grid, but don't edit them yet. Note: the lookup needs
-      // to be done multiple times because Formio re-renders the element in the DOM...
-      await userEvent.click(await canvas.findByRole('button', {name: /Add/}));
-      await userEvent.click(await canvas.findByRole('button', {name: /Add/}));
-      expect(canvas.queryByLabelText('Follower 1')).not.toBeInTheDocument();
-      expect(canvas.queryByLabelText('Follower 2')).not.toBeInTheDocument();
+    // Add two items to the edit grid, but don't edit them yet. Note: the lookup needs
+    // to be done multiple times because Formio re-renders the element in the DOM...
+    await userEvent.click(await canvas.findByRole('button', {name: /Add/}));
+    await userEvent.click(await canvas.findByRole('button', {name: /Add/}));
+    expect(canvas.queryByLabelText('Follower 1')).not.toBeInTheDocument();
+    expect(canvas.queryByLabelText('Follower 2')).not.toBeInTheDocument();
 
-      await step('Visibility trigger because of external trigger', async () => {
-        await userEvent.type(externalTriggerField, 'show follower 1');
+    await step('Visibility trigger because of external trigger', async () => {
+      await userEvent.type(externalTriggerField, 'show follower 1');
 
-        // Formio renders the same ID for multiple elements in repeating groups. :)
-        // So we can't do getAllByLabelText
-        await waitFor(() => {
-          const follower1Fields = canvas.getAllByText('Follower 1');
-          expect(follower1Fields).toHaveLength(2);
-        });
+      // Formio renders the same ID for multiple elements in repeating groups. :)
+      // So we can't do getAllByLabelText
+      await waitFor(() => {
+        const follower1Fields = canvas.getAllByText('Follower 1');
+        expect(follower1Fields).toHaveLength(2);
       });
+    });
 
-      // here the logic/conditional is applied to the scope of a single item in the
-      // repeating group, while the external trigger affects *all* items
-      await step('Visibility trigger with nested trigger', async () => {
-        const firstNestedTrigger = canvas.getAllByLabelText('Trigger inside editgrid')[0];
-        await userEvent.type(firstNestedTrigger, 'show follower 2');
+    // here the logic/conditional is applied to the scope of a single item in the
+    // repeating group, while the external trigger affects *all* items
+    await step('Visibility trigger with nested trigger', async () => {
+      const firstNestedTrigger = canvas.getAllByLabelText('Trigger inside editgrid')[0];
+      await userEvent.type(firstNestedTrigger, 'show follower 2');
 
-        // Formio renders the same ID for multiple elements in repeating groups. :)
-        // So we can't do getAllByLabelText
-        await waitFor(() => {
-          const follower1Fields = canvas.getAllByText('Follower 1');
-          expect(follower1Fields).toHaveLength(2);
+      // Formio renders the same ID for multiple elements in repeating groups. :)
+      // So we can't do getAllByLabelText
+      await waitFor(() => {
+        const follower1Fields = canvas.getAllByText('Follower 1');
+        expect(follower1Fields).toHaveLength(2);
 
-          const follower2Fields = canvas.getAllByText('Follower 2');
-          expect(follower2Fields).toHaveLength(1);
-        });
+        const follower2Fields = canvas.getAllByText('Follower 2');
+        expect(follower2Fields).toHaveLength(1);
       });
-    },
-  });
-
-export {ConditionallyVisibleInEditGrid, ConditionallyVisibleInEditGridReference};
+    });
+  },
+};
