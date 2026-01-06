@@ -15,6 +15,7 @@ import type {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
 import NearestAddress from './NearestAddress';
 import {DEFAULT_CENTER_COORDINATES, DEFAULT_ZOOM_LEVEL} from './constants';
 import {overloadLeafletDrawPolylineControl} from './drawPolylineControl';
+import {overloadLeafletDrawToolbarControls} from './drawToolbarControls';
 import {CRS_RD, TILE_LAYER_RD, initialize} from './init';
 import {
   applyLeafletTranslations,
@@ -75,6 +76,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   overlays,
 }) => {
   const featureGroupRef = useRef<L.FeatureGroup>(null);
+  const drawControlRef = useRef<L.Control.Draw | null>(null);
   const id = useId();
   const intl = useIntl();
   const center: L.LatLng | null = geoJsonGeometry
@@ -101,6 +103,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   }, [featureGroupRef, intl]);
 
   useEffect(() => {
+    overloadLeafletDrawToolbarControls();
     overloadLeafletDrawPolylineControl();
   }, []);
 
@@ -164,14 +167,13 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
           <FeatureGroup ref={featureGroupRef}>
             {!withoutControl && (
               <>
-                {singleInteractionMode && (
-                  <SingleInteractionMode shape={activeInteractionNames[0]} />
-                )}
-
                 <EditControl
                   position="topright"
                   onCreated={onFeatureCreate}
                   onDeleted={onFeatureDelete}
+                  onMounted={(drawControl: L.Control.Draw) => {
+                    drawControlRef.current = drawControl;
+                  }}
                   edit={{
                     edit: false,
                   }}
@@ -184,6 +186,13 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
                     circlemarker: false,
                   }}
                 />
+                {singleInteractionMode && (
+                  <SingleInteractionMode
+                    shape={activeInteractionNames[0]}
+                    drawControlRef={drawControlRef}
+                    geoJsonGeometry={geoJsonGeometry}
+                  />
+                )}
               </>
             )}
             <Geometry
@@ -240,48 +249,33 @@ const EnsureTestId = () => {
 
 interface SingleInteractionModeProps {
   shape: keyof Interactions;
+  drawControlRef: React.RefObject<L.Control.Draw>;
+  geoJsonGeometry?: GeoJsonGeometry | null;
 }
 
-const SingleInteractionMode: React.FC<SingleInteractionModeProps> = ({shape}) => {
+const SingleInteractionMode: React.FC<SingleInteractionModeProps> = ({
+  shape,
+  drawControlRef,
+  geoJsonGeometry,
+}) => {
   const map = useMap();
-  const drawHandlerRef = useRef<L.Draw.Feature | null>(null);
 
+  // Setting the map into "active drawing" mode without having to click the "interaction"
+  // button.
   useEffect(() => {
-    if (!map) return;
+    // If there is no map, no draw control ref, or the map already has a value, do nothing.
+    if (!map || !drawControlRef.current || !!geoJsonGeometry) return;
+    const drawControl = drawControlRef.current;
 
-    const getDrawHandler = (): L.Draw.Marker | L.Draw.Polygon | L.Draw.Polyline | null => {
-      switch (shape) {
-        case 'marker':
-          return new L.Draw.Marker(map as L.DrawMap);
-        case 'polygon':
-          return new L.Draw.Polygon(map as L.DrawMap);
-        case 'polyline':
-          return new L.Draw.Polyline(map as L.DrawMap);
-        default:
-          return null;
-      }
-    };
-
-    // Get draw handler
-    drawHandlerRef.current = getDrawHandler();
-
-    // Enable drawing mode
-    drawHandlerRef.current?.enable();
-
-    // Cancel drawing on 'right-click'
-    map.on('contextmenu', () => {
-      drawHandlerRef.current?.disable();
-
-      // After canceling the currect drawing, get a new handler to allow a new drawing.
-      drawHandlerRef.current = getDrawHandler();
-      drawHandlerRef.current?.enable();
-    });
+    // Enable the drawing mode for the provided shape.
+    if (drawControl.enableDrawingMode) drawControl.enableDrawingMode(shape);
 
     return () => {
-      drawHandlerRef.current?.disable();
+      // On unmounting, disable the drawing mode.
+      if (drawControl.disableDrawingMode) drawControl.disableDrawingMode(shape);
     };
     // Re-enable drawing mode when the shape, the map, or the current geojson changes.
-  }, [shape, map]);
+  }, [shape, map, geoJsonGeometry, drawControlRef]);
 
   return null;
 };
