@@ -1,4 +1,4 @@
-import * as Leaflet from 'leaflet';
+import Leaflet from 'leaflet';
 
 import type {Interactions} from './types';
 
