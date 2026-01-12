@@ -236,19 +236,23 @@ export const WithoutInteractions: Story = {
 
 export const SingleInteractionMode: Story = {
   args: {
+    onGeoJsonGeometrySet: fn(),
     interactions: {
       marker: true,
       polygon: false,
       polyline: false,
     },
   },
-  play: async ({canvasElement}) => {
+  play: async ({canvasElement, step, args}) => {
     const canvas = within(canvasElement);
     const map = await canvas.findByTestId('leaflet-map');
+    const leafletMap = window._OF_INTERNAL_leafletMap;
 
     await waitFor(() => {
       expect(map).not.toBeNull();
       expect(map).toBeVisible();
+      // Wait for projection to be defined, preventing weird issues with proj4.
+      expect(leafletMap.options.crs?.project).toBeDefined();
     });
 
     // There is a "Current location" button
@@ -258,8 +262,65 @@ export const SingleInteractionMode: Story = {
     });
     expect(currentLocationButton).toBeInTheDocument();
 
+    // The pin "map interaction" button is shown
+    const pinButton = await within(map).findByRole('link', {name: 'Marker'});
+    expect(pinButton).toBeVisible();
+
     const deleteButton = canvas.queryByTitle('No shapes to remove');
     expect(deleteButton).toBeInTheDocument();
+
+    // When the map is empty, we can draw shapes without having to click the
+    // interaction buttons.
+    await step('Interaction with empty map', async () => {
+      // Trigger map click via leafletMap directly. Preventing weird issues with proj4
+      // and other race-conditions.
+      leafletMap.fire('click', {
+        latlng: leafletMap.containerPointToLatLng([100, 100]),
+      });
+
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Point',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [expect.anything(), expect.anything()],
+      });
+    });
+
+    // When the map has a value, we don't automatically draw shapes anymore.
+    await step('Clicking the map while it has value', async () => {
+      // This 'button' is the placed marker on the map
+      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
+
+      leafletMap.fire('click', {
+        latlng: leafletMap.containerPointToLatLng([100, 100]),
+      });
+
+      // expect `onGeoJsonGeometrySet` to not be called a second time.
+      expect(args.onGeoJsonGeometrySet).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Remove drawn shape', async () => {
+      // Automatically resolve the confirmation message
+      window.confirm = () => true;
+      await userEvent.click(canvas.getByRole('link', {name: 'Remove shapes'}));
+    });
+
+    // When the map is emptied, we can again draw shapes without having to click the
+    // interaction buttons.
+    await step('Interact again with an empty map', async () => {
+      leafletMap.fire('click', {
+        latlng: leafletMap.containerPointToLatLng([100, 100]),
+      });
+
+      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
+        type: 'Point',
+        // Expect that the coordinates array contains 2 items.
+        // We cannot pin it to specific values, because they can differentiate.
+        // To make sure that this test doesn't magically fail, just expect any 2 values
+        coordinates: [expect.anything(), expect.anything()],
+      });
+    });
   },
 };
 
