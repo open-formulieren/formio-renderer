@@ -1,5 +1,26 @@
 # Changes
 
+## 1.1.0 (2026-02-03)
+
+Small quality-of-life features and bugfixes release.
+
+**New features**
+
+- [`OF#5798`][OF#5798] The map interaction buttons are now always shown, to reduce user confusion,
+  even if only a single interaction is possible.
+
+**Bugfixes**
+
+- [`OF#5798`][OF#5798] Fixed not being able to place a pin in the map component after removing the
+  previous pin.
+
+**Project maintenance**
+
+- Updated to new version of our Formio types package.
+- Dropped the `formiojs` (dev) dependencies.
+
+[OF#5798]: https://github.com/open-formulieren/open-forms/issues/5798
+
 ## 1.0.0 (2025-12-31)
 
 First stable release of the renderer.
