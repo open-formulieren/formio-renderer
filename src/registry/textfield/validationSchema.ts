@@ -26,7 +26,7 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
     required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
   if (maxLength !== undefined)
-    schema = schema = schema.max(maxLength, {
+    schema = schema.max(maxLength, {
       message:
         errors?.maxLength || intl.formatMessage(TEXTFIELD_MAX_LENGTH_MESSAGE, {field: label}),
     });
