@@ -272,7 +272,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
     // XXX: this means that component definitions may not have reference cycles in their
     // conditional logic to prevent infinite render loops!
     const {visibleComponents: componentsToRender, updatedValues} = useMemo(() => {
-      const {visibleComponents, updatedValues} = processVisibility(components, values, {
+      const {visibleComponents, updatedValues} = processVisibility(components, values, errors, {
         parentHidden: false,
         initialValues,
         getRegistryEntry,
@@ -294,6 +294,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       componentsMap,
       initialValues,
       values,
+      errors,
     ]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the

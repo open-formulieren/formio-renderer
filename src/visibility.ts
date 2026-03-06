@@ -1,4 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {FormikErrors} from 'formik';
 import {getIn, setIn} from 'formik';
 
 import {getClearOnHide, isHidden} from '@/formio';
@@ -23,6 +24,12 @@ interface ProcessVisibilityResult {
    * stable identity, for both the top-level and nested objects.
    */
   updatedValues: JSONObject;
+  /**
+   * Updated `errors` because of logic rules. A component can be invalid when it is not
+   * hidden. The key of a hidden field should not be in the object even if it "used" to
+   * be invalid.
+   */
+  updatedErrors: FormikErrors<JSONObject>;
 }
 
 /**
@@ -60,6 +67,7 @@ export const processVisibility = (
    * dependencies but also more fine-grained context set by one or more parent
    * components.
    */
+  errors: FormikErrors<JSONObject>,
   context: VisibilityContext
 ): ProcessVisibilityResult => {
   const visibleComponents: AnyComponentSchema[] = [];
@@ -69,6 +77,8 @@ export const processVisibility = (
   // processed. If there are no side-effects applied, then it will keep the same
   // identity because we use Formik's `setIn` under the hood.
   let updatedValues = values;
+  let updatedErrors = errors;
+  console.log('initial errors: ', errors);
 
   // Process the component tree depth-first. We loop over the components in order of
   // definition, which matches top-to-bottom UI-wise. Within each component, we first
@@ -89,6 +99,10 @@ export const processVisibility = (
     if (hidden) {
       // only clear the value if actually requested
       if (clearOnHide) updatedValues = clearValue(updatedValues, key);
+
+      // update the errors if any component is invalid but hidden
+      const errorKeys = Object.keys(updatedErrors);
+      updatedErrors = removeHiddenComponentsErrors(updatedValues, errorKeys, updatedErrors);
     } else {
       // the component is visible - it may have been hidden and cleared before, so make
       // sure that we have a value for it. `initialValues` contains either the
@@ -120,7 +134,7 @@ export const processVisibility = (
     if (!hidden) visibleComponents.push(componentDefinition);
   }
 
-  return {visibleComponents, updatedValues};
+  return {visibleComponents, updatedValues, updatedErrors};
 };
 
 /**
@@ -134,4 +148,24 @@ export const processVisibility = (
  */
 const clearValue = (values: JSONObject, key: string): JSONObject => {
   return setIn(values, key, undefined);
+};
+
+/**
+ * Remove hidden components' keys from the errors.
+ */
+const removeHiddenComponentsErrors = (
+  updatedValues: JSONObject,
+  errorKeys: string[],
+  updatedErrors: FormikErrors<JSONObject>
+) => {
+  console.log('updatedValues: ', updatedValues);
+  console.log('errorKeys: ', errorKeys);
+  console.log('updatedErrors: ', updatedErrors);
+  for (const errorKey of errorKeys) {
+    if (!(errorKey in updatedValues)) {
+      delete updatedErrors[errorKey];
+    }
+  }
+
+  return updatedErrors;
 };

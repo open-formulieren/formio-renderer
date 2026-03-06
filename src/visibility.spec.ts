@@ -34,6 +34,8 @@ test('processVisibility filters out hidden components and clears values', () => 
   expect(updatedValues).toEqual({deep: {value: 'hide'}});
 });
 
+test('processVisibility filters out errors of hidden components', () => {});
+
 // for edit grids, access to the root values/scope is needed but *also* to the local
 // (nested) item scopes, which are namespaced using their parent edit grid keys.
 test('processVisibility uses provided evaluation scope', () => {
