@@ -34,7 +34,7 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
 
   // debounce to avoid rapidly firing updates when the user is typing
   const addressData = useDebounce(value, 300);
-  const {postcode, houseNumber} = addressData;
+  const {postcode, houseNumber} = addressData ?? {};
 
   // if postcode/house number change, check if we need to clear the derived inputs
   useEffect(() => {
