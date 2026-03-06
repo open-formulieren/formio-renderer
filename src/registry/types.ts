@@ -1,5 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {Conditional} from '@open-formulieren/types/dist/extensions';
+import {FormikErrors} from 'formik';
 import type {IntlShape} from 'react-intl';
 import type {z} from 'zod';
 
@@ -176,6 +177,10 @@ export type ApplyVisibility<S> = (
    * component definitions that would create infinite loops.
    */
   updatedValues: JSONObject;
+  /**
+   * Updated form errors after applying hidden component's behaviour.
+   */
+  updatedErrors: FormikErrors<JSONObject>;
 };
 
 export type IsEmpty<S, V = JSONValue> = (
