@@ -5,6 +5,7 @@ import type {z} from 'zod';
 
 import type {FormioComponentProps} from '@/components/FormioComponent';
 import type {JSONObject, JSONValue} from '@/types';
+import type {Errors} from '@/visibility';
 
 export type GetRegistryEntry = (
   componentDefinition: AnyComponentSchema
@@ -151,6 +152,11 @@ export type ApplyVisibility<S> = (
    */
   values: JSONObject,
   /**
+   * Formik errors state, passed down so that child errors can be cleared if the child
+   * becomes hidden, with a mechanism similar to the `values`.
+   */
+  errors: Errors,
+  /**
    * Additional context/utilities relevant to evaluate a component (sub) tree.
    */
   context: VisibilityContext
@@ -176,6 +182,10 @@ export type ApplyVisibility<S> = (
    * component definitions that would create infinite loops.
    */
   updatedValues: JSONObject;
+  /**
+   * Updated form errors after applying hidden component's behaviour.
+   */
+  updatedErrors: Errors;
 };
 
 export type IsEmpty<S, V = JSONValue> = (

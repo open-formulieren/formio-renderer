@@ -3,10 +3,11 @@ import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
+import type {Errors} from '@/visibility';
 
 import applyVisibility from './visibility';
 
-test('Hiding nested component clears its data', () => {
+test('Hiding nested component clears its data and errors', () => {
   interface Values extends JSONObject {
     outer: {
       trigger: string;
@@ -76,8 +77,28 @@ test('Hiding nested component clears its data', () => {
     ],
   };
   const initialValues: Values = {outer: []};
+  const errors: Errors = {
+    outer: [
+      {
+        trigger: 'keep error',
+        inner: [
+          {
+            textfield: 'error to clear',
+          },
+        ],
+      },
+      {
+        trigger: 'keep error',
+        inner: [
+          {
+            textfield: 'keep error',
+          },
+        ],
+      },
+    ],
+  };
 
-  const {updatedValues} = applyVisibility(component, values, {
+  const {updatedValues, updatedErrors} = applyVisibility(component, values, errors, {
     parentHidden: false,
     initialValues: initialValues,
     getRegistryEntry,
@@ -93,6 +114,22 @@ test('Hiding nested component clears its data', () => {
       {
         trigger: 'show',
         inner: [{textfield: 'value to keep'}],
+      },
+    ],
+  });
+  expect(updatedErrors).toEqual({
+    outer: [
+      {
+        trigger: 'keep error',
+        inner: [{}],
+      },
+      {
+        trigger: 'keep error',
+        inner: [
+          {
+            textfield: 'keep error',
+          },
+        ],
       },
     ],
   });
@@ -146,8 +183,9 @@ test('Nested components gets default value when it becomes visible', () => {
     outer: [{inner: [{}]}],
   };
   const initialValues: Values = {external: 'show', outer: []};
+  const errors: Errors = {};
 
-  const {updatedValues} = applyVisibility(component, values, {
+  const {updatedValues} = applyVisibility(component, values, errors, {
     parentHidden: false,
     initialValues: initialValues,
     getRegistryEntry,
