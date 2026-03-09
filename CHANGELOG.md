@@ -1,5 +1,17 @@
 # Changes
 
+## 1.1.1 (2026-03-09)
+
+Bugfix release.
+
+- [`OF#5994`][OF#5994] Fixed validation errors not being cleared for hidden fields leading to not
+  being able to submit the form.
+- [`#266`][#266] Fixed crash when adding an `addressNL` component to an editgrid.
+- Updated dependencies with security fixes (via @dependabot).
+
+[OF#5994]: https://github.com/open-formulieren/open-forms/issues/5994
+[#266]: https://github.com/open-formulieren/formio-renderer/issues/266
+
 ## 1.1.0 (2026-02-03)
 
 Small quality-of-life features and bugfixes release.
