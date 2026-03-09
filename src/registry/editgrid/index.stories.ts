@@ -10,9 +10,10 @@ import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import FormioComponent from '@/components/FormioComponent';
 import type {FormioFormProps} from '@/components/FormioForm';
+import type {FormSettings} from '@/context';
 import {getRegistryEntry} from '@/registry';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
-import {withFormik} from '@/sb-decorators';
+import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import type {JSONObject} from '@/types';
 
 import {FormioEditGrid} from './';
@@ -817,5 +818,62 @@ export const MutationsTriggerRevalidation: ValidationStory = {
         expect(canvas.queryByText(/number of items/)).not.toBeInTheDocument();
       });
     });
+  },
+};
+
+export const WithAdressNL: Story = {
+  decorators: [withFormSettingsProvider, withFormik],
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Various combinations of value display',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'addressNL',
+          type: 'addressNL',
+          key: 'addressNL',
+          label: 'AddressNL',
+          layout: 'singleColumn',
+          deriveAddress: true,
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [
+          {
+            addressNL: {
+              postcode: '1043GR',
+              houseNumber: '151',
+              houseLetter: 'A',
+              houseNumberAddition: '9',
+              streetName: 'Kingsfordweg',
+              city: 'Amsterdam',
+            } satisfies AddressData,
+          },
+        ],
+      },
+    },
+    formSettings: {
+      componentParameters: {
+        addressNL: {
+          addressAutoComplete: async () => ({
+            streetName: 'Autofilled street',
+            city: 'Autofilled',
+            secretStreetCity: 'some-hashed-security-thing',
+          }),
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
   },
 };
