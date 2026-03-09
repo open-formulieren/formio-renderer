@@ -14,6 +14,7 @@ import type {JSONObject} from '@/types';
 import {buildValidationSchema, useValidationSchemas, validatePlugins} from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
+import type {Errors} from '@/visibility';
 
 import ItemPreview from './ItemPreview';
 import isEmpty from './empty';
@@ -47,6 +48,7 @@ export interface ItemBodyProps {
   parentComponentsMap: Record<string, AnyComponentSchema>;
   initialValues: JSONObject;
   onItemValuesUpdated: (itemValues: JSONObject) => void;
+  onItemErrorsUpdated: (itemErrors: Errors) => void;
   onValidationSchemaChange: (index: number, schema: z.ZodSchema<JSONObject>) => void;
   expanded: boolean;
 }
@@ -61,11 +63,12 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   parentComponentsMap,
   initialValues,
   onItemValuesUpdated,
+  onItemErrorsUpdated,
   onValidationSchemaChange,
   expanded,
 }) => {
   const intl = useIntl();
-  const {values} = useFormikContext<WrappedJSONObject>();
+  const {values, errors} = useFormikContext<WrappedJSONObject>();
   const {validatePluginCallback} = useFormSettings();
 
   // ensure we peek deep inside the formik data skipping over any prefixes applied by
@@ -75,6 +78,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   if (!rawNamePrefix.endsWith('.')) throw new Error('Unexpected name prefix');
   const namePrefix = rawNamePrefix.slice(0, -1);
   const itemValues: JSONObject = getIn(values, namePrefix);
+  const itemErrors: Errors = getIn(errors, namePrefix);
 
   const componentsMap = useMemo(() => {
     const localComponentsMap: Record<string, AnyComponentSchema> = Object.fromEntries(
@@ -88,33 +92,33 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     return {...parentComponentsMap, ...localComponentsMap};
   }, [parentComponentsMap, components, parentKey]);
 
-  const {visibleComponents, updatedItemValues} = useMemo(() => {
-    const {visibleComponents, updatedValues: updatedItemValues} = processVisibility(
-      components,
-      itemValues,
-      {
-        // in this case, the parent is the item itself rather than the `editgrid`
-        // component. There are no mechanisms to hide an entire item. If the editgrid
-        // component were to be hidden, matching key of that component will be cleared
-        // and/or items won't be rendered at all because the editgrid component is
-        // filtered out of the visible components.
-        parentHidden: false,
-        initialValues,
-        getRegistryEntry,
-        getEvaluationScope: (values: JSONObject): JSONObject => {
-          const result: JSONObject = setIn(parentValues, parentKey, values);
-          return result;
-        },
-        componentsMap,
-      }
-    );
+  const {visibleComponents, updatedItemValues, updatedItemErrors} = useMemo(() => {
+    const {
+      visibleComponents,
+      updatedValues: updatedItemValues,
+      updatedErrors: updatedItemErrors,
+    } = processVisibility(components, itemValues, itemErrors, {
+      // in this case, the parent is the item itself rather than the `editgrid`
+      // component. There are no mechanisms to hide an entire item. If the editgrid
+      // component were to be hidden, matching key of that component will be cleared
+      // and/or items won't be rendered at all because the editgrid component is
+      // filtered out of the visible components.
+      parentHidden: false,
+      initialValues,
+      getRegistryEntry,
+      getEvaluationScope: (values: JSONObject): JSONObject => {
+        const result: JSONObject = setIn(parentValues, parentKey, values);
+        return result;
+      },
+      componentsMap,
+    });
     const updatedValidationSchema = buildValidationSchema(visibleComponents, {
       intl,
       getRegistryEntry,
       validatePlugins: validatePlugins.bind(null, validatePluginCallback),
     });
     onValidationSchemaChange(index, updatedValidationSchema);
-    return {visibleComponents, updatedItemValues};
+    return {visibleComponents, updatedItemValues, updatedItemErrors};
   }, [
     intl,
     index,
@@ -127,6 +131,7 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     componentsMap,
     initialValues,
     itemValues,
+    itemErrors,
   ]);
 
   // handle the side-effects from the visibility checks that apply clearOnHide to the
@@ -141,7 +146,18 @@ const ItemBody: React.FC<ItemBodyProps> = ({
     if (updatedItemValues !== itemValues) {
       onItemValuesUpdated(updatedItemValues);
     }
-  }, [onItemValuesUpdated, itemValues, updatedItemValues]);
+
+    if (updatedItemErrors !== itemErrors) {
+      onItemErrorsUpdated(updatedItemErrors);
+    }
+  }, [
+    onItemValuesUpdated,
+    itemValues,
+    updatedItemValues,
+    onItemErrorsUpdated,
+    itemErrors,
+    updatedItemErrors,
+  ]);
 
   if (!expanded) {
     // assign the local item values to the editgrid scope - `parentKey` is the key of the
@@ -199,8 +215,13 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   renderNested: FormioComponent,
   getRegistryEntry,
 }) => {
-  const {values, setFieldValue, getFieldProps} = useFormikContext<WrappedJSONObject>();
+  const {values, setFieldValue, getFieldProps, getFieldMeta, setFieldError} =
+    useFormikContext<WrappedJSONObject>();
   const {value} = getFieldProps<JSONObject[]>(key);
+  const {error} = getFieldMeta<JSONObject[]>(key);
+  // type cast because the FormikErrors type is plain wrong for nested structures like
+  // edit grids
+  const fieldError = error as Errors;
 
   // ensure we peek deep inside the formik data skipping over any prefixes applied by
   // the EditGridItem for the isolation-mode-editing. Note that prefix ends with a
@@ -256,6 +277,18 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
           onItemValuesUpdated={newItemValues => {
             const updatedFieldValue = replace(value, index, newItemValues);
             setFieldValue(key, updatedFieldValue);
+          }}
+          onItemErrorsUpdated={newItemErrors => {
+            // we can only replace the item errors if the field errors are an array of
+            // item-level errors. Possibly there are:
+            // - no errors at all (undefined)
+            // - a string error, for the editgrid as a whole
+            if (Array.isArray(fieldError)) {
+              const updatedFieldErrors = replace(fieldError, index, newItemErrors);
+              // @ts-expect-error the formik type expects a string, but we're working
+              // with nested objects here
+              setFieldError(key, updatedFieldErrors);
+            }
           }}
           onValidationSchemaChange={setSchema}
           expanded={expanded}

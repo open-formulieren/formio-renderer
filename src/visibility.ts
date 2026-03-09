@@ -1,9 +1,29 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
 
+import type {NestedObject} from '@/components/utils';
 import {getClearOnHide, isHidden} from '@/formio';
 import type {VisibilityContext} from '@/registry/types';
 import type {JSONObject} from '@/types';
+
+/**
+ * The possible errors in the Formik state.
+ *
+ * @note We don't use the `FormikErrors` type here because it's too limited with a
+ * generic JSONObject `Values` type argument - it simplifies to `{[k: string]: string}`,
+ * but the actual error structure mimicks the values structure that can string keys
+ * and values of type:
+ *
+ * - string
+ * - string[] (for components with multiple: true, for example)
+ * - nested error structure (object), for `foo.bar` like component keys
+ * - arrays of nested error structures or strings, like for edit grids, where the
+ *   error may be about the item as a whole (string) or an object (item field errors)
+ *
+ * The errors structure itself may also be `undefined`, when there's *no* error for a
+ * particular field at all.
+ */
+export type Errors = NestedObject<string | string[] | Errors[]> | string | string[] | undefined;
 
 /**
  * The return value of `processVisibility`.
@@ -23,6 +43,12 @@ interface ProcessVisibilityResult {
    * stable identity, for both the top-level and nested objects.
    */
   updatedValues: JSONObject;
+  /**
+   * Updated `errors` because of visibility logic. A component can be invalid when it is
+   * not hidden. The key of a hidden component should not be in the object even if it
+   * "used" to be invalid.
+   */
+  updatedErrors: Errors;
 }
 
 /**
@@ -56,6 +82,18 @@ export const processVisibility = (
    */
   values: JSONObject,
   /**
+   * Validation errors for the current scope. The root scope is equal to the
+   * errors for the _whole_ submission, but that's not always the case. Edit grids
+   * essentially have a nested, isolated scope for each item with a nested subform tree
+   * of components, with access to the outer sope. See the context parameter
+   * `getEvaluationScope` for such situations.
+   *
+   * A component becoming hidden produces side effects - the validation errors for that
+   * component must be cleared to not block submission. Make sure the shape of `errors`
+   * matches the component definitions provided in `components`.
+   */
+  errors: Errors,
+  /**
    * Form definition/subtree context, used to pass callbacks to avoid circular
    * dependencies but also more fine-grained context set by one or more parent
    * components.
@@ -69,6 +107,7 @@ export const processVisibility = (
   // processed. If there are no side-effects applied, then it will keep the same
   // identity because we use Formik's `setIn` under the hood.
   let updatedValues = values;
+  let updatedErrors = errors;
 
   // Process the component tree depth-first. We loop over the components in order of
   // definition, which matches top-to-bottom UI-wise. Within each component, we first
@@ -89,6 +128,8 @@ export const processVisibility = (
     if (hidden) {
       // only clear the value if actually requested
       if (clearOnHide) updatedValues = clearValue(updatedValues, key);
+      // update the errors if any component is invalid but hidden
+      updatedErrors = clearErrors(updatedErrors, key);
     } else {
       // the component is visible - it may have been hidden and cleared before, so make
       // sure that we have a value for it. `initialValues` contains either the
@@ -98,6 +139,10 @@ export const processVisibility = (
       if (!hasValue) {
         updatedValues = setIn(updatedValues, key, getIn(initialValues, key));
       }
+
+      // we don't 'restore' errors like we do values - when a component becomes visible,
+      // assume a pristine state. The client and server-side validation will set them
+      // again whenever it's necessary.
     }
 
     // now the component itself was processed, recurse into its children, if configured
@@ -106,12 +151,13 @@ export const processVisibility = (
     if (applyVisibility) {
       // applyVisibility should only affect child components/values, not the parent
       // scope, though it technically can
-      const result = applyVisibility(componentDefinition, updatedValues, {
+      const result = applyVisibility(componentDefinition, updatedValues, updatedErrors, {
         ...context,
         parentHidden: hidden,
       });
       componentDefinition = result.updatedDefinition;
       updatedValues = result.updatedValues;
+      updatedErrors = result.updatedErrors;
     }
 
     // finally, add the component if it's visible - this must be the last step so that
@@ -120,7 +166,7 @@ export const processVisibility = (
     if (!hidden) visibleComponents.push(componentDefinition);
   }
 
-  return {visibleComponents, updatedValues};
+  return {visibleComponents, updatedValues, updatedErrors};
 };
 
 /**
@@ -134,4 +180,35 @@ export const processVisibility = (
  */
 const clearValue = (values: JSONObject, key: string): JSONObject => {
   return setIn(values, key, undefined);
+};
+
+/**
+ * Clear any validation error(s) for the specified `key`.
+ *
+ * The key points to a component that can be of any type, as such, the errors could be
+ * a single string, nested object or even an array for edit grids, depending on how deep
+ * in the tree the key points.
+ *
+ * We use Formik's `setIn` because it keeps the `errors` refernce stable if no changes
+ * are being made, which is crucial for equality/identity checks in the React hooks.
+ */
+const clearErrors = (errors: Errors, key: string): Errors => {
+  if (errors === undefined) return errors;
+  let updated: Errors = setIn(errors, key, undefined);
+
+  // we must crawl up and check if we have empty-ish error objects so that Formik's
+  // isValid correctly reports whether there are errors or not
+  const bits = key.split('.');
+  for (let i = bits.length; i > 0; i--) {
+    const parentKey = bits.slice(0, i).join('.');
+    const parentErrors: Errors = getIn(updated, parentKey);
+    if (
+      !parentErrors ||
+      (Array.isArray(parentErrors) && !parentErrors.length) ||
+      (typeof parentErrors == 'object' && !Object.keys(parentErrors).length)
+    ) {
+      updated = setIn(updated, parentKey, undefined);
+    }
+  }
+  return updated;
 };

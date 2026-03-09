@@ -52,12 +52,17 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({
   // The `ItemBody` component takes care of (recursively) processing the value changes
   // from clearOnHide side-effects. In the preview, we only need to worry about whether
   // a component is visible or not.
-  const {visibleComponents} = processVisibility(components, values, {
-    parentHidden: false,
-    initialValues: {}, // actual value is not relevant here, it's handled in `ItemBody`
-    getRegistryEntry,
-    componentsMap,
-  });
+  const {visibleComponents} = processVisibility(
+    components,
+    values,
+    {},
+    {
+      parentHidden: false,
+      initialValues: {}, // actual value is not relevant here, it's handled in `ItemBody`
+      getRegistryEntry,
+      componentsMap,
+    }
+  );
   return (
     <DataList appearance="rows">
       {visibleComponents.map(component => (

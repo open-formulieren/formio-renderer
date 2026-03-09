@@ -8,17 +8,20 @@ import {processVisibility} from '@/visibility';
 const applyVisibility: ApplyVisibility<ColumnsComponentSchema> = (
   componentDefinition,
   values,
+  errors,
   context
 ) => {
   const updatedColumns: Column[] = componentDefinition.columns.map(column => {
-    const {visibleComponents, updatedValues} = processVisibility(
+    const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
       column.components,
       values,
+      errors,
       context
     );
     // make sure to update this for the next iteration so that it sees the up-to-date
     // side-effects of clearOnHide
     values = updatedValues;
+    errors = updatedErrors;
     return setIn(column, 'components', visibleComponents);
   });
 
@@ -28,7 +31,7 @@ const applyVisibility: ApplyVisibility<ColumnsComponentSchema> = (
     updatedColumns
   );
 
-  return {updatedDefinition, updatedValues: values};
+  return {updatedDefinition, updatedValues: values, updatedErrors: errors};
 };
 
 export default applyVisibility;

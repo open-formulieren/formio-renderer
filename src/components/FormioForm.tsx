@@ -17,6 +17,7 @@ import {
 } from '@/validationSchema';
 import {deepMergeValues, extractInitialValues} from '@/values';
 import {processVisibility} from '@/visibility';
+import type {Errors as VisibilityErrors} from '@/visibility';
 
 import FormFieldContainer from './FormFieldContainer';
 import FormSettingsProvider from './FormSettingsProvider';
@@ -271,13 +272,24 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
     // values via clearOnHide, and this implies multiple (render) passes to converge.
     // XXX: this means that component definitions may not have reference cycles in their
     // conditional logic to prevent infinite render loops!
-    const {visibleComponents: componentsToRender, updatedValues} = useMemo(() => {
-      const {visibleComponents, updatedValues} = processVisibility(components, values, {
-        parentHidden: false,
-        initialValues,
-        getRegistryEntry,
-        componentsMap,
-      });
+    const {
+      visibleComponents: componentsToRender,
+      updatedValues,
+      updatedErrors,
+    } = useMemo(() => {
+      const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
+        components,
+        values,
+        // type cast necessary because Formik's FormikErrors type is wrong for nested
+        // structures/generics like JSONObject
+        errors as VisibilityErrors,
+        {
+          parentHidden: false,
+          initialValues,
+          getRegistryEntry,
+          componentsMap,
+        }
+      );
 
       const updatedValidationSchema = buildValidationSchema(visibleComponents, {
         intl,
@@ -285,7 +297,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         validatePlugins: validatePlugins.bind(null, validatePluginCallback),
       });
       onValidationSchemaChange(updatedValidationSchema);
-      return {visibleComponents, updatedValues};
+      return {visibleComponents, updatedValues, updatedErrors};
     }, [
       intl,
       validatePluginCallback,
@@ -294,6 +306,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       componentsMap,
       initialValues,
       values,
+      errors,
     ]);
 
     // handle the side-effects from the visibility checks that apply clearOnHide to the
@@ -306,7 +319,15 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       if (updatedValues !== values) {
         setValues(updatedValues);
       }
-    }, [setValues, values, updatedValues]);
+
+      // update the errors the same way - values and errors are typically mutated at
+      // the same time
+      if (updatedErrors !== errors) {
+        // type cast necessary because Formik's FormikErrors type is wrong for nested
+        // structures/generics like JSONObject
+        setErrors(updatedErrors as FormikErrors<JSONObject>);
+      }
+    }, [setValues, values, updatedValues, setErrors, errors, updatedErrors]);
 
     return (
       <Form noValidate id={id}>

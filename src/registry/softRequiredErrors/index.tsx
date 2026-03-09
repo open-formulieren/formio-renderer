@@ -34,12 +34,19 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   // workload.
   const missingFields: MissingFields[] = useMemo(() => {
     // We only show visible components in the soft-required list.
-    const {visibleComponents} = processVisibility(components, values, {
-      parentHidden: false,
-      initialValues,
-      getRegistryEntry,
-      componentsMap,
-    });
+    const {visibleComponents} = processVisibility(
+      components,
+      values,
+      // the error state is irrelevant for this processing, we only need to know which
+      // components are visible
+      {},
+      {
+        parentHidden: false,
+        initialValues,
+        getRegistryEntry,
+        componentsMap,
+      }
+    );
 
     // Filter the list of visible components to the components that are actually
     // soft-required.
