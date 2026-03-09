@@ -657,6 +657,118 @@ export const WithNestedRadio: Story = {
   },
 };
 
+export const NestedWithSimpleConditionalsAndInitialErrors: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'parent',
+      label: 'Repeating group with nested repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Parent',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'textField1',
+          label: 'Textfield 1',
+          clearOnHide: false,
+        },
+        {
+          id: 'component3',
+          type: 'editgrid',
+          key: 'child',
+          label: 'Nested repeating group',
+          disableAddingRemovingRows: false,
+          groupLabel: 'Child',
+          clearOnHide: false,
+          components: [
+            {
+              id: 'component4',
+              type: 'textfield',
+              key: 'textField2',
+              label: 'Nested 1',
+              clearOnHide: false,
+              conditional: {
+                show: false,
+                when: 'parent.textField1',
+                eq: 'hide',
+              },
+            },
+          ],
+        } satisfies EditGridComponentSchema,
+        {
+          id: 'component5',
+          type: 'textfield',
+          key: 'textField3',
+          label: 'Textfield 3',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        parent: [
+          {
+            textField1: 'show',
+            child: [{textField2: 'aaa'}],
+            textField3: 'untouched',
+          },
+        ],
+      },
+      initialErrors: {
+        parent: [
+          {
+            textField1: 'Textfield 1 error',
+            child: [{textField2: 'Textfield 2 error'}],
+            textField3: 'Textfield 3 error',
+          },
+        ],
+      },
+    },
+  },
+
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial errors visible', async () => {
+      const parent1Container = canvas.getByRole('group', {name: 'Parent 1'});
+      expect(parent1Container).toBeVisible();
+      expect(await canvas.findByText('Textfield 1 error')).toBeVisible();
+      expect(await canvas.findByText('Textfield 2 error')).toBeVisible();
+      expect(await canvas.findByText('Textfield 3 error')).toBeVisible();
+    });
+
+    await step('Hide nested textfield', async () => {
+      const textfield1 = await canvas.findByLabelText('Textfield 1');
+      await userEvent.clear(textfield1);
+      await userEvent.type(textfield1, 'hide');
+      await userEvent.keyboard('{Tab}');
+
+      // assert the new state - text field 1 is cleared because the input has changed,
+      // textfield 2 is gone because it's hidden
+      await waitFor(() => {
+        expect(canvas.queryByLabelText('Nested 1')).not.toBeInTheDocument();
+        expect(canvas.queryByText('Textfield 1 error')).not.toBeInTheDocument();
+        expect(canvas.queryByText('Textfield 2 error')).not.toBeInTheDocument();
+      });
+      expect(await canvas.findByText('Textfield 3 error')).toBeVisible();
+    });
+
+    await step('Show textfield 2 again and assert the validation error is gone', async () => {
+      const textfield1 = await canvas.findByLabelText('Textfield 1');
+      await userEvent.clear(textfield1);
+      await userEvent.type(textfield1, 'show');
+      await userEvent.keyboard('{Tab}');
+
+      expect(await canvas.findByLabelText('Nested 1')).toBeVisible();
+      expect(await canvas.findByText('Textfield 3 error')).toBeVisible();
+      expect(canvas.queryByText('Textfield 2 error')).not.toBeInTheDocument();
+    });
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: EditGridComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];

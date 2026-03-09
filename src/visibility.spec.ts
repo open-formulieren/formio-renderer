@@ -4,9 +4,10 @@ import {expect, test} from 'vitest';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
 
+import type {Errors} from './visibility';
 import {processVisibility} from './visibility';
 
-test('processVisibility filters out hidden components and clears values', () => {
+test('processVisibility filters out hidden components, clears values and clears errors', () => {
   const components: TextFieldComponentSchema[] = [
     {
       id: 'text',
@@ -22,16 +23,81 @@ test('processVisibility filters out hidden components and clears values', () => 
     },
   ];
   const values: JSONObject = {deep: {value: 'hide'}, text: 'value to clear'};
+  const errors: Errors = {
+    deep: {value: 'error to keep'},
+    text: 'error to clear',
+  };
 
-  const {visibleComponents, updatedValues} = processVisibility(components, values, {
+  const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
+    components,
+    values,
+    errors,
+    {
+      parentHidden: false,
+      initialValues: {text: ''},
+      getRegistryEntry,
+      componentsMap: {},
+    }
+  );
+
+  expect(visibleComponents).toEqual([]);
+  expect(updatedValues).toEqual({deep: {value: 'hide'}});
+  expect(updatedErrors).toEqual({deep: {value: 'error to keep'}});
+});
+
+test('processVisibility crawls up when clearing nested errors', () => {
+  // with nested objects for values (and errors), empty objects need to be cleared as
+  // otherwise formik still considers the form invalid due to having validation errors
+  const components: TextFieldComponentSchema[] = [
+    {
+      id: 'text1',
+      type: 'textfield',
+      key: 'parent.child.text1',
+      label: 'Text 1',
+      hidden: true,
+    },
+    {
+      id: 'text2',
+      type: 'textfield',
+      key: 'parent.child.text2',
+      label: 'Text 2',
+      hidden: true,
+    },
+    {
+      id: 'text3',
+      type: 'textfield',
+      key: 'toplevel.child1',
+      label: 'Text 3',
+      hidden: true,
+    },
+    {
+      id: 'text4',
+      type: 'textfield',
+      key: 'toplevel.child2',
+      label: 'Text 4',
+      hidden: false,
+    },
+  ];
+  const values: JSONObject = {
+    parent: {child: {text1: '', text2: ''}},
+    toplevel: {child1: '', child2: ''},
+  };
+  const errors: Errors = {
+    parent: {child: {text1: 'error to clear', text2: 'error to clear'}},
+    toplevel: {child1: 'error to clear', child2: 'error to keep'},
+  };
+
+  const {updatedErrors} = processVisibility(components, values, errors, {
     parentHidden: false,
-    initialValues: {text: ''},
+    initialValues: {
+      parent: {child: {text1: '', text2: ''}},
+      toplevel: {child1: '', child2: ''},
+    },
     getRegistryEntry,
     componentsMap: {},
   });
 
-  expect(visibleComponents).toEqual([]);
-  expect(updatedValues).toEqual({deep: {value: 'hide'}});
+  expect(updatedErrors).toEqual({toplevel: {child2: 'error to keep'}});
 });
 
 // for edit grids, access to the root values/scope is needed but *also* to the local
@@ -58,22 +124,29 @@ test('processVisibility uses provided evaluation scope', () => {
     },
   ];
   const itemValues: JSONObject = {text1: 'keep me', text2: 'clear me'};
+  const itemErrors: Errors = {text1: 'keep error', text2: 'clear error'};
   const getEvaluationScope = (values: JSONObject): JSONObject => {
     return {item: values};
   };
 
-  const {visibleComponents, updatedValues} = processVisibility(itemComponents, itemValues, {
-    parentHidden: false,
-    initialValues: {text1: '', text2: ''},
-    getRegistryEntry,
-    getEvaluationScope,
-    componentsMap: {},
-  });
+  const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
+    itemComponents,
+    itemValues,
+    itemErrors,
+    {
+      parentHidden: false,
+      initialValues: {text1: '', text2: ''},
+      getRegistryEntry,
+      getEvaluationScope,
+      componentsMap: {},
+    }
+  );
 
   expect(visibleComponents).toHaveLength(1);
   // we require the identity to be the same if no modifications are made
   expect(visibleComponents[0]).toBe(itemComponents[0]);
   expect(updatedValues).toEqual({text1: 'keep me'});
+  expect(updatedErrors).toEqual({text1: 'keep error'});
 });
 
 test('processVisibility handles duplicate keys in different scopes', () => {
@@ -91,20 +164,27 @@ test('processVisibility handles duplicate keys in different scopes', () => {
     },
   ];
   const itemValues: JSONObject = {text1: 'clear me'};
+  const itemErrors: Errors = {text1: 'clear error'};
   const getEvaluationScope = (values: JSONObject): JSONObject => {
     return {text1: 'clear', item: values};
   };
 
-  const {visibleComponents, updatedValues} = processVisibility(itemComponents, itemValues, {
-    parentHidden: false,
-    initialValues: {text1: ''},
-    getRegistryEntry,
-    getEvaluationScope,
-    componentsMap: {},
-  });
+  const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
+    itemComponents,
+    itemValues,
+    itemErrors,
+    {
+      parentHidden: false,
+      initialValues: {text1: ''},
+      getRegistryEntry,
+      getEvaluationScope,
+      componentsMap: {},
+    }
+  );
 
   expect(visibleComponents).toEqual([]);
   expect(updatedValues).toEqual({});
+  expect(updatedErrors).toEqual({});
 });
 
 // scoped item values may not be available in their outer context
@@ -129,18 +209,25 @@ test('processVisibility does not pollute the evaluation scope', () => {
     },
   ];
   const itemValues: JSONObject = {text1: 'keep', text2: 'keep'};
+  const itemErrors: Errors = {text1: 'keep error', text2: 'keep error'};
   const getEvaluationScope = (values: JSONObject): JSONObject => {
     return {item: values}; // deliberately omitting text1 here
   };
 
-  const {visibleComponents, updatedValues} = processVisibility(itemComponents, itemValues, {
-    parentHidden: false,
-    initialValues: {text1: '', text2: ''},
-    getRegistryEntry,
-    getEvaluationScope,
-    componentsMap: {},
-  });
+  const {visibleComponents, updatedValues, updatedErrors} = processVisibility(
+    itemComponents,
+    itemValues,
+    itemErrors,
+    {
+      parentHidden: false,
+      initialValues: {text1: '', text2: ''},
+      getRegistryEntry,
+      getEvaluationScope,
+      componentsMap: {},
+    }
+  );
 
   expect(visibleComponents).toEqual(itemComponents);
   expect(updatedValues).toEqual({text1: 'keep', text2: 'keep'});
+  expect(updatedErrors).toEqual({text1: 'keep error', text2: 'keep error'});
 });

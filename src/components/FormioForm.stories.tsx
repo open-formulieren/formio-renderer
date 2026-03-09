@@ -1,5 +1,10 @@
-import type {FieldsetComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
+import type {
+  CheckboxComponentSchema,
+  FieldsetComponentSchema,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {useFormikContext} from 'formik';
 import React, {useRef} from 'react';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
@@ -13,20 +18,23 @@ export default {
   component: FormioForm,
   decorators: [
     // Add a submit button for the form
-    (Story, {args}) => (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          rowGap: '20px',
-        }}
-      >
+    (Story, {args, parameters}) =>
+      parameters?.skipSubmitButtonDecorator ? (
         <Story />
-        <PrimaryActionButton type="submit" form={args.id} style={{alignSelf: 'flex-start'}}>
-          Submit
-        </PrimaryActionButton>
-      </div>
-    ),
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            rowGap: '20px',
+          }}
+        >
+          <Story />
+          <PrimaryActionButton type="submit" form={args.id} style={{alignSelf: 'flex-start'}}>
+            Submit
+          </PrimaryActionButton>
+        </div>
+      ),
   ],
   args: {
     onChange: fn(),
@@ -426,6 +434,65 @@ export const SetErrorsFromParentComponent: Story = {
 
     await userEvent.click(canvas.getByRole('button', {name: 'Set error'}));
     expect(await canvas.findByText('An outside validation error!')).toBeVisible();
+  },
+};
+
+const CheckIsValid: React.FC = () => {
+  const {isValid} = useFormikContext();
+  return isValid ? (
+    <PrimaryActionButton type="submit" disabled={!isValid}>
+      Submit
+    </PrimaryActionButton>
+  ) : (
+    'Validation error(s)'
+  );
+};
+
+export const ValidationErrorsOfHiddenComponentsDoNotBlockSubmission: Story = {
+  args: {
+    components: [
+      {
+        id: 'component1',
+        type: 'textfield',
+        key: 'parent.conditional.textfield',
+        label: 'Textfield with errors',
+        conditional: {
+          show: true,
+          when: 'checkbox',
+          eq: false,
+        },
+      } satisfies TextFieldComponentSchema,
+      {
+        id: 'component2',
+        type: 'checkbox',
+        key: 'checkbox',
+        label: 'Hide textfield',
+      } satisfies CheckboxComponentSchema,
+    ],
+    values: {
+      parent: {conditional: {textfield: 'A invalid value'}},
+    },
+    errors: {
+      parent: {conditional: {textfield: 'This is not valid'}},
+    },
+    children: <CheckIsValid />,
+  },
+  parameters: {
+    skipSubmitButtonDecorator: true,
+  },
+  play: async ({canvasElement, args, step}) => {
+    const canvas = within(canvasElement);
+
+    await step('Initial invalid state', async () => {
+      expect(await canvas.findByText('Validation error(s)')).toBeVisible();
+    });
+
+    await step('Hide textfield with errors', async () => {
+      await userEvent.click(canvas.getByLabelText('Hide textfield'));
+      const submitButton = await canvas.findByRole('button', {name: 'Submit'});
+      await userEvent.click(submitButton);
+      expect(args.onSubmit).toHaveBeenCalledOnce();
+    });
   },
 };
 
