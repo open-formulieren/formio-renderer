@@ -1,5 +1,5 @@
-@use '@utrecht/components/table';
-@use '@utrecht/components/custom-checkbox';
+@use '@utrecht/table-css';
+@use '@utrecht/custom-checkbox-css';
 
 .openforms-children {
   .utrecht-form-field-description--openforms-errors + .utrecht-button {

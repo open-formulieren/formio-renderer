@@ -2,7 +2,7 @@ import '@fortawesome/fontawesome-free/css/fontawesome.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@open-formulieren/design-tokens/dist/index.css';
 import type {Preview} from '@storybook/react-vite';
-import '@utrecht/document-css/dist/index.css';
+import '@utrecht/document-css';
 
 import {utrechtDocumentDecorator, withModal} from './decorators';
 import './dte-theme.scss';
