@@ -1,6 +1,6 @@
-@use '@utrecht/form-field-css/src/index' as *;
-@use '@utrecht/paragraph-css/src/index' as *;
-@use '@utrecht/textbox-css/src/index' as *;
+@use '@utrecht/form-field-css';
+@use '@utrecht/paragraph-css';
+@use '@utrecht/textbox-css';
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
