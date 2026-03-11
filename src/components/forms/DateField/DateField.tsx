@@ -22,6 +22,18 @@ export interface DatePickerProps {
    * An array of ISO-8601 (YYYY-MM-DD) date strings, representing not-available dates.
    */
   disabledDates?: string[];
+  /**
+   * Show/hide the weekend.
+   *
+   * By default this is enabled/shown.
+   */
+  displayWeekend?: boolean;
+  /**
+   * Show/hide year navigation buttons.
+   *
+   * By default this is enabled/shown.
+   */
+  displayYearNavigation?: boolean;
 }
 
 /**

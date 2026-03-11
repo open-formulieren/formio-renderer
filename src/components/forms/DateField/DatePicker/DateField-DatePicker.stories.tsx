@@ -150,6 +150,52 @@ export const DatePickerDisabledDates: Story = {
   },
 };
 
+export const DatePickerHiddenWeekend: Story = {
+  decorators: [withMockDate],
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'Date',
+    description: 'This is a custom description',
+    tooltip: 'A short tooltip.',
+    isReadOnly: false,
+    isRequired: true,
+    widgetProps: {displayWeekend: false},
+  },
+  parameters: {
+    mockDate: new Date('2025-09-29T12:00:00+02:00'),
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    await userEvent.click(trigger);
+  },
+};
+
+export const DatePickerHiddenYearNavigation: Story = {
+  decorators: [withMockDate],
+  args: {
+    widget: 'datePicker',
+    name: 'date',
+    label: 'Date',
+    description: 'This is a custom description',
+    tooltip: 'A short tooltip.',
+    isReadOnly: false,
+    isRequired: true,
+    widgetProps: {displayYearNavigation: false},
+  },
+  parameters: {
+    mockDate: new Date('2025-09-29T12:00:00+02:00'),
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const trigger = canvas.getByRole('button', {name: 'Toon/verberg de kalender'});
+    await userEvent.click(trigger);
+  },
+};
+
 export const DatePickerKeyboardNavigation: Story = {
   args: {
     widget: 'datePicker',
