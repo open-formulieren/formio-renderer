@@ -159,7 +159,7 @@
   },
   "dependencies": {
     "@open-formulieren/types": "^1.0.0",
-    "@utrecht/calendar-react": "^1.0.15",
+    "@utrecht/calendar-react": "^1.1.0",
     "@utrecht/component-library-react": "1.0.0-alpha.353",
     "clsx": "^2.1.0",
     "dompurify": "^3.2.6",
