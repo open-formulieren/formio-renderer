@@ -206,6 +206,7 @@ export const ValidateValid: ValidationStory = {
           dateOfBirth: '2025-11-01',
           _OF_INTERNAL_addedManually: true,
           _OF_INTERNAL_id: expect.any(String),
+          selected: null,
         },
       ],
     });
