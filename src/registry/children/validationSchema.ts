@@ -69,7 +69,7 @@ const buildChildSchema = (intl: IntlShape): z.ZodSchema => {
       })
       .min(1),
     dateOfBirth: buildDateOfBirthSchema(intl),
-    selected: z.boolean().optional(),
+    selected: z.boolean().nullable(),
     // _OF_INTERNAL_addedManually must either be true or undefined.
     _OF_INTERNAL_addedManually: z.literal<boolean>(true).optional(),
     // _OF_INTERNAL_id must be a string or undefined.

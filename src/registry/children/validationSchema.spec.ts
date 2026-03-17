@@ -46,11 +46,13 @@ describe('Plain children validation', () => {
         bsn: '111222333',
         firstNames: 'Johan',
         dateOfBirth: '1980-12-12',
+        selected: null,
       },
       {
         bsn: '923456788',
         firstNames: 'Joe',
         dateOfBirth: '1980-12-12',
+        selected: null,
       },
     ]);
 
@@ -60,16 +62,16 @@ describe('Plain children validation', () => {
 
 describe('Children subfields validation', () => {
   test.for([
-    [{bsn: '', firstNames: '', dateOfBirth: ''}],
+    [{bsn: '', firstNames: '', dateOfBirth: '', selected: null}],
 
-    [{bsn: '111222333', firstNames: '', dateOfBirth: ''}],
-    [{bsn: '111222333', firstNames: '', dateOfBirth: '1980-12-12'}],
-    [{bsn: '111222333', firstNames: 'Joe', dateOfBirth: ''}],
+    [{bsn: '111222333', firstNames: '', dateOfBirth: '', selected: null}],
+    [{bsn: '111222333', firstNames: '', dateOfBirth: '1980-12-12', selected: null}],
+    [{bsn: '111222333', firstNames: 'Joe', dateOfBirth: '', selected: null}],
 
-    [{bsn: '', firstNames: 'Joe', dateOfBirth: ''}],
-    [{bsn: '', firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: '', firstNames: 'Joe', dateOfBirth: '', selected: null}],
+    [{bsn: '', firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
 
-    [{bsn: '', firstNames: '', dateOfBirth: '1980-12-12'}],
+    [{bsn: '', firstNames: '', dateOfBirth: '1980-12-12', selected: null}],
   ] satisfies ChildDetails[][])(
     'does not accept children with missing BSN, first name or date of birth (value: %s)',
     async value => {
@@ -83,15 +85,15 @@ describe('Children subfields validation', () => {
 
   test.for([
     // Not a string
-    [{bsn: 111222333, firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: 111222333, firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
     // Too short
-    [{bsn: '123', firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: '123', firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
     // Too long
-    [{bsn: '0000000000', firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: '0000000000', firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
     // Not digits only
-    [{bsn: 'aaabbbccc', firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: 'aaabbbccc', firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
     // Doesn't pass 11 check
-    [{bsn: '123456789', firstNames: 'Joe', dateOfBirth: '1980-12-12'}],
+    [{bsn: '123456789', firstNames: 'Joe', dateOfBirth: '1980-12-12', selected: null}],
   ])('does not accept invalid BSN (value: %s)', async value => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
@@ -107,6 +109,7 @@ describe('Children subfields validation', () => {
         firstNames: 'Joe',
         // Go back 120 years and 1 day
         dateOfBirth: subDays(subYears(today, 120), 1).toISOString(),
+        selected: null,
       },
     ],
     [
@@ -115,6 +118,7 @@ describe('Children subfields validation', () => {
         firstNames: 'Joe',
         // Today
         dateOfBirth: today.toISOString(),
+        selected: null,
       },
     ],
     [
@@ -123,6 +127,7 @@ describe('Children subfields validation', () => {
         firstNames: 'Joe',
         // 1 year in the future
         dateOfBirth: addYears(today, 1).toISOString(),
+        selected: null,
       },
     ],
   ] satisfies ChildDetails[][])(
@@ -142,6 +147,7 @@ describe('Children subfields validation', () => {
         bsn: '111222333',
         firstNames: 'Joe',
         dateOfBirth: '1980-12-12',
+        selected: null,
       },
     ];
     const schema = buildValidationSchema(BASE_COMPONENT);
@@ -163,6 +169,7 @@ describe('Manually added children validation', () => {
         dateOfBirth: '1980-12-12',
         _OF_INTERNAL_addedManually: true,
         _OF_INTERNAL_id: '9905f081-57c2-4228-8010-77b34ef0e7ab',
+        selected: null,
       },
     ]);
 
@@ -202,11 +209,13 @@ describe('Multiple children validation', () => {
         bsn: '111222333',
         firstNames: 'Johan',
         dateOfBirth: '1980-12-12',
+        selected: null,
       },
       {
         bsn: '111222333',
         firstNames: 'Joe',
         dateOfBirth: '2000-05-06',
+        selected: null,
       },
     ]);
 
@@ -220,11 +229,13 @@ describe('Multiple children validation', () => {
         bsn: '111222333',
         firstNames: 'Johan',
         dateOfBirth: '1980-12-12',
+        selected: null,
       },
       {
         bsn: '923456788',
         firstNames: 'Joe',
         dateOfBirth: '2000-05-06',
+        selected: null,
       },
     ]);
 

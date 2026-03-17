@@ -1,7 +1,7 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import type {FormikErrors} from 'formik';
 import {FieldArray, useFormikContext} from 'formik';
-import {useId, useState} from 'react';
+import {useEffect, useId, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import {SecondaryActionButton} from '@/components/Button';
@@ -32,7 +32,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
 }) => {
   const id = useId();
   key = useFieldConfig(key);
-  const {getFieldProps, getFieldMeta, setFieldTouched} = useFormikContext();
+  const {getFieldProps, getFieldMeta, setFieldTouched, setFieldValue} = useFormikContext();
   const {touched, error: formikError} = getFieldMeta<ExtendedChildDetails[]>(key);
   const {value: children = []} = getFieldProps<ExtendedChildDetails[]>(key);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +58,27 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
   const markFieldAsTouched = () => {
     setFieldTouched(key, true);
   };
+
+  // update the `selected` property of the child
+  useEffect(() => {
+    let hasChanged = false;
+
+    const updatedChildren = children.map(child => {
+      const newSelected =
+        typeof child.selected === 'boolean' ? child.selected : enableSelection ? false : null;
+
+      if (child.selected !== newSelected) {
+        hasChanged = true;
+        return {...child, selected: newSelected};
+      }
+
+      return child;
+    });
+
+    if (hasChanged) {
+      setFieldValue('children', updatedChildren);
+    }
+  }, [children, enableSelection, setFieldValue]);
 
   return (
     <Fieldset
@@ -100,7 +121,7 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
                   arrayHelpers.push({
                     ...newChild,
                     _OF_INTERNAL_id: crypto.randomUUID(),
-                    selected: enableSelection ? false : undefined,
+                    selected: enableSelection ? false : null,
                   });
 
                   markFieldAsTouched();
