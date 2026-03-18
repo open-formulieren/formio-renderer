@@ -1,5 +1,27 @@
 # Changes
 
+## 1.2.0 (2026-03-18)
+
+Feature and bugfix release.
+
+**New features**
+
+- [`OF#5692`][OF#5692] Now it's possible to select between showing or hiding the weekend and the
+  year navigation in the `DatePicker` component.
+
+**Bugfixes**
+
+- [`OF#6064`][OF#6064] Fixed `Children` component regarding the `selected` property.
+
+**Project maintenance**
+
+- Replaced Utrecht's component CSS usage with separate packages.
+- Cleaned up CSS imports.
+- Upgraded NL DS CSS packages.
+
+[OF#5692]: https://github.com/open-formulieren/open-forms/issues/5692
+[OF#6064]: https://github.com/open-formulieren/open-forms/issues/6064
+
 ## 1.1.1 (2026-03-09)
 
 Bugfix release.
