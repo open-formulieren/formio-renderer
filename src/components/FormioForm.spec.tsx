@@ -5,14 +5,18 @@ import type {
 } from '@open-formulieren/types';
 import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {createRef, forwardRef, useState} from 'react';
+import {useFormikContext} from 'formik';
+import {createRef, forwardRef, useEffect, useState} from 'react';
 import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
 
 import FormioForm from './FormioForm';
 import type {FormStateRef, FormioFormProps} from './FormioForm';
 
-type FormProps = Pick<FormioFormProps, 'components' | 'onChange' | 'onSubmit' | 'values'>;
+type FormProps = Pick<
+  FormioFormProps,
+  'components' | 'onChange' | 'onSubmit' | 'values' | 'children'
+>;
 
 const Form = forwardRef<FormStateRef, FormProps>((props, ref) => {
   return (
@@ -444,6 +448,50 @@ describe('Updating form errors', () => {
       const error = screen.queryByText('Error not displayed anywhere');
       expect(error).not.toBeInTheDocument();
     });
+  });
+
+  test('Clear errors when the (leaf) value is set to undefined', async () => {
+    const ref = createRef<FormStateRef>();
+    let isValid: boolean = false;
+
+    const IsValidObserver: React.FC = () => {
+      const {isValid: isValidFormik, errors} = useFormikContext();
+      useEffect(() => {
+        isValid = isValidFormik;
+      }, [isValidFormik]);
+      console.log(errors);
+      return null;
+    };
+
+    render(
+      <Form
+        ref={ref}
+        components={[
+          {
+            id: 'comp2',
+            type: 'textfield',
+            key: 'bar.baz',
+            label: 'Baz',
+            defaultValue: '',
+          },
+        ]}
+        onSubmit={vi.fn()}
+      >
+        <IsValidObserver />
+      </Form>
+    );
+
+    const errorMsg = 'Visible bar.baz error';
+    // ensure that the error is visible first so that we can assert it no longer will be
+    ref.current!.updateErrors({'bar.baz': errorMsg});
+    expect(await screen.findByText(errorMsg)).toBeVisible();
+
+    // clear the error
+    ref.current!.updateErrors({'bar.baz': undefined});
+    await waitFor(() => {
+      expect(screen.queryByText(errorMsg)).not.toBeInTheDocument();
+    });
+    expect(isValid).toBe(true);
   });
 });
 
