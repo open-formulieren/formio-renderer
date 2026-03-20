@@ -107,6 +107,11 @@ export interface VisibilityContext {
    * interpreted in the right context.
    */
   componentsMap: Partial<Record<string, AnyComponentSchema>>;
+  /**
+   * Object tracking the data updates done during visibility processing, excluding
+   * the data keys that were cleared.
+   */
+  dataUpdatesAccumulator?: JSONObject;
 }
 
 type ConditionalOptions = NonNullable<Conditional['conditional']>;
