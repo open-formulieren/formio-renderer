@@ -11,7 +11,7 @@ import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
 
 import FormioForm from './FormioForm';
-import type {FormStateRef, FormioFormProps} from './FormioForm';
+import type {Errors, FormStateRef, FormioFormProps} from './FormioForm';
 
 type FormProps = Pick<
   FormioFormProps,
@@ -362,6 +362,39 @@ describe('Updating form values', () => {
   });
 });
 
+// mostly a type checker test :-)
+test('Errors type assignment', () => {
+  const errors: Errors = {
+    string: 'string',
+    stringArray: ['string'],
+    undefined: undefined,
+    parent: {
+      child: 'child',
+      childArray: ['child'],
+    },
+    editgrid: [
+      {
+        string: 'string',
+        stringArray: [''],
+      },
+    ],
+    parentEditgrid: [
+      'string',
+      {
+        nestedEditgrid: [
+          'string',
+          {
+            string: 'string',
+            stringArray: ['string'],
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(errors).toBeTypeOf('object');
+});
+
 describe('Updating form errors', () => {
   test('Display flat and deep nested errors', async () => {
     const ref = createRef<FormStateRef>();
@@ -455,11 +488,10 @@ describe('Updating form errors', () => {
     let isValid: boolean = false;
 
     const IsValidObserver: React.FC = () => {
-      const {isValid: isValidFormik, errors} = useFormikContext();
+      const {isValid: isValidFormik} = useFormikContext();
       useEffect(() => {
         isValid = isValidFormik;
       }, [isValidFormik]);
-      console.log(errors);
       return null;
     };
 
@@ -470,26 +502,55 @@ describe('Updating form errors', () => {
           {
             id: 'comp2',
             type: 'textfield',
-            key: 'bar.baz',
+            key: 'foo.bar.baz',
             label: 'Baz',
             defaultValue: '',
           },
+          {
+            id: 'comp3',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Edit grid',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'comp4',
+                type: 'textfield',
+                key: 'nestedTextfield',
+                label: 'Nested textfield',
+              },
+            ],
+          },
         ]}
         onSubmit={vi.fn()}
+        values={{
+          foo: {bar: {baz: ''}},
+          editgrid: [{nestedTextfield: ''}],
+        }}
       >
         <IsValidObserver />
       </Form>
     );
 
-    const errorMsg = 'Visible bar.baz error';
+    const errorMsg1 = 'Visible foo.bar.baz error';
+    const errorMsg2 = 'Visible editgrid error';
     // ensure that the error is visible first so that we can assert it no longer will be
-    ref.current!.updateErrors({'bar.baz': errorMsg});
-    expect(await screen.findByText(errorMsg)).toBeVisible();
+    ref.current!.updateErrors({
+      'foo.bar.baz': errorMsg1,
+      'editgrid.0.nestedTextfield': errorMsg2,
+    });
+    expect(await screen.findByText(errorMsg1)).toBeVisible();
+    expect(await screen.findByText(errorMsg2)).toBeVisible();
 
     // clear the error
-    ref.current!.updateErrors({'bar.baz': undefined});
+    ref.current!.updateErrors({
+      'foo.bar.baz': undefined,
+      'editgrid.0.nestedTextfield': undefined,
+    });
     await waitFor(() => {
-      expect(screen.queryByText(errorMsg)).not.toBeInTheDocument();
+      expect(screen.queryByText(errorMsg1)).not.toBeInTheDocument();
+      expect(screen.queryByText(errorMsg2)).not.toBeInTheDocument();
     });
     expect(isValid).toBe(true);
   });
