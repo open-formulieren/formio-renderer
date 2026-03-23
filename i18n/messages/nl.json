@@ -133,7 +133,7 @@
     "originalDefault": "BSN"
   },
   "46fk1B": {
-    "defaultMessage": "Het verplichte veld ''{fieldLabel}' is niet ingevuld.",
+    "defaultMessage": "Het verplichte veld {fieldLabel} is niet ingevuld.",
     "description": "Validation error for required field.",
     "originalDefault": "The required field {fieldLabel} must be filled in."
   },
