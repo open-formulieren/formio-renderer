@@ -1,4 +1,4 @@
-import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, JSONValue} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
 import {set} from 'lodash';
 
@@ -141,9 +141,11 @@ export const processVisibility = (
       // of the component/component type, see `FormioForm.tsx`.
       const hasValue = getIn(updatedValues, key) !== undefined;
       if (!hasValue) {
-        const newValue = getIn(initialValues, key);
-        updatedValues = setIn(updatedValues, key, newValue);
-        set(context.dataUpdatesAccumulator, key, newValue);
+        const newValue: JSONValue | undefined = getIn(initialValues, key);
+        if (newValue !== undefined) {
+          updatedValues = setIn(updatedValues, key, newValue);
+          set(context.dataUpdatesAccumulator, key, newValue);
+        }
       }
 
       // we don't 'restore' errors like we do values - when a component becomes visible,
