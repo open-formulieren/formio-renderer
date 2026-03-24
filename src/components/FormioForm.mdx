@@ -155,6 +155,20 @@ const FormStep: React.FC = () => {
 };
 ```
 
+You can provide nested objects or a flat object with dotted keys - both will work:
+
+```tsx
+const errors1 = {parent: {textfield: 'Some textfield error'}};
+const errors2 = {'parent.textfield': 'Some textfield error'};
+// same end result for the child text field
+```
+
+Additionally, if you wish to clear errors, use `undefined` as value:
+
+```tsx
+const clearErrors = {'parent.textfield': undefined};
+```
+
 ## Providing the `validatePluginCallback`
 
 Many of the Formio component types have been extended to support _plugin_-based backend validation -

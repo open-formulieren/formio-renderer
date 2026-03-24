@@ -1,6 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {FormikErrors} from 'formik';
-import {Form, Formik, setNestedObjectValues, useFormikContext} from 'formik';
+import {Form, Formik, setIn, setNestedObjectValues, useFormikContext} from 'formik';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
@@ -22,10 +22,15 @@ import type {Errors as VisibilityErrors} from '@/visibility';
 import FormFieldContainer from './FormFieldContainer';
 import FormSettingsProvider from './FormSettingsProvider';
 import FormioComponent from './FormioComponent';
-import type {JSONObjectWithUndefined, JSONValuePlusUndefined, NestedObject} from './utils';
+import type {JSONObjectWithUndefined, JSONValuePlusUndefined} from './utils';
 import {merge} from './utils';
 
-export type Errors = NestedObject<string | string[]>;
+// Errors is a subset of JSONObject
+type ErrorPrimitive = string | undefined;
+type ErrorValue = ErrorPrimitive | ErrorValue[] | Errors;
+export type Errors = {
+  [k: string]: ErrorValue;
+};
 
 /**
  * Props for a complete Formio form definition.
@@ -93,11 +98,10 @@ export interface FormioFormProps {
 }
 
 export type UpdateValues = JSONObjectWithUndefined;
-export type UpdateErrors = NestedObject<string | string[] | undefined>;
 
 export interface FormStateRef {
   updateValues: (values: UpdateValues) => void;
-  updateErrors: (errors: UpdateErrors) => void;
+  updateErrors: (errors: Errors) => void;
 }
 
 /**
@@ -250,7 +254,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
         updateValues: (values: UpdateValues): void => {
           setValues(prev => getFormikValues(prev, values));
         },
-        updateErrors: (updates: UpdateErrors): void => {
+        updateErrors: (updates: Errors): void => {
           // FormikErrors<JSONObject> narrows down to {[k: string]: string | undefined},
           // which is wrong and misses the recursion entirely. So, we cast instead :(
           const newErrors = getFormikErrors(
@@ -359,8 +363,61 @@ const getFormikValues = (prev: JSONObject, updates: UpdateValues): JSONObject =>
   return merge<JSONValuePlusUndefined, JSONValue>(prev, updates);
 };
 
-const getFormikErrors = (prev: Errors, updates: UpdateErrors): Errors => {
-  return merge<string | string[]>(prev, updates);
+const getFormikErrors = (prev: Errors, updates: Errors): Errors => {
+  const merged = merge<ErrorValue>(prev, updates);
+  // clean errors - if the leaf nodes are objects without children, unset them,
+  // otherwise Formik's isValid returns False.
+  return removeEmptyNodes(merged);
+};
+
+const removeEmptyNodes = (target: Errors): Errors => {
+  let result = target;
+
+  Object.entries(target).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      const updatedValue = value.map(nestedValue => {
+        if (nestedValue === undefined) {
+          return undefined;
+        }
+        if (typeof nestedValue === 'string') {
+          return nestedValue ? nestedValue : undefined;
+        }
+        // Array directly in an array -> can only be a list of error messages for the
+        // (edit grid) item
+        if (Array.isArray(nestedValue)) {
+          return nestedValue.length ? nestedValue : undefined;
+        }
+        const nestedResult = removeEmptyNodes(nestedValue);
+        if (Object.keys(nestedResult).length === 0) {
+          return undefined;
+        }
+        return nestedResult;
+      });
+
+      // if all nested items are falsy, there are no errors for the array as a whole, so
+      // unset it
+      if (updatedValue.every(nested => !nested)) {
+        result = setIn(result, key, undefined);
+      }
+      return;
+    }
+
+    if (typeof value === 'object') {
+      // empty leaf -> remove/unset parent
+      if (value === null || Object.keys(value).length === 0) {
+        result = setIn(result, key, undefined);
+      } else {
+        // non-empty object, recurse
+        const nestedResult = removeEmptyNodes(value);
+        if (Object.keys(nestedResult).length === 0) {
+          result = setIn(result, key, undefined);
+        }
+      }
+      return;
+    }
+  });
+
+  return result;
 };
 
 export default FormioForm;
