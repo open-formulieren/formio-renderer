@@ -140,12 +140,10 @@ export const processVisibility = (
       // user-submitted submission data, or is populated with the default/empty value
       // of the component/component type, see `FormioForm.tsx`.
       const hasValue = getIn(updatedValues, key) !== undefined;
-      if (!hasValue) {
-        const newValue: JSONValue | undefined = getIn(initialValues, key);
-        if (newValue !== undefined) {
-          updatedValues = setIn(updatedValues, key, newValue);
-          set(context.dataUpdatesAccumulator, key, newValue);
-        }
+      const newValue: JSONValue | undefined = getIn(initialValues, key);
+      if (!hasValue && newValue !== undefined) {
+        updatedValues = setIn(updatedValues, key, newValue);
+        set(context.dataUpdatesAccumulator, key, newValue);
       }
 
       // we don't 'restore' errors like we do values - when a component becomes visible,
