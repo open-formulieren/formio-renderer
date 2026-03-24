@@ -1,5 +1,22 @@
 # Changes
 
+## 1.3.0 (2026-03-24)
+
+Small feature release, focused on low-level/private API.
+
+- [`#290`][#290] Updated default validation error messages to not quote the label, for improved
+  accessibility. This matches the behaviour of the old renderer.
+- [`OF#5962`][OF#5962] Added improvements to facilitate the logic evaluation in the SDK:
+  - Export the `getRegistryEntry` helper so that `processVisibility` can be reused.
+  - Track the delta/diff of submission data updates because of visibility processing.
+  - Documented and added tests for the `setErrors` behaviour with various flavours of error (update)
+    objects.
+  - Ensure that the Formik error state is properly cleaned up so that `isValid` is accurate.
+  - Processing the components map now also populates the child-parent relationships map.
+
+[#290]: https://github.com/open-formulieren/formio-renderer/issues/290
+[OF#5962]: https://github.com/open-formulieren/open-forms/issues/5962
+
 ## 1.2.0 (2026-03-18)
 
 Feature and bugfix release.
