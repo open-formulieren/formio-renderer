@@ -1,5 +1,14 @@
 # Changes
 
+## 1.4.0 (2026-03-27)
+
+Tiny feature release, focused on private API.
+
+- [`OF#5962`][OF#5962] Added ability to provide custom `clearValue` callback function for
+  non-standard behaviour.
+
+[OF#5962]: https://github.com/open-formulieren/open-forms/issues/5962
+
 ## 1.3.0 (2026-03-24)
 
 Small feature release, focused on low-level/private API.
