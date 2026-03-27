@@ -112,6 +112,11 @@ export interface VisibilityContext {
    * the data keys that were cleared.
    */
   dataUpdatesAccumulator?: JSONObject;
+  /**
+   * Callback to invoke to apply clearOnHide behaviour. If unspecified, the default
+   * behaviour of removing the key from the data will be applied.
+   */
+  clearValueCallback?: (values: JSONObject, key: string) => JSONObject;
 }
 
 type ConditionalOptions = NonNullable<Conditional['conditional']>;

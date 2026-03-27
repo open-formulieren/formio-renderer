@@ -131,7 +131,10 @@ export const processVisibility = (
     // loop so that the next iteration uses the side-effects as soon as possible.
     if (hidden) {
       // only clear the value if actually requested
-      if (clearOnHide) updatedValues = clearValue(updatedValues, key);
+      if (clearOnHide) {
+        const clearValueCallback = context?.clearValueCallback ?? clearValue;
+        updatedValues = clearValueCallback(updatedValues, key);
+      }
       // update the errors if any component is invalid but hidden
       updatedErrors = clearErrors(updatedErrors, key);
     } else {

@@ -1,4 +1,5 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import {setIn} from 'formik';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
@@ -264,4 +265,41 @@ test('record dataUpdates in accumulator', () => {
   );
 
   expect(dataUpdatesAccumulator).toEqual({text: ''});
+});
+
+test('processVisibility takes optional clearValueCallback', () => {
+  const components: TextFieldComponentSchema[] = [
+    {
+      id: 'text',
+      type: 'textfield',
+      key: 'text',
+      label: 'Text',
+      clearOnHide: true,
+      conditional: {
+        show: false,
+        when: 'deep.value',
+        eq: 'hide',
+      },
+    },
+  ];
+  const values: JSONObject = {deep: {value: 'hide'}};
+  const valuesCleared: string[] = [];
+
+  processVisibility(
+    components,
+    values,
+    {},
+    {
+      parentHidden: false,
+      initialValues: {text: ''},
+      getRegistryEntry,
+      componentsMap: {},
+      clearValueCallback: (values, key) => {
+        valuesCleared.push(key);
+        return setIn(values, key, undefined);
+      },
+    }
+  );
+
+  expect(valuesCleared).toEqual(['text']);
 });
