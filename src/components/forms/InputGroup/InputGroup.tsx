@@ -14,8 +14,6 @@ export interface InputGroupProps {
   tooltip?: React.ReactNode;
   isReadOnly?: boolean;
   isRequired?: boolean;
-  isInvalid?: boolean;
-  'aria-describedby'?: string;
   name?: string;
 }
 
@@ -25,14 +23,10 @@ const InputGroup: React.FC<InputGroupProps> = ({
   tooltip,
   isRequired = false,
   isReadOnly = false,
-  isInvalid = false,
-  'aria-describedby': ariaDescribedBy,
   name,
 }) => (
   <Fieldset
-    invalid={isInvalid}
     className="utrecht-form-fieldset--openforms"
-    aria-describedby={ariaDescribedBy}
     name={name}
     data-testid="inputgroup-container"
   >

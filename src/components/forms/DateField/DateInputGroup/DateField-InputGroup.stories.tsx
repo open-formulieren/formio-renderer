@@ -144,8 +144,12 @@ export const InputGroupWithInitialValue: Story = {
 
     expect(canvas.getByText('A validation error')).toBeVisible();
 
-    const fieldset = canvas.getByRole('group', {name: 'Test date field'});
-    expect(fieldset).toHaveAccessibleDescription('A validation error');
+    const monthInput = canvas.getByRole('textbox', {name: 'Month'});
+    expect(monthInput).toHaveAccessibleDescription('A validation error');
+    const dayInput = canvas.getByRole('textbox', {name: 'Day'});
+    expect(dayInput).toHaveAccessibleDescription('A validation error');
+    const yearInput = canvas.getByRole('textbox', {name: 'Year'});
+    expect(yearInput).toHaveAccessibleDescription('A validation error');
   },
 };
 
@@ -276,7 +280,12 @@ export const ValidateOnBlur: Story = {
 
     yearInput.blur();
     expect(await canvas.findByText('Always invalid')).toBeVisible();
-    expect(container).toHaveAttribute('aria-invalid', 'true');
+    expect(dayInput).toHaveAttribute('aria-invalid', 'true');
+    expect(dayInput).toHaveAccessibleDescription('Always invalid');
+    expect(monthInput).toHaveAttribute('aria-invalid', 'true');
+    expect(monthInput).toHaveAccessibleDescription('Always invalid');
+    expect(yearInput).toHaveAttribute('aria-invalid', 'true');
+    expect(yearInput).toHaveAccessibleDescription('Always invalid');
   },
 };
 

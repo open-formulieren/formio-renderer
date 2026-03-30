@@ -22,7 +22,9 @@ export interface DateInputItemsProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isReadOnly?: boolean;
+  isInvalid?: boolean;
   autoComplete?: string;
+  'aria-describedby'?: string;
 }
 
 const DateInputItems: React.FC<DateInputItemsProps> = ({
@@ -30,12 +32,21 @@ const DateInputItems: React.FC<DateInputItemsProps> = ({
   month,
   year,
   isReadOnly,
+  isInvalid,
   onChange,
   onBlur,
   autoComplete,
+  'aria-describedby': ariaDescribedBy,
 }) => {
   const {partsOrder} = useDateLocaleMeta();
-  const commonProps = {isReadOnly, onChange, onBlur, autoComplete};
+  const commonProps = {
+    isReadOnly,
+    onChange,
+    onBlur,
+    autoComplete,
+    isInvalid,
+    ['aria-describedby']: ariaDescribedBy,
+  };
 
   const parts: Record<DatePart, React.ReactElement> = {
     day: <DatePartInput name="day" value={day} {...commonProps} />,

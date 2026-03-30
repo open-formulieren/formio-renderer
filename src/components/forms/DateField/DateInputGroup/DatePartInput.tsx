@@ -29,6 +29,8 @@ export interface DatePartInputProps {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isReadOnly?: boolean;
   autoComplete?: string;
+  isInvalid?: boolean;
+  'aria-describedby'?: string;
 }
 
 /**
@@ -43,8 +45,10 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
   value,
   onChange,
   isReadOnly,
+  isInvalid,
   onBlur,
   autoComplete,
+  'aria-describedby': ariaDescribedBy,
 }) => {
   const intl = useIntl();
   const id = useId();
@@ -83,6 +87,8 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
         placeholder={intl.formatMessage(PART_PLACEHOLDERS[name])}
         onBlur={onBlur}
         autoComplete={autoComplete}
+        invalid={isInvalid}
+        aria-describedby={ariaDescribedBy}
       />
     </>
   );
