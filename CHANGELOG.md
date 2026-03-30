@@ -1,5 +1,13 @@
 # Changes
 
+## 1.4.1 (2026-03-30)
+
+Bugfix release.
+
+- [`OF#5962`][OF#5962] Fixed missing compatibility mode for input-value restoring.
+
+[OF#5962]: https://github.com/open-formulieren/open-forms/issues/5962
+
 ## 1.4.0 (2026-03-27)
 
 Tiny feature release, focused on private API.
