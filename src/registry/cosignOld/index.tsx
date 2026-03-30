@@ -1,5 +1,11 @@
 import type {CosignV1ComponentSchema} from '@open-formulieren/types';
-import {Alert, ButtonLink, FormField, Paragraph} from '@utrecht/component-library-react';
+import {
+  Alert,
+  ButtonLink,
+  FormField,
+  Paragraph,
+  Icon as UtrechtIcon,
+} from '@utrecht/component-library-react';
 import {useId} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {useAsync} from 'react-use';
@@ -37,7 +43,14 @@ const CosignAuthentication: React.FC<CosignAuthenticationProps> = ({
     return representation ? (
       <div className="openforms-co-sign-old__representation">{representation}</div>
     ) : (
-      <Alert type="error" icon={<Icon icon="error" />}>
+      <Alert
+        type="error"
+        icon={
+          <UtrechtIcon>
+            <Icon icon="error" />
+          </UtrechtIcon>
+        }
+      >
         <FormattedMessage
           description="Co-sign auth option not available on form"
           defaultMessage="Something went wrong while processing the co-sign results. Please contact the municipality."
@@ -50,7 +63,14 @@ const CosignAuthentication: React.FC<CosignAuthenticationProps> = ({
 
   if (!loginOption) {
     return (
-      <Alert type="error" icon={<Icon icon="error" />}>
+      <Alert
+        type="error"
+        icon={
+          <UtrechtIcon>
+            <Icon icon="error" />
+          </UtrechtIcon>
+        }
+      >
         <FormattedMessage
           description="Co-sign auth option not available on form"
           defaultMessage="Something went wrong while presenting the login option. Please contact the municipality."
@@ -98,7 +118,14 @@ export const FormioCosignOldField: React.FC<FormioCosignOldProps> = ({
             authPlugin={authPlugin}
           />
         ) : (
-          <Alert type="error" icon={<Icon icon="error" />}>
+          <Alert
+            type="error"
+            icon={
+              <UtrechtIcon>
+                <Icon icon="error" />
+              </UtrechtIcon>
+            }
+          >
             <FormattedMessage
               description="Required co-sign callbacks not configured"
               defaultMessage="Something went wrong while presenting the login option. Please contact the municipality."
