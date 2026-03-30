@@ -1,5 +1,6 @@
-import DOMPurify from 'dompurify';
 import {useId} from 'react';
+
+import DynamicFormattedMessage from '@/components/DynamicFormattedMessage';
 
 import './InputContainer.scss';
 
@@ -49,8 +50,9 @@ const InputContainer: React.FC<InputContainerProps> = ({
         <span
           id={prefixId}
           className="openforms-input-container__affix openforms-input-container__affix--prefix"
-          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(prefix)}}
-        />
+        >
+          <DynamicFormattedMessage description="Prefix" defaultMessage={prefix} asHtml />
+        </span>
       )}
 
       {renderInput(ariaLabelledBy)}
@@ -59,8 +61,9 @@ const InputContainer: React.FC<InputContainerProps> = ({
         <span
           id={suffixId}
           className="openforms-input-container__affix openforms-input-container__affix--suffix"
-          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(suffix)}}
-        />
+        >
+          <DynamicFormattedMessage description="Suffix" defaultMessage={suffix} asHtml />
+        </span>
       )}
     </div>
   );

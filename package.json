@@ -108,6 +108,8 @@
     "@utrecht/paragraph-css": "^3.0.1",
     "@utrecht/radio-button-css": "^2.0.1",
     "@utrecht/select-css": "^2.0.1",
+    "@utrecht/subscript-css": "^2.0.1",
+    "@utrecht/superscript-css": "^2.0.1",
     "@utrecht/table-css": "^2.0.1",
     "@utrecht/textarea-css": "^3.0.1",
     "@utrecht/textbox-css": "^3.0.1",

@@ -1,3 +1,6 @@
+@use '@utrecht/subscript-css';
+@use '@utrecht/superscript-css';
+
 @use '@/scss/bem';
 
 // Note: this was ported from the SDK
@@ -24,21 +27,6 @@ $affixes: 'prefix', 'suffix';
     padding-inline: var(--of-input-container-affix-padding-inline);
     padding-block: var(--of-input-container-affix-padding-block);
     line-height: var(--of-input-container-affix-line-height);
-
-    // support superscript and subscript
-    sup,
-    sub {
-      vertical-align: baseline;
-      position: relative;
-    }
-
-    sup {
-      top: -0.4em;
-    }
-
-    sub {
-      top: 0.4em;
-    }
 
     // allow overrides for each affix
     @each $affix in $affixes {
