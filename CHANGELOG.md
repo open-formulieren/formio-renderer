@@ -11,6 +11,7 @@ Deprecated functionality continues to function until the next major Open Forms (
 - The `--of-input-font-weight` design token is now deprecated. Instead use
   `--utrecht-form-control-font-weight` or component-specific tokens like
   `--utrecht-textbox-font-weight`.
+- The `--utrecht-button-icon-gap` token is renamed in favour of `--utrecht-button-column-gap`.
 
 **New features**
 

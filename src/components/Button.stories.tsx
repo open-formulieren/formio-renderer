@@ -1,6 +1,8 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, within} from 'storybook/test';
 
+import Icon from '@/components/icons';
+
 import {Button, PrimaryActionButton, SecondaryActionButton, SubtleButton} from './Button';
 
 export default {
@@ -18,6 +20,16 @@ export const Default: Story = {};
 export const Primary: StoryObj<typeof PrimaryActionButton> = {
   render: args => {
     return <PrimaryActionButton {...args} />;
+  },
+};
+
+export const PrimaryWithIcon: StoryObj<typeof PrimaryActionButton> = {
+  render: args => {
+    return (
+      <PrimaryActionButton>
+        <Icon icon="edit" /> {args.children}
+      </PrimaryActionButton>
+    );
   },
 };
 

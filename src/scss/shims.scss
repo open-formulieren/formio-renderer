@@ -5,4 +5,8 @@
 // have higher priority/selectivity.
 :root {
   --utrecht-form-control-font-weight: var(--of-input-font-weight, initial);
+
+  .utrecht-button {
+    column-gap: var(--utrecht-button-column-gap, var(--utrecht-button-icon-gap));
+  }
 }
