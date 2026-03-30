@@ -13,13 +13,13 @@ import './DatePickerCalendar.scss';
 const loadCalendarLocale = async (locale: string): Promise<Locale> => {
   switch (locale) {
     case 'nl': {
-      const {default: nl} = await import('date-fns/locale/nl');
+      const {nl} = await import('date-fns/locale/nl');
       return nl;
     }
     case 'en':
     default: {
-      const {default: en} = await import('date-fns/locale/en-GB');
-      return en;
+      const {enGB} = await import('date-fns/locale/en-GB');
+      return enGB;
     }
   }
 };

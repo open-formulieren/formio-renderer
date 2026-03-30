@@ -1,5 +1,5 @@
 import type {CosignV2ComponentSchema} from '@open-formulieren/types';
-import {URLValue} from '@utrecht/component-library-react';
+import {URLData} from '@utrecht/component-library-react';
 
 import './ValueDisplay.scss';
 
@@ -10,7 +10,7 @@ export interface ValueDisplayProps {
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({value}) => {
   const normalizedValue = value ?? '';
-  return <URLValue>{normalizedValue}</URLValue>;
+  return <URLData>{normalizedValue}</URLData>;
 };
 
 export default ValueDisplay;
