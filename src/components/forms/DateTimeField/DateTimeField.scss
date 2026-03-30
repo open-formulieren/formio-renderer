@@ -19,9 +19,3 @@
     color: var(--of-color-fg-muted);
   }
 }
-
-.utrecht-textbox {
-  @include bem.modifier('openforms') {
-    font-weight: var(--of-input-font-weight, normal);
-  }
-}

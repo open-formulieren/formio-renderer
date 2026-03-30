@@ -116,10 +116,6 @@
       color: var(--utrecht-textbox-color, var(--utrecht-form-control-color));
       font-family: var(--utrecht-textbox-font-family, var(--utrecht-form-control-font-family));
       font-size: var(--utrecht-textbox-font-size, var(--utrecht-form-control-font-size, inherit));
-      font-weight: var(
-        --of-input-font-weight,
-        var(--utrecht-textbox-font-weight, var(--utrecht-form-control-font-weight, initial))
-      );
     }
 
     .rs-placeholder {
