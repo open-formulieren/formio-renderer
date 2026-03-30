@@ -1,6 +1,6 @@
 import type {AnyComponentSchema, JSONValue} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
-import {set} from 'lodash';
+import {isEqual, set} from 'lodash';
 
 import type {NestedObject} from '@/components/utils';
 import {getClearOnHide, isHidden} from '@/formio';
@@ -142,9 +142,16 @@ export const processVisibility = (
       // sure that we have a value for it. `initialValues` contains either the
       // user-submitted submission data, or is populated with the default/empty value
       // of the component/component type, see `FormioForm.tsx`.
-      const hasValue = getIn(updatedValues, key) !== undefined;
+      const currentValue: JSONValue | undefined = getIn(updatedValues, key);
+      const hasValue = currentValue !== undefined;
       const newValue: JSONValue | undefined = getIn(initialValues, key);
-      if (!hasValue && newValue !== undefined) {
+
+      const shouldSyncFromInitialValues = !!(
+        !hasValue ||
+        (context.emulateBackend && !isEqual(currentValue, newValue))
+      );
+
+      if (newValue !== undefined && shouldSyncFromInitialValues) {
         updatedValues = setIn(updatedValues, key, newValue);
         set(context.dataUpdatesAccumulator, key, newValue);
       }

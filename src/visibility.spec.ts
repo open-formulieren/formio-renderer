@@ -303,3 +303,29 @@ test('processVisibility takes optional clearValueCallback', () => {
 
   expect(valuesCleared).toEqual(['text']);
 });
+
+test('processVisibility restores original input data', () => {
+  const component: TextFieldComponentSchema = {
+    type: 'textfield',
+    key: 'show-when-a',
+    id: 'show-when-a',
+    label: '',
+    hidden: false,
+  };
+  const values: JSONObject = {'show-when-a': ''};
+
+  const {updatedValues} = processVisibility(
+    [component],
+    values,
+    {},
+    {
+      parentHidden: false,
+      initialValues: {'show-when-a': 'restore-me'},
+      getRegistryEntry,
+      componentsMap: {},
+      emulateBackend: true,
+    }
+  );
+
+  expect(updatedValues).toEqual({'show-when-a': 'restore-me'});
+});
