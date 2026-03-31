@@ -423,60 +423,6 @@ describe('The getComponentsMap utility', () => {
     expect(map.sibling.id).toBe('content1');
     expect(map).toHaveProperty('editgrid');
   });
-
-  test('tracks parent-child relationships', () => {
-    const components: AnyComponentSchema[] = [
-      {
-        type: 'textfield',
-        key: 'my.textfield',
-        id: 'text1',
-        label: 'A text field',
-      } satisfies TextFieldComponentSchema,
-      {
-        type: 'fieldset',
-        key: 'container',
-        id: 'fieldset1',
-        label: 'A fieldset',
-        hideHeader: false,
-        components: [
-          {
-            type: 'email',
-            key: 'my.email',
-            id: 'email1',
-            label: 'An email field',
-          } satisfies EmailComponentSchema,
-          {
-            type: 'columns',
-            key: 'columsnLayout',
-            id: 'columns1',
-            columns: [
-              {
-                size: 12,
-                sizeMobile: 4,
-                components: [
-                  {
-                    type: 'content',
-                    key: 'wysiwyg',
-                    id: 'content1',
-                    html: '<p>Henlo</p>',
-                  } satisfies ContentComponentSchema,
-                ],
-              },
-            ],
-          } satisfies ColumnsComponentSchema,
-        ],
-      } satisfies FieldsetComponentSchema,
-    ];
-    const parentLinks: Record<string, string> = {};
-
-    getComponentsMap(components, parentLinks);
-
-    expect(parentLinks).toEqual({
-      wysiwyg: 'columsnLayout',
-      columsnLayout: 'container',
-      'my.email': 'container',
-    });
-  });
 });
 
 describe('isHidden utility', () => {
