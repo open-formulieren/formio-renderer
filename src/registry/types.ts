@@ -108,11 +108,6 @@ export interface VisibilityContext {
    */
   componentsMap: Partial<Record<string, AnyComponentSchema>>;
   /**
-   * Object tracking the data updates done during visibility processing, excluding
-   * the data keys that were cleared.
-   */
-  dataUpdatesAccumulator?: JSONObject;
-  /**
    * Callback to invoke to apply clearOnHide behaviour. If unspecified, the default
    * behaviour of removing the key from the data will be applied.
    */
