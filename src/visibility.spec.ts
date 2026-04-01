@@ -233,40 +233,6 @@ test('processVisibility does not pollute the evaluation scope', () => {
   expect(updatedErrors).toEqual({text1: 'keep error', text2: 'keep error'});
 });
 
-test('record dataUpdates in accumulator', () => {
-  const components: TextFieldComponentSchema[] = [
-    {
-      id: 'text',
-      type: 'textfield',
-      key: 'text',
-      label: 'Text',
-      clearOnHide: true,
-      conditional: {
-        show: false,
-        when: 'deep.value',
-        eq: 'hide',
-      },
-    },
-  ];
-  const values: JSONObject = {deep: {value: 'show'}};
-  const dataUpdatesAccumulator: JSONObject = {};
-
-  processVisibility(
-    components,
-    values,
-    {},
-    {
-      parentHidden: false,
-      initialValues: {text: ''},
-      getRegistryEntry,
-      componentsMap: {},
-      dataUpdatesAccumulator,
-    }
-  );
-
-  expect(dataUpdatesAccumulator).toEqual({text: ''});
-});
-
 test('processVisibility takes optional clearValueCallback', () => {
   const components: TextFieldComponentSchema[] = [
     {

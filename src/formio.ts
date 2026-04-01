@@ -137,11 +137,6 @@ export const getClearOnHide = (componentDefinition: AnyComponentSchema): boolean
   return true;
 };
 
-interface IterComponentsMeta {
-  parentLinks: Record<string, string>;
-  parentKey?: string;
-}
-
 /**
  * Recursively (and depth-first) iterate over all components in the component definition.
  *
@@ -157,22 +152,18 @@ interface IterComponentsMeta {
  *   editgrid (an array of objects all with identical shape) itself, you cannot obtain
  *   the value of a particular nested component inside the items.
  */
-function* iterComponents(
-  components: AnyComponentSchema[],
-  meta: IterComponentsMeta
-): Generator<AnyComponentSchema> {
+function* iterComponents(components: AnyComponentSchema[]): Generator<AnyComponentSchema> {
   for (const component of components) {
-    if (meta.parentKey) meta.parentLinks[component.key] = meta.parentKey;
     yield component;
 
     switch (component.type) {
       case 'fieldset': {
-        yield* iterComponents(component.components, {...meta, parentKey: component.key});
+        yield* iterComponents(component.components);
         break;
       }
       case 'columns': {
         for (const column of component.columns) {
-          yield* iterComponents(column.components, {...meta, parentKey: component.key});
+          yield* iterComponents(column.components);
         }
         break;
       }
@@ -194,17 +185,13 @@ function* iterComponents(
  * introspect the matching component type/configuration.
  *
  * @param components The list of components to process.
- * @param parentLinks Optional parameter to track the parent-child relationships of
- *   the provided `components`. Keys are child component keys, values are the key of
- *   their parent component.
  * @returns A flat map of component key to component definition.
  */
 export const getComponentsMap = (
-  components: AnyComponentSchema[],
-  parentLinks: Record<string, string> = {}
+  components: AnyComponentSchema[]
 ): Record<string, AnyComponentSchema> => {
   const map: Record<string, AnyComponentSchema> = {};
-  for (const component of iterComponents(components, {parentLinks})) {
+  for (const component of iterComponents(components)) {
     map[component.key] = component;
   }
   return map;
@@ -212,7 +199,7 @@ export const getComponentsMap = (
 
 function* iterDependencies(components: AnyComponentSchema[]): Generator<[string, string]> {
   // build a map of dependencies
-  for (const component of iterComponents(components, {parentLinks: {}})) {
+  for (const component of iterComponents(components)) {
     const conditional = getConditional(component);
     if (conditional !== null) {
       yield [component.key, conditional.when];

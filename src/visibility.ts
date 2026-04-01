@@ -1,6 +1,6 @@
 import type {AnyComponentSchema, JSONValue} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
-import {isEqual, set} from 'lodash';
+import {isEqual} from 'lodash';
 
 import type {NestedObject} from '@/components/utils';
 import {getClearOnHide, isHidden} from '@/formio';
@@ -103,9 +103,6 @@ export const processVisibility = (
 ): ProcessVisibilityResult => {
   const visibleComponents: AnyComponentSchema[] = [];
   const {parentHidden, initialValues, getRegistryEntry, componentsMap} = context;
-  if (!context.dataUpdatesAccumulator) {
-    context.dataUpdatesAccumulator = {};
-  }
 
   // `updatedValues` may potentially be updated/mutated after each component is
   // processed. If there are no side-effects applied, then it will keep the same
@@ -153,7 +150,6 @@ export const processVisibility = (
 
       if (newValue !== undefined && shouldSyncFromInitialValues) {
         updatedValues = setIn(updatedValues, key, newValue);
-        set(context.dataUpdatesAccumulator, key, newValue);
       }
 
       // we don't 'restore' errors like we do values - when a component becomes visible,
