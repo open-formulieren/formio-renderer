@@ -1,6 +1,6 @@
 # Changes
 
-## 1.5.0 (2026-04-??)
+## 1.5.0 (2026-04-02)
 
 Feature release.
 
@@ -19,7 +19,12 @@ Deprecated functionality continues to function until the next major Open Forms (
   - Improved accessibility of invalid date fields when using separate input fields.
   - Removed workaround code for functionality that's now included in the Utrecht components.
 
+**Cleanup**
+
+- [`#302`][#302] Reverted the `#5962` features as the SDK does not need them anymore.
+
 [#301]: https://github.com/open-formulieren/formio-renderer/issues/301
+[#302]: https://github.com/open-formulieren/formio-renderer/issues/302
 
 ## 1.4.1 (2026-03-30)
 
