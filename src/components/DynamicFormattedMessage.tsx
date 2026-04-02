@@ -1,6 +1,7 @@
 import {formatMessage as coreFormatMessage} from '@formatjs/intl';
 import type {ResolvedIntlConfig} from '@formatjs/intl/src/types';
 import {DEFAULT_INTL_CONFIG} from '@formatjs/intl/src/utils';
+import {Subscript, Superscript} from '@utrecht/component-library-react';
 import DOMPurify from 'dompurify';
 import type {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
 import React, {useId, useMemo} from 'react';
@@ -32,6 +33,8 @@ const ALLOWED_HTML_TAGS: MessageValues<FormatXMLElementFn<React.ReactNode>> = {
   strong: chunks => <strong>{chunks}</strong>,
   u: chunks => <u>{chunks}</u>,
   i: chunks => <i>{chunks}</i>,
+  sub: chunks => <Subscript>{chunks}</Subscript>,
+  sup: chunks => <Superscript>{chunks}</Superscript>,
 };
 
 /**
@@ -137,7 +140,9 @@ const preProcessHtml = (html: string): {message: string; values: MessageValues} 
           case 'strong':
           case 'u':
           case 'i':
-          case 'em': {
+          case 'em':
+          case 'sub':
+          case 'sup': {
             return node.outerHTML;
           }
           // void elements - self-closing tags are not supported in react-intl formatting

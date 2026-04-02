@@ -1,0 +1,12 @@
+// Shims for backwards compatibility, grouped by Open Forms SDK version.
+
+// 3.5.0 - upgraded the @utrecht/component-library-react. Can be removed in 4.0.
+// Uses the root selector so that more specific (theme-specific!) design token values
+// have higher priority/selectivity.
+:root {
+  --utrecht-form-control-font-weight: var(--of-input-font-weight, initial);
+
+  .utrecht-button {
+    column-gap: var(--utrecht-button-column-gap, var(--utrecht-button-icon-gap));
+  }
+}

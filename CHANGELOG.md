@@ -1,5 +1,26 @@
 # Changes
 
+## 1.5.0 (2026-04-??)
+
+Feature release.
+
+**Deprecations**
+
+Deprecated functionality continues to function until the next major Open Forms (SDK) release.
+
+- The `--of-input-font-weight` design token is now deprecated. Instead use
+  `--utrecht-form-control-font-weight` or component-specific tokens like
+  `--utrecht-textbox-font-weight`.
+- The `--utrecht-button-icon-gap` token is renamed in favour of `--utrecht-button-column-gap`.
+
+**New features**
+
+- [`#301`][#301] Upgraded the NL Design System component library to latest version(s).
+  - Improved accessibility of invalid date fields when using separate input fields.
+  - Removed workaround code for functionality that's now included in the Utrecht components.
+
+[#301]: https://github.com/open-formulieren/formio-renderer/issues/301
+
 ## 1.4.1 (2026-03-30)
 
 Bugfix release.

@@ -36,7 +36,6 @@ export default {
     labels: ['Input 1', 'Input 2', 'Input 3'],
     isRequired: true,
     isReadOnly: false,
-    isInvalid: false,
   },
   argTypes: {
     children: {table: {disable: true}},
@@ -52,31 +51,16 @@ export const WithTooltip: Story = {
   args: {
     tooltip: 'Example short tooltip.',
   },
-};
-
-export const ReadOnly: Story = {
-  args: {
-    isReadOnly: true,
-  },
-};
-
-export const Invalid: Story = {
-  args: {
-    isInvalid: true,
-  },
-};
-
-export const WithValidationErrorAndTooltip: Story = {
-  ...Invalid,
-  args: {
-    ...Invalid.args,
-    tooltip: 'Tooltip content.',
-  },
-
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
     const fieldset = canvas.getByRole('group', {name: /^Input group/});
     expect(fieldset).toHaveAccessibleDescription('');
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    isReadOnly: true,
   },
 };

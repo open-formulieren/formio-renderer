@@ -4,9 +4,3 @@
 
 @use '@/scss/bem';
 @use '@/scss/form-field-override';
-
-.utrecht-textbox {
-  @include bem.modifier('openforms') {
-    font-weight: var(--of-input-font-weight, normal);
-  }
-}

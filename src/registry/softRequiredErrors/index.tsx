@@ -1,5 +1,5 @@
 import type {SoftRequiredErrorsComponentSchema} from '@open-formulieren/types';
-import {Alert, HTMLContent} from '@utrecht/component-library-react';
+import {Alert, HTMLContent, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {useFormikContext} from 'formik';
 import {useMemo} from 'react';
 
@@ -61,7 +61,14 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   }
 
   return (
-    <Alert type="warning" icon={<Icon icon="warning" />}>
+    <Alert
+      type="warning"
+      icon={
+        <UtrechtIcon>
+          <Icon icon="warning" />
+        </UtrechtIcon>
+      }
+    >
       <HTMLContent>
         <SoftRequiredErrorsMessage html={html} missingFields={missingFields} />
       </HTMLContent>

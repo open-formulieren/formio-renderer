@@ -131,8 +131,6 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
       tooltip={tooltip}
       isRequired={isRequired}
       isReadOnly={isReadOnly}
-      isInvalid={touched && !!error}
-      aria-describedby={ariaDescribedBy}
       name={name}
     >
       <DateInputItems
@@ -140,6 +138,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
         month={month}
         day={day}
         isReadOnly={isReadOnly}
+        isInvalid={touched && !!error}
         onChange={onPartChange}
         onBlur={async () => {
           setTouched(true);
@@ -148,6 +147,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
           }
         }}
         autoComplete={autoComplete}
+        aria-describedby={ariaDescribedBy}
       />
     </InputGroup>
   );

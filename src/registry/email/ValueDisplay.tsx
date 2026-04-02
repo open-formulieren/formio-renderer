@@ -1,5 +1,5 @@
 import type {EmailComponentSchema} from '@open-formulieren/types';
-import {OrderedList, OrderedListItem, URLValue} from '@utrecht/component-library-react';
+import {OrderedList, OrderedListItem, URLData} from '@utrecht/component-library-react';
 
 import './ValueDisplay.scss';
 
@@ -23,14 +23,14 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({
       <OrderedList>
         {normalizedValue.map((item, index) => (
           <OrderedListItem key={`item-${index}-${item}`}>
-            <URLValue>{item}</URLValue>
+            <URLData>{item}</URLData>
           </OrderedListItem>
         ))}
       </OrderedList>
     );
   }
 
-  return <URLValue>{normalizedValue}</URLValue>;
+  return <URLData>{normalizedValue}</URLData>;
 };
 
 export default ValueDisplay;
