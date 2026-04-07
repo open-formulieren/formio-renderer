@@ -163,8 +163,8 @@
   "dependencies": {
     "@babel/runtime": "^7.29.2",
     "@open-formulieren/types": "^1.0.1",
-    "@utrecht/calendar-react": "^1.1.1",
-    "@utrecht/component-library-react": "13.0.4",
+    "@utrecht/calendar-react": "^1.1.2",
+    "@utrecht/component-library-react": "13.1.0",
     "clsx": "^2.1.0",
     "dompurify": "^3.2.6",
     "formik": "^2.4.5",
