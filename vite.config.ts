@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react';
 import {dirname, resolve} from 'node:path';
