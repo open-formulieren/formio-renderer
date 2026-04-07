@@ -6,7 +6,7 @@ import type {ArrayHelpers} from 'formik';
 import {ErrorCode} from 'react-dropzone';
 import type {FileRejection, FileWithPath} from 'react-dropzone';
 import {IntlProvider} from 'react-intl';
-import {afterAll, afterEach, beforeAll, beforeEach, expect, test, vi} from 'vitest';
+import {afterAll, afterEach, beforeAll, expect, test, vi} from 'vitest';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
 
@@ -151,26 +151,15 @@ const TestComponent: React.FC<TestComponentProps> = ({
   );
 };
 
-const createObjectURLMock = vi.fn(() => 'blob:mock-url');
-const revokeObjectURLMock = vi.fn();
-
 // mock URL.createObjectURL since jsdom doesn't implement it.
 beforeAll(() => {
   vi.stubGlobal('jest', {
     advanceTimersByTime: vi.advanceTimersByTime.bind(vi),
   });
-
-  if (URL.createObjectURL !== undefined) throw new Error('Mock not necessary anymore?');
-  URL.createObjectURL = createObjectURLMock;
-  URL.revokeObjectURL = revokeObjectURLMock;
-});
-
-beforeEach(() => {
-  createObjectURLMock.mockReset();
-  revokeObjectURLMock.mockReset();
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   if (vi.isFakeTimers()) {
     vi.runOnlyPendingTimers();
     vi.useRealTimers();
@@ -183,6 +172,8 @@ afterAll(() => {
 
 test('successful uploads are correctly added to the state', async () => {
   vi.useFakeTimers();
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const user = userEvent.setup({
     // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
     advanceTimers: vi.advanceTimersByTime,
@@ -206,7 +197,7 @@ test('successful uploads are correctly added to the state', async () => {
   for (const pendingUpload of pendingUploadsList) {
     expect(pendingUpload.dataset.state).toBe('pending');
   }
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(2);
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(2);
 
   // Let the mock upload complete so that it arrives in its state update machinery
   await vi.advanceTimersByTimeAsync(200);
@@ -215,11 +206,13 @@ test('successful uploads are correctly added to the state', async () => {
   const completedUploadsList = screen.queryAllByRole('listitem');
   expect(completedUploadsList).toHaveLength(2);
   expect(completedUploadsList[0].dataset.state).toBe('success');
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(2);
+  expect(revokeObjectURLSpy).toHaveBeenCalledTimes(2);
 });
 
 test('failed uploads are correctly updated in the state', async () => {
   vi.useFakeTimers();
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const user = userEvent.setup({
     // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
     advanceTimers: vi.advanceTimersByTime,
@@ -243,7 +236,7 @@ test('failed uploads are correctly updated in the state', async () => {
   for (const pendingUpload of pendingUploadsList) {
     expect(pendingUpload.dataset.state).toBe('pending');
   }
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(2);
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(2);
 
   // Let the mock upload complete so that it arrives in its state update machinery
   await vi.advanceTimersByTimeAsync(200);
@@ -255,7 +248,7 @@ test('failed uploads are correctly updated in the state', async () => {
     expect(completedUploadsList[0].dataset.state).toBe('error');
     expect(completedUploadsList[1].dataset.state).toBe('success');
   });
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+  expect(revokeObjectURLSpy).toHaveBeenCalledTimes(1);
 
   expect(screen.getByText(/Backend error 1./)).toBeVisible();
   expect(screen.getByText(/Backend error 2./)).toBeVisible();
@@ -284,6 +277,8 @@ test('remove file while uploading', async () => {
 });
 
 test('process file rejection eagerly', async () => {
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const user = userEvent.setup();
   const upload: FileRejection = {
     file: new File(['dummy'], 'dummy.png', {type: 'image/png'}),
@@ -308,8 +303,8 @@ test('process file rejection eagerly', async () => {
   // these race against each other, where the remove finishes before the upload completes
   await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
 
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
-  expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(1);
+  expect(revokeObjectURLSpy).not.toHaveBeenCalled();
   const erroredUpload = screen.getByRole('listitem');
   expect(erroredUpload.dataset.state).toBe('error');
 
