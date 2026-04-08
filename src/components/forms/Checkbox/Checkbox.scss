@@ -33,6 +33,7 @@
       .utrecht-checkbox--custom {
         margin-block-start: var(--of-utrecht-form-label-checkbox-padding-block-start);
         margin-inline-start: var(--of-utrecht-form-label-checkbox-padding-inline-start);
+        z-index: 0;
 
         &:focus ~ .utrecht-form-field__label--checkbox {
           outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
