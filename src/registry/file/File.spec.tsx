@@ -151,7 +151,6 @@ const TestComponent: React.FC<TestComponentProps> = ({
   );
 };
 
-// mock URL.createObjectURL since jsdom doesn't implement it.
 beforeAll(() => {
   vi.stubGlobal('jest', {
     advanceTimersByTime: vi.advanceTimersByTime.bind(vi),

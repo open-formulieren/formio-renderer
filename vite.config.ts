@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react';
+import {playwright} from '@vitest/browser-playwright';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
@@ -75,7 +76,7 @@ export default defineConfig(({mode}) => ({
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: './vitest.setup.ts',
     coverage: {
       provider: 'v8',
@@ -90,5 +91,20 @@ export default defineConfig(({mode}) => ({
       ],
       reporter: ['text', 'cobertura', 'html'],
     },
+    browser: {
+      enabled: true,
+      headless: true,
+      provider: playwright({}),
+      instances: [{browser: 'chromium'}],
+    },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['src/**/*.spec.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
+        },
+      },
+    ],
   },
 }));

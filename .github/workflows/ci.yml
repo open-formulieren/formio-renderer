@@ -121,6 +121,7 @@ jobs:
 
       - name: Run tests
         run: |
+          npx playwright install --with-deps
           npm run test:vitest -- --coverage
 
       - name: Publish coverage report
