@@ -132,7 +132,7 @@ jobs:
 
   interaction-tests:
     name: Run Storybook tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     needs:
       - storybook
 
@@ -152,20 +152,8 @@ jobs:
           npx playwright install --with-deps
           npm run compilemessages
 
-      - name: Download storybook artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: storybook-static
-
       - name: Serve storybook and run tests
-        run: |
-          cd storybook-static/ && tar -xvf artifact.tar && cd ..
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "npx http-server storybook-static --port 6006 --quiet" \
-            "npx wait-on -l http://127.0.0.1:6006 && npm run test:storybook"
-          # Prepare coverage
-          npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook
+        run: npm run test:storybook -- --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
