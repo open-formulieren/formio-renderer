@@ -5,10 +5,9 @@ import type {
   SoftRequiredErrorsComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
-import {render, screen} from '@testing-library/react';
 import {IntlProvider} from 'react-intl';
-import {userEvent, waitFor, within} from 'storybook/test';
 import {describe, expect, test, vi} from 'vitest';
+import {render} from 'vitest-browser-react';
 
 import FormioForm from '@/components/FormioForm';
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -27,7 +26,7 @@ const Form: React.FC<FormProps> = props => (
 describe('Soft required components without parents', () => {
   test('Empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -61,17 +60,19 @@ describe('Soft required components without parents', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual('Empty textfield');
+    await expect.element(listItem).toHaveTextContent('Empty textfield');
   });
 
   test('Empty soft-required editgrid is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -119,17 +120,19 @@ describe('Soft required components without parents', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual('Editgrid');
+    await expect.element(listItem).toHaveTextContent('Editgrid');
   });
 
   test('Hidden empty field is not picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -164,15 +167,15 @@ describe('Soft required components without parents', () => {
       />
     );
 
-    expect(screen.queryByLabelText('Hidden empty textfield')).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Not all required fields are filled out. That can get expensive!')
-    ).not.toBeInTheDocument();
+    await expect.element(screen.getByLabelText('Hidden empty textfield')).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
   });
 
   test('Filling a field removes it from the softRequired missing list', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -221,32 +224,31 @@ describe('Soft required components without parents', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With both fields initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItems = within(list).getAllByRole('listitem');
+    const listItems = screen.getByRole('list', {name: 'Empty fields'}).getByRole('listitem').all();
 
     // Both fields should be marked as missing
     expect(listItems).toHaveLength(2);
-    expect(listItems[0].textContent).toEqual('To be filled textfield');
-    expect(listItems[1].textContent).toEqual('Empty textfield');
+    await expect.element(listItems[0]).toHaveTextContent('To be filled textfield');
+    await expect.element(listItems[1]).toHaveTextContent('Empty textfield');
 
     // Mutate the value of 1 field
     const input = screen.getByLabelText('To be filled textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // We expect that the updated field is removed from the soft-required missing list
-    await waitFor(() => {
-      const updatedListItems = within(list).getAllByRole('listitem');
-
-      expect(updatedListItems).toHaveLength(1);
-      expect(updatedListItems[0].textContent).toEqual('Empty textfield');
-    });
+    const updatedListItems = screen
+      .getByRole('list', {name: 'Empty fields'})
+      .getByRole('listitem')
+      .all();
+    expect(updatedListItems).toHaveLength(1);
+    await expect.element(updatedListItems[0]).toHaveTextContent('Empty textfield');
   });
 
   test('The softRequired message is only shown when there are empty softRequired fields', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -283,28 +285,26 @@ describe('Soft required components without parents', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With the field initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual('To be filled textfield');
+    await expect.element(listItem).toHaveTextContent('To be filled textfield');
 
     // Mutate the value of the missing field
     const input = screen.getByLabelText('To be filled textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // We expect that the softRequired message is removed
-    await waitFor(() => {
-      expect(screen.queryByText(ERROR_TEXT)).toBeNull();
-    });
+    await expect.element(screen.getByText(ERROR_TEXT)).not.toBeInTheDocument();
   });
 });
 
 describe('Soft required components nested in fieldset', () => {
   test('Nested empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -347,19 +347,21 @@ describe('Soft required components nested in fieldset', () => {
       />
     );
 
-    expect(await screen.findByText("Auto's")).toBeVisible();
+    await expect.element(screen.getByText("Auto's", {exact: true})).toBeVisible();
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual("Auto's > Empty textfield");
+    await expect.element(listItem).toHaveTextContent("Auto's > Empty textfield");
   });
 
   test('Filling a field removes it from the softRequired missing list', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -405,27 +407,25 @@ describe('Soft required components nested in fieldset', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With the field initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
     // The field should be marked as missing
-    expect(listItem.textContent).toEqual("Auto's > Empty textfield");
+    await expect.element(listItem).toHaveTextContent("Auto's > Empty textfield");
 
     // Mutate the value of the field
     const input = screen.getByLabelText('Empty textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // We expect that the softRequires message is removed
-    await waitFor(() => {
-      expect(screen.queryByText(ERROR_TEXT)).toBeNull();
-    });
+    await expect.element(screen.getByText(ERROR_TEXT)).not.toBeInTheDocument();
   });
 
   test('Nested empty field in hidden parent is not picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -469,17 +469,17 @@ describe('Soft required components nested in fieldset', () => {
       />
     );
 
-    expect(screen.queryByText("Auto's")).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Not all required fields are filled out. That can get expensive!')
-    ).not.toBeInTheDocument();
+    await expect.element(screen.getByText("Auto's")).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
   });
 });
 
 describe('Soft required components nested in columns', () => {
   test('Nested empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -544,19 +544,21 @@ describe('Soft required components nested in columns', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItems = within(list).getAllByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItems = list.getByRole('listitem').all();
 
     expect(listItems).toHaveLength(2);
-    expect(listItems[0].textContent).toEqual('Empty textfield 1');
-    expect(listItems[1].textContent).toEqual('Empty textfield 2');
+    await expect.element(listItems[0]).toHaveTextContent('Empty textfield 1');
+    await expect.element(listItems[1]).toHaveTextContent('Empty textfield 2');
   });
 
   test('Filling a field removes it from the softRequired missing list', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -624,32 +626,29 @@ describe('Soft required components nested in columns', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With the field initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItems = within(list).getAllByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItems = list.getByRole('listitem').all();
 
     // Both fields should be marked as missing
     expect(listItems).toHaveLength(2);
-    expect(listItems[0].textContent).toEqual('To be filled textfield');
-    expect(listItems[1].textContent).toEqual('Empty textfield');
+    await expect.element(listItems[0]).toHaveTextContent('To be filled textfield');
+    await expect.element(listItems[1]).toHaveTextContent('Empty textfield');
 
     // Mutate the value of 1 field
     const input = screen.getByLabelText('To be filled textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // We expect that the updated field is removed from the soft-required missing list
-    await waitFor(() => {
-      const updatedListItems = within(list).getAllByRole('listitem');
-
-      expect(updatedListItems).toHaveLength(1);
-      expect(updatedListItems[0].textContent).toEqual('Empty textfield');
-    });
+    const updatedListItems = list.getByRole('listitem').all();
+    expect(updatedListItems).toHaveLength(1);
+    await expect.element(updatedListItems[0]).toHaveTextContent('Empty textfield');
   });
 
   test('Nested empty field in hidden parent is not picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -715,16 +714,16 @@ describe('Soft required components nested in columns', () => {
       />
     );
 
-    expect(
-      screen.queryByText('Not all required fields are filled out. That can get expensive!')
-    ).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
   });
 });
 
 describe('Soft required components nested in editgrid', () => {
   test('Nested empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -772,17 +771,19 @@ describe('Soft required components nested in editgrid', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual("Auto's > Auto 1 > Textfield");
+    await expect.element(listItem).toHaveTextContent("Auto's > Auto 1 > Textfield");
   });
 
   test('Adding new nested empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -829,25 +830,25 @@ describe('Soft required components nested in editgrid', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // Without any softrequired fields, the error should not be shown
-    expect(await screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument();
+    await expect.element(screen.getByText(ERROR_TEXT)).not.toBeInTheDocument();
 
     // Add an item to the edit grid.
     const addButton = screen.getByRole('button', {name: 'Add another'});
-    await userEvent.click(addButton);
+    await addButton.click();
 
     // The empty soft-required fields in the newly added editgrid item are immediately
     // added to the missing list.
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual('Editgrid > Editgrid item 1 > Textfield');
+    await expect.element(listItem).toHaveTextContent('Editgrid > Editgrid item 1 > Textfield');
   });
 
   test('Filling a field removes it from the softRequired missing list', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -898,35 +899,33 @@ describe('Soft required components nested in editgrid', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With the field initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
     // the field should be marked as missing
-    expect(listItem.textContent).toEqual("Auto's > Auto 1 > Textfield");
+    await expect.element(listItem).toHaveTextContent("Auto's > Auto 1 > Textfield");
 
     // Edit the editgrid item
-    const editButton = await screen.findByRole('button', {name: 'Edit item 1'});
-    await userEvent.click(editButton);
+    const editButton = screen.getByRole('button', {name: 'Edit item 1'});
+    await editButton.click();
 
     // Mutate the value of the field
     const input = screen.getByLabelText('Textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // Save the editgrid item
-    const saveButton = await screen.findByRole('button', {name: 'Save'});
-    await userEvent.click(saveButton);
+    const saveButton = screen.getByRole('button', {name: 'Save'});
+    await saveButton.click();
 
     // We expect that the updated field is removed from the soft-required missing list
-    await waitFor(() => {
-      expect(screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument();
-    });
+    await expect.element(screen.getByText(ERROR_TEXT)).not.toBeInTheDocument();
   });
 
   test('Nested empty field in hidden parent is not picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -974,17 +973,17 @@ describe('Soft required components nested in editgrid', () => {
       />
     );
 
-    expect(screen.queryByText("Auto's")).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Not all required fields are filled out. That can get expensive!')
-    ).not.toBeInTheDocument();
+    await expect.element(screen.getByText("Auto's")).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
   });
 });
 
 describe('Soft required components nested in nested editgrid', () => {
   test('Multiple nested empty field is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -1057,26 +1056,34 @@ describe('Soft required components nested in nested editgrid', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItems = within(list).getAllByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItems = list.getByRole('listitem').all();
 
     expect(listItems).toHaveLength(3);
-    expect(listItems[0].textContent).toEqual(
-      'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 1 > Textfield'
-    );
-    expect(listItems[1].textContent).toEqual(
-      'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 2 > Textfield'
-    );
-    expect(listItems[2].textContent).toEqual(
-      'Outer editgrid > Outer editgrid item 2 > Inner editgrid > Inner editgrid item 1 > Textfield'
-    );
+    await expect
+      .element(listItems[0])
+      .toHaveTextContent(
+        'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 1 > Textfield'
+      );
+    await expect
+      .element(listItems[1])
+      .toHaveTextContent(
+        'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 2 > Textfield'
+      );
+    await expect
+      .element(listItems[2])
+      .toHaveTextContent(
+        'Outer editgrid > Outer editgrid item 2 > Inner editgrid > Inner editgrid item 1 > Textfield'
+      );
   });
 
   test('Nested empty soft-required editgrid is picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -1139,17 +1146,21 @@ describe('Soft required components nested in nested editgrid', () => {
       />
     );
 
-    await screen.findByText('Not all required fields are filled out. That can get expensive!');
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
-    expect(listItem.textContent).toEqual('Outer editgrid > Outer editgrid item 1 > Inner editgrid');
+    await expect
+      .element(listItem)
+      .toHaveTextContent('Outer editgrid > Outer editgrid item 1 > Inner editgrid');
   });
 
   test('Filling a field removes it from the softRequired missing list', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -1215,52 +1226,52 @@ describe('Soft required components nested in nested editgrid', () => {
     const ERROR_TEXT = 'Not all required fields are filled out. That can get expensive!';
 
     // With the field initially empty, we should see the error
-    expect(await screen.findByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
 
-    const list = await screen.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const list = screen.getByRole('list', {name: 'Empty fields'});
+    const listItem = list.getByRole('listitem');
 
     // the field should be marked as missing
-    expect(listItem.textContent).toEqual(
-      'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 1 > Textfield'
-    );
+    await expect
+      .element(listItem)
+      .toHaveTextContent(
+        'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 1 > Textfield'
+      );
 
     // Edit the editgrid item.
     // We have to click edit twice, for the outer editgrid and the inner editgrid
-    await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
-    await userEvent.click(await screen.findByRole('button', {name: 'Edit item 1'}));
+    await screen.getByRole('button', {name: 'Edit item 1'}).click();
+    await screen.getByRole('button', {name: 'Edit item 1'}).click();
 
     // Mutate the value of the field
     const input = screen.getByLabelText('Textfield');
-    await userEvent.type(input, 'Not empty');
+    await input.fill('Not empty');
 
     // Save the inner editgrid item
-    const saveButtons = await screen.findAllByRole('button', {name: 'Save'});
-    await userEvent.click(saveButtons[0]);
+    const saveButtons = screen.getByRole('button', {name: 'Save'}).all();
+    await saveButtons[0].click();
 
     // We expect that the updated field is still present in the soft-required missing
     // list. It will be updated once the most outer editgrid is updated.
-    await waitFor(() => {
-      expect(screen.queryByText(ERROR_TEXT)).toBeVisible();
-      expect(listItem).toBeVisible();
-      expect(listItem.textContent).toEqual(
+    await expect.element(screen.getByText(ERROR_TEXT)).toBeVisible();
+    await expect.element(listItem).toBeVisible();
+    await expect
+      .element(listItem)
+      .toHaveTextContent(
         'Outer editgrid > Outer editgrid item 1 > Inner editgrid > Inner editgrid item 1 > Textfield'
       );
-    });
 
     // Save the outer editgrid item
-    await userEvent.click(saveButtons[1]);
+    await screen.getByRole('button', {name: 'Save'}).click();
 
     // We expect that the updated field is no-longer present in the soft-required missing
     // list.
-    await waitFor(() => {
-      expect(screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument();
-    });
+    await expect.element(screen.getByText(ERROR_TEXT)).not.toBeInTheDocument();
   });
 
   test('Nested empty field in hidden parent is not picked-up by softRequired component', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -1323,9 +1334,9 @@ describe('Soft required components nested in nested editgrid', () => {
       />
     );
 
-    expect(screen.queryByText('Outer editgrid')).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Not all required fields are filled out. That can get expensive!')
-    ).not.toBeInTheDocument();
+    await expect.element(screen.getByText('Outer editgrid')).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
   });
 });

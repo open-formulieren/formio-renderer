@@ -3,12 +3,12 @@ import type {
   EditGridComponentSchema,
   TextFieldComponentSchema,
 } from '@open-formulieren/types';
-import {act, render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {useFormikContext} from 'formik';
 import {createRef, forwardRef, useEffect, useState} from 'react';
 import {IntlProvider} from 'react-intl';
 import {describe, expect, test, vi} from 'vitest';
+import {render} from 'vitest-browser-react';
+import {userEvent} from 'vitest/browser';
 
 import FormioForm from './FormioForm';
 import type {Errors, FormStateRef, FormioFormProps} from './FormioForm';
@@ -33,7 +33,7 @@ describe('Updating form values', () => {
   test('Simple flat configuration', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -49,25 +49,23 @@ describe('Updating form values', () => {
       />
     );
 
-    const input = await screen.findByLabelText('Foo');
-    expect(input).toBeVisible();
-    expect(input).toHaveDisplayValue('');
+    const input = screen.getByLabelText('Foo');
+    await expect.element(input).toBeVisible();
+    await expect.element(input).toHaveDisplayValue('');
 
     // now mutate the form values and check that the state updates accordingly
     ref.current!.updateValues({foo: 'bar'});
-    await waitFor(() => {
-      expect(input).toHaveDisplayValue('bar');
-    });
+    await expect.element(input).toHaveDisplayValue('bar');
 
     // and values should be reflected accordingly on submission
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({foo: 'bar'});
   });
 
   test('Supports partial updates', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -90,22 +88,20 @@ describe('Updating form values', () => {
       />
     );
 
-    const fooInput = await screen.findByLabelText('Foo');
-    expect(fooInput).toBeVisible();
-    expect(fooInput).toHaveDisplayValue('');
+    const fooInput = screen.getByLabelText('Foo');
+    await expect.element(fooInput).toBeVisible();
+    await expect.element(fooInput).toHaveDisplayValue('');
 
-    const barInput = await screen.findByLabelText('Bar');
-    expect(barInput).toBeVisible();
-    expect(barInput).toHaveDisplayValue('Bar');
+    const barInput = screen.getByLabelText('Bar');
+    await expect.element(barInput).toBeVisible();
+    await expect.element(barInput).toHaveDisplayValue('Bar');
 
     ref.current!.updateValues({foo: 'updated'});
-    await waitFor(() => {
-      expect(fooInput).toHaveDisplayValue('updated');
-      expect(barInput).toHaveDisplayValue('Bar');
-    });
+    await expect.element(fooInput).toHaveDisplayValue('updated');
+    await expect.element(barInput).toHaveDisplayValue('Bar');
 
     // and values should be reflected accordingly on submission
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({
       foo: 'updated',
       bar: 'Bar',
@@ -115,7 +111,7 @@ describe('Updating form values', () => {
   test('Supports partial deep updates', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -140,7 +136,7 @@ describe('Updating form values', () => {
 
     ref.current!.updateValues({parent: {nested2: 'updated'}});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({
       parent: {
         nested1: 'foo',
@@ -152,7 +148,7 @@ describe('Updating form values', () => {
   test('Supports full (deep) updates', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -177,7 +173,7 @@ describe('Updating form values', () => {
 
     ref.current!.updateValues({parent: {nested1: 'changed', nested2: 'changed2'}});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({
       parent: {
         nested1: 'changed',
@@ -189,7 +185,7 @@ describe('Updating form values', () => {
   test('Can replace editgrid as a whole', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -215,19 +211,19 @@ describe('Updating form values', () => {
       />
     );
     // sanity check the initial state
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Initial'}]});
 
     ref.current!.updateValues({editgrid: [{name: 'Updated'}, {name: 'New'}]});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Updated'}, {name: 'New'}]});
   });
 
   test('Update whole editgrid value to remove an item', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -253,20 +249,20 @@ describe('Updating form values', () => {
       />
     );
     // sanity check the initial state
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'First'}, {name: 'Second'}]});
 
     // remove the first item
     ref.current!.updateValues({editgrid: [{name: 'Second'}]});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({editgrid: [{name: 'Second'}]});
   });
 
   test('Can replace individual editgrid items', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -303,7 +299,7 @@ describe('Updating form values', () => {
 
     ref.current!.updateValues({'editgrid.0': {name: 'Updated'}});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({
       editgrid: [
         {name: 'Updated', other: 'Other 1'},
@@ -315,7 +311,7 @@ describe('Updating form values', () => {
   test('Can deep partial update editgrid items', async () => {
     const onSubmit = vi.fn();
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -352,7 +348,7 @@ describe('Updating form values', () => {
 
     ref.current!.updateValues({'editgrid.0.name': 'Updated', bar: undefined});
 
-    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
     expect(onSubmit).toHaveBeenCalledWith({
       editgrid: [
         {name: 'Updated', other: 'Other 1'},
@@ -398,7 +394,7 @@ test('Errors type assignment', () => {
 describe('Updating form errors', () => {
   test('Display flat and deep nested errors', async () => {
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -428,13 +424,13 @@ describe('Updating form errors', () => {
       },
     });
 
-    expect(await screen.findByText('Visible foo error')).toBeVisible();
-    expect(await screen.findByText('Visible bar.baz error')).toBeVisible();
+    await expect.element(screen.getByText('Visible foo error')).toBeVisible();
+    await expect.element(screen.getByText('Visible bar.baz error')).toBeVisible();
   });
 
   test('Display dotted key errors', async () => {
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -452,12 +448,12 @@ describe('Updating form errors', () => {
 
     ref.current!.updateErrors({'bar.baz': 'Visible bar.baz error'});
 
-    expect(await screen.findByText('Visible bar.baz error')).toBeVisible();
+    await expect.element(screen.getByText('Visible bar.baz error')).toBeVisible();
   });
 
   test('Ignore invalid key errors', async () => {
     const ref = createRef<FormStateRef>();
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -473,14 +469,10 @@ describe('Updating form errors', () => {
       />
     );
 
-    await act(() => {
-      ref.current!.updateErrors({missingKey: 'Error not displayed anywhere'});
-    });
+    ref.current!.updateErrors({missingKey: 'Error not displayed anywhere'});
 
-    await waitFor(() => {
-      const error = screen.queryByText('Error not displayed anywhere');
-      expect(error).not.toBeInTheDocument();
-    });
+    const error = screen.getByText('Error not displayed anywhere');
+    await expect.element(error).not.toBeInTheDocument();
   });
 
   test('Clear errors when the (leaf) value is set to undefined', async () => {
@@ -495,7 +487,7 @@ describe('Updating form errors', () => {
       return null;
     };
 
-    render(
+    const screen = await render(
       <Form
         ref={ref}
         components={[
@@ -540,24 +532,21 @@ describe('Updating form errors', () => {
       'foo.bar.baz': errorMsg1,
       'editgrid.0.nestedTextfield': errorMsg2,
     });
-    expect(await screen.findByText(errorMsg1)).toBeVisible();
-    expect(await screen.findByText(errorMsg2)).toBeVisible();
+    await expect.element(screen.getByText(errorMsg1)).toBeVisible();
+    await expect.element(screen.getByText(errorMsg2)).toBeVisible();
 
     // clear the error
     ref.current!.updateErrors({
       'foo.bar.baz': undefined,
       'editgrid.0.nestedTextfield': undefined,
     });
-    await waitFor(() => {
-      expect(screen.queryByText(errorMsg1)).not.toBeInTheDocument();
-      expect(screen.queryByText(errorMsg2)).not.toBeInTheDocument();
-    });
+    await expect.element(screen.getByText(errorMsg1)).not.toBeInTheDocument();
+    await expect.element(screen.getByText(errorMsg2)).not.toBeInTheDocument();
     expect(isValid).toBe(true);
   });
 });
 
 test('Modifying the form definition updates the validation schema', async () => {
-  const user = userEvent.setup();
   const onSubmit = vi.fn();
   const initial: TextFieldComponentSchema = {
     id: 'textfield',
@@ -581,35 +570,36 @@ test('Modifying the form definition updates the validation schema', async () => 
     );
   };
 
-  render(<TestComponent />);
+  const screen = await render(<TestComponent />);
 
   // initially validate the text field - 10 chars is okay
-  const texfield = await screen.findByLabelText('Textfield with max length');
+  const texfield = screen.getByLabelText('Textfield with max length');
+  await texfield.fill('12345678901');
+
   const submitButton = screen.getByRole('button', {name: 'Submit'});
-  await user.type(texfield, '12345678901');
-  await user.click(submitButton);
-  expect(await screen.findByText('There are too many characters provided.')).toBeVisible();
+  await submitButton.click();
+  await expect.element(screen.getByText('There are too many characters provided.')).toBeVisible();
   expect(onSubmit).not.toHaveBeenCalled();
 
   // correct the input and check that we can submit
-  await user.clear(texfield);
-  await user.type(texfield, '1234ab');
-  await user.click(submitButton);
+  await texfield.clear();
+  await texfield.fill('1234ab');
+  await userEvent.tab();
+  await submitButton.click();
   expect(onSubmit).toHaveBeenCalledWith({textfield: '1234ab'});
 
   // now update the component definition, which should update the validation schema
-  await user.click(screen.getByRole('button', {name: 'Update component'}));
-  const updatedTexfield = await screen.findByLabelText('Textfield with max length');
-  expect(updatedTexfield).toHaveDisplayValue('1234ab');
-  await user.click(submitButton);
-  expect(await screen.findByText('There are too many characters provided.')).toBeVisible();
+  await screen.getByRole('button', {name: 'Update component'}).click();
+  const updatedTexfield = screen.getByLabelText('Textfield with max length');
+  await expect.element(updatedTexfield).toHaveDisplayValue('1234ab');
+  await submitButton.click();
+  await expect.element(screen.getByText('There are too many characters provided.')).toBeVisible();
 });
 
 describe('onChange prop', () => {
   test('is called for changes because of user input', async () => {
-    const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -624,19 +614,18 @@ describe('onChange prop', () => {
         onSubmit={vi.fn()}
       />
     );
-    const input = await screen.findByLabelText('Foo');
-    expect(input).toBeVisible();
+    const input = screen.getByLabelText('Foo');
+    await expect.element(input).toBeVisible();
 
-    await user.type(input, 'Sample');
+    await userEvent.type(input, 'Sample');
 
-    expect(onChange).toBeCalledTimes(6); // once for each character
+    expect(onChange).toHaveBeenCalledTimes(6); // once for each character
     expect(onChange).toHaveBeenLastCalledWith({foo: 'Sample'});
   });
 
   test('is called for changes from clearOnHide', async () => {
-    const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[
           {
@@ -665,9 +654,9 @@ describe('onChange prop', () => {
       />
     );
 
-    const input = await screen.findByLabelText('Foo');
-    expect(input).toBeVisible();
-    await user.type(input, 'hide');
+    const input = screen.getByLabelText('Foo');
+    await expect.element(input).toBeVisible();
+    await input.fill('hide');
 
     // we expect both the user input change and the calculated clearOnHide change
     expect(onChange).toHaveBeenCalledWith({foo: 'hide', email: 'info@example.com'});
@@ -718,7 +707,7 @@ describe('Regressions', () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
       throw new Error(err);
     });
-    render(
+    const screen = await render(
       <Form
         components={[NESTED_EDITGRIDS]}
         values={{
@@ -737,11 +726,11 @@ describe('Regressions', () => {
       />
     );
 
-    const editButton = await screen.findByRole('button', {name: 'Edit item 1'});
+    const editButton = screen.getByRole('button', {name: 'Edit item 1'});
 
     let error: Error | undefined = undefined;
     try {
-      await userEvent.click(editButton);
+      await editButton.click();
     } catch (e) {
       error = e;
       // if an error happens (which shouldn't be the case), make sure we're checking
@@ -757,7 +746,7 @@ describe('Regressions', () => {
 
   test('Properly clears hidden fields in nested editgrids', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <Form
         components={[NESTED_EDITGRIDS]}
         values={{
@@ -776,7 +765,7 @@ describe('Regressions', () => {
       />
     );
 
-    await userEvent.click(await screen.findByRole('button', {name: 'Submit'}));
+    await screen.getByRole('button', {name: 'Submit'}).click();
 
     expect(onSubmit).toHaveBeenCalledWith({
       outer: [
@@ -793,7 +782,7 @@ describe('Regressions', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
         throw new Error(err);
       });
-      render(
+      const screen = await render(
         <Form
           components={[
             {
@@ -831,14 +820,14 @@ describe('Regressions', () => {
         />
       );
 
-      const outerTrigger = await screen.findByLabelText('Outer trigger');
+      const outerTrigger = screen.getByLabelText('Outer trigger');
 
       let error: Error | undefined = undefined;
       // Hiding the edit-grid shouldn't cause any errors.
       // And turning the edit-grid back to visible, shouldn't cause any errors either.
       try {
-        await userEvent.type(outerTrigger, 'hide');
-        await userEvent.clear(outerTrigger);
+        await outerTrigger.fill('hide');
+        await outerTrigger.clear();
       } catch (e) {
         error = e;
         // if an error happens (which shouldn't be the case), make sure we're checking
@@ -859,7 +848,7 @@ describe('Regressions', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(err => {
         throw new Error(err);
       });
-      render(
+      const screen = await render(
         <Form
           components={[
             {
@@ -911,14 +900,14 @@ describe('Regressions', () => {
         />
       );
 
-      const outerTrigger = await screen.findByLabelText('Outer trigger');
+      const outerTrigger = screen.getByLabelText('Outer trigger');
 
       let error: Error | undefined = undefined;
       // Hiding the edit-grid shouldn't cause any errors.
       // And turning the edit-grid back to visible, shouldn't cause any errors either.
       try {
-        await userEvent.type(outerTrigger, 'hide');
-        await userEvent.clear(outerTrigger);
+        await outerTrigger.fill('hide');
+        await outerTrigger.clear();
       } catch (e) {
         error = e;
         // if an error happens (which shouldn't be the case), make sure we're checking
