@@ -14,8 +14,8 @@ import {PrimaryActionButton} from '@/index';
  * Wrap stories so that they are inside a container with the class name "utrecht-document", used
  * to wrap some 'page-global' styling.
  */
-export const utrechtDocumentDecorator: Decorator = Story => {
-  const sbRoot = document.getElementById('storybook-root')!;
+export const utrechtDocumentDecorator: Decorator = (Story, context) => {
+  const sbRoot = context.canvasElement;
   ['utrecht-document', 'utrecht-document--surface'].forEach(clsName => {
     if (!sbRoot.classList.contains(clsName)) {
       sbRoot.classList.add(clsName);
@@ -122,11 +122,11 @@ export const withMockDate: Decorator = (Story, {parameters}) => {
  * 'canvas' and breaks queries in interaction tests. So this decorator sets up the
  * storybook root as portal target node.
  */
-export const withModal: Decorator = Story => (
+export const withModal: Decorator = (Story, context) => (
   <ModalContext.Provider
     value={{
       // only for storybook integration, do not use this in real apps!
-      parentSelector: () => document.getElementById('storybook-root')!,
+      parentSelector: () => context.canvasElement,
     }}
   >
     <Story />
