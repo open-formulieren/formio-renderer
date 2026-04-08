@@ -1,33 +1,44 @@
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {Paragraph} from '@utrecht/component-library-react';
 import {Formik} from 'formik';
-import {useArgs} from 'storybook/preview-api';
+import {useState} from 'react';
 import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import {Checkbox} from '@/components/forms';
 
 import FormFieldContainer from '../FormFieldContainer';
 import Modal from './Modal';
+import type {ModalProps} from './Modal';
 
-const withModalTrigger: Decorator = Story => {
-  const [{isOpen, closeModal, ...args}, updateArgs] = useArgs();
+const withTriggerDecorator: Decorator<ModalProps> = (_, context) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {closeModal: closeModalArg} = context.args;
   return (
-    <>
+    <div style={{minHeight: 'calc(100dvh - 2 * 1rem)'}}>
       <p>Text outside the modal dialog</p>
-      {!isOpen && <button onClick={() => updateArgs({isOpen: true})}>show modal</button>}
-      <Story
-        args={{
-          ...args,
-          isOpen,
-          closeModal: () => {
-            // After closing the modal, update the story args
-            updateArgs({isOpen: false});
-            // Make sure to also call the initial defined callback
-            closeModal();
-          },
+      <button onClick={() => setIsOpen(true)}>show modal</button>
+      <Modal
+        {...context.args}
+        isOpen={isOpen}
+        closeModal={() => {
+          if (!isOpen) return;
+          // close modal actually fires twice when closing the modal (if you click the
+          // close button).
+          // 1. Click close button
+          // 2. Calls closeModal, which updates the state here
+          // 3. The new `isOpen: false` is passed to the Modal component, which
+          //    invokes the modal.close() API to sync modal state to the prop.
+          // 4. Because of the dialog['onClose'], `closeModal` is called *again*, it
+          //    seems, but I'm not 100% sure this is correct :(
+          //
+          // This leads to flaky tests :)
+          //
+          // FIXME: see #286
+          closeModalArg();
+          setIsOpen(false);
         }}
       />
-    </>
+    </div>
   );
 };
 
@@ -48,7 +59,7 @@ type Story = StoryObj<typeof Modal>;
 export const Default: Story = {};
 
 export const CloseModal: Story = {
-  decorators: [withModalTrigger],
+  decorators: [withTriggerDecorator],
   args: {
     isOpen: false,
   },
