@@ -1,5 +1,14 @@
 # Changes
 
+## 1.5.1 (2026-04-09)
+
+Bugfix release.
+
+- [`OF#5944`][OF#5944] Fixed checkbox label overlay issue on Safari/iOS 18.
+- Bumped component library dependencies so that the latest lodash security fixes can be included.
+
+[OF#5944]: https://github.com/open-formulieren/open-forms/issues/5944
+
 ## 1.5.0 (2026-04-02)
 
 Feature release.
