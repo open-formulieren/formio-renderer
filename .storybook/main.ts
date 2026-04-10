@@ -11,7 +11,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     'storybook-react-intl',
     '@storybook/addon-docs',
-    '@storybook/addon-coverage',
+    '@storybook/addon-vitest',
   ],
   framework: {
     name: '@storybook/react-vite',

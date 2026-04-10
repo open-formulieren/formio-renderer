@@ -1,5 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="vitest/config" />
+import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import react from '@vitejs/plugin-react';
+import {playwright} from '@vitest/browser-playwright';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
@@ -74,7 +77,7 @@ export default defineConfig(({mode}) => ({
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: './vitest.setup.ts',
     coverage: {
       provider: 'v8',
@@ -89,5 +92,32 @@ export default defineConfig(({mode}) => ({
       ],
       reporter: ['text', 'cobertura', 'html'],
     },
+    browser: {
+      enabled: true,
+      headless: true,
+      provider: playwright({}),
+      instances: [{browser: 'chromium'}],
+    },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['src/**/*.spec.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
+        },
+      },
+      {
+        extends: true,
+        plugins: [
+          // The plugin will run tests for the stories defined in your Storybook config
+          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+          storybookTest({configDir: resolve(_OF_INTERNAL_dirname, '.storybook')}),
+        ],
+        test: {
+          name: 'storybook',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+    ],
   },
 }));

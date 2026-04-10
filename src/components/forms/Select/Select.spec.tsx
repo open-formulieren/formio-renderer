@@ -1,19 +1,14 @@
-import {render, screen} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {Form, Formik} from 'formik';
 import {IntlProvider} from 'react-intl';
-import selectEvent from 'react-select-event';
 import {expect, test, vi} from 'vitest';
+import {render} from 'vitest-browser-react';
+import {userEvent} from 'vitest/browser';
 
 import Select from './Select';
 
-// This test produces `act` warnings, most likely due to react-select-event being a bit
-// outdated:
-//   Warning: The current testing environment is not configured to support act(...)
 test('clearing select variants', async () => {
   const onSubmit = vi.fn();
-  const user = userEvent.setup();
-  render(
+  const screen = await render(
     <IntlProvider locale="en" messages={{}}>
       <Formik
         onSubmit={values => onSubmit(values)}
@@ -45,15 +40,20 @@ test('clearing select variants', async () => {
   );
 
   const select1 = screen.getByLabelText('Select 1');
-  expect(select1).toBeVisible();
+  await expect.element(select1).toBeVisible();
   const select2 = screen.getByLabelText('Select 2');
-  expect(select2).toBeVisible();
+  await expect.element(select2).toBeVisible();
 
-  // eslint-disable-next-line import/no-named-as-default-member
-  await selectEvent.clearFirst(select1);
-  // eslint-disable-next-line import/no-named-as-default-member
-  await selectEvent.clearFirst(select2);
-  await user.click(screen.getByRole('button', {name: 'Submit'}));
+  // clear select 1
+  await select1.click();
+  await userEvent.keyboard('{Backspace}');
+  await userEvent.keyboard('{Escape}');
+  // clear select 2
+  await select2.click();
+  await userEvent.keyboard('{Backspace}');
+  await userEvent.keyboard('{Escape}');
+
+  await screen.getByRole('button', {name: 'Submit'}).click();
 
   expect(onSubmit).toHaveBeenCalledExactlyOnceWith({
     select2: '',

@@ -1,12 +1,11 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
-import {render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {ErrorMessage, FieldArray, Formik} from 'formik';
 import type {ArrayHelpers} from 'formik';
 import {ErrorCode} from 'react-dropzone';
 import type {FileRejection, FileWithPath} from 'react-dropzone';
 import {IntlProvider} from 'react-intl';
-import {afterAll, afterEach, beforeAll, beforeEach, expect, test, vi} from 'vitest';
+import {afterEach, expect, test, vi} from 'vitest';
+import {render} from 'vitest-browser-react';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
 
@@ -151,140 +150,113 @@ const TestComponent: React.FC<TestComponentProps> = ({
   );
 };
 
-const createObjectURLMock = vi.fn(() => 'blob:mock-url');
-const revokeObjectURLMock = vi.fn();
-
-// mock URL.createObjectURL since jsdom doesn't implement it.
-beforeAll(() => {
-  vi.stubGlobal('jest', {
-    advanceTimersByTime: vi.advanceTimersByTime.bind(vi),
-  });
-
-  if (URL.createObjectURL !== undefined) throw new Error('Mock not necessary anymore?');
-  URL.createObjectURL = createObjectURLMock;
-  URL.revokeObjectURL = revokeObjectURLMock;
-});
-
-beforeEach(() => {
-  createObjectURLMock.mockReset();
-  revokeObjectURLMock.mockReset();
-});
-
 afterEach(() => {
+  vi.restoreAllMocks();
   if (vi.isFakeTimers()) {
     vi.runOnlyPendingTimers();
     vi.useRealTimers();
   }
 });
 
-afterAll(() => {
-  vi.unstubAllGlobals();
-});
-
 test('successful uploads are correctly added to the state', async () => {
   vi.useFakeTimers();
-  const user = userEvent.setup({
-    // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
-    advanceTimers: vi.advanceTimersByTime,
-  });
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const component: FileComponentSchema = {...BASE_COMPONENT, multiple: true};
   const uploads: File[] = [
     new File(['dummy'], 'dummy1.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
   ];
 
-  render(<TestComponentContainer componentDefinition={component} simulatedUploads={uploads} />);
+  const screen = await render(
+    <TestComponentContainer componentDefinition={component} simulatedUploads={uploads} />
+  );
 
   // initially, no uploads are displayed
-  const uploadsList = screen.queryAllByRole('listitem');
+  const uploadsList = screen.getByRole('listitem').all();
   expect(uploadsList).toHaveLength(0);
 
-  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
+  await screen.getByRole('button', {name: 'Simulate upload'}).click();
 
-  const pendingUploadsList = screen.queryAllByRole('listitem');
+  const pendingUploadsList = screen.getByRole('listitem').all();
   expect(pendingUploadsList).toHaveLength(2);
   for (const pendingUpload of pendingUploadsList) {
-    expect(pendingUpload.dataset.state).toBe('pending');
+    await expect.element(pendingUpload).toHaveAttribute('data-state', 'pending');
   }
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(2);
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(2);
 
   // Let the mock upload complete so that it arrives in its state update machinery
   await vi.advanceTimersByTimeAsync(200);
 
   // verify that the states have been updated
-  const completedUploadsList = screen.queryAllByRole('listitem');
+  const completedUploadsList = screen.getByRole('listitem').all();
   expect(completedUploadsList).toHaveLength(2);
-  expect(completedUploadsList[0].dataset.state).toBe('success');
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(2);
+  await expect.element(completedUploadsList[0]).toHaveAttribute('data-state', 'success');
+  expect(revokeObjectURLSpy).toHaveBeenCalledTimes(2);
 });
 
 test('failed uploads are correctly updated in the state', async () => {
   vi.useFakeTimers();
-  const user = userEvent.setup({
-    // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
-    advanceTimers: vi.advanceTimersByTime,
-  });
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const component: FileComponentSchema = {...BASE_COMPONENT, multiple: true};
   const uploads: File[] = [
     new File(['dummy'], 'error.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
   ];
 
-  render(<TestComponentContainer componentDefinition={component} simulatedUploads={uploads} />);
+  const screen = await render(
+    <TestComponentContainer componentDefinition={component} simulatedUploads={uploads} />
+  );
 
   // initially, no uploads are displayed
-  const uploadsList = screen.queryAllByRole('listitem');
+  const uploadsList = screen.getByRole('listitem').all();
   expect(uploadsList).toHaveLength(0);
 
-  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
+  await screen.getByRole('button', {name: 'Simulate upload'}).click();
 
-  const pendingUploadsList = screen.queryAllByRole('listitem');
+  const pendingUploadsList = screen.getByRole('listitem').all();
   expect(pendingUploadsList).toHaveLength(2);
   for (const pendingUpload of pendingUploadsList) {
-    expect(pendingUpload.dataset.state).toBe('pending');
+    await expect.element(pendingUpload).toHaveAttribute('data-state', 'pending');
   }
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(2);
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(2);
 
   // Let the mock upload complete so that it arrives in its state update machinery
   await vi.advanceTimersByTimeAsync(200);
 
   // wait for the upload to complete and verify that the states have been updated
-  await waitFor(async () => {
-    const completedUploadsList = screen.queryAllByRole('listitem');
-    expect(completedUploadsList).toHaveLength(2);
-    expect(completedUploadsList[0].dataset.state).toBe('error');
-    expect(completedUploadsList[1].dataset.state).toBe('success');
-  });
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+  const completedUploadsList = screen.getByRole('listitem').all();
+  expect(completedUploadsList).toHaveLength(2);
+  await expect.element(completedUploadsList[0]).toHaveAttribute('data-state', 'error');
+  await expect.element(completedUploadsList[1]).toHaveAttribute('data-state', 'success');
+  expect(revokeObjectURLSpy).toHaveBeenCalledTimes(1);
 
-  expect(screen.getByText(/Backend error 1./)).toBeVisible();
-  expect(screen.getByText(/Backend error 2./)).toBeVisible();
+  await expect.element(screen.getByText(/Backend error 1./)).toBeVisible();
+  await expect.element(screen.getByText(/Backend error 2./)).toBeVisible();
 });
 
 test('remove file while uploading', async () => {
   vi.useFakeTimers();
-  const user = userEvent.setup({
-    // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
-    advanceTimers: vi.advanceTimersByTime,
-  });
   const upload: File = new File(['dummy'], 'dummy.pdf', {type: 'application/pdf'});
 
-  render(
+  const screen = await render(
     <TestComponentContainer componentDefinition={BASE_COMPONENT} simulatedUploads={[upload]} />
   );
 
   // these race against each other, where the remove finishes before the upload completes
-  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
-  await user.click(screen.getByRole('button', {name: 'Remove upload 0'}));
+  await screen.getByRole('button', {name: 'Simulate upload'}).click();
+  await screen.getByRole('button', {name: 'Remove upload 0'}).click();
 
   // Let the mock upload complete so that it arrives in its state update machinery
   await vi.advanceTimersByTimeAsync(200);
 
-  expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+  await expect.element(screen.getByRole('listitem')).not.toBeInTheDocument();
 });
 
 test('process file rejection eagerly', async () => {
-  const user = userEvent.setup();
+  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+  const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const upload: FileRejection = {
     file: new File(['dummy'], 'dummy.png', {type: 'image/png'}),
     errors: [
@@ -298,7 +270,7 @@ test('process file rejection eagerly', async () => {
     ],
   };
 
-  render(
+  const screen = await render(
     <TestComponentContainer
       componentDefinition={{...BASE_COMPONENT, fileMaxSize: '1 MB', maxNumberOfFiles: 3}}
       simulatedUploads={[upload]}
@@ -306,35 +278,31 @@ test('process file rejection eagerly', async () => {
   );
 
   // these race against each other, where the remove finishes before the upload completes
-  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
+  await screen.getByRole('button', {name: 'Simulate upload'}).click();
 
-  expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
-  expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+  expect(createObjectURLSpy).toHaveBeenCalledTimes(1);
+  expect(revokeObjectURLSpy).not.toHaveBeenCalled();
   const erroredUpload = screen.getByRole('listitem');
-  expect(erroredUpload.dataset.state).toBe('error');
+  await expect.element(erroredUpload).toHaveAttribute('data-state', 'error');
 
   // check that our transformed error messages are present.
-  expect(
-    screen.getByText(/The uploaded file type is not an allowed type. It must be \.pdf\./)
-  ).toBeVisible();
-  expect(screen.getByText(/The file must be smaller than 1 MB\./)).toBeVisible();
-  expect(screen.getByText(/The file is too small\./)).toBeVisible();
-  expect(screen.getByText(/Not ignored\./)).toBeVisible();
+  await expect
+    .element(screen.getByText(/The uploaded file type is not an allowed type. It must be \.pdf\./))
+    .toBeVisible();
+  await expect.element(screen.getByText(/The file must be smaller than 1 MB\./)).toBeVisible();
+  await expect.element(screen.getByText(/The file is too small\./)).toBeVisible();
+  await expect.element(screen.getByText(/Not ignored\./)).toBeVisible();
 });
 
 test('too-many-files uploaded error clear on new attepts', async () => {
   vi.useFakeTimers();
-  const user = userEvent.setup({
-    // Let user-event advance timers it sets under the hood, using Vitest’s fake timers
-    advanceTimers: vi.advanceTimersByTime,
-  });
   const uploads: File[] = [
     new File(['dummy'], 'dummy1.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy3.pdf', {type: 'application/pdf'}),
   ];
 
-  render(
+  const screen = await render(
     <TestComponentContainer
       componentDefinition={{
         ...BASE_COMPONENT,
@@ -345,20 +313,20 @@ test('too-many-files uploaded error clear on new attepts', async () => {
     />
   );
 
-  expect(screen.getByTestId('field-error')).toHaveTextContent('');
+  await expect.element(screen.getByTestId('field-error')).toHaveTextContent('');
 
   // uploading too many files triggers client-side rejection.
-  await user.click(screen.getByRole('button', {name: 'Simulate TooManyFiles'}));
+  await screen.getByRole('button', {name: 'Simulate TooManyFiles'}).click();
   // nothing is added to the file upload list in the UI
-  expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+  await expect.element(screen.getByRole('listitem')).not.toBeInTheDocument();
   // the validation error is set and displayed
-  expect(screen.getByTestId('field-error')).toHaveTextContent(/Too many files uploaded\./);
+  await expect
+    .element(screen.getByTestId('field-error'))
+    .toHaveTextContent(/Too many files uploaded\./);
 
   // uploading files without client-side rejection clears the error.
-  await user.click(screen.getByRole('button', {name: 'Simulate upload'}));
+  await screen.getByRole('button', {name: 'Simulate upload'}).click();
   await vi.advanceTimersByTimeAsync(200);
-  await waitFor(() => {
-    expect(screen.queryAllByRole('listitem')).toHaveLength(3);
-    expect(screen.getByTestId('field-error')).toBeEmptyDOMElement();
-  });
+  expect(screen.getByRole('listitem').all()).toHaveLength(3);
+  await expect.element(screen.getByTestId('field-error')).toBeEmptyDOMElement();
 });
