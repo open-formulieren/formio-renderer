@@ -1,4 +1,4 @@
-import {FormFieldDescription} from '@utrecht/component-library-react';
+import {FormFieldDescription} from '@utrecht/form-field-description-react';
 import {clsx} from 'clsx';
 
 import './HelpText.scss';

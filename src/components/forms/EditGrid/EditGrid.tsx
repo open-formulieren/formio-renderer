@@ -1,5 +1,5 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {FormField} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useId, useMemo} from 'react';

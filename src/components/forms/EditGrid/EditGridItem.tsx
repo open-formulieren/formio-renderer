@@ -1,4 +1,4 @@
-import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 import type {FormikErrors} from 'formik';
 import {Formik, getIn, setIn, setNestedObjectValues} from 'formik';

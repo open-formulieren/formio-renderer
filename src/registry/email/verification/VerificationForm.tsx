@@ -1,5 +1,6 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {Link, Paragraph} from '@utrecht/component-library-react';
+import {Paragraph} from '@utrecht/component-library-react';
+import {Link} from '@utrecht/link-react';
 import {Form, Formik} from 'formik';
 import type {FormikErrors} from 'formik';
 import {FormattedMessage, useIntl} from 'react-intl';

@@ -1,11 +1,6 @@
 import type {CosignV1ComponentSchema} from '@open-formulieren/types';
-import {
-  Alert,
-  ButtonLink,
-  FormField,
-  Paragraph,
-  Icon as UtrechtIcon,
-} from '@utrecht/component-library-react';
+import {Alert, ButtonLink, Paragraph, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
 import {useId} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {useAsync} from 'react-use';

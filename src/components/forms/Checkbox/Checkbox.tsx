@@ -1,8 +1,6 @@
-import {
-  FormField,
-  FormFieldDescription,
-  Checkbox as UtrechtCheckbox,
-} from '@utrecht/component-library-react';
+import {Checkbox as UtrechtCheckbox} from '@utrecht/checkbox-react';
+import {FormFieldDescription} from '@utrecht/form-field-description-react';
+import {FormField} from '@utrecht/form-field-react';
 import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';

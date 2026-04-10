@@ -1,4 +1,5 @@
-import {FormField, Textbox} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
+import {Textbox} from '@utrecht/textbox-react';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 import {useIntl} from 'react-intl';

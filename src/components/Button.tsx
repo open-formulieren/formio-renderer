@@ -7,7 +7,7 @@ import {
   SecondaryActionButton as UtrechtSecondaryActionButton,
   // eslint-disable-next-line no-restricted-imports
   SubtleButton as UtrechtSubtleButton,
-} from '@utrecht/component-library-react';
+} from '@utrecht/button-react';
 import {clsx} from 'clsx';
 import {forwardRef} from 'react';
 

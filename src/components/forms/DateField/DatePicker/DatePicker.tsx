@@ -1,4 +1,5 @@
-import {Paragraph, Textbox} from '@utrecht/component-library-react';
+import {Paragraph} from '@utrecht/component-library-react';
+import {Textbox} from '@utrecht/textbox-react';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';

@@ -1,5 +1,5 @@
 import type {SignatureComponentSchema} from '@open-formulieren/types';
-import {FormField} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
 import {useField, useFormikContext} from 'formik';
 import {useId, useLayoutEffect, useRef} from 'react';
 import {useIntl} from 'react-intl';
