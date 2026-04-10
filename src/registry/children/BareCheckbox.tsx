@@ -1,4 +1,4 @@
-import {Checkbox as UtrechtCheckbox} from '@utrecht/component-library-react';
+import {Checkbox as UtrechtCheckbox} from '@utrecht/checkbox-react';
 import {useField} from 'formik';
 
 import {useFieldConfig} from '@/hooks';

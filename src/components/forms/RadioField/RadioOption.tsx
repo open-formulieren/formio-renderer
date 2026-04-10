@@ -1,4 +1,6 @@
-import {FormField, FormLabel, RadioButton} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
+import {FormLabel} from '@utrecht/form-label-react';
+import {RadioButton} from '@utrecht/radio-button-react';
 import {useField} from 'formik';
 
 export interface RadioOptionProps {

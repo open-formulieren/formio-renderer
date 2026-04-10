@@ -1,4 +1,5 @@
-import {FormLabel, Textbox} from '@utrecht/component-library-react';
+import {FormLabel} from '@utrecht/form-label-react';
+import {Textbox} from '@utrecht/textbox-react';
 import {useId} from 'react';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {MessageDescriptor} from 'react-intl';

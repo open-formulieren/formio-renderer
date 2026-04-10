@@ -1,4 +1,5 @@
-import {Fieldset, FieldsetLegend, Paragraph} from '@utrecht/component-library-react';
+import {Paragraph} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 
 import {LabelContent} from '@/components/forms/Label';

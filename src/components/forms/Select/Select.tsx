@@ -1,4 +1,4 @@
-import {FormField} from '@utrecht/component-library-react';
+import {FormField} from '@utrecht/form-field-react';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId} from 'react';
 import type {MultiValue, OptionProps, SingleValue} from 'react-select';

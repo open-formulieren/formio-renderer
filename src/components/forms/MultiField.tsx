@@ -1,5 +1,6 @@
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {Fieldset, FieldsetLegend, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 import {FieldArray, getIn, useFormikContext} from 'formik';
 import {useEffect, useId, useRef} from 'react';

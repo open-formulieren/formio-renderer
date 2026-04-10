@@ -1,4 +1,4 @@
-import {Link} from '@utrecht/component-library-react';
+import {Link} from '@utrecht/link-react';
 
 import './PortalUrl.scss';
 import {useCustomerProfileComponentParameters} from './hooks';

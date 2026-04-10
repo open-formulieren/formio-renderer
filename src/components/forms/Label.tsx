@@ -1,4 +1,4 @@
-import {FormLabel} from '@utrecht/component-library-react';
+import {FormLabel} from '@utrecht/form-label-react';
 import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
 
