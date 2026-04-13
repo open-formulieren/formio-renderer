@@ -22,8 +22,7 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
   let items: JSONObject[] | undefined = getIn(values, key);
   let itemsErrors: Errors[] | string | undefined = getIn(errors, key);
 
-  // Make sure `clearOnHide` actually clears the edit-grid
-  if (items === undefined) {
+  if (items === undefined || context.emulateBackend) {
     return {
       updatedDefinition: componentDefinition,
       updatedValues: values,
