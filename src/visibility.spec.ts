@@ -1,4 +1,4 @@
-import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import type {EditGridComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
 import {setIn} from 'formik';
 import {expect, test} from 'vitest';
 
@@ -294,4 +294,39 @@ test('processVisibility restores original input data', () => {
   );
 
   expect(updatedValues).toEqual({'show-when-a': 'restore-me'});
+});
+
+test('editgrid data does not get cleared unexpectedly when using backend logic', () => {
+  const component: EditGridComponentSchema = {
+    key: 'editgrid',
+    id: 'editgrid',
+    type: 'editgrid',
+    label: 'Editgrid',
+    clearOnHide: true,
+    disableAddingRemovingRows: false,
+    groupLabel: 'Group',
+    components: [
+      {
+        type: 'textfield',
+        key: 'textfield',
+        id: 'textfield',
+        label: 'Textfield',
+      },
+    ],
+  };
+
+  const {updatedValues} = processVisibility(
+    [component],
+    {editgrid: [{textfield: 'foo'}, {textfield: 'bar'}]},
+    {},
+    {
+      emulateBackend: true,
+      parentHidden: false,
+      initialValues: {editgrid: [{textfield: 'foo'}, {textfield: 'bar'}]},
+      getRegistryEntry,
+      componentsMap: {},
+    }
+  );
+
+  expect(updatedValues).toEqual({editgrid: [{textfield: 'foo'}, {textfield: 'bar'}]});
 });
