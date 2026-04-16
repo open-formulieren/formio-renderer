@@ -1,5 +1,21 @@
 # Changes
 
+## 1.5.2 (2026-04-16)
+
+Bugfix release.
+
+**Bugfixes**
+
+- [`OF#6183`][OF#6183] Fixed editgrid submission data getting cleared unexpectedly when
+  using non-standard behavior of processing component visibility.
+
+**Project maintenance**
+
+- [`#301`][#301] Swapped several mono-package imports from Utrecht's React component library for
+  individual packages.
+
+[OF#6183]: https://github.com/open-formulieren/open-forms/issues/6183
+
 ## 1.5.1 (2026-04-09)
 
 Bugfix release.
