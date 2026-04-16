@@ -739,3 +739,61 @@ export const WithMultipleAndDefaultValue: Story = {
     });
   },
 };
+
+export const SoftRequiredFileComponentInsideEditgridWithLogic: Story = {
+  name: 'Soft-required file component inside editgrid with logic',
+  args: {
+    components: [
+      {
+        id: 'checkbox',
+        key: 'checkbox',
+        type: 'checkbox',
+        label: 'Checkbox',
+      },
+      {
+        id: 'editgrid',
+        key: 'editgrid',
+        type: 'editgrid',
+        label: 'Editgrid',
+        groupLabel: 'Item',
+        disableAddingRemovingRows: false,
+        // @ts-expect-error not officially supported, but just used for testing purposes here
+        conditional: {
+          show: true,
+          when: 'checkbox',
+          eq: true,
+        },
+        components: [
+          {
+            id: 'file',
+            key: 'file',
+            type: 'file',
+            label: 'File',
+            openForms: {softRequired: true},
+            filePattern: '.pdf',
+            file: {
+              name: '',
+              type: ['application/pdf'],
+              allowedTypesLabels: ['pdf'],
+            },
+          },
+        ],
+      },
+      {
+        id: 'softRequiredErrors',
+        type: 'softRequiredErrors',
+        key: 'softRequiredErrors',
+        html: '<p>Not all required fields are filled out</p>',
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const checkbox = canvas.getByLabelText('Checkbox');
+    await userEvent.click(checkbox);
+
+    const editgrid = canvas.getByLabelText('Editgrid');
+    expect(editgrid).toBeVisible();
+  },
+};
