@@ -34,7 +34,7 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   // workload.
   const missingFields: MissingFields[] = useMemo(() => {
     // We only show visible components in the soft-required list.
-    const {visibleComponents} = processVisibility(
+    const {visibleComponents, updatedValues} = processVisibility(
       components,
       values,
       // the error state is irrelevant for this processing, we only need to know which
@@ -53,7 +53,7 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
     const softRequiredComponents = getSoftRequiredComponents(visibleComponents);
 
     // Get the missing/empty soft-required fields, and return them.
-    return getMissingFields(softRequiredComponents, values, getRegistryEntry);
+    return getMissingFields(softRequiredComponents, updatedValues, getRegistryEntry);
   }, [components, componentsMap, getRegistryEntry, initialValues, values]);
 
   if (!missingFields.length) {
