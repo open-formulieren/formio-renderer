@@ -797,3 +797,40 @@ export const SoftRequiredFileComponentInsideEditgridWithLogic: Story = {
     expect(editgrid).toBeVisible();
   },
 };
+
+export const ValidationForMultipleDateComponents: Story = {
+  args: {
+    components: [
+      {
+        id: 'date',
+        type: 'date',
+        key: 'date',
+        label: 'Date',
+        validate: {
+          required: false,
+        },
+        openForms: {widget: 'datePicker'},
+      },
+      {
+        id: 'dateRequired',
+        type: 'date',
+        key: 'dateRequired',
+        label: 'Date required',
+        validate: {
+          required: true,
+        },
+        openForms: {widget: 'datePicker'},
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const dateRequired = canvas.getByLabelText('Date required');
+    await userEvent.type(dateRequired, 'foo');
+
+    dateRequired.blur();
+    expect(await canvas.findByText(/The date must be in a valid format/)).toBeVisible();
+    expect(dateRequired).toHaveAttribute('aria-invalid', 'true');
+  },
+};

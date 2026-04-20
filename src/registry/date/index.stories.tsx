@@ -4,7 +4,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
-import {withFormik} from '@/sb-decorators';
+import {withFormik, withMockDate} from '@/sb-decorators';
 
 import {FormioDate} from './';
 import ValueDisplay from './ValueDisplay';
@@ -658,6 +658,125 @@ export const InvalidMultipleDateDatePicker: ValidationStory = {
     ).toBeVisible();
 
     expect(date).toHaveDisplayValue('13/32/2000');
+  },
+};
+
+export const ValidateSelectedDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  decorators: [withMockDate],
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'date',
+      type: 'date',
+      key: 'date',
+      label: 'Date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    mockDate: new Date('2026-04-23T12:00:00+02:00'),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Open calendar and select a date
+    await userEvent.click(canvas.getByRole('button', {name: 'Toggle calendar'}));
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', {name: 'Friday 24 April 2026'}));
+
+    // Date field should not be invalid
+    expect(canvas.getByLabelText('Date')).not.toHaveAttribute('aria-invalid');
+
+    // Submit
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({date: '2026-04-24'});
+  },
+};
+
+export const ValidateSelectedWithInitialErrorDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  decorators: [withMockDate],
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'date',
+      type: 'date',
+      key: 'date',
+      label: 'Date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    mockDate: new Date('2026-04-23T12:00:00+02:00'),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Create initial error by submitting with an empty (required) date field
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+    await userEvent.click(submit);
+    const dateField = canvas.getByLabelText('Date');
+    expect(dateField).toHaveAttribute('aria-invalid');
+
+    // Open calendar and select a date
+    await userEvent.click(canvas.getByRole('button', {name: 'Toggle calendar'}));
+    expect(await canvas.findByRole('dialog')).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', {name: 'Friday 24 April 2026'}));
+
+    // Date field should not be invalid
+    expect(dateField).not.toHaveAttribute('aria-invalid');
+
+    // Submit
+    await userEvent.click(submit);
+    expect(args.onSubmit).toHaveBeenCalledWith({date: '2026-04-24'});
+  },
+};
+
+export const ValidateTypedDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'date',
+      type: 'date',
+      key: 'date',
+      label: 'Date',
+      openForms: {translations: {}, widget: 'datePicker'},
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Type a date
+    const date = await canvas.findByLabelText('Date');
+    await userEvent.type(date, '4/23/2026');
+
+    // Shift focus to the submit button by tabbing away - twice because the calendar icon will be
+    // selected first.
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(date).not.toHaveAttribute('aria-invalid');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+    expect(submit).toHaveFocus();
+
+    // Submit
+    await userEvent.click(submit);
+    expect(args.onSubmit).toHaveBeenCalledWith({date: '2026-04-23'});
   },
 };
 

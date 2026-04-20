@@ -2,7 +2,6 @@ import {FormField, Paragraph, Textbox} from '@utrecht/component-library-react';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId, useState} from 'react';
-import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
 import {DatePicker, DatePickerRoot, DatePickerTrigger} from '@/components/forms/DatePicker';
@@ -157,11 +156,11 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
 
   const onPartChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // we must cast here since we can't pass the valid input names as a generic.
-    const name = event.target.name as DateTimePart;
+    const partName = event.target.name as DateTimePart;
     const value = event.target.value;
 
     // update the state of the individual parts
-    const newDateParts = {date, time, [name]: value};
+    const newDateParts = {date, time, [partName]: value};
     setDateTimeParts(newDateParts);
 
     if (newDateParts.date === '' || newDateParts.time === '') {
@@ -173,6 +172,8 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       // ISO-8601 string, respectively.
       const date_ = parseDateTime(`${newDateParts.date}T${newDateParts.time}:00`)!;
       setValue(formatISO(date_!));
+      setTouched(true);
+      validateField(name);
     }
   };
 
@@ -209,7 +210,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 name={name}
                 value={textboxValue}
                 onChange={onChange}
-                onBlur={async event => {
+                onBlur={event => {
                   const value = event.target.value;
                   // Attempt to create a date object using the locale meta
                   const date = parseDateTime(value, dateLocaleMeta);
@@ -217,7 +218,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                   // as the field value. Otherwise, just set the entered value to the field directly.
                   // It's up to the validation libraries to check it.
                   const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
-                  await setValue(newValue);
+                  setValue(newValue);
                   onBlur(event);
                 }}
                 className="utrecht-textbox--openforms"
@@ -234,16 +235,13 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
               />
             </Paragraph>
             <DatePicker
-              onCalendarClick={async selectedDate => {
-                flushSync(() => {
-                  // Need to truncate, because the selected date is in datetime format
-                  const truncated = selectedDate.substring(0, 10);
-                  const e = {
-                    target: {name: 'date', value: truncated},
-                  } as React.ChangeEvent<HTMLInputElement>;
-                  onPartChange(e);
-                });
-                await setTouched(true);
+              onCalendarClick={selectedDate => {
+                // Need to truncate, because the selected date is in datetime format
+                const truncated = selectedDate.substring(0, 10);
+                const e = {
+                  target: {name: 'date', value: truncated},
+                } as React.ChangeEvent<HTMLInputElement>;
+                onPartChange(e);
               }}
               currentDate={currentDateTime ?? undefined}
               minDate={minDate}
@@ -260,11 +258,11 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 onChange={onPartChange}
                 value={time}
                 className="utrecht-textbox--openforms"
-                onKeyDown={async (event: React.KeyboardEvent) => {
+                onKeyDown={(event: React.KeyboardEvent) => {
                   // treat enter key as a submit
                   if (event.key === 'Enter') {
                     setIsOpen(false);
-                    await validateField(name);
+                    validateField(name);
                   }
                 }}
               />

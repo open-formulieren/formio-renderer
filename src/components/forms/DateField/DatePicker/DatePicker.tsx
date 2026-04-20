@@ -2,7 +2,6 @@ import {Paragraph, Textbox} from '@utrecht/component-library-react';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
-import {flushSync} from 'react-dom';
 import {useIntl} from 'react-intl';
 
 import {DatePicker, DatePickerRoot, DatePickerTrigger} from '@/components/forms/DatePicker';
@@ -134,7 +133,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                 name={name}
                 value={textboxValue}
                 onChange={onChange}
-                onBlur={async event => {
+                onBlur={event => {
                   const value = event.target.value;
                   // Attempt to create a date object using the locale meta
                   const date = parseDate(value, dateLocaleMeta);
@@ -142,7 +141,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                   // as the field value. Otherwise, just set the entered value to the field directly.
                   // It's up to the validation libraries to check it.
                   const newValue = date ? formatISO(date, {representation: 'date'}) : value;
-                  await setValue(newValue);
+                  setValue(newValue);
                   onBlur(event);
                 }}
                 className="utrecht-textbox--openforms"
@@ -160,13 +159,12 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
             </Paragraph>
             <DatePicker
               onCalendarClick={async selectedDate => {
-                flushSync(() => {
-                  // Need to truncate, because the selected date is in datetime format
-                  const truncated = selectedDate.substring(0, 10);
-                  setValue(truncated);
-                  setIsOpen(false);
-                });
+                // Need to truncate, because the selected date is in datetime format
+                const truncated = selectedDate.substring(0, 10);
+                setValue(truncated);
                 await setTouched(true);
+                await validateField(name);
+                setIsOpen(false);
               }}
               currentDate={currentDate ?? undefined}
               minDate={minDate}

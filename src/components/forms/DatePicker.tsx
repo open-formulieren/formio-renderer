@@ -201,46 +201,26 @@ export const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     const container = containerRef.current;
     if (!container || !onFocusOut) return;
 
-    const handleClick = (event: MouseEvent) => {
-      const clickedElement = event.target;
-      // ignore clicking inputs or labels, as they result in focus events which we
-      // already listen to.
-      // Clicking within the container (like clicking the datepicker calendar trigger)
-      // should also not trigger validation.
-      if (
-        clickedElement instanceof HTMLLabelElement ||
-        clickedElement instanceof HTMLInputElement ||
-        container.contains(clickedElement as Node)
-      )
-        return;
-
-      // any other element (anywhere) being clicked triggers validation, as focus loss
-      // is implied
-      onFocusOut();
-    };
-
     /**
-     * Detect focus events on anything other than elements inside the div container.
+     * Handle focus out events.
      *
-     * Receiving this event means that some node got focus - if it's outside of our
-     * container we can trigger validation because we're 100% certain that the container
-     * does not have focus.
+     * Receiving this event means that some node lost focus. We don't have to trigger validation
+     * if the element is not part of the container or if the new target node is still within
+     * the container.
      */
-    const handleFocusIn = (event: FocusEvent) => {
-      const focusedElement = event.target;
-      if (container.contains(focusedElement as Node)) return;
+    const handleFocusOut = (event: FocusEvent) => {
+      const currentTarget = event.target;
+      const newTarget = event.relatedTarget;
+      if (!container.contains(currentTarget as Node) || container.contains(newTarget as Node))
+        return;
       onFocusOut();
     };
 
     // we subscribe to global events because we need to know whether the focus shifted
     // away from our component
-    document.addEventListener('click', handleClick);
-    document.addEventListener('focusin', handleFocusIn);
-    // no focusout event support to detect focus shift because of programmatic blurs,
-    // as browser support is only partial and it's quite a theoretical edge case
+    document.addEventListener('focusout', handleFocusOut);
     return () => {
-      document.removeEventListener('click', handleClick);
-      document.removeEventListener('focusin', handleFocusIn);
+      document.removeEventListener('focusout', handleFocusOut);
     };
   }, [onFocusOut]);
 
