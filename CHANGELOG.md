@@ -1,5 +1,14 @@
 # Changes
 
+## 1.5.3 (2026-04-21)
+
+Bugfix release.
+
+- [`OF#6185`][OF#6185] Fixed soft-required file component inside a conditionally visible editgrid
+  causing a form crash.
+
+[OF#6185]: https://github.com/open-formulieren/open-forms/issues/6185
+
 ## 1.5.2 (2026-04-16)
 
 Bugfix release.
