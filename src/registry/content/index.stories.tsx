@@ -1,5 +1,6 @@
 import type {ContentComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, within} from 'storybook/test';
 
 import {FormioContent as Content} from './';
 
@@ -32,6 +33,7 @@ export const SimpleContent: Story = {
       <h4>Heading 4</h4>
       <h5>Heading 5</h5>
       <h6>Heading 6</h6>
+      <style nonce="foo" data-testid="style-tag"></style>
       <p><strong>Paragraph</strong>: Lorem ipsum dolor sit amet, <em>consectetur adipiscing
       elit</em>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
       enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
@@ -42,6 +44,16 @@ export const SimpleContent: Story = {
       <p>Second paragraph</p>`,
       customClass: '',
     } satisfies ContentComponentSchema,
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const link = await canvas.findByRole('link', {name: 'est laborum'});
+    expect(link).toHaveAttribute('target', '_blank');
+
+    const style = canvas.getByTestId('style-tag');
+    expect(style).toHaveAttribute('nonce', 'foo');
   },
 };
 
