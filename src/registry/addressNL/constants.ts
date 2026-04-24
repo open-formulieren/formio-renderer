@@ -8,3 +8,10 @@ export const SUB_FIELD_NAMES: (keyof AddressData)[] = [
   'streetName',
   'city',
 ];
+
+export const EMPTY_ADDRESS: AddressData = {
+  postcode: '',
+  houseNumber: '',
+  houseLetter: '',
+  houseNumberAddition: '',
+};
