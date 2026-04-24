@@ -5,6 +5,7 @@ import {useAsync} from 'react-use';
 
 import {useDebounce, useFieldConfig, useFormSettings} from '@/hooks';
 
+import {EMPTY_ADDRESS} from './constants';
 import type {FormValues} from './types';
 import {DEFAULT_POSTCODE_REGEX, HOUSE_NUMBER_REGEX} from './validationSchema';
 
@@ -21,7 +22,7 @@ const testValidInputs = (postcode: string, houseNumber: string): boolean => {
 export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddress => {
   const {getFieldProps, setFieldValue} = useFormikContext<FormValues>();
   key = useFieldConfig(key);
-  const {value} = getFieldProps<AddressData>(key);
+  const {value} = getFieldProps<AddressData | undefined>(key);
   const formSettings = useFormSettings();
   const [enableManualEntry, setEnableManualEntry] = useState<boolean>(false);
 
@@ -34,7 +35,7 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
   const skipAutoFill = !enabled || !doAddressAutoComplete;
 
   // debounce to avoid rapidly firing updates when the user is typing
-  const addressData = useDebounce(value, 300);
+  const addressData = useDebounce(value, 300) ?? EMPTY_ADDRESS;
   const {postcode, houseNumber} = addressData;
 
   // if postcode/house number change, check if we need to clear the derived inputs

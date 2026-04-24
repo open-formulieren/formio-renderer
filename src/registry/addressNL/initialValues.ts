@@ -4,14 +4,13 @@ import type {AddressData} from '@open-formulieren/types/dist/components/addressN
 import type {GetInitialValues} from '@/registry/types';
 import type {JSONObject} from '@/types';
 
+import {EMPTY_ADDRESS} from './constants';
+
 const getInitialValues: GetInitialValues<AddressNLComponentSchema, JSONObject> = ({
   key,
 }: AddressNLComponentSchema) => {
   const defaultValue: AddressData = {
-    postcode: '',
-    houseNumber: '',
-    houseLetter: '',
-    houseNumberAddition: '',
+    ...EMPTY_ADDRESS,
     streetName: '',
     city: '',
     secretStreetCity: '',
