@@ -6,6 +6,7 @@ import type {RegistryEntry} from '@/registry/types';
 import type {FormioFileProps} from './File';
 import './File.scss';
 import ValueDisplay from './ValueDisplay';
+import testConditional from './conditional';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
@@ -29,6 +30,7 @@ const FileComponent: RegistryEntry<FileComponentSchema> = {
   valueDisplay: ValueDisplay,
   getInitialValues,
   getValidationSchema,
+  testConditional,
   isEmpty,
 };
 
