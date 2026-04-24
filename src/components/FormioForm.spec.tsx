@@ -660,7 +660,7 @@ describe('onChange prop', () => {
 
     // we expect both the user input change and the calculated clearOnHide change
     expect(onChange).toHaveBeenCalledWith({foo: 'hide', email: 'info@example.com'});
-    expect(onChange).toHaveBeenLastCalledWith({foo: 'hide'});
+    await expect.poll(() => onChange).toHaveBeenLastCalledWith({foo: 'hide'});
   });
 });
 
