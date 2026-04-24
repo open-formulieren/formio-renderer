@@ -14,8 +14,17 @@ export interface FormioTextFieldProps {
 }
 
 export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefinition}) => {
-  const {key, label, description, tooltip, placeholder, validate, disabled, showCharCount} =
-    componentDefinition;
+  const {
+    key,
+    label,
+    description,
+    tooltip,
+    placeholder,
+    autocomplete,
+    validate,
+    disabled,
+    showCharCount,
+  } = componentDefinition;
 
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
@@ -39,6 +48,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
           placeholder={placeholder}
           showCharCount={showCharCount}
           maxLength={validate?.maxLength}
+          autoComplete={autocomplete}
           isReadOnly={isReadOnly}
           isMultiValue
         />
@@ -50,6 +60,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
       placeholder={placeholder}
       showCharCount={showCharCount}
       maxLength={validate?.maxLength}
+      autoComplete={autocomplete}
     />
   );
 };
