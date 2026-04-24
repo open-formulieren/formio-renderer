@@ -19,6 +19,7 @@ const _OF_INTERNAL_dirname = dirname(fileURLToPath(import.meta.url));
 const externalPackages = [
   ...Object.keys(dependencies || {}),
   ...Object.keys(peerDependencies || {}),
+  '@react-leaflet/core',
 ];
 
 // Creating regexes of the packages to make sure subpaths of the
