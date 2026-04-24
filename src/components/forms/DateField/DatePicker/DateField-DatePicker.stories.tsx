@@ -418,3 +418,34 @@ export const ReadOnlyDatePicker: Story = {
     expect(trigger).toHaveAttribute('tabIndex', '-1');
   },
 };
+
+export const ValidateOnBlur: Story = {
+  args: {
+    name: 'validateOnBlur',
+    label: 'Validate on blur',
+    isRequired: false,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        validateOnBlur: '',
+      },
+      zodSchema: z.object({
+        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const date = canvas.getByLabelText('Validate on blur');
+    expect(date).not.toHaveAttribute('aria-invalid');
+
+    await userEvent.type(date, '20-04-2026');
+    expect(date).toHaveFocus();
+
+    date.blur();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    expect(date).toHaveAttribute('aria-invalid', 'true');
+  },
+};

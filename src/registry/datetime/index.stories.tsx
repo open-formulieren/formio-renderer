@@ -5,7 +5,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
-import {withFormik} from '@/sb-decorators';
+import {withFormik, withMockDate} from '@/sb-decorators';
 
 import {FormioDateTime} from './';
 import ValueDisplay from './ValueDisplay';
@@ -506,6 +506,136 @@ export const MultipleDateTimeWithCustomErrorMessage: ValidationStory = {
     expect(
       await canvas.findAllByText('Custom error message for required with multiple: true')
     ).toHaveLength(2);
+  },
+};
+
+export const ValidateSelectedDatetime: ValidationStory = {
+  ...BaseValidationStory,
+  decorators: [withMockDate],
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'datetime',
+      label: 'Datetime',
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+    mockDate: new Date('2026-04-23T12:00:00+02:00'),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Open calendar, and select a date and time
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
+    expect(canvas.getByRole('dialog')).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', {name: 'vrijdag 24 april 2026'}));
+
+    const time = await canvas.findByLabelText('Tijdstip');
+    await userEvent.type(time, '1052');
+    expect(time).toHaveDisplayValue('10:52');
+
+    // Date field should not be invalid
+    expect(canvas.getByLabelText('Datetime')).not.toHaveAttribute('aria-invalid');
+
+    // Submit
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(args.onSubmit).toHaveBeenCalledWith({datetime: '2026-04-24T10:52:00+02:00'});
+  },
+};
+
+export const ValidateSelectedWithInitialErrorDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  decorators: [withMockDate],
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'datetime',
+      label: 'Datetime',
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+    mockDate: new Date('2026-04-23T12:00:00+02:00'),
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Create initial error by submitting with an empty (required) date field
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+    await userEvent.click(submit);
+    const datetime = canvas.getByLabelText('Datetime');
+    expect(datetime).toHaveAttribute('aria-invalid');
+
+    // Open calendar, and select a date and time
+    await userEvent.click(canvas.getByRole('button', {name: 'Toon/verberg de kalender'}));
+    expect(canvas.getByRole('dialog')).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', {name: 'vrijdag 24 april 2026'}));
+
+    const time = await canvas.findByLabelText('Tijdstip');
+    await userEvent.type(time, '1052');
+    expect(time).toHaveDisplayValue('10:52');
+
+    // Date field should not be invalid
+    expect(datetime).not.toHaveAttribute('aria-invalid');
+
+    // Submit
+    await userEvent.click(submit);
+    expect(args.onSubmit).toHaveBeenCalledWith({datetime: '2026-04-24T10:52:00+02:00'});
+  },
+};
+
+export const ValidateTypedDatetime: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'datetime',
+      type: 'datetime',
+      key: 'datetime',
+      label: 'Datetime',
+      validate: {
+        required: true,
+      },
+      multiple: false,
+    },
+  },
+  parameters: {
+    ...BaseValidationStory.parameters,
+    chromatic: {disableSnapshot: true}, // don't create snapshots because we can't set the timezone for chromatic
+  },
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    // Type a datetime
+    const datetime = await canvas.findByLabelText('Datetime');
+    await userEvent.type(datetime, '23-04-2026 10:52');
+
+    // Shift focus to the submit button by tabbing away - twice because the calendar icon will be
+    // selected first.
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(datetime).not.toHaveAttribute('aria-invalid');
+    const submit = canvas.getByRole('button', {name: 'Submit'});
+    expect(submit).toHaveFocus();
+
+    // Submit
+    await userEvent.click(submit);
+    expect(args.onSubmit).toHaveBeenCalledWith({datetime: '2026-04-23T10:52:00+02:00'});
   },
 };
 
