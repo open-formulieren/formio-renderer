@@ -1,13 +1,24 @@
 # Changes
 
-## 1.5.3 (2026-04-21)
+## 1.5.3 (2026-04-28)
 
 Bugfix release.
 
 - [`OF#6185`][OF#6185] Fixed soft-required file component inside a conditionally visible editgrid
   causing a form crash.
+- [`OF#6190`][OF#6190] Fixed the anchor `target` attribute being stripped out by DOMPurify.
+- [`OF#6192`][OF#6192] Fixed missing textfield `autocomplete` attribute support.
+- [`OF#6181`][OF#6181] Fixed empty-ish comparison against file components not working as expected
+- [`OF#6163`][OF#6163] Fixed UX of date(time) validation not applying consistently.
+- [`OF#6125`][OF#6125] Fixed a crash in `addressNL` when conditionally displaying it.
+- Added support for `@utrecht/component-library-react` v14.
 
 [OF#6185]: https://github.com/open-formulieren/open-forms/issues/6185
+[OF#6190]: https://github.com/open-formulieren/open-forms/issues/6190
+[OF#6192]: https://github.com/open-formulieren/open-forms/issues/6192
+[OF#6181]: https://github.com/open-formulieren/open-forms/issues/6181
+[OF#6163]: https://github.com/open-formulieren/open-forms/issues/6163
+[OF#6125]: https://github.com/open-formulieren/open-forms/issues/6125
 
 ## 1.5.2 (2026-04-16)
 
@@ -15,8 +26,8 @@ Bugfix release.
 
 **Bugfixes**
 
-- [`OF#6183`][OF#6183] Fixed editgrid submission data getting cleared unexpectedly when
-  using non-standard behavior of processing component visibility.
+- [`OF#6183`][OF#6183] Fixed editgrid submission data getting cleared unexpectedly when using
+  non-standard behavior of processing component visibility.
 
 **Project maintenance**
 
