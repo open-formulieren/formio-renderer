@@ -78,6 +78,34 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithAutoComplete: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textfield',
+      key: 'my.textfield',
+      label: 'A simple textfield',
+      autocomplete: 'given-name',
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: '',
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const textfield = canvas.getByLabelText('A simple textfield');
+    expect(textfield).toBeVisible();
+    expect(textfield).toHaveAttribute('autocomplete', 'given-name');
+  },
+};
+
 export const Multiple: Story = {
   args: {
     componentDefinition: {
