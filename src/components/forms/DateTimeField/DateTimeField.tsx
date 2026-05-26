@@ -156,7 +156,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
     [currentDateTime]
   );
 
-  const onPartChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onPartChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     // we must cast here since we can't pass the valid input names as a generic.
     const partName = event.target.name as DateTimePart;
     const value = event.target.value;
@@ -173,8 +173,8 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       // object. This is possible, because the date picker and time input return a date and time
       // ISO-8601 string, respectively.
       const date_ = parseDateTime(`${newDateParts.date}T${newDateParts.time}:00`)!;
-      setValue(formatISO(date_!));
-      setTouched(true);
+      await setValue(formatISO(date_!));
+      await setTouched(true);
       validateField(name);
     }
   };
