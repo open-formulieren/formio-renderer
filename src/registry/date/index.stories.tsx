@@ -591,6 +591,59 @@ export const MinMaxValidationDatePicker: ValidationStory = {
   },
 };
 
+export const MaxValidationWithIncludingDayDatePicker: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      openForms: {
+        translations: {},
+        widget: 'datePicker',
+        maxDate: {mode: 'past', includeToday: true},
+      },
+      datePicker: {
+        minDate: '2025-09-05',
+        maxDate: '2025-09-10',
+      },
+    },
+  },
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const date = canvas.getByLabelText('Your date');
+    const button = canvas.getByRole('button', {name: 'Submit'});
+
+    await step('Date between in date range', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '9/8/2025');
+
+      await userEvent.click(button);
+      expect(canvas.queryByText(/The date must be in a valid format/)).not.toBeInTheDocument();
+      expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-08'}});
+    });
+
+    await step('Date exactly in max date', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '9/10/2025');
+
+      await userEvent.click(button);
+      expect(canvas.queryByText(/The date must be in a valid format/)).not.toBeInTheDocument();
+      expect(args.onSubmit).toHaveBeenCalledWith({my: {date: '2025-09-10'}});
+    });
+
+    await step('Date after date range', async () => {
+      await userEvent.clear(date);
+      await userEvent.type(date, '9/11/2025');
+
+      await userEvent.click(button);
+      expect(await canvas.findByText(/The date must be earlier than or equal to/)).toBeVisible();
+    });
+  },
+};
+
 export const InvalidMultipleDateInputGroup: ValidationStory = {
   ...BaseValidationStory,
   args: {
