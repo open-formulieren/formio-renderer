@@ -1,5 +1,5 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
-import {isValid, parseISO} from 'date-fns';
+import {endOfDay, isValid, parseISO} from 'date-fns';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
@@ -42,7 +42,7 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
     });
   }
   if (maxDate) {
-    dateSchema = dateSchema.max(parseISO(maxDate), {
+    dateSchema = dateSchema.max(endOfDay(parseISO(maxDate)), {
       message:
         errors?.maxDate || intl.formatMessage(DATE_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDate}),
     });
