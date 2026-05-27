@@ -55,3 +55,36 @@ test('addressNL can be conditionally displayed', async () => {
   await expect.element(screen.getByLabelText('Postcode')).toBeVisible();
   await expect.element(screen.getByLabelText('House number', {exact: true})).toBeVisible();
 });
+
+test('addressNL displays custom validation errors', async () => {
+  const components = [
+    {
+      id: 'addressNL',
+      type: 'addressNL',
+      key: 'addressNL',
+      label: 'Address',
+      layout: 'singleColumn',
+      deriveAddress: false,
+      openForms: {
+        components: {
+          postcode: {
+            validate: {
+              pattern: '1043 ?GR',
+            },
+            // must be set by the backend!
+            errors: {
+              pattern: 'Custom pattern error',
+            },
+          },
+        },
+      },
+    } satisfies AddressNLComponentSchema,
+  ];
+
+  const screen = await render(<Form components={components} onSubmit={vi.fn()} />);
+
+  await expect.element(screen.getByRole('group', {name: 'Address'})).toBeVisible();
+  await screen.getByRole('textbox', {name: 'Postcode'}).fill('1234 AB');
+  await screen.getByRole('textbox', {name: 'House letter'}).click();
+  await expect.element(screen.getByText('Custom pattern error')).toBeVisible();
+});
