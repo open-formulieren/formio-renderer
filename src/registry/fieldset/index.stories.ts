@@ -79,6 +79,41 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithoutLabel: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'fieldset',
+      key: 'fieldset',
+      label: 'Fieldset label',
+      hideHeader: true,
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textfield: '',
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const fieldset = canvas.getByRole('group');
+    expect(fieldset).toBeVisible();
+    expect(fieldset).toHaveAccessibleName('Fieldset label');
+  },
+};
+
 interface ValidationStoryArgs {
   nestedComponents: AnyComponentSchema[];
   onSubmit: FormioFormProps['onSubmit'];
