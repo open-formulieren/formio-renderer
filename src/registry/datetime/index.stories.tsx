@@ -551,7 +551,7 @@ export const ValidateSelectedDatetime: ValidationStory = {
   },
 };
 
-export const ValidateSelectedWithInitialErrorDatePicker: ValidationStory = {
+export const ValidateSelectedDatetimeWithInitialError: ValidationStory = {
   ...BaseValidationStory,
   decorators: [withMockDate],
   args: {
