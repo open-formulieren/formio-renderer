@@ -135,11 +135,13 @@ describe('date component validation', () => {
 
   test.each([
     ['2024-01-01', false],
+    ['2025-02-11', true],
     ['2030-07-21', true],
   ])('Maximum date: %s (valid: %s)', (maxDate, valid) => {
     const component: DateComponentSchema = {
       ...BASE_COMPONENT,
       datePicker: {...BASE_DATEPICKER, maxDate},
+      openForms: {maxDate: {mode: 'past', includeToday: true}},
     };
     const schema = buildValidationSchema(component);
 
