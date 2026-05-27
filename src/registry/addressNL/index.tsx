@@ -35,6 +35,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
   componentDefinition: {
     key,
     label,
+    hideLabel,
     tooltip,
     description,
     validate,
@@ -63,7 +64,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
 
   const invalid = touched && !!addressError;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-  const descriptionid = `${id}-description`;
+  const descriptionid = description ? `${id}-description` : '';
 
   // An address as a whole is or is not required.
   const isRequired = validate?.required;
@@ -84,6 +85,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
           {tooltip && <Tooltip>{tooltip}</Tooltip>}
         </>
       }
+      headerHidden={hideLabel}
       isInvalid={invalid}
       hasTooltip={!!tooltip}
       className={clsx('openforms-addressnl', {

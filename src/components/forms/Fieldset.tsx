@@ -8,6 +8,7 @@ export interface FieldsetProps {
   hasTooltip?: boolean;
   isInvalid?: boolean;
   className?: string;
+  headerHidden?: boolean;
 }
 
 /**
@@ -18,6 +19,7 @@ export interface FieldsetProps {
  */
 const Fieldset: React.FC<FieldsetProps & React.ComponentProps<'fieldset'>> = ({
   header,
+  headerHidden,
   hasTooltip,
   isInvalid,
   className,
@@ -29,7 +31,7 @@ const Fieldset: React.FC<FieldsetProps & React.ComponentProps<'fieldset'>> = ({
       'openforms-fieldset',
       {
         'openforms-fieldset--invalid': isInvalid,
-        'openforms-fieldset--no-header': !header,
+        'openforms-fieldset--no-header': !header || headerHidden,
       },
       className
     )}
@@ -39,6 +41,7 @@ const Fieldset: React.FC<FieldsetProps & React.ComponentProps<'fieldset'>> = ({
       <legend
         className={clsx('openforms-fieldset__legend', {
           'openforms-fieldset__legend--tooltip': hasTooltip,
+          'sr-only': headerHidden,
         })}
       >
         {header}
