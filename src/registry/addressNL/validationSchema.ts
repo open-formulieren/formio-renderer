@@ -51,7 +51,9 @@ const buildPostcodeSchema = (
         fieldLabel: intl.formatMessage(FIELD_LABELS.postcode),
       }),
     })
-    .regex(DEFAULT_POSTCODE_REGEX, {message: defaultMessage});
+    // if a custom message is available, show it already as that provides the best
+    // feedback
+    .regex(DEFAULT_POSTCODE_REGEX, {message: message || defaultMessage});
   // add the custom pattern *on top of* the default pattern, which is always supposed to
   // be less strict than custom patterns
   if (pattern) {

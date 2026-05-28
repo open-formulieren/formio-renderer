@@ -1,5 +1,6 @@
 import type {AddressNLComponentSchema} from '@open-formulieren/types';
 import type {AddressData} from '@open-formulieren/types/dist/components/addressNL';
+import {isEqual} from 'lodash';
 import {createIntl} from 'react-intl';
 import {describe, expect, test} from 'vitest';
 
@@ -136,6 +137,42 @@ describe('addressNL subfields validation', () => {
     expect(success).toBe(false);
     const message = error?.issues?.[0].message;
     expect(message).toBe('House number addition must be up to four letters and digits.');
+  });
+
+  test('prefers the custom pattern(s)/error messages when available', async () => {
+    const schema = buildValidationSchema({
+      ...BASE_COMPONENT,
+      validate: {required: false},
+      openForms: {
+        components: {
+          postcode: {
+            validate: {pattern: '1043 ?GR'},
+            errors: {pattern: 'Custom postcode error'},
+          },
+          city: {
+            validate: {pattern: 'Amsterdam|AMSTERDAM'},
+            errors: {pattern: 'Custom city error'},
+          },
+        },
+      },
+    });
+
+    const {success, error} = await schema.safeParseAsync({
+      postcode: '1234',
+      houseNumber: '3',
+      houseLetter: undefined,
+      HouseNumberAddition: undefined,
+      city: 'Utrecht',
+      streetName: 'Amsterdamsestraat',
+      secretStreetCity: 'foo',
+      autoPopulated: false,
+    });
+
+    expect(success).toBe(false);
+    const postcodeIssue = error?.issues?.find(issue => isEqual(issue.path, ['postcode']));
+    expect(postcodeIssue?.message).toBe('Custom postcode error');
+    const cityIssue = error?.issues?.find(issue => isEqual(issue.path, ['city']));
+    expect(cityIssue?.message).toBe('Custom city error');
   });
 });
 
