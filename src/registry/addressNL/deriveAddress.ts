@@ -20,7 +20,8 @@ const testValidInputs = (postcode: string, houseNumber: string): boolean => {
 };
 
 export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddress => {
-  const {getFieldProps, setFieldValue} = useFormikContext<FormValues>();
+  const {getFieldProps, setFieldValue, setFieldTouched, validateField} =
+    useFormikContext<FormValues>();
   key = useFieldConfig(key);
   const {value} = getFieldProps<AddressData | undefined>(key);
   const formSettings = useFormSettings();
@@ -36,7 +37,7 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
 
   // debounce to avoid rapidly firing updates when the user is typing
   const addressData = useDebounce(value, 300) ?? EMPTY_ADDRESS;
-  const {postcode, houseNumber} = addressData;
+  const {postcode, houseNumber, streetName, city, autoPopulated} = addressData;
 
   // if postcode/house number change, check if we need to clear the derived inputs
   useEffect(() => {
@@ -75,8 +76,27 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
       setFieldValue(`${key}.city`, result.city);
       setFieldValue(`${key}.secretStreetCity`, result.secretStreetCity);
       setFieldValue(`${key}.autoPopulated`, true);
+      // ensure that validation errors can be displayed
+      setFieldTouched(`${key}.streetName`);
+      setFieldTouched(`${key}.city`);
     }
-  }, [key, setFieldValue, doAddressAutoComplete, skipAutoFill, postcode, houseNumber]);
+  }, [
+    key,
+    setFieldValue,
+    setFieldTouched,
+    doAddressAutoComplete,
+    skipAutoFill,
+    postcode,
+    houseNumber,
+  ]);
+
+  // run client-side validation on the city/street name fields when changed by the
+  // autofill hook
+  useEffect(() => {
+    if (!autoPopulated) return;
+    validateField(`${key}.streetName`);
+    validateField(`${key}.city`);
+  }, [key, validateField, autoPopulated, streetName, city]);
 
   return {enableManualEntry};
 };

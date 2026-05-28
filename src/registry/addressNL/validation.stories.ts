@@ -218,8 +218,7 @@ export const CustomPatternsAndErrorMessages: Story = {
       expect(canvas.getByLabelText('Street name')).toHaveDisplayValue('Laanlaan');
       expect(canvas.getByLabelText('City')).toHaveDisplayValue('Betondam');
     });
-
-    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    // error must be displayed *before* a submit event takes place
     expect(await canvas.findByText('Postcode area must be in 31XX or 32XX.')).toBeVisible();
     expect(await canvas.findByText('The location must be Utreg.')).toBeVisible();
   },
