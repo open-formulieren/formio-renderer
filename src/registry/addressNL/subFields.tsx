@@ -37,6 +37,7 @@ interface PostCodeFieldProps {
 export const PostCodeField: React.FC<PostCodeFieldProps> = ({namePrefix, isRequired}) => (
   <TextField
     name={`${namePrefix}.postcode`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.postcode} />}
     placeholder="1234 AB"
     isRequired={isRequired}
@@ -51,6 +52,7 @@ interface HouseNumberFieldProps {
 export const HouseNumberField: React.FC<HouseNumberFieldProps> = ({namePrefix, isRequired}) => (
   <TextField
     name={`${namePrefix}.houseNumber`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.houseNumber} />}
     inputMode="numeric"
     placeholder="123"
@@ -65,6 +67,7 @@ interface HouseLetterProps {
 export const HouseLetter: React.FC<HouseLetterProps> = ({namePrefix}) => (
   <TextField
     name={`${namePrefix}.houseLetter`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.houseLetter} />}
   />
 );
@@ -76,6 +79,7 @@ interface HouseNumberAdditionProps {
 export const HouseNumberAddition: React.FC<HouseNumberAdditionProps> = ({namePrefix}) => (
   <TextField
     name={`${namePrefix}.houseNumberAddition`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.houseNumberAddition} />}
   />
 );
@@ -89,6 +93,7 @@ interface StreetNameProps {
 export const StreetName: React.FC<StreetNameProps> = ({namePrefix, isRequired, isReadOnly}) => (
   <TextField
     name={`${namePrefix}.streetName`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.streetName} />}
     isRequired={isRequired}
     isReadOnly={isReadOnly}
@@ -104,6 +109,7 @@ interface CityProps {
 export const City: React.FC<CityProps> = ({namePrefix, isRequired, isReadOnly}) => (
   <TextField
     name={`${namePrefix}.city`}
+    nameForValidate={namePrefix.split('.')[0]}
     label={<FormattedMessage {...FIELD_LABELS.city} />}
     isRequired={isRequired}
     isReadOnly={isReadOnly}

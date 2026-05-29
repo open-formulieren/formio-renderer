@@ -76,25 +76,17 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
       setFieldValue(`${key}.city`, result.city);
       setFieldValue(`${key}.secretStreetCity`, result.secretStreetCity);
       setFieldValue(`${key}.autoPopulated`, true);
-      // ensure that validation errors can be displayed
-      setFieldTouched(`${key}.streetName`);
-      setFieldTouched(`${key}.city`);
     }
-  }, [
-    key,
-    setFieldValue,
-    setFieldTouched,
-    doAddressAutoComplete,
-    skipAutoFill,
-    postcode,
-    houseNumber,
-  ]);
+  }, [key, setFieldValue, doAddressAutoComplete, skipAutoFill, postcode, houseNumber]);
 
   // run client-side validation on the whole address when changed by the autofill hook
   useEffect(() => {
     if (!autoPopulated) return;
     validateField(key);
-  }, [key, validateField, autoPopulated, streetName, city]);
+    // ensure that validation errors can be displayed
+    setFieldTouched(`${key}.streetName`);
+    setFieldTouched(`${key}.city`);
+  }, [key, validateField, setFieldTouched, autoPopulated, streetName, city]);
 
   return {enableManualEntry};
 };
