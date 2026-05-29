@@ -223,3 +223,45 @@ export const CustomPatternsAndErrorMessages: Story = {
     expect(await canvas.findByText('The location must be Utreg.')).toBeVisible();
   },
 };
+
+export const AutofillDoesNotResolve: Story = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: true,
+      layout: 'doubleColumn',
+    } satisfies AddressNLComponentSchema,
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        addressNL: {
+          // simulates the response of a lookup without results
+          addressAutoComplete: async () => ({
+            streetName: '',
+            city: '',
+            secretStreetCity: '',
+          }),
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const postcodeField = canvas.getByLabelText('Postcode');
+    await userEvent.type(postcodeField, '9999 ZZ');
+    const houseNumberField = canvas.getByLabelText('House number');
+    await userEvent.type(houseNumberField, '99999');
+
+    expect(
+      await canvas.findByText("The entered postcode and number don't result into a known address.")
+    ).toBeVisible();
+  },
+};

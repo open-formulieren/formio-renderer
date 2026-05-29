@@ -90,12 +90,10 @@ export const useDeriveAddress = (key: string, enabled: boolean): UseDeriveAddres
     houseNumber,
   ]);
 
-  // run client-side validation on the city/street name fields when changed by the
-  // autofill hook
+  // run client-side validation on the whole address when changed by the autofill hook
   useEffect(() => {
     if (!autoPopulated) return;
-    validateField(`${key}.streetName`);
-    validateField(`${key}.city`);
+    validateField(key);
   }, [key, validateField, autoPopulated, streetName, city]);
 
   return {enableManualEntry};

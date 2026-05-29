@@ -34,6 +34,11 @@ const HOUSE_NUMBER_ADDITION_INVALID_MESSAGE = defineMessage({
   defaultMessage: 'House number addition must be up to four letters and digits.',
 });
 
+const INVALID_AUTOFILL_ADDRESS_MESSAGE = defineMessage({
+  description: 'Validation error for empty address derivation result.',
+  defaultMessage: "The entered postcode and number don't result into a known address.",
+});
+
 interface PostcodeOptions {
   pattern: string | undefined;
   message: string | undefined;
@@ -198,6 +203,7 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
         .optional(),
       streetName: streetNameSchema,
       city: citySchema,
+      autoPopulated: z.boolean().optional(),
     })
     .superRefine(async (val, ctx) => {
       const postcodeOrHouseNumberProvided = Boolean(val.postcode || val.houseNumber);
@@ -223,8 +229,17 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
             path: ['postcode'],
           });
         }
+      }
 
-        if (deriveAddress && !val.streetName) {
+      if (postcodeOrHouseNumberProvided && deriveAddress) {
+        if (val.autoPopulated && !val.streetName && !val.city) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: intl.formatMessage(INVALID_AUTOFILL_ADDRESS_MESSAGE),
+          });
+        }
+
+        if (!val.autoPopulated && !val.streetName) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: buildRequiredMessage(intl, {
@@ -234,7 +249,7 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
           });
         }
 
-        if (deriveAddress && !val.city) {
+        if (!val.autoPopulated && !val.city) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: buildRequiredMessage(intl, {
