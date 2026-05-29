@@ -894,6 +894,11 @@
     "description": "Draw handler polygon tooltip end.",
     "originalDefault": "Click first point to finish shape"
   },
+  "w4culW": {
+    "defaultMessage": "The entered postcode and number don't result into a known address.",
+    "description": "Validation error for empty address derivation result.",
+    "originalDefault": "The entered postcode and number don't result into a known address."
+  },
   "wiPGoP": {
     "defaultMessage": "Add partner details",
     "description": "Partners component: 'add partner' button label",
