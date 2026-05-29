@@ -265,3 +265,47 @@ export const AutofillDoesNotResolve: Story = {
     ).toBeVisible();
   },
 };
+
+export const RectifyInitialError: Story = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'doubleColumn',
+    } satisfies AddressNLComponentSchema,
+  },
+
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {name: 'Submit'});
+
+    await step('Make initial error', async () => {
+      const postcodeField = canvas.getByLabelText('Postcode');
+      await userEvent.type(postcodeField, '9999 ZZ');
+      const houseNumberField = canvas.getByLabelText('House number');
+      // focus field, but leave it empty and shift focus elsewhere, to make sure the error is displayed
+      await userEvent.click(houseNumberField);
+      await userEvent.click(canvas.getByLabelText('House letter'));
+      expect(
+        await canvas.findByText('The required field House number must be filled in.')
+      ).toBeVisible();
+    });
+
+    await step('Clear original postcode field', async () => {
+      const postcodeField = canvas.getByLabelText('Postcode');
+      await userEvent.clear(postcodeField);
+      await userEvent.keyboard('{Tab}');
+    });
+
+    await step('Submit', async () => {
+      await waitFor(() => expect(submitButton).toHaveAttribute('data-is-valid', 'true'));
+      await userEvent.click(submitButton);
+      await waitFor(() => expect(args.onSubmit).toHaveBeenCalled());
+    });
+  },
+};

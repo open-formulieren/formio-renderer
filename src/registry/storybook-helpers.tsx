@@ -1,5 +1,6 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {StoryContext} from '@storybook/react-vite';
+import {useFormikContext} from 'formik';
 
 import {PrimaryActionButton} from '@/components/Button';
 import type {FormioFormProps} from '@/components/FormioForm';
@@ -28,9 +29,22 @@ export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<u
       requiredFieldsWithAsterisk
       componentParameters={context?.parameters?.formSettings?.componentParameters}
       validatePluginCallback={context?.parameters?.formSettings?.validatePluginCallback}
-    />
-    <PrimaryActionButton type="submit" form="formio-form" style={{alignSelf: 'flex-start'}}>
-      Submit
-    </PrimaryActionButton>
+    >
+      <SubmitButton />
+    </FormioForm>
   </div>
 );
+
+const SubmitButton = () => {
+  const {isValid} = useFormikContext();
+  return (
+    <PrimaryActionButton
+      type="submit"
+      form="formio-form"
+      style={{alignSelf: 'flex-start', marginBlockStart: '24px'}}
+      data-is-valid={isValid ? 'true' : 'false'}
+    >
+      Submit
+    </PrimaryActionButton>
+  );
+};
