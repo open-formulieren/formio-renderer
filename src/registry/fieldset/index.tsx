@@ -22,13 +22,12 @@ export const FormioFieldset: React.FC<FieldsetProps> = ({
   return (
     <Fieldset
       header={
-        hideHeader ? undefined : (
-          <>
-            {label}
-            {tooltip && <Tooltip>{tooltip}</Tooltip>}
-          </>
-        )
+        <>
+          {label}
+          {tooltip && <Tooltip>{tooltip}</Tooltip>}
+        </>
       }
+      headerHidden={hideHeader}
       hasTooltip={!!tooltip}
     >
       <FormFieldContainer>

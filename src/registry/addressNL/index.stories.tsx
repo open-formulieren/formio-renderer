@@ -97,6 +97,48 @@ export const MinimalConfigurationDoubleColumn: Story = {
   },
 };
 
+export const WithoutLabel: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'singleColumn',
+      hideLabel: true,
+      validate: {
+        required: true,
+      },
+    } satisfies AddressNLComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          address: {
+            postcode: '',
+            houseNumber: '',
+            houseLetter: '',
+            houseNumberAddition: '',
+            // optional properties depending on the features used
+            city: undefined,
+            streetName: undefined,
+            secretStreetCity: undefined,
+            autoPopulated: undefined,
+          } satisfies AddressData,
+        },
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const fieldset = canvas.getByRole('group');
+    expect(fieldset).toBeVisible();
+    expect(fieldset).toHaveAccessibleName('Your address');
+  },
+};
+
 export const WithDescriptionAndTooltip: Story = {
   args: {
     componentDefinition: {
