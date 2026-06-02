@@ -1811,6 +1811,12 @@
       "value": "Klik op het eerste punt, om de veelhoek te voltooien"
     }
   ],
+  "w4culW": [
+    {
+      "type": 0,
+      "value": "The entered postcode and number don't result into a known address."
+    }
+  ],
   "wiPGoP": [
     {
       "type": 0,

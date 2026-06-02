@@ -218,9 +218,94 @@ export const CustomPatternsAndErrorMessages: Story = {
       expect(canvas.getByLabelText('Street name')).toHaveDisplayValue('Laanlaan');
       expect(canvas.getByLabelText('City')).toHaveDisplayValue('Betondam');
     });
-
-    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    // error must be displayed *before* a submit event takes place
     expect(await canvas.findByText('Postcode area must be in 31XX or 32XX.')).toBeVisible();
     expect(await canvas.findByText('The location must be Utreg.')).toBeVisible();
+  },
+};
+
+export const AutofillDoesNotResolve: Story = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: true,
+      layout: 'doubleColumn',
+    } satisfies AddressNLComponentSchema,
+  },
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        addressNL: {
+          // simulates the response of a lookup without results
+          addressAutoComplete: async () => ({
+            streetName: '',
+            city: '',
+            secretStreetCity: '',
+          }),
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const postcodeField = canvas.getByLabelText('Postcode');
+    await userEvent.type(postcodeField, '9999 ZZ');
+    const houseNumberField = canvas.getByLabelText('House number');
+    await userEvent.type(houseNumberField, '99999');
+
+    expect(
+      await canvas.findByText("The entered postcode and number don't result into a known address.")
+    ).toBeVisible();
+  },
+};
+
+export const RectifyInitialError: Story = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'doubleColumn',
+    } satisfies AddressNLComponentSchema,
+  },
+
+  play: async ({canvasElement, step, args}) => {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {name: 'Submit'});
+
+    await step('Make initial error', async () => {
+      const postcodeField = canvas.getByLabelText('Postcode');
+      await userEvent.type(postcodeField, '9999 ZZ');
+      const houseNumberField = canvas.getByLabelText('House number');
+      // focus field, but leave it empty and shift focus elsewhere, to make sure the error is displayed
+      await userEvent.click(houseNumberField);
+      await userEvent.click(canvas.getByLabelText('House letter'));
+      expect(
+        await canvas.findByText('The required field House number must be filled in.')
+      ).toBeVisible();
+    });
+
+    await step('Clear original postcode field', async () => {
+      const postcodeField = canvas.getByLabelText('Postcode');
+      await userEvent.clear(postcodeField);
+      await userEvent.keyboard('{Tab}');
+    });
+
+    await step('Submit', async () => {
+      await waitFor(() => expect(submitButton).toHaveAttribute('data-is-valid', 'true'));
+      await userEvent.click(submitButton);
+      await waitFor(() => expect(args.onSubmit).toHaveBeenCalled());
+    });
   },
 };

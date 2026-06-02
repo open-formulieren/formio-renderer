@@ -1869,6 +1869,12 @@
       "value": "Click first point to finish shape"
     }
   ],
+  "w4culW": [
+    {
+      "type": 0,
+      "value": "The entered postcode and number don't result into a known address."
+    }
+  ],
   "wiPGoP": [
     {
       "type": 0,

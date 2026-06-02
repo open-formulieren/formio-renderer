@@ -64,6 +64,12 @@ export interface TextFieldProps {
    */
   isMultiValue?: boolean;
   /**
+   * Optional name for the validate hook invoked when blurring the field. Useful for
+   * composite fields where editing one aspect should trigger validation of the whole
+   * composite.
+   */
+  nameForValidate?: string;
+  /**
    * Any additional content, positioned between the text field and the description (if any).
    */
   children?: React.ReactNode;
@@ -86,6 +92,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  nameForValidate = undefined,
   children,
   ...extraProps
 }) => {
@@ -120,7 +127,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           {...props}
           onBlur={async e => {
             props.onBlur(e);
-            await validateField(name);
+            await validateField(nameForValidate ?? name);
           }}
           className="utrecht-textbox--openforms"
           id={id}
