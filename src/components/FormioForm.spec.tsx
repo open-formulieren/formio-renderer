@@ -18,13 +18,22 @@ type FormProps = Pick<
   'components' | 'onChange' | 'onSubmit' | 'values' | 'children'
 >;
 
+const SubmitButton: React.FC = () => {
+  const {isValid} = useFormikContext();
+  return (
+    <button type="submit" form="test-form" data-is-valid={isValid ? 'true' : 'false'}>
+      Submit
+    </button>
+  );
+};
+
 const Form = forwardRef<FormStateRef, FormProps>((props, ref) => {
   return (
     <IntlProvider locale="en" messages={{}}>
-      <FormioForm {...props} ref={ref} id="test-form" requiredFieldsWithAsterisk />
-      <button type="submit" form="test-form">
-        Submit
-      </button>
+      <FormioForm {...props} ref={ref} id="test-form" requiredFieldsWithAsterisk>
+        {props.children}
+        <SubmitButton />
+      </FormioForm>
     </IntlProvider>
   );
 });
@@ -921,4 +930,40 @@ describe('Regressions', () => {
       consoleErrorSpy.mockRestore();
     }
   );
+
+  test('Correctly reports validity state with periods in component keys', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'textfield',
+            id: 'textfield',
+            key: 'container.field',
+            label: 'Period in component key',
+            validate: {maxLength: 3},
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+
+    const textbox = screen.getByRole('textbox', {name: 'Period in component key'});
+    const submitButton = screen.getByRole('button', {name: 'Submit'});
+
+    // trigger validation error to fix
+    await textbox.fill('1234');
+    await submitButton.click();
+    await expect.element(screen.getByText('There are too many characters provided.')).toBeVisible();
+    await expect.element(submitButton).toHaveAttribute('data-is-valid', 'false');
+
+    // clear validation error
+    await textbox.clear();
+    await textbox.fill('123');
+    await userEvent.tab();
+
+    await expect.element(submitButton, {timeout: 1000}).toHaveAttribute('data-is-valid', 'true');
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect.poll(() => onSubmit).toHaveBeenCalledWith({container: {field: '123'}});
+  });
 });
