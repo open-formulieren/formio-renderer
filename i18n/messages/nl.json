@@ -902,7 +902,7 @@
     "originalDefault": "Click first point to finish shape"
   },
   "w4culW": {
-    "defaultMessage": "The entered postcode and number don't result into a known address.",
+    "defaultMessage": "De ingevoerde postcode en huisnummer leiden niet tot een bekend adres.",
     "description": "Validation error for empty address derivation result.",
     "originalDefault": "The entered postcode and number don't result into a known address."
   },
