@@ -1,5 +1,39 @@
 # Changes
 
+## 1.6.0 (2026-06-02)
+
+Feature and bugfix release.
+
+**New features**
+
+- Improved accessibility for screenreaders with fieldsets that have their label hidden.
+- [`#167`][#167] There is now an option to hide the `addressNL` fieldset legend/label.
+
+**Bugfixes**
+
+- [`#256`][#256] Fixed interaction issues with the `addressNL` component.
+  - Fix validation errors not properly being cleared.
+  - Now an error is shown if the postcode + house number don't resolve to a known address.
+  - Fixed custom error messages not being used.
+
+- [`OF#6312`][OF#6312] Fixed maximum date validation being off by one day.
+- [`OF#6313`][OF#6313] Fixed datetime validation triggering too early.
+- [`#329`][#329] Fixed the form submission ending up in a deadlocked state when validation errors
+  are resolved for components that have a `.` in their `key`.
+
+**Project maintenance**
+
+- Upgraded dependencies to latest available (security) fixes.
+- Applied configuration hardening to protect against possible supply chain attacks.
+- [`#319`][#319] Switch development tooling to React 19.
+
+[#256]: https://github.com/open-formulieren/formio-renderer/issues/256
+[#167]: https://github.com/open-formulieren/formio-renderer/issues/167
+[#319]: https://github.com/open-formulieren/formio-renderer/issues/319
+[#329]: https://github.com/open-formulieren/formio-renderer/issues/329
+[OF#6312]: https://github.com/open-formulieren/open-forms/issues/6312
+[OF#6313]: https://github.com/open-formulieren/open-forms/issues/6313
+
 ## 1.5.3 (2026-04-28)
 
 Bugfix release.
