@@ -333,6 +333,13 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       }
     }, [setValues, values, updatedValues, setErrors, errors, updatedErrors]);
 
+    useEffect(() => {
+      const newErrors = removeEmptyNodes(errors);
+      if (errors !== newErrors) {
+        setErrors(newErrors as FormikErrors<unknown>);
+      }
+    }, [errors, setErrors]);
+
     return (
       <Form noValidate id={id}>
         <FormFieldContainer>
