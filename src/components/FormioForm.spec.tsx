@@ -966,4 +966,55 @@ describe('Regressions', () => {
     await screen.getByRole('button', {name: 'Submit'}).click();
     await expect.poll(() => onSubmit).toHaveBeenCalledWith({container: {field: '123'}});
   });
+
+  test('Correctly reports validity state with periods in component keys inside editgrids', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'editgrid',
+            id: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                type: 'textfield',
+                id: 'textfield',
+                key: 'container.field',
+                label: 'Period in component key',
+                validate: {maxLength: 3},
+              },
+            ],
+          },
+        ]}
+        values={{editgrid: [{container: {field: ''}}]}}
+        onSubmit={onSubmit}
+      />
+    );
+
+    await screen.getByRole('button', {name: 'Edit item 1'}).click();
+
+    const saveButton = screen.getByRole('button', {name: 'Save'});
+    const textbox = screen.getByRole('textbox', {name: 'Period in component key'});
+    // trigger validation error to fix
+    await textbox.fill('1234');
+    await saveButton.click();
+    await expect.element(screen.getByText('There are too many characters provided.')).toBeVisible();
+
+    // clear validation error
+    await textbox.clear();
+    await textbox.fill('123');
+    await userEvent.tab();
+    await saveButton.click();
+
+    const submitButton = screen.getByRole('button', {name: 'Submit'});
+    await expect.element(submitButton, {timeout: 1000}).toHaveAttribute('data-is-valid', 'true');
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect
+      .poll(() => onSubmit)
+      .toHaveBeenCalledWith({editgrid: [{container: {field: '123'}}]});
+  });
 });
