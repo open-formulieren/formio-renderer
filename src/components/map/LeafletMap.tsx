@@ -354,15 +354,23 @@ interface MapBlurProps {
   onBlur: () => void;
 }
 
-const MapBlur: React.FC<MapBlurProps> = props => {
-  const {onBlur} = props;
-
+const MapBlur: React.FC<MapBlurProps> = ({onBlur}) => {
   const map = useMap();
   useEffect(() => {
-    map.on('blur', onBlur);
+    const container = map.getContainer();
+    const handleFocusOut = (event: FocusEvent) => {
+      const nextTarget = event.relatedTarget as Node | null;
+
+      // Ignore focus moving inside the map/draw controls
+      if (nextTarget && container.contains(nextTarget)) return;
+
+      onBlur();
+    };
+
+    container.addEventListener('focusout', handleFocusOut);
 
     return () => {
-      map.off('blur', onBlur);
+      container.removeEventListener('focusout', handleFocusOut);
     };
   }, [map, onBlur]);
   return null;
