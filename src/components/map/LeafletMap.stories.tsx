@@ -326,6 +326,7 @@ export const SingleInteractionMode: Story = {
 
 export const AllInteractions: Story = {
   args: {
+    onGeoJsonGeometrySet: fn(),
     interactions: {
       marker: true,
       polygon: true,
@@ -361,6 +362,7 @@ export const AllInteractions: Story = {
 
 export const WithCurrentLocationGranted: Story = {
   args: {
+    onGeoJsonGeometrySet: fn(),
     interactions: {
       marker: true,
       polygon: false,
@@ -404,6 +406,7 @@ export const WithCurrentLocationGranted: Story = {
 
 export const WithCurrentLocationDenied: Story = {
   args: {
+    onGeoJsonGeometrySet: fn(),
     interactions: {
       marker: true,
       polygon: false,
@@ -446,6 +449,7 @@ export const WithCurrentLocationDenied: Story = {
 
 export const WithCurrentLocationManuallyTogglePermission: Story = {
   args: {
+    onGeoJsonGeometrySet: fn(),
     interactions: {
       marker: true,
       polygon: false,
