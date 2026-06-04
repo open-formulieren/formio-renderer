@@ -1,5 +1,13 @@
 # Changes
 
+## 1.6.1 (2026-06-04)
+
+Bugfix release.
+
+- [`OF#6076`][OF#6076] Fixed not being able to place pins, lines or polygons in the `map` component.
+
+[OF#6076]: https://github.com/open-formulieren/open-forms/issues/6076
+
 ## 1.1.3 (2026-06-04)
 
 Bugfix release.
