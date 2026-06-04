@@ -1,5 +1,15 @@
 # Changes
 
+## 1.1.3 (2026-06-04)
+
+Bugfix release.
+
+- [`OF#6313`][OF#6313] Fixed datetime validation triggering too early.
+- [`OF#6076`][OF#6076] Fixed not being able to place pins, lines or polygons in the `map` component.
+
+[OF#6313]: https://github.com/open-formulieren/open-forms/issues/6313
+[OF#6076]: https://github.com/open-formulieren/open-forms/issues/6076
+
 ## 1.6.0 (2026-06-02)
 
 Feature and bugfix release.
@@ -46,6 +56,25 @@ Bugfix release.
 - [`OF#6163`][OF#6163] Fixed UX of date(time) validation not applying consistently.
 - [`OF#6125`][OF#6125] Fixed a crash in `addressNL` when conditionally displaying it.
 - Added support for `@utrecht/component-library-react` v14.
+
+[OF#6185]: https://github.com/open-formulieren/open-forms/issues/6185
+[OF#6190]: https://github.com/open-formulieren/open-forms/issues/6190
+[OF#6192]: https://github.com/open-formulieren/open-forms/issues/6192
+[OF#6181]: https://github.com/open-formulieren/open-forms/issues/6181
+[OF#6163]: https://github.com/open-formulieren/open-forms/issues/6163
+[OF#6125]: https://github.com/open-formulieren/open-forms/issues/6125
+
+## 1.1.2 (2026-04-24)
+
+Bugfix release.
+
+- [`OF#6185`][OF#6185] Fixed soft-required file component inside a conditionally visible editgrid
+  causing a form crash.
+- [`OF#6190`][OF#6190] Fixed the anchor `target` attribute being stripped out by DOMPurify.
+- [`OF#6192`][OF#6192] Fixed missing textfield `autocomplete` attribute support.
+- [`OF#6181`][OF#6181] Fixed empty-ish comparison against file components not working as expected
+- [`OF#6163`][OF#6163] Fixed UX of date(time) validation not applying consistently.
+- [`OF#6125`][OF#6125] Fixed a crash in `addressNL` when conditionally displaying it.
 
 [OF#6185]: https://github.com/open-formulieren/open-forms/issues/6185
 [OF#6190]: https://github.com/open-formulieren/open-forms/issues/6190
