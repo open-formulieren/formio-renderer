@@ -1,5 +1,15 @@
 # Changes
 
+## 1.1.3 (2026-06-04)
+
+Bugfix release.
+
+- [`OF#6313`][OF#6313] Fixed datetime validation triggering too early.
+- [`OF#6076`][OF#6076] Fixed not being able to place pins, lines or polygons in the `map` component.
+
+[OF#6313]: https://github.com/open-formulieren/open-forms/issues/6313
+[OF#6076]: https://github.com/open-formulieren/open-forms/issues/6076
+
 ## 1.1.2 (2026-04-24)
 
 Bugfix release.
