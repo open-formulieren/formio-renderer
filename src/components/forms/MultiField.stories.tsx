@@ -78,6 +78,28 @@ export const WithDescriptionAndTooltip: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    faqItems: [
+      {
+        title: 'How do I fill in this field?',
+        content: 'The values required to fill out this field can be retrieved from XYZ.',
+      },
+      {
+        title: 'Is this field applicable to me?',
+        content: 'This field is applicable if you are XYZ.',
+      },
+    ],
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        test: ['First', 'Second'],
+      },
+    },
+  },
+};
+
 export const ItemValidationError: Story = {
   parameters: {
     formik: {

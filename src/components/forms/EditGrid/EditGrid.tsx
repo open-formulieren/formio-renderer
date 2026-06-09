@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {FormField} from '@utrecht/form-field-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
@@ -17,6 +18,7 @@ import Icon from '@/components/icons';
 import {useFieldConfig} from '@/hooks';
 import type {JSONObject, JSONValue} from '@/types';
 
+import FAQTooltip from '../FAQTooltip';
 import EditGridItem from './EditGridItem';
 import {ITEM_ADDED_MARKER, ITEM_EXPANDED_MARKER} from './constants';
 import type {MarkedEditGridItem} from './types';
@@ -46,6 +48,11 @@ interface EditGridBaseProps<T> {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Callback to return the heading for a single item. Gets passed the item values and
    * index in the array of values.
@@ -125,6 +132,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   tooltip,
   getItemHeading,
   canRemoveItem,
+  faqItems = [],
   removeItemLabel = '',
   emptyItem = null,
   addButtonLabel = '',
@@ -140,6 +148,10 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   const fieldError = typeof error === 'string' && error;
   const hasFieldLevelError = !!fieldError;
   const errorMessageId = hasFieldLevelError ? `${id}-error-message` : undefined;
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   return (
     <FormField
@@ -256,6 +268,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
         )}
       </FieldArray>
       <HelpText>{description}</HelpText>
+      {faqElements}
       {hasFieldLevelError && errorMessageId && (
         <ValidationErrors error={error} id={errorMessageId} />
       )}

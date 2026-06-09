@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {FormField} from '@utrecht/form-field-react';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId} from 'react';
@@ -9,6 +10,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import ReactSelectWrapper from './ReactSelectWrapper';
 
 export interface Option {
@@ -66,6 +68,11 @@ export interface SelectProps {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * Formio compatibility - a select without any option chosen is represented as empty
    * string in Formio submission data, instead of `null` or `undefined`. The default
    * is to use `undefined` to remove the value from the Formik state entirely.
@@ -92,6 +99,7 @@ const Select: React.FC<SelectProps> = ({
   tooltip,
   noOptionSelectedValue = undefined,
   optionComponent,
+  faqItems = [],
 }) => {
   name = useFieldConfig(name);
   const {validateField} = useFormikContext();
@@ -113,6 +121,10 @@ const Select: React.FC<SelectProps> = ({
   } else {
     wrapperValue = value ?? null;
   }
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   useEffect(() => {
     // if the option is not enabled, do nothing
@@ -176,6 +188,7 @@ const Select: React.FC<SelectProps> = ({
         aria-invalid={invalid ? invalid : undefined}
       />
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );
