@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
@@ -14,6 +15,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import Icon from '@/components/icons';
 import type {JSONObject} from '@/types';
 
+import FAQTooltip from './FAQTooltip';
 import './MultiField.scss';
 
 /**
@@ -69,6 +71,11 @@ export interface MultiFieldProps<T extends MultiFieldValue> {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * Optional callback invoked when a new item is added that should receive auto focus.
    *
    * If provided, you receive the Formik field name of the inserted item, e.g. `myField.3`.
@@ -111,6 +118,7 @@ function MultiField<T extends MultiFieldValue>({
   description,
   tooltip,
   getAutoFocusQuerySelector,
+  faqItems = [],
 }: MultiFieldProps<T>) {
   const {getFieldProps, setFieldError, getFieldMeta, touched} = useFormikContext<JSONObject>();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
@@ -135,6 +143,10 @@ function MultiField<T extends MultiFieldValue>({
   const anyItemTouched = Object.values(itemsTouched ?? {}).some(t => !!t);
   const hasFieldLevelError = typeof error === 'string' && anyItemTouched && !!error;
   const errorMessageId = hasFieldLevelError ? `${id}-error-message` : undefined;
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   return (
     <Fieldset
@@ -221,6 +233,7 @@ function MultiField<T extends MultiFieldValue>({
       </FieldArray>
 
       <HelpText id={descriptionid}>{description}</HelpText>
+      {faqElements}
       {anyItemTouched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </Fieldset>
   );

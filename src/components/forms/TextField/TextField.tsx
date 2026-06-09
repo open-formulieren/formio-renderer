@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {Paragraph} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import type {TextboxProps} from '@utrecht/textbox-react';
@@ -12,6 +13,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import './TextField.scss';
 
 export interface TextFieldProps {
@@ -45,6 +47,11 @@ export interface TextFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Placeholder when no (default) value is available.
    */
@@ -93,6 +100,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   showCharCount = false,
   isMultiValue = false,
   nameForValidate = undefined,
+  faqItems = [],
   children,
   ...extraProps
 }) => {
@@ -108,6 +116,10 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const characterCountId = `${id}-character-count`;
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   return (
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
@@ -146,6 +158,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       )}
       {children}
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );

@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {FormField} from '@utrecht/form-field-react';
 import {useFormikContext} from 'formik';
 import {useId} from 'react';
@@ -6,6 +7,7 @@ import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
 
@@ -81,6 +83,11 @@ interface DateFieldCommonProps {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * How to autocomplete the field from the browser.
    */
   autoComplete?: string;
@@ -112,6 +119,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   isMultiValue = false,
+  faqItems = [],
   ...props
 }) => {
   const id = useId();
@@ -154,10 +162,15 @@ const DateField: React.FC<DateFieldProps> = ({
     }
   }
 
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
+
   return (
     <FormField type="text" invalid={isInvalid} className="utrecht-form-field--openforms">
       {dateInput}
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );

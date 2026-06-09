@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
@@ -9,6 +10,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import './RadioField.scss';
 import RadioOption from './RadioOption';
 
@@ -41,6 +43,11 @@ interface BasicRadioFieldProps {
    * Array of possible choices for the field. Only one can be selected.
    */
   options: RadioOption[];
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
 }
 
 type RadioFieldWithLabelProps = BasicRadioFieldProps & {
@@ -86,6 +93,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   isReadOnly = false,
   options = [],
   tooltip,
+  faqItems = [],
 }) => {
   name = useFieldConfig(name);
   const {validateField, getFieldProps} = useFormikContext();
@@ -173,6 +181,10 @@ const RadioField: React.FC<RadioFieldProps> = ({
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionId = description ? `${id}-description` : undefined;
 
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
+
   return (
     <Fieldset
       ref={fieldsetRef}
@@ -207,6 +219,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
       ))}
 
       <HelpText id={descriptionId}>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </Fieldset>
   );

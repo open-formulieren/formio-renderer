@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {FormField} from '@utrecht/form-field-react';
 import {Textbox} from '@utrecht/textbox-react';
 import {useField, useFormikContext} from 'formik';
@@ -12,6 +13,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import './NumberField.scss';
 
 export interface NumberFieldProps {
@@ -48,6 +50,11 @@ export interface NumberFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Maximum number of decimals of the input.
    */
@@ -126,6 +133,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   useThousandSeparator = false,
   fixedDecimalScale = false,
   isMultiValue = false,
+  faqItems = [],
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -146,6 +154,10 @@ const NumberField: React.FC<NumberFieldProps> = ({
   //  itself can be interpreted directly as a number, but we have the opposite
   //  in Dutch locale where the '.' character is the thousand separator.
   const valueIsNumericString = thousandSeparator !== '.';
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   return (
     <FormField type="text" invalid={invalid} className="utrecht-form-field--openforms">
@@ -198,6 +210,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
       />
 
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );

@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {Paragraph} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import {Textbox} from '@utrecht/textbox-react';
@@ -13,6 +14,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import './DateTimeField.scss';
 import {useDateLocaleMeta} from './hooks';
 import {PART_PLACEHOLDERS} from './messages';
@@ -49,6 +51,11 @@ export interface DateTimeFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Earliest date that is selectable in the calendar.
    */
@@ -106,6 +113,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   maxDate,
   'aria-describedby': ariaDescribedBy,
   isMultiValue = false,
+  faqItems = [],
 }) => {
   name = useFieldConfig(name);
   const id = useId();
@@ -192,6 +200,10 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         }).replace(',', '')
       : value;
 
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
+
   return (
     <FormField invalid={isInvalid} className="utrecht-form-field--openforms">
       <Label
@@ -274,6 +286,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
       </DatePickerRoot>
 
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );
