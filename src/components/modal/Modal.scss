@@ -7,6 +7,15 @@ body:has(.openforms-modal[open]) {
   overflow: hidden;
 }
 
+@keyframes slide-in {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
 .openforms-modal {
   --_of-modal-padding-block-start: var(--of-modal-padding-block-start, 40px);
   --_of-modal-padding-block-end: var(--of-modal-padding-block-end, 40px);
@@ -39,6 +48,25 @@ body:has(.openforms-modal[open]) {
     0 6px 20px rgba(0, 0, 0, 0.2)
   );
   box-sizing: border-box;
+
+  @include bem.modifier('sheet') {
+    max-block-size: var(--of-modal-sheet-max-block-size, 75dvh);
+    inline-size: var(--of-modal-sheet-inline-size, 100dvw);
+    max-inline-size: var(--of-modal-sheet-max-inline-size, 100vw);
+
+    border-radius: var(--of-modal-sheet-border-radius, 5px 5px 0 0);
+
+    margin-block-end: 0;
+
+    animation-duration: 0.2s;
+    animation-name: slide-in;
+
+    @include responsive.desktop {
+      margin-block-end: revert;
+
+      animation: none;
+    }
+  }
 
   &[open] {
     display: flex;
@@ -132,5 +160,11 @@ body:has(.openforms-modal[open]) {
     padding-block-start: var(--_of-modal-body-bleed-margin);
     padding-inline-end: var(--_of-modal-body-bleed-margin);
     padding-inline-start: var(--_of-modal-body-bleed-margin);
+  }
+}
+
+.openforms-theme {
+  @include responsive.desktop {
+    --of-modal-sheet-inline-size: 60dvw;
   }
 }
