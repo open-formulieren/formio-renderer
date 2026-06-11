@@ -40,6 +40,16 @@ export const Default: Story = {
     label: 'Datetime',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
+    faqItems: [
+      {
+        title: 'How do I fill in this field?',
+        content: 'The values required to fill out this field can be retrieved from XYZ.',
+      },
+      {
+        title: 'Is this field applicable to me?',
+        content: 'This field is applicable if you are XYZ.',
+      },
+    ],
     isReadOnly: false,
     isRequired: true,
   },

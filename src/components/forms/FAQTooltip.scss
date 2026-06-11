@@ -1,0 +1,17 @@
+@use '@utrecht/icon-css';
+
+@use '@/scss/bem';
+
+.openforms-faq-tooltip {
+  margin-block-start: var(--of-faq-tooltip-margin-block, 8px);
+  padding-block-end: var(--of-faq-tooltip-padding-block, 11px);
+  padding-block-start: var(--of-faq-tooltip-padding-block, 11px);
+  padding-inline-end: var(--of-faq-tooltip-padding-inline, 16px);
+  padding-inline-start: calc(
+    var(--of-faq-tooltip-padding-inline, 16px) - var(--_border-left-width)
+  );
+
+  &__title:before {
+    content: ' ';
+  }
+}
