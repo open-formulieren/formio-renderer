@@ -5,6 +5,8 @@
 // have higher priority/selectivity.
 :root {
   --utrecht-form-control-font-weight: var(--of-input-font-weight, initial);
+  // adds the quotes that the default styles are missing
+  --utrecht-unordered-list-list-style-type: '●';
 
   .utrecht-button {
     column-gap: var(--utrecht-button-column-gap, var(--utrecht-button-icon-gap));
