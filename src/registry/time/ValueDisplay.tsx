@@ -16,14 +16,14 @@ const formatTime = (timeValue: string): React.ReactNode => {
   let time = new Date(timeValue);
 
   if (isNaN(Number(time))) {
-    const [hours, minutes, seconds] = timeValue.split(':');
+    const [hours, minutes, seconds = '00'] = timeValue.split(':');
     time = new Date();
     time.setHours(parseInt(hours));
     time.setMinutes(parseInt(minutes));
     time.setSeconds(parseInt(seconds));
   }
 
-  return <FormattedTime value={time} format="short" />;
+  return <FormattedTime value={time} />;
 };
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({
