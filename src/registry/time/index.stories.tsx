@@ -497,3 +497,17 @@ export const MultiValueDisplay: ValueDisplayStory = {
     value: ['12:00:00', '00:00:00'],
   },
 };
+
+export const ValueDisplayNoSecondsPart: ValueDisplayStory = {
+  ...BaseValueDisplayStory,
+  args: {
+    componentDefinition: {
+      type: 'time',
+      key: 'time',
+      id: 'timefield',
+      label: 'timefield',
+      multiple: false,
+    } satisfies TimeComponentSchema,
+    value: '15:30',
+  },
+};
