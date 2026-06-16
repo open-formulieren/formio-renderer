@@ -76,9 +76,9 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
     });
 
     if (hasChanged) {
-      setFieldValue('children', updatedChildren);
+      setFieldValue(key, updatedChildren);
     }
-  }, [children, enableSelection, setFieldValue]);
+  }, [setFieldValue, key, children, enableSelection]);
 
   return (
     <Fieldset
