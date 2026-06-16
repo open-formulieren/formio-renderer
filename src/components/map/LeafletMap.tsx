@@ -1,7 +1,7 @@
 import type {MapComponentSchema} from '@open-formulieren/types';
 import type {CoordinatePair, GeoJsonGeometry} from '@open-formulieren/types/dist/components/map';
 import L from 'leaflet';
-import {useEffect, useId, useRef} from 'react';
+import {useEffect, useId, useMemo, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import {FeatureGroup, MapContainer, TileLayer, useMap} from 'react-leaflet';
 import {EditControl} from 'react-leaflet-draw';
@@ -79,11 +79,14 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   const drawControlRef = useRef<L.Control.Draw | null>(null);
   const id = useId();
   const intl = useIntl();
-  const center: L.LatLng | null = geoJsonGeometry
-    ? L.geoJSON(geoJsonGeometry).getBounds().getCenter()
-    : null;
 
-  const coordinates: CoordinatePair | null = center ? [center.lat, center.lng] : null;
+  // ensure we have a stable identity for the coordinates being passed as prop.
+  const coordinates: CoordinatePair | null = useMemo(() => {
+    const center: L.LatLng | null = geoJsonGeometry
+      ? L.geoJSON(geoJsonGeometry).getBounds().getCenter()
+      : null;
+    return center ? [center.lat, center.lng] : null;
+  }, [geoJsonGeometry]);
 
   const withoutControl = !interactions || Object.values(interactions).every(value => !value);
   // Get the names of the active interactions
