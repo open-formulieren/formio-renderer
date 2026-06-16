@@ -834,3 +834,33 @@ export const ValidationForMultipleDateComponents: Story = {
     expect(dateRequired).toHaveAttribute('aria-invalid', 'true');
   },
 };
+
+export const ScrollsFirstErrorIntoView: Story = {
+  args: {
+    components: [...Array(15).keys()].map(i => ({
+      id: `component-${i}`,
+      type: 'textfield',
+      key: `field-${i}`,
+      label: `Field ${i}`,
+      validate: {
+        required: false,
+        maxLength: 5,
+      },
+    })),
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.type(canvas.getByLabelText('Field 0'), 'value too long!');
+    await userEvent.type(canvas.getByLabelText('Field 10'), 'value too long!');
+
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+
+    const errors = await canvas.findAllByText('There are too many characters provided.');
+    expect(errors).toHaveLength(2);
+    for (const errorNode of errors) {
+      expect(errorNode).toBeVisible();
+    }
+  },
+};

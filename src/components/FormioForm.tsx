@@ -245,8 +245,18 @@ export type InnerFormioFormProps = Pick<FormioFormProps, 'components' | 'id' | '
 const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
   ({components, validatePluginCallback, id, onValidationSchemaChange, children}, ref) => {
     const intl = useIntl();
-    const {values, setValues, errors, setErrors, setTouched, initialValues} =
-      useFormikContext<JSONObject>();
+    const {
+      values,
+      setValues,
+      errors,
+      setErrors,
+      setTouched,
+      initialValues,
+      isValidating,
+      submitCount,
+    } = useFormikContext<JSONObject>();
+    const formContainer = useRef<HTMLFormElement | null>(null);
+    const lastHandledSubmit = useRef(0);
 
     useImperativeHandle(
       ref,
@@ -340,8 +350,35 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       }
     }, [errors, setErrors]);
 
+    // ensure that the first error in the form is scrolled into view, if any.
+    // Formik updates the submitCount on every submit attempt and runs validation. By
+    // doing the scroll effect after explicit submit, we avoid scrolling the page when
+    // the user is doing *other* actions.
+    const hasErrors = Object.keys(errors).length > 0;
+    useEffect(() => {
+      if (submitCount === 0) return;
+      if (isValidating) return;
+      if (lastHandledSubmit.current === submitCount) return;
+      if (!hasErrors) return;
+      lastHandledSubmit.current = submitCount;
+
+      // the query selector is the easiest way to find the first element, rather than
+      // trying to determine the order from the component definition or error messages
+      // object structure...
+      const firstErrorMessage = formContainer.current?.querySelector(
+        '.utrecht-form-field--invalid, .openforms-fieldset--invalid'
+      );
+      if (!firstErrorMessage) return;
+      const reqId = requestAnimationFrame(() => {
+        firstErrorMessage.scrollIntoView({behavior: 'smooth'});
+      });
+      return () => {
+        window.cancelAnimationFrame(reqId);
+      };
+    }, [submitCount, isValidating, hasErrors]);
+
     return (
-      <Form noValidate id={id}>
+      <Form noValidate id={id} ref={formContainer}>
         <FormFieldContainer>
           {componentsToRender.map((definition, index) => (
             <FormioComponent key={`${definition.id || index}`} componentDefinition={definition} />
