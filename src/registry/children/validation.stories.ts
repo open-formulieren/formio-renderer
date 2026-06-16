@@ -1,9 +1,10 @@
 import type {ChildrenComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, fn, userEvent, within} from 'storybook/test';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
+import type {JSONObject} from '@/types';
 
 import {FormioChildrenField} from './index';
 
@@ -15,6 +16,7 @@ export default {
 interface ValidationStoryArgs {
   componentDefinition: ChildrenComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
+  values?: JSONObject;
 }
 
 type ValidationStory = StoryObj<ValidationStoryArgs>;
@@ -222,5 +224,55 @@ export const ValidateValidWithoutChildren: ValidationStory = {
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
 
     expect(args.onSubmit).toHaveBeenCalledWith({children: []});
+  },
+};
+
+export const ValidateValidWithDataFromPrefill: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    ...BaseValidationStory.args,
+    componentDefinition: {
+      type: 'children',
+      key: 'prefilledChildren',
+      id: 'children',
+      label: 'Children',
+      enableSelection: false,
+    } satisfies ChildrenComponentSchema,
+    values: {
+      prefilledChildren: [
+        {
+          bsn: '111222333',
+          firstNames: 'Joe',
+          dateOfBirth: '2025-11-01',
+        },
+      ],
+    },
+  },
+
+  play: async ({canvasElement, args}) => {
+    const canvas = within(canvasElement);
+
+    const submitButton = canvas.getByRole('button', {name: 'Submit'});
+
+    // there are re-renderers happen to set the `selected` property, and on Chromatic
+    // the submit click seems to happen *before* this data update has completed, leading
+    // to invalid data being submitted. This doesn't happen in the browser / vitest
+    // tests it seems
+    await waitFor(() => {
+      expect(submitButton).toHaveAttribute('data-is-valid', 'true');
+    });
+    await userEvent.click(submitButton);
+
+    // Submit the empty children data.
+    expect(args.onSubmit).toHaveBeenCalledWith({
+      prefilledChildren: [
+        {
+          bsn: '111222333',
+          firstNames: 'Joe',
+          dateOfBirth: '2025-11-01',
+          selected: null,
+        },
+      ],
+    });
   },
 };
