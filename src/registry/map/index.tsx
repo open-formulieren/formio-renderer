@@ -31,6 +31,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
     tileLayerUrl,
     interactions = DEFAULT_INTERACTIONS,
     overlays,
+    validate,
   } = componentDefinition;
   const name = useFieldConfig(key);
   const id = useId();
@@ -44,6 +45,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
   return (
     <FormField invalid={error ? true : false} className="utrecht-form-field--openforms">
       <Label
+        isRequired={validate?.required}
         isDisabled={withoutControl}
         tooltip={tooltip ? <Tooltip>{tooltip}</Tooltip> : undefined}
       >

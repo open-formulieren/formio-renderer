@@ -59,6 +59,35 @@ export const WithTooltip: Story = {
   },
 };
 
+export const NoAsterisks: Story = {
+  name: 'No asterisk for required',
+  decorators: [withFormSettingsProvider],
+  args: {
+    componentDefinition: {
+      id: 'map',
+      type: 'map',
+      key: 'my.map',
+      label: 'A map',
+      tooltip: 'Tooltip placeholder',
+      validate: {required: true},
+    },
+  },
+  parameters: {
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
+    },
+    formik: {
+      initialValues: {
+        map: null,
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    expect(canvas.queryByText(/not required/)).not.toBeInTheDocument();
+  },
+};
+
 export const WithPoint: Story = {
   args: {
     componentDefinition: {
