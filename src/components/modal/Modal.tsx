@@ -1,4 +1,5 @@
 import {Heading2, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {clsx} from 'clsx';
 import {useEffect, useId, useRef} from 'react';
 import ReactDOM from 'react-dom';
 import {useIntl} from 'react-intl';
@@ -9,6 +10,8 @@ import Icon from '@/components/icons';
 import './Modal.scss';
 import {useModalContext} from './hooks';
 
+export type ModalVariant = 'modal' | 'sheet';
+
 export interface ModalProps {
   isOpen?: boolean;
   title: React.ReactNode;
@@ -16,6 +19,7 @@ export interface ModalProps {
   closeModal: () => void;
   children: React.ReactNode;
   noPortal?: boolean;
+  variant?: ModalVariant;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,6 +28,7 @@ const Modal: React.FC<ModalProps> = ({
   titleId,
   closeModal,
   noPortal = false,
+  variant = 'modal',
   children,
 }) => {
   const id = useId();
@@ -51,7 +56,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const dialogUI = (
     <dialog
-      className="openforms-modal"
+      className={clsx('openforms-modal', {'openforms-modal--sheet': variant === 'sheet'})}
       ref={modalRef}
       aria-labelledby={titleId}
       onClose={closeModal}

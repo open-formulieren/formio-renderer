@@ -58,6 +58,8 @@ type Story = StoryObj<typeof Modal>;
 
 export const Default: Story = {};
 
+export const Sheet: Story = {args: {variant: 'sheet'}};
+
 export const CloseModal: Story = {
   decorators: [withTriggerDecorator],
   args: {
@@ -103,9 +105,24 @@ export const CloseModal: Story = {
   },
 };
 
+export const CloseSheet: Story = {
+  ...CloseModal,
+  args: {
+    ...CloseModal.args,
+    variant: 'sheet',
+  },
+};
+
 export const WithPortal: Story = {
   args: {
     noPortal: false,
+  },
+};
+
+export const WithPortalSheet: Story = {
+  args: {
+    noPortal: false,
+    variant: 'sheet',
   },
 };
 
@@ -159,5 +176,13 @@ export const OutlinesVisible: Story = {
 
     const checkbox = await canvas.findByRole('checkbox', {name: /On focus/});
     checkbox.focus();
+  },
+};
+
+export const OutlinesVisibleSheet: Story = {
+  ...OutlinesVisible,
+  args: {
+    ...OutlinesVisible.args,
+    variant: 'sheet',
   },
 };
