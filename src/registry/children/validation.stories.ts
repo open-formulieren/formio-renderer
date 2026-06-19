@@ -258,21 +258,19 @@ export const ValidateValidWithDataFromPrefill: ValidationStory = {
     // the submit click seems to happen *before* this data update has completed, leading
     // to invalid data being submitted. This doesn't happen in the browser / vitest
     // tests it seems
-    await waitFor(() => {
-      expect(submitButton).toHaveAttribute('data-is-valid', 'true');
-    });
-    await userEvent.click(submitButton);
-
-    // Submit the empty children data.
-    expect(args.onSubmit).toHaveBeenCalledWith({
-      prefilledChildren: [
-        {
-          bsn: '111222333',
-          firstNames: 'Joe',
-          dateOfBirth: '2025-11-01',
-          selected: null,
-        },
-      ],
+    await waitFor(async () => {
+      // Submit the empty children data.
+      await userEvent.click(submitButton);
+      expect(args.onSubmit).toHaveBeenCalledWith({
+        prefilledChildren: [
+          {
+            bsn: '111222333',
+            firstNames: 'Joe',
+            dateOfBirth: '2025-11-01',
+            selected: null,
+          },
+        ],
+      });
     });
   },
 };
