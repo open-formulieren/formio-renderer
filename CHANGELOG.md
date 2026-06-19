@@ -1,5 +1,21 @@
 # Changes
 
+## 1.1.4 (2026-06-19)
+
+Bugfix release.
+
+- [`OF#6356`][OF#6356] Fixed displaying time values that only have the hours and minutes parts.
+- [`OF#6354`][OF#6354] Fixed data-retrieval callbacks being called excessively despite no data being
+  changed.
+- [`OF#6075`][OF#6075] Fixed the asterisk/label suffix display for required map components.
+- [`OF#6371`][OF#6371] Fixed the children component data not being updated properly when prefill
+  data is used.
+
+[OF#6356]: https://github.com/open-formulieren/open-forms/issues/6356
+[OF#6354]: https://github.com/open-formulieren/open-forms/issues/6354
+[OF#6075]: https://github.com/open-formulieren/open-forms/issues/6075
+[OF#6371]: https://github.com/open-formulieren/open-forms/issues/6371
+
 ## 1.1.3 (2026-06-04)
 
 Bugfix release.
