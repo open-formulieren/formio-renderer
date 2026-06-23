@@ -16,6 +16,8 @@ on:
       - ready_for_review
   workflow_dispatch:
 
+permissions: {}
+
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref_name }}' # unique builds for branch/tag name
   cancel-in-progress: false  # do not cancel in progress, but only in-between builds
@@ -29,21 +31,25 @@ jobs:
       version: ${{ steps.vars.outputs.version }}
       git_hash: ${{ steps.vars.outputs.git_hash }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
       - name: Extract version info
         id: vars
-        uses: maykinmedia/open-api-workflows/actions/extract-version@v6
+        uses: maykinmedia/open-api-workflows/actions/extract-version@79102b911003d75203ca2fed7df01ad79d9b6bba # v6.4.0
 
   storybook:
     name: Create storybook build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Build Storybook docs
         run: |
@@ -52,7 +58,7 @@ jobs:
           npm run build-storybook -- --stats-json --quiet
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./storybook-static
 
@@ -61,11 +67,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -82,7 +90,7 @@ jobs:
           fi
 
       - name: Store build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: build
           path: dist/
@@ -93,11 +101,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -105,16 +115,34 @@ jobs:
       - name: Run prettier linter
         run: npm run checkformat
 
+  zizmor:
+    name: GitHub Actions Security Analysis with zizmor 🌈
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor 🌈
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+
   unit-tests:
     name: Run unit tests
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -125,7 +153,7 @@ jobs:
           npm run test:vitest -- --coverage
 
       - name: Publish coverage report
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: vitest
@@ -137,11 +165,13 @@ jobs:
       - storybook
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -156,7 +186,7 @@ jobs:
         run: npm run test:storybook -- --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: storybook
@@ -166,15 +196,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: open-formulieren/actions/check-message-extraction@v1
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: open-formulieren/actions/check-message-extraction@c3a381fb81dde99084eaeeb861bb95a433b1a535 # v1.1
         with:
           paths: i18n/{compiled,messages}
           extraction-command: ./bin/makemessages.sh
           compilation-command: npm run compilemessages
 
       # Only actually does anything in release/* branches or for pushed tags
-      - uses: open-formulieren/actions/check-missing-translations@v1
+      - uses: open-formulieren/actions/check-missing-translations@c3a381fb81dde99084eaeeb861bb95a433b1a535 # v1.1
         with:
           messages-path: i18n/messages
           locales: nl
@@ -203,10 +235,10 @@ jobs:
     steps:
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
   chromatic:
     name: Visual regression test with Chromatic
@@ -219,12 +251,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
+          persist-credentials: false
           fetch-depth: 0 # 👈 Required to retrieve git history
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: github-pages
           path: ./storybook-static
@@ -236,7 +269,7 @@ jobs:
         working-directory: ./storybook-static
 
       - name: Publish to Chromatic for visual regression tests
-        uses: chromaui/action@latest
+        uses: chromaui/action@d92ea1ce501f70e8c34745b2c7888648150a368a # v17.2.0
         if: github.event.pull_request.draft == false || github.event.push
         with:
           autoAcceptChanges: main
@@ -267,11 +300,13 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
           registry-url: 'https://registry.npmjs.org'
           scope: '@open-formulieren'
 
@@ -282,14 +317,14 @@ jobs:
           npm install
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: build
           path: dist/
 
       - name: Publish package to NPM
         run: |
-          case "${{ needs.setup.outputs.version }}" in
+          case "${VERSION}" in
             *"-alpha."*) npm_tag=next ;;
             *"-beta."*) npm_tag=next ;;
             *"-rc."*) npm_tag=next ;;
@@ -297,3 +332,5 @@ jobs:
           esac
 
           npm publish --access public --tag="$npm_tag"
+        env:
+          VERSION: ${{ needs.setup.outputs.version }}
