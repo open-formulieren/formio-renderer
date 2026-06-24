@@ -1,4 +1,5 @@
 import type {TextFieldComponentSchema} from '@open-formulieren/types';
+import {FastField} from 'formik';
 
 import MultiField from '@/components/forms/MultiField';
 import TextField from '@/components/forms/TextField';
@@ -42,26 +43,35 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
       {...sharedProps}
       newItemValue=""
       renderField={({name, label, isReadOnly}) => (
+        <FastField name={name}>
+          {() => (
+            <TextField
+              name={name}
+              label={label}
+              placeholder={placeholder}
+              showCharCount={showCharCount}
+              maxLength={validate?.maxLength}
+              autoComplete={autocomplete}
+              isReadOnly={isReadOnly}
+              isMultiValue
+            />
+          )}
+        </FastField>
+      )}
+    />
+  ) : (
+    // FIXME: needs to compare other props too (from sharedProps)
+    <FastField name={key}>
+      {() => (
         <TextField
-          name={name}
-          label={label}
+          {...sharedProps}
           placeholder={placeholder}
           showCharCount={showCharCount}
           maxLength={validate?.maxLength}
           autoComplete={autocomplete}
-          isReadOnly={isReadOnly}
-          isMultiValue
         />
       )}
-    />
-  ) : (
-    <TextField
-      {...sharedProps}
-      placeholder={placeholder}
-      showCharCount={showCharCount}
-      maxLength={validate?.maxLength}
-      autoComplete={autocomplete}
-    />
+    </FastField>
   );
 };
 
