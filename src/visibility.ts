@@ -1,6 +1,5 @@
-import type {AnyComponentSchema, JSONValue} from '@open-formulieren/types';
+import type {AnyComponentSchema} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
-import {isEqual} from 'lodash';
 
 import type {NestedObject} from '@/components/utils';
 import {getClearOnHide, isHidden} from '@/formio';
@@ -74,7 +73,7 @@ export const processVisibility = (
    * Submission (or item) values for the current scope. The root scope is equal to the
    * values for the _whole_ submission, but that's not always the case. Edit grids
    * essentially have a nested, isolated scope for each item with a nested subform tree
-   * of components, with access to the outer sope. See the context parameter
+   * of components, with access to the outer scope. See the context parameter
    * `getEvaluationScope` for such situations.
    *
    * A component becoming visible or hidden produces side effects, which are applied to
@@ -86,7 +85,7 @@ export const processVisibility = (
    * Validation errors for the current scope. The root scope is equal to the
    * errors for the _whole_ submission, but that's not always the case. Edit grids
    * essentially have a nested, isolated scope for each item with a nested subform tree
-   * of components, with access to the outer sope. See the context parameter
+   * of components, with access to the outer scope. See the context parameter
    * `getEvaluationScope` for such situations.
    *
    * A component becoming hidden produces side effects - the validation errors for that
@@ -128,10 +127,7 @@ export const processVisibility = (
     // loop so that the next iteration uses the side-effects as soon as possible.
     if (hidden) {
       // only clear the value if actually requested
-      if (clearOnHide) {
-        const clearValueCallback = context?.clearValueCallback ?? clearValue;
-        updatedValues = clearValueCallback(updatedValues, key);
-      }
+      if (clearOnHide) updatedValues = clearValue(updatedValues, key);
       // update the errors if any component is invalid but hidden
       updatedErrors = clearErrors(updatedErrors, key);
     } else {
@@ -139,17 +135,9 @@ export const processVisibility = (
       // sure that we have a value for it. `initialValues` contains either the
       // user-submitted submission data, or is populated with the default/empty value
       // of the component/component type, see `FormioForm.tsx`.
-      const currentValue: JSONValue | undefined = getIn(updatedValues, key);
-      const hasValue = currentValue !== undefined;
-      const newValue: JSONValue | undefined = getIn(initialValues, key);
-
-      const shouldSyncFromInitialValues = !!(
-        !hasValue ||
-        (context.emulateBackend && !isEqual(currentValue, newValue))
-      );
-
-      if (newValue !== undefined && shouldSyncFromInitialValues) {
-        updatedValues = setIn(updatedValues, key, newValue);
+      const hasValue = getIn(updatedValues, key) !== undefined;
+      if (!hasValue) {
+        updatedValues = setIn(updatedValues, key, getIn(initialValues, key));
       }
 
       // we don't 'restore' errors like we do values - when a component becomes visible,

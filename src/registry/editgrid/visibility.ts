@@ -22,7 +22,7 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
   let items: JSONObject[] | undefined = getIn(values, key);
   let itemsErrors: Errors[] | string | undefined = getIn(errors, key);
 
-  if (items === undefined || context.emulateBackend) {
+  if (items === undefined) {
     return {
       updatedDefinition: componentDefinition,
       updatedValues: values,
