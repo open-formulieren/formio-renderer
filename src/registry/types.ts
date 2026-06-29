@@ -107,16 +107,6 @@ export interface VisibilityContext {
    * interpreted in the right context.
    */
   componentsMap: Partial<Record<string, AnyComponentSchema>>;
-  /**
-   * Callback to invoke to apply clearOnHide behaviour. If unspecified, the default
-   * behaviour of removing the key from the data will be applied.
-   */
-  clearValueCallback?: (values: JSONObject, key: string) => JSONObject;
-  /**
-   * Flag to indicate we're emulating backend behaviour, which triggers non-intuitive
-   * code paths.
-   */
-  emulateBackend?: boolean;
 }
 
 type ConditionalOptions = NonNullable<Conditional['conditional']>;
