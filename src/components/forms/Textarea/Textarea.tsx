@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {Paragraph, Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
 import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
@@ -12,6 +13,7 @@ import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
 
+import FAQTooltip from '../FAQTooltip';
 import './Textarea.scss';
 
 export interface TextareaProps {
@@ -45,6 +47,11 @@ export interface TextareaProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Placeholder when no (default) value is available.
    */
@@ -81,6 +88,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  faqItems = [],
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -110,6 +118,10 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
       textarea.scrollHeight + parseFloat(borderBlockStart) + parseFloat(borderBlockEnd);
     textarea.style.blockSize = `${newHeight}px`;
   }, [autoExpand, value, textareaRef]);
+
+  const faqElements = faqItems.map((faqItem, index) => (
+    <FAQTooltip key={index} faqItem={faqItem} />
+  ));
 
   return (
     <FormField type="textarea" invalid={invalid} className="utrecht-form-field--openforms">
@@ -150,6 +162,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
         <CharCount id={characterCountId} text={value} limit={maxLength} />
       )}
       <HelpText>{description}</HelpText>
+      {faqElements}
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
     </FormField>
   );

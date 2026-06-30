@@ -1,9 +1,12 @@
+import type {FAQItem} from '@open-formulieren/types/dist/common';
 import {Paragraph} from '@utrecht/component-library-react';
 import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
+
+import FAQTooltip from '../FAQTooltip';
 
 export interface InputGroupProps {
   children?: React.ReactNode;
@@ -13,6 +16,7 @@ export interface InputGroupProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  faqItems?: FAQItem[];
   isReadOnly?: boolean;
   isRequired?: boolean;
   name?: string;
@@ -24,6 +28,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
   tooltip,
   isRequired = false,
   isReadOnly = false,
+  faqItems = [],
   name,
 }) => (
   <Fieldset
@@ -40,6 +45,10 @@ const InputGroup: React.FC<InputGroupProps> = ({
       {tooltip && <Tooltip>{tooltip}</Tooltip>}
     </FieldsetLegend>
     <Paragraph className="openforms-input-group">{children}</Paragraph>
+
+    {faqItems.map((faqItem, index) => (
+      <FAQTooltip key={index} faqItem={faqItem} />
+    ))}
   </Fieldset>
 );
 
