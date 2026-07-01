@@ -1,0 +1,18 @@
+// Shims for backwards compatibility, grouped by Open Forms SDK version.
+
+// 3.4.0
+// Uses the root selector so that more specific (theme-specific!) design token values
+// have higher priority/selectivity.
+:root {
+  // defaults for the unordered list component to be backwards compatible.
+  --utrecht-unordered-list-list-style-type: disc;
+  --utrecht-unordered-list-padding-inline-start: 18px;
+  --utrecht-unordered-list-margin-inline-start: 0;
+  --utrecht-unordered-list-item-padding-inline-start: 0;
+}
+
+.openforms-theme {
+  // make explicit so that --utrecht-unordered-list-item-padding-inline-start isn't used
+  // as fallback, which results in a visual regression otherwise
+  --utrecht-ordered-list-item-padding-inline-start: 8px;
+}

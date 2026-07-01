@@ -1,3 +1,5 @@
+import '@/scss/shims.scss';
+
 // High level API
 export {default as FormioForm} from '@/components/FormioForm';
 
