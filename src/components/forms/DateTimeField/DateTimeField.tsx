@@ -16,7 +16,7 @@ import {useFieldConfig, useFieldError} from '@/hooks';
 import './DateTimeField.scss';
 import {useDateLocaleMeta} from './hooks';
 import {PART_PLACEHOLDERS} from './messages';
-import {parseDateTime} from './utils';
+import {getBestInitialDate, parseDateTime} from './utils';
 
 export interface DateTimeFieldProps {
   /**
@@ -245,7 +245,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 } as React.ChangeEvent<HTMLInputElement>;
                 onPartChange(e);
               }}
-              currentDate={currentDateTime ?? undefined}
+              currentDate={currentDateTime ?? getBestInitialDate(minDate, maxDate)}
               minDate={minDate}
               maxDate={maxDate}
             >
