@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
       - name: Extract version info
         id: vars
-        uses: maykinmedia/open-api-workflows/actions/extract-version@79102b911003d75203ca2fed7df01ad79d9b6bba # v6
+        uses: maykinmedia/open-api-workflows/actions/extract-version@0a5525c13f8eea10be40c8eaee5e535ea3a10721 # v6.4.1
 
   storybook:
     name: Create storybook build
@@ -194,14 +194,14 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           persist-credentials: false
-      - uses: open-formulieren/actions/check-message-extraction@599d67bf43a0c630d26675244a2d4774835a6897 # v1
+      - uses: open-formulieren/actions/check-message-extraction@c3a381fb81dde99084eaeeb861bb95a433b1a535 # v1.1
         with:
           paths: i18n/{compiled,messages}
           extraction-command: ./bin/makemessages.sh
           compilation-command: npm run compilemessages
 
       # Only actually does anything in release/* branches or for pushed tags
-      - uses: open-formulieren/actions/check-missing-translations@599d67bf43a0c630d26675244a2d4774835a6897 # v1
+      - uses: open-formulieren/actions/check-missing-translations@c3a381fb81dde99084eaeeb861bb95a433b1a535 # v1.1
         with:
           messages-path: i18n/messages
           locales: nl
