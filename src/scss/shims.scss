@@ -5,8 +5,13 @@
 // have higher priority/selectivity.
 :root {
   --utrecht-form-control-font-weight: var(--of-input-font-weight, initial);
-  // adds the quotes that the default styles are missing
-  --utrecht-unordered-list-list-style-type: '●';
+
+  // defaults for the unordered list component to be backwards compatible. Can be
+  // removed in Open Forms 5.0. (DeprecationWarning)
+  --utrecht-unordered-list-list-style-type: disc;
+  --utrecht-unordered-list-padding-inline-start: 18px;
+  --utrecht-unordered-list-margin-inline-start: 0;
+  --utrecht-unordered-list-item-padding-inline-start: 0;
 
   .utrecht-button {
     column-gap: var(--utrecht-button-column-gap, var(--utrecht-button-icon-gap));
