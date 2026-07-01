@@ -16,6 +16,8 @@ on:
       - ready_for_review
   workflow_dispatch:
 
+permissions: {}
+
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref_name }}' # unique builds for branch/tag name
   cancel-in-progress: false  # do not cancel in progress, but only in-between builds
@@ -29,21 +31,25 @@ jobs:
       version: ${{ steps.vars.outputs.version }}
       git_hash: ${{ steps.vars.outputs.git_hash }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
       - name: Extract version info
         id: vars
-        uses: maykinmedia/open-api-workflows/actions/extract-version@v6
+        uses: maykinmedia/open-api-workflows/actions/extract-version@79102b911003d75203ca2fed7df01ad79d9b6bba # v6
 
   storybook:
     name: Create storybook build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Build Storybook docs
         run: |
@@ -52,7 +58,7 @@ jobs:
           npm run build-storybook -- --stats-json --quiet
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: ./storybook-static
 
@@ -61,11 +67,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -82,7 +90,7 @@ jobs:
           fi
 
       - name: Store build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: build
           path: dist/
@@ -93,11 +101,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -110,11 +120,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -124,7 +136,7 @@ jobs:
           npm run test:vitest -- --coverage
 
       - name: Publish coverage report
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: vitest
@@ -136,11 +148,13 @@ jobs:
       - storybook
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
 
       - name: Install dependencies
         run: npm ci
@@ -152,7 +166,7 @@ jobs:
           npm run compilemessages
 
       - name: Download storybook artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: github-pages
           path: storybook-static
@@ -167,7 +181,7 @@ jobs:
           npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: storybook
@@ -177,15 +191,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: open-formulieren/actions/check-message-extraction@v1
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: open-formulieren/actions/check-message-extraction@599d67bf43a0c630d26675244a2d4774835a6897 # v1
         with:
           paths: i18n/{compiled,messages}
           extraction-command: ./bin/makemessages.sh
           compilation-command: npm run compilemessages
 
       # Only actually does anything in release/* branches or for pushed tags
-      - uses: open-formulieren/actions/check-missing-translations@v1
+      - uses: open-formulieren/actions/check-missing-translations@599d67bf43a0c630d26675244a2d4774835a6897 # v1
         with:
           messages-path: i18n/messages
           locales: nl
@@ -214,10 +230,10 @@ jobs:
     steps:
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@1f0c5cde4bc74cd7e1254d0cb4de8d49e9068c7d # v4
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
 
   chromatic:
     name: Visual regression test with Chromatic
@@ -230,12 +246,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0 # 👈 Required to retrieve git history
+          persist-credentials: false
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: github-pages
           path: ./storybook-static
@@ -247,7 +264,7 @@ jobs:
         working-directory: ./storybook-static
 
       - name: Publish to Chromatic for visual regression tests
-        uses: chromaui/action@latest
+        uses: chromaui/action@b5b575184e923495cfbd28d3c0df91b42379c94e  #v18.0.0
         if: github.event.pull_request.draft == false || github.event.push
         with:
           autoAcceptChanges: main
@@ -278,11 +295,13 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-          cache: npm
+          package-manager-cache: 'false'
           registry-url: 'https://registry.npmjs.org'
           scope: '@open-formulieren'
 
@@ -293,14 +312,14 @@ jobs:
           npm install
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: build
           path: dist/
 
       - name: Publish package to NPM
         run: |
-          case "${{ needs.setup.outputs.version }}" in
+          case "${NEEDS_SETUP_OUTPUTS_VERSION}" in
             *"-alpha."*) npm_tag=next ;;
             *"-beta."*) npm_tag=next ;;
             *"-rc."*) npm_tag=next ;;
@@ -309,3 +328,5 @@ jobs:
           esac
 
           npm publish --access public --tag="$npm_tag"
+        env:
+          NEEDS_SETUP_OUTPUTS_VERSION: ${{ needs.setup.outputs.version }}
