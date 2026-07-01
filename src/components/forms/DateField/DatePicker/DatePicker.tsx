@@ -11,7 +11,7 @@ import Tooltip from '@/components/forms/Tooltip';
 
 import {useDateLocaleMeta} from '../hooks';
 import {PART_PLACEHOLDERS} from '../messages';
-import {parseDate} from '../utils';
+import {getBestInitialDate, parseDate} from '../utils';
 import './DatePicker.scss';
 
 interface DatePickerFieldProps {
@@ -166,7 +166,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                 await validateField(name);
                 setIsOpen(false);
               }}
-              currentDate={currentDate ?? undefined}
+              currentDate={currentDate ?? getBestInitialDate(minDate, maxDate)}
               minDate={minDate}
               maxDate={maxDate}
               events={calendarEvents}

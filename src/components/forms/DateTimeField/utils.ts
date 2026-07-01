@@ -121,3 +121,38 @@ export const getDateLocaleMeta = (locale: string): LocaleMeta => {
   const is24HourFormat = !parts.find(part => part.type === 'dayPeriod');
   return {datePartsOrder, dateSeparator, timeSeparator, is24HourFormat};
 };
+
+/**
+ * Determine the "best" initial date for the date picker.
+ *
+ * Given the (optional) minimum and maximum bounds, pick the bound that should lead
+ * to the least amount of clicks for the user to get to a valid date. There are a
+ * number of cases to consider here that prevent use from using date-fns `min` helper:
+ *
+ * - for a max date in the past, use the max date so the user doesn't have to skip over
+ *   all days between the past max date & now
+ * - for a min date in the future, a similar case applies
+ * - when both min and max date are specified and today falls within the interval -
+ *   don't use any of the bounds, as the date picker defaults to the current date
+ */
+export const getBestInitialDate = (
+  minDate: Date | undefined,
+  maxDate: Date | undefined
+): Date | undefined => {
+  // no bounds given -> nothing to decide
+  if (minDate === undefined && maxDate === undefined) return undefined;
+
+  const now = new Date();
+  // both bounds given and now falls within the interval -> nothing to decide either
+  if (minDate !== undefined && minDate <= now && maxDate !== undefined && now <= maxDate)
+    return undefined;
+
+  // for max date in the past, use the max date as closest moment to 'now'
+  if (maxDate !== undefined && maxDate <= now) return maxDate;
+
+  // for min date in the future, use the min date as closest moment to 'now'
+  if (minDate !== undefined && minDate >= now) return minDate;
+
+  // max date in the future or min date in the past -> nothing to decide
+  return undefined;
+};
