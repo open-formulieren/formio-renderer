@@ -1,5 +1,33 @@
 # Changes
 
+## 1.7.0 (2026-07-03)
+
+Small feature and bugfix release.
+
+**New features**
+
+- You can now track parent-child relations again through the `getComponentsMap` utility (internal
+  API).
+- [`OF#6315`][OF#6315] Added a modal "sheet" variant for future informational UI elements.
+
+[OF#6315]: https://github.com/open-formulieren/open-forms/issues/6315
+
+**Bugfixes**
+
+- [`OF#6410`][OF#6410] Fixed unordered lists styling regression.
+- [`OF#6403`][OF#6403] Fixed initial/default date in date picker calendars when the field has a
+  minimum value in the future or maximum value in the past.
+
+[OF#6410]: https://github.com/open-formulieren/open-forms/issues/6410
+[OF#6403]: https://github.com/open-formulieren/open-forms/issues/6403
+
+**Project maintenance**
+
+- [`OF#6126`][OF#6126] Hardened the CI pipeline to protect against potential supply chain attacks.
+- Bumped dependencies to their latest (security) releases.
+
+[OF#6126]: https://github.com/open-formulieren/open-forms/issues/6126
+
 ## 1.6.2 (2026-06-19)
 
 Bugfix release.
