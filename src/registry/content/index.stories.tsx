@@ -41,7 +41,18 @@ export const SimpleContent: Story = {
       cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
       proident, sunt in culpa qui officia deserunt mollit anim id
       <a href="https://example.com" target="_blank" rel="external">est laborum</a>.</p>
-      <p>Second paragraph</p>`,
+      <p>Second paragraph</p>
+      <ul>
+        <li>Unordered list</li>
+        <li>
+          With nested items:
+          <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+          </ul>
+        </li>
+      </ul>
+      `,
       customClass: '',
     } satisfies ContentComponentSchema,
   },
