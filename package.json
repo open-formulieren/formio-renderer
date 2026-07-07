@@ -75,7 +75,7 @@
     "@formatjs/intl": "^3.1.8",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@maykinmedia/eslint-config": "^2.0.0",
-    "@open-formulieren/design-tokens": "^0.66.0",
+    "@open-formulieren/design-tokens": "^0.68.1",
     "@open-formulieren/leaflet-tools": "^1.0.0",
     "@sinonjs/fake-timers": "^15.0.0",
     "@storybook/addon-docs": "10.4.1",
