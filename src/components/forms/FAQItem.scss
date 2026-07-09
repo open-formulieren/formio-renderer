@@ -1,0 +1,26 @@
+@use '@utrecht/icon-css';
+@use '@utrecht/link-button-css';
+
+@use '@/scss/bem';
+
+.openforms-faq-items {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--of-faq-items-row-gap, 8px);
+  align-items: flex-start;
+  padding-block-start: var(--of-faq-items-padding-block-start, 8px);
+}
+
+.openforms-faq-item {
+  @include bem.element('title') {
+    color: var(--of-faq-item-title-color);
+    font-size: var(--of-faq-item-title-font-size);
+    font-weight: var(--of-faq-item-title-font-weight);
+    line-height: var(--of-faq-item-title-line-height);
+    text-decoration: var(--of-faq-item-title-text-decoration);
+
+    &:hover {
+      text-decoration: var(--of-faq-item-title-hover-text-decoration);
+    }
+  }
+}
