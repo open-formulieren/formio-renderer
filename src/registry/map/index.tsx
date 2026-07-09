@@ -5,6 +5,7 @@ import {useField, useFormikContext} from 'formik';
 import React, {useId} from 'react';
 
 import {HelpText, Label, ValidationErrors} from '@/components/forms';
+import FAQItems from '@/components/forms/FAQItems';
 import Tooltip from '@/components/forms/Tooltip';
 import LeafletMap from '@/components/map';
 import {useFieldConfig, useFieldError} from '@/hooks';
@@ -32,6 +33,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
     interactions = DEFAULT_INTERACTIONS,
     overlays,
     validate,
+    faqItems = [],
   } = componentDefinition;
   const name = useFieldConfig(key);
   const id = useId();
@@ -84,6 +86,7 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
 
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

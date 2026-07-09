@@ -205,6 +205,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
     hideLabel,
     tooltip,
     description,
+    faqItems,
     validate,
     disableAddingRemovingRows,
     groupLabel,
@@ -263,6 +264,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
       isRequired={validate?.required}
       description={description}
       enableIsolation
+      faqItems={faqItems}
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
       getItemBody={(_, index: number, {expanded}) => (
         <ItemBody

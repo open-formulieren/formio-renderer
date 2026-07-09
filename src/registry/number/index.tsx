@@ -23,6 +23,7 @@ export const FormioNumberField: React.FC<FormioNumberFieldProps> = ({
     allowNegative,
     prefix,
     suffix,
+    faqItems,
   },
 }) => {
   return (
@@ -36,6 +37,7 @@ export const FormioNumberField: React.FC<FormioNumberFieldProps> = ({
       allowNegative={allowNegative}
       prefix={prefix}
       suffix={suffix}
+      faqItems={faqItems}
     />
   );
 };

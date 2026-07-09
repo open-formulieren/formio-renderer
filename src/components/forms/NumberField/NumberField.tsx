@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {FormField} from '@utrecht/form-field-react';
 import {Textbox} from '@utrecht/textbox-react';
 import {useField, useFormikContext} from 'formik';
@@ -5,6 +6,7 @@ import {useId} from 'react';
 import {useIntl} from 'react-intl';
 import {NumericFormat} from 'react-number-format';
 
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import InputContainer from '@/components/forms/InputContainer';
 import Label from '@/components/forms/Label';
@@ -48,6 +50,11 @@ export interface NumberFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Maximum number of decimals of the input.
    */
@@ -126,6 +133,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   useThousandSeparator = false,
   fixedDecimalScale = false,
   isMultiValue = false,
+  faqItems = [],
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -199,6 +207,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
 
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

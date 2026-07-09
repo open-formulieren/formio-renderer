@@ -5,6 +5,7 @@ import {FormattedMessage} from 'react-intl';
 
 import {PrimaryActionButton, SecondaryActionButton} from '@/components/Button';
 import FormFieldContainer from '@/components/FormFieldContainer';
+import FAQItems from '@/components/forms/FAQItems';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
@@ -25,7 +26,7 @@ export interface FormioPartnersFieldProps {
 }
 
 export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
-  componentDefinition: {key, label, description, tooltip},
+  componentDefinition: {key, label, description, tooltip, faqItems = []},
 }) => {
   const {setFieldValue, getFieldProps} = useFormikContext();
   const {value: partners} = getFieldProps<ManuallyAddedPartnerDetails[] | PartnerDetails[]>(key);
@@ -85,6 +86,7 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
       )}
 
       <HelpText>{description}</HelpText>
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

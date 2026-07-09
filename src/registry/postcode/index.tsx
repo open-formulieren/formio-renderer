@@ -14,10 +14,10 @@ export interface FormioPostCodeProps {
 }
 
 export const PostCodeField: React.FC<FormioPostCodeProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, disabled} = componentDefinition;
+  const {key, label, tooltip, description, validate, disabled, faqItems} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -25,6 +25,7 @@ export const PostCodeField: React.FC<FormioPostCodeProps> = ({componentDefinitio
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

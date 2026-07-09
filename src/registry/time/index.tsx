@@ -14,10 +14,10 @@ export interface TimeFieldProps {
 }
 
 export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
-  const {key, label, description, tooltip, validate, disabled} = componentDefinition;
+  const {key, label, description, tooltip, validate, disabled, faqItems} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -25,6 +25,7 @@ export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

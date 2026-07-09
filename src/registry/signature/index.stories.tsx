@@ -44,6 +44,35 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'signature',
+      type: 'signature',
+      key: 'signature',
+      label: 'Signature',
+      footer: 'Awesome footer!',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        signature: '',
+      },
+    },
+  },
+};
+
 export const WithTooltipDescriptionAndFooter: Story = {
   args: {
     componentDefinition: {

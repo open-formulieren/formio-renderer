@@ -13,7 +13,7 @@ export interface FormioCosignProps {
 }
 
 export const FormioCosign: React.FC<FormioCosignProps> = ({
-  componentDefinition: {key, label, description, tooltip, validate, autocomplete},
+  componentDefinition: {key, label, description, tooltip, validate, autocomplete, faqItems},
 }) => {
   return (
     <TextField
@@ -24,6 +24,7 @@ export const FormioCosign: React.FC<FormioCosignProps> = ({
       tooltip={tooltip}
       isRequired={validate?.required}
       autoComplete={autocomplete}
+      faqItems={faqItems}
     />
   );
 };

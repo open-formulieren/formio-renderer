@@ -52,6 +52,31 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    isRequired: true,
+    faqItems: [
+      {
+        label: 'How do I fill in this field?',
+        content: 'The values required to fill out this field can be retrieved from XYZ.',
+      },
+      {
+        label: 'Is this field applicable to me?',
+        content: 'This field is applicable if you are XYZ.',
+      },
+    ],
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const faqLabels1 = canvas.getByRole('button', {name: 'How do I fill in this field?'});
+    const faqLabels2 = canvas.getByRole('button', {name: 'Is this field applicable to me?'});
+
+    // Label should be visible underneath the fields
+    await expect(faqLabels1).toBeVisible();
+    await expect(faqLabels2).toBeVisible();
+  },
+};
+
 export const ValidationError: Story = {
   name: 'Validation error',
   args: {

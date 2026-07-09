@@ -59,6 +59,37 @@ export const MinimalConfigurationDatePicker: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'date',
+      key: 'my.date',
+      label: 'Your date',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+      openForms: {translations: {}, widget: 'inputGroup'},
+    } satisfies DateComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          date: '',
+        },
+      },
+    },
+  },
+};
+
 export const WithTooltipInputGroup: Story = {
   args: {
     componentDefinition: {

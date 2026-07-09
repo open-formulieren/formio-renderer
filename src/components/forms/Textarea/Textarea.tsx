@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {Paragraph, Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
 import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
@@ -6,6 +7,7 @@ import {useField, useFormikContext} from 'formik';
 import {useId, useLayoutEffect, useRef} from 'react';
 
 import CharCount from '@/components/forms/CharCount';
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -46,6 +48,11 @@ export interface TextareaProps {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * Placeholder when no (default) value is available.
    */
   placeholder?: string;
@@ -81,6 +88,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  faqItems = [],
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -151,6 +159,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
       )}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

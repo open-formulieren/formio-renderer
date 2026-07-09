@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
@@ -7,6 +8,7 @@ import {useEffect, useId, useRef} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import {Button, SecondaryActionButton} from '@/components/Button';
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -69,6 +71,11 @@ export interface MultiFieldProps<T extends MultiFieldValue> {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * Optional callback invoked when a new item is added that should receive auto focus.
    *
    * If provided, you receive the Formik field name of the inserted item, e.g. `myField.3`.
@@ -111,6 +118,7 @@ function MultiField<T extends MultiFieldValue>({
   description,
   tooltip,
   getAutoFocusQuerySelector,
+  faqItems = [],
 }: MultiFieldProps<T>) {
   const {getFieldProps, setFieldError, getFieldMeta, touched} = useFormikContext<JSONObject>();
   const {value: formikItems} = getFieldProps<T[] | undefined>(name);
@@ -222,6 +230,7 @@ function MultiField<T extends MultiFieldValue>({
 
       <HelpText id={descriptionid}>{description}</HelpText>
       {anyItemTouched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 }

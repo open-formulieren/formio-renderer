@@ -15,11 +15,12 @@ export interface FormioDateTimeProps {
 }
 
 export const FormioDateTime: React.FC<FormioDateTimeProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, datePicker, disabled} = componentDefinition;
+  const {key, label, tooltip, description, validate, datePicker, disabled, faqItems} =
+    componentDefinition;
 
   const sharedProps: Pick<
     React.ComponentProps<typeof DateTimeField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -27,6 +28,7 @@ export const FormioDateTime: React.FC<FormioDateTimeProps> = ({componentDefiniti
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
 
   // Note: setting a max and min date in the form builder sets a value without the seconds in the

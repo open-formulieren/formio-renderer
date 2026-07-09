@@ -44,6 +44,27 @@ type Story = StoryObj<typeof FormioPartnersField>;
 
 export const MinimalConfiguration: Story = {};
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'partners',
+      type: 'partners',
+      key: 'partners',
+      label: 'Partners',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+};
+
 export const WithTooltipAndDescription: Story = {
   args: {
     componentDefinition: {

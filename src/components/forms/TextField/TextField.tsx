@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {Paragraph} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import type {TextboxProps} from '@utrecht/textbox-react';
@@ -6,6 +7,7 @@ import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
 import CharCount from '@/components/forms/CharCount';
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -45,6 +47,11 @@ export interface TextFieldProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Placeholder when no (default) value is available.
    */
@@ -93,6 +100,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   showCharCount = false,
   isMultiValue = false,
   nameForValidate = undefined,
+  faqItems = [],
   children,
   ...extraProps
 }) => {
@@ -147,6 +155,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       {children}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

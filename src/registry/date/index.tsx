@@ -15,7 +15,7 @@ export interface FormioDateProps {
 }
 
 export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, openForms, datePicker, disabled} =
+  const {key, label, tooltip, description, validate, openForms, datePicker, disabled, faqItems} =
     componentDefinition;
 
   const parsedMax = datePicker?.maxDate ? parseDate(datePicker.maxDate) : null;
@@ -24,7 +24,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
 
   const sharedProps: Pick<
     React.ComponentProps<typeof DateField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -32,6 +32,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
 
   return componentDefinition.multiple ? (

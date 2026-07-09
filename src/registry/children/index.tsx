@@ -5,6 +5,7 @@ import {useEffect, useId, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import {SecondaryActionButton} from '@/components/Button';
+import FAQItems from '@/components/forms/FAQItems';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
@@ -28,7 +29,7 @@ export interface FormioChildrenFieldProps {
 }
 
 export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
-  componentDefinition: {key, label, description, tooltip, enableSelection},
+  componentDefinition: {key, label, description, tooltip, faqItems = [], enableSelection},
 }) => {
   const id = useId();
   key = useFieldConfig(key);
@@ -145,6 +146,8 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
           />
         </SecondaryActionButton>
       )}
+
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

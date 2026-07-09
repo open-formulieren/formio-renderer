@@ -24,11 +24,12 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
     validate,
     disabled,
     showCharCount,
+    faqItems,
   } = componentDefinition;
 
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -36,6 +37,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

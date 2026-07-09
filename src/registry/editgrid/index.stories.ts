@@ -79,6 +79,44 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'my.textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [{my: {textfield: ''}}],
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {

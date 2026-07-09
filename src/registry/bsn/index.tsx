@@ -14,10 +14,10 @@ export interface FormioBSNProps {
 }
 
 export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, disabled} = componentDefinition;
+  const {key, label, tooltip, faqItems, description, validate, disabled} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -25,6 +25,7 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
 
   return componentDefinition.multiple ? (

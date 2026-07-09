@@ -39,6 +39,7 @@ export const FormioCurrencyField: React.FC<FormioCurrencyFieldProps> = ({
     currency,
     decimalLimit = 2,
     allowNegative,
+    faqItems,
   },
 }) => {
   const {locale} = useIntl();
@@ -57,6 +58,7 @@ export const FormioCurrencyField: React.FC<FormioCurrencyFieldProps> = ({
       valuePrefix={currencySymbol}
       useThousandSeparator
       fixedDecimalScale
+      faqItems={faqItems}
     />
   );
 };

@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {Checkbox as UtrechtCheckbox} from '@utrecht/checkbox-react';
 import {FormFieldDescription} from '@utrecht/form-field-description-react';
 import {FormField} from '@utrecht/form-field-react';
@@ -5,6 +6,7 @@ import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
 
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -58,6 +60,11 @@ export interface CheckboxProps {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -69,6 +76,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   isReadOnly = false,
   ignoreRequired = false,
   tooltip,
+  faqItems = [],
 }) => {
   const {validateField} = useFormikContext();
   name = useFieldConfig(name);
@@ -86,6 +94,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const descriptionId = description && !descriptionAsHelpText ? `${id}-description` : undefined;
 
   const ariaDescribedBy = [errorMessageId, descriptionId].filter(Boolean).join(' ');
+
   return (
     <FormField type="checkbox" invalid={invalid} className="utrecht-form-field--openforms">
       <UtrechtCheckbox
@@ -135,6 +144,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       )}
 
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

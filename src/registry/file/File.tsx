@@ -5,6 +5,7 @@ import {FieldArray, useFormikContext} from 'formik';
 import type {ArrayHelpers, FormikErrors} from 'formik';
 import {useId} from 'react';
 
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -54,6 +55,7 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
     fileMaxSize,
     file: {type},
     validate = {},
+    faqItems = [],
   } = componentDefinition;
   const name = useFieldConfig(key);
   const {required: isRequired = false} = validate;
@@ -144,6 +146,8 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
             <ValidationErrors error={fieldError} id={errorMessageId} />
           </div>
         )}
+
+        <FAQItems items={faqItems} />
       </div>
     </FormField>
   );
