@@ -9,6 +9,7 @@ import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 
 import './File.scss';
 import UploadInput from './UploadInput';
@@ -23,7 +24,8 @@ export interface FormioFileProps {
 }
 
 const FormioFile: React.FC<FormioFileProps> = ({componentDefinition}) => {
-  const {key: name} = componentDefinition;
+  const {key} = componentDefinition;
+  const name = useFieldConfig(key);
   return (
     <FieldArray name={name} validateOnChange={false}>
       {arrayHelpers => (
@@ -43,7 +45,7 @@ interface InnerProps {
  */
 const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
   const {
-    key: name,
+    key,
     label,
     description,
     tooltip,
@@ -53,6 +55,7 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
     file: {type},
     validate = {},
   } = componentDefinition;
+  const name = useFieldConfig(key);
   const {required: isRequired = false} = validate;
   const {getFieldProps, getFieldMeta, getFieldHelpers} = useFormikContext();
   const id = useId();
