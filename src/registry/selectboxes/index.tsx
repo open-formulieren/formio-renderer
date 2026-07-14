@@ -2,14 +2,14 @@ import type {SelectboxesComponentSchema} from '@open-formulieren/types';
 import {Fieldset, FieldsetLegend} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
-import {useEffect, useId, useRef} from 'react';
+import {useEffect, useId, useMemo, useRef} from 'react';
 
 import Checkbox from '@/components/forms/Checkbox';
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
-import type {RegistryEntry} from '@/registry/types';
+import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
 import testConditional from './conditional';
@@ -19,16 +19,25 @@ import getValidationSchema from './validationSchema';
 
 export interface FormioSelectboxesProps {
   componentDefinition: SelectboxesComponentSchema;
+  getRegistryEntry: GetRegistryEntry;
 }
 
-export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDefinition}) => {
+export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
+  componentDefinition,
+  getRegistryEntry,
+}) => {
   const {key, label, tooltip, description, validate = {}, values: options} = componentDefinition;
   const {required = false, maxSelectedCount} = validate;
   const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
-  const [{value: selectboxesState = {}}, {error = ''}] = useField<{string: boolean} | undefined>(
-    key
-  );
+  const [{value: selectboxesState = {}}, {error = ''}, {setValue}] = useField<
+    Record<string, boolean> | undefined
+  >(key);
   const id = useId();
+
+  const initialValues: Record<string, boolean> = useMemo(
+    () => getInitialValues(componentDefinition, getRegistryEntry)[componentDefinition.key],
+    [getRegistryEntry, componentDefinition]
+  );
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null);
   const lastValidatedValueRef = useRef<Record<string, boolean> | null>(null);
@@ -40,6 +49,37 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({componentDe
     const {touched} = getFieldMeta<boolean>(nestedFieldName);
     return touched;
   });
+
+  // 🩹 - options can be changed dynamically and we need to ensure when they change,
+  // that new options are properly injected into the Formik state, otherwise we lose the
+  // boolean nature of the value and browser defaults (``[on]``) are used.
+  // See open-formulieren/open-forms#6420
+  useEffect(() => {
+    const updatedValue: Record<string, boolean> = selectboxesState;
+    const optionKeysPresentInValue = new Set(Object.keys(updatedValue));
+    let hasUpdates = false;
+
+    // check which options aren't in the state yet and add them with their initial value
+    // if necessary
+    for (const {value} of options) {
+      if (optionKeysPresentInValue.has(value)) {
+        optionKeysPresentInValue.delete(value);
+      } else {
+        updatedValue[value] = initialValues[value];
+        hasUpdates = true;
+      }
+    }
+
+    // remove stale values from options that are obsoleted
+    if (!hasUpdates && optionKeysPresentInValue.size > 0) hasUpdates = true;
+    for (const staleValue of optionKeysPresentInValue) {
+      delete updatedValue[staleValue];
+    }
+
+    if (hasUpdates) {
+      setValue(updatedValue);
+    }
+  }, [setValue, options, selectboxesState, initialValues]);
 
   // track the focus state of the fieldset and its children - when it loses focus, trigger
   // validation
