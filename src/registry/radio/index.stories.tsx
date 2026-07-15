@@ -56,6 +56,48 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'radio',
+      key: 'my.radio',
+      label: 'A radio choice',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+      values: [
+        {
+          value: 'terra',
+          label: 'Terra',
+        },
+        {
+          value: 'ziggy',
+          label: 'Ziggy',
+        },
+      ],
+      defaultValue: null,
+      ...extensionBoilerplate,
+    } satisfies RadioComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          radio: null,
+        },
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {

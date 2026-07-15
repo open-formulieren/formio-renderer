@@ -14,16 +14,17 @@ export interface FormioLicensePlateProps {
 }
 
 export const FormioLicensePlate: React.FC<FormioLicensePlateProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate} = componentDefinition;
+  const {key, label, tooltip, description, validate, faqItems} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
+    faqItems,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

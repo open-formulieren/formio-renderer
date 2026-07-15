@@ -60,6 +60,37 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'checkbox',
+      key: 'my.checkbox',
+      label: 'A simple checkbox',
+      defaultValue: false,
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          checkbox: false,
+        },
+      },
+    },
+  },
+};
+
 export const WithDescription: Story = {
   args: {
     componentDefinition: {

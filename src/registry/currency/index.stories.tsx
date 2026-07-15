@@ -74,6 +74,35 @@ export const MinimalConfigurationWithEnglishLocale: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'currency',
+      type: 'currency',
+      key: 'currency',
+      label: 'Currency',
+      currency: 'EUR',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        currency: null,
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {

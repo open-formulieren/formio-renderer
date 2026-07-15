@@ -24,17 +24,19 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
     validate,
     autocomplete,
     openForms = {translations: {}},
+    faqItems,
   } = componentDefinition;
   const prefixedKey = useFieldConfig(key);
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'faqItems'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
+    faqItems,
   };
 
   const isVerificationRequired = openForms.requireVerification ?? false;

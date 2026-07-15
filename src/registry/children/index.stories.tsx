@@ -42,6 +42,42 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'children',
+      type: 'children',
+      key: 'children',
+      label: 'Children',
+      enableSelection: false,
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        children: [
+          {
+            bsn: '111222333',
+            firstNames: 'John Doe',
+            dateOfBirth: '2000-1-1',
+            selected: null,
+          },
+        ],
+      },
+    },
+  },
+};
+
 export const WithTooltipAndDescription: Story = {
   args: {
     componentDefinition: {

@@ -5,6 +5,7 @@ import {useField, useFormikContext} from 'formik';
 import {useEffect, useId, useMemo, useRef} from 'react';
 
 import Checkbox from '@/components/forms/Checkbox';
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -26,7 +27,15 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
   componentDefinition,
   getRegistryEntry,
 }) => {
-  const {key, label, tooltip, description, validate = {}, values: options} = componentDefinition;
+  const {
+    key,
+    label,
+    tooltip,
+    description,
+    validate = {},
+    values: options,
+    faqItems = [],
+  } = componentDefinition;
   const {required = false, maxSelectedCount} = validate;
   const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
   const [{value: selectboxesState = {}}, {error = ''}, {setValue}] = useField<
@@ -181,6 +190,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
 
       <HelpText id={descriptionid}>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

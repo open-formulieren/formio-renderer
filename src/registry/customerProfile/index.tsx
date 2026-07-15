@@ -7,6 +7,7 @@ import {useId} from 'react';
 import FormFieldContainer from '@/components/FormFieldContainer';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import {ValidationErrors} from '@/components/forms';
+import FAQItems from '@/components/forms/FAQItems';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
@@ -28,7 +29,15 @@ export interface FormioCustomerProfileProps {
 }
 
 export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
-  componentDefinition: {key: name, label, tooltip, description, validate, digitalAddressTypes},
+  componentDefinition: {
+    key: name,
+    label,
+    tooltip,
+    description,
+    validate,
+    digitalAddressTypes,
+    faqItems = [],
+  },
 }) => {
   const {getFieldMeta} = useFormikContext<FormValues>();
   const id = useId();
@@ -94,6 +103,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
       )}
       <HelpText id={descriptionId}>{description}</HelpText>
       {fieldError && errorMessageId && <ValidationErrors id={errorMessageId} error={fieldError} />}
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

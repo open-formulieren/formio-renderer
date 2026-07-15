@@ -5,6 +5,7 @@ import {useId, useLayoutEffect, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import SignatureCanvas from 'react-signature-canvas';
 
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -35,7 +36,15 @@ export interface FormioSignatureFieldProps {
  * It includes a button with which the entire canvas can be cleared.
  */
 export const FormioSignatureField: React.FC<FormioSignatureFieldProps> = ({
-  componentDefinition: {key: name, label, description, tooltip, validate = {}, footer},
+  componentDefinition: {
+    key: name,
+    label,
+    description,
+    tooltip,
+    validate = {},
+    footer,
+    faqItems = [],
+  },
 }) => {
   name = useFieldConfig(name);
   const intl = useIntl();
@@ -144,6 +153,7 @@ export const FormioSignatureField: React.FC<FormioSignatureFieldProps> = ({
       </div>
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

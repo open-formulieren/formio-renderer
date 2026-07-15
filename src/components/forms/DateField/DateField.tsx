@@ -1,7 +1,9 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {FormField} from '@utrecht/form-field-react';
 import {useFormikContext} from 'formik';
 import {useId} from 'react';
 
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig, useFieldError} from '@/hooks';
@@ -81,6 +83,11 @@ interface DateFieldCommonProps {
    */
   tooltip?: React.ReactNode;
   /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
+  /**
    * How to autocomplete the field from the browser.
    */
   autoComplete?: string;
@@ -112,6 +119,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   isMultiValue = false,
+  faqItems = [],
   ...props
 }) => {
   const id = useId();
@@ -159,6 +167,7 @@ const DateField: React.FC<DateFieldProps> = ({
       {dateInput}
       <HelpText>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };

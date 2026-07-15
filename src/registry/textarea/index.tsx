@@ -25,10 +25,11 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
     autocomplete,
     rows,
     disabled,
+    faqItems,
   } = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof Textarea>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
@@ -36,6 +37,7 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
     tooltip,
     isRequired: validate?.required,
     isReadOnly: disabled,
+    faqItems,
   };
 
   return componentDefinition.multiple ? (

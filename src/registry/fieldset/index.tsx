@@ -2,6 +2,7 @@ import type {FieldsetComponentSchema} from '@open-formulieren/types';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
 import type {FormioComponentProps} from '@/components/FormioComponent';
+import FAQItems from '@/components/forms/FAQItems';
 import Fieldset from '@/components/forms/Fieldset';
 import Tooltip from '@/components/forms/Tooltip';
 import type {RegistryEntry} from '@/registry/types';
@@ -16,7 +17,7 @@ export interface FieldsetProps {
 }
 
 export const FormioFieldset: React.FC<FieldsetProps> = ({
-  componentDefinition: {components, hideHeader = false, label, tooltip},
+  componentDefinition: {components, hideHeader = false, label, tooltip, faqItems = []},
   renderNested: FormioComponent,
 }) => {
   return (
@@ -35,6 +36,8 @@ export const FormioFieldset: React.FC<FieldsetProps> = ({
           <FormioComponent key={nestedDefinition.id} componentDefinition={nestedDefinition} />
         ))}
       </FormFieldContainer>
+
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

@@ -4,6 +4,7 @@ import {getIn, useFormikContext} from 'formik';
 import type {FormikErrors} from 'formik';
 import {useId} from 'react';
 
+import FAQItems from '@/components/forms/FAQItems';
 import Fieldset from '@/components/forms/Fieldset';
 import HelpText from '@/components/forms/HelpText';
 import Tooltip from '@/components/forms/Tooltip';
@@ -41,6 +42,7 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
     validate,
     layout = 'doubleColumn',
     deriveAddress = false,
+    faqItems = [],
   },
 }) => {
   const {values, errors, getFieldMeta} = useFormikContext<FormValues>();
@@ -118,6 +120,8 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
       {touched && errorMessageId && addressError && (
         <ValidationErrors error={addressError} id={errorMessageId} />
       )}
+
+      <FAQItems items={faqItems} />
     </Fieldset>
   );
 };

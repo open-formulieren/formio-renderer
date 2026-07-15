@@ -73,6 +73,43 @@ export const Multiple: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'select',
+      key: 'my.select',
+      label: 'A simple select',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+      data: {
+        values: [
+          {value: '1', label: 'First'},
+          {value: '2', label: 'Second'},
+        ],
+      },
+      openForms: {translations: {}, dataSrc: 'manual'},
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          select: '',
+        },
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {

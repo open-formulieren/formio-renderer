@@ -38,6 +38,16 @@ export const InputGroup: Story = {
     label: 'Test date field',
     description: 'This is a custom description',
     tooltip: 'A short tooltip.',
+    faqItems: [
+      {
+        label: 'How do I fill in this field?',
+        content: 'The values required to fill out this field can be retrieved from XYZ.',
+      },
+      {
+        label: 'Is this field applicable to me?',
+        content: 'This field is applicable if you are XYZ.',
+      },
+    ],
     isReadOnly: false,
     isRequired: true,
   },
@@ -54,6 +64,12 @@ export const InputGroup: Story = {
     await expect(canvas.getByText('Month')).toBeVisible();
     await expect(canvas.getByText('Day')).toBeVisible();
     await expect(canvas.getByText('This is a custom description')).toBeVisible();
+
+    const faqLabels1 = canvas.getByRole('button', {name: 'How do I fill in this field?'});
+    const faqLabels2 = canvas.getByRole('button', {name: 'Is this field applicable to me?'});
+    // Label should be visible underneath the fields
+    await expect(faqLabels1).toBeVisible();
+    await expect(faqLabels2).toBeVisible();
 
     const inputsByName = Object.fromEntries(inputs.map(input => [input.name, input]));
 

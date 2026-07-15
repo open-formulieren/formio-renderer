@@ -13,7 +13,7 @@ export interface FormioCheckboxProps {
 }
 
 export const FormioCheckbox: React.FC<FormioCheckboxProps> = ({
-  componentDefinition: {key, label, description, tooltip, validate},
+  componentDefinition: {key, label, description, tooltip, faqItems, validate},
 }) => {
   return (
     <Checkbox
@@ -22,6 +22,7 @@ export const FormioCheckbox: React.FC<FormioCheckboxProps> = ({
       tooltip={tooltip}
       description={description}
       isRequired={validate?.required}
+      faqItems={faqItems}
     />
   );
 };

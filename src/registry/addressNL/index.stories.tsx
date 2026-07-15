@@ -139,6 +139,48 @@ export const WithoutLabel: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'addressNL',
+      key: 'my.address',
+      label: 'Your address',
+      deriveAddress: false,
+      layout: 'doubleColumn',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    } satisfies AddressNLComponentSchema,
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          address: {
+            postcode: '',
+            houseNumber: '',
+            houseLetter: '',
+            houseNumberAddition: '',
+            // optional properties depending on the features used
+            city: undefined,
+            streetName: undefined,
+            secretStreetCity: undefined,
+            autoPopulated: undefined,
+          } satisfies AddressData,
+        },
+      },
+    },
+  },
+};
+
 export const WithDescriptionAndTooltip: Story = {
   args: {
     componentDefinition: {

@@ -55,6 +55,29 @@ export const WithTooltipAndDescription: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+};
+
 export const WithInitialValue: Story = {
   args: {
     componentDefinition: {

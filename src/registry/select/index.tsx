@@ -21,6 +21,7 @@ export const FormioSelect: React.FC<FormioSelectProps> = ({componentDefinition})
     data: {values: options},
     multiple,
     validate,
+    faqItems,
   } = componentDefinition;
   return (
     <Select
@@ -32,6 +33,7 @@ export const FormioSelect: React.FC<FormioSelectProps> = ({componentDefinition})
       description={description}
       isRequired={validate?.required}
       noOptionSelectedValue=""
+      faqItems={faqItems}
     />
   );
 };

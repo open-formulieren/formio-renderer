@@ -22,16 +22,17 @@ export interface PhoneNumberFieldProps {
  * validators.
  */
 export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate, autocomplete} = componentDefinition;
+  const {key, label, tooltip, description, validate, autocomplete, faqItems} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'isReadOnly' | 'faqItems'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
+    faqItems,
   };
   return componentDefinition.multiple ? (
     <MultiField<string>

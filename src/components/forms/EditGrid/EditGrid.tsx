@@ -1,3 +1,4 @@
+import type {FAQItem} from '@open-formulieren/types';
 import {ButtonGroup} from '@utrecht/button-group-react';
 import {FormField} from '@utrecht/form-field-react';
 import {FieldArray, getIn, setIn, useFormikContext} from 'formik';
@@ -9,6 +10,7 @@ import type {ValidationError} from 'zod-formik-adapter';
 
 import {SecondaryActionButton} from '@/components/Button';
 import FieldConfigProvider from '@/components/FieldConfigProvider';
+import FAQItems from '@/components/forms/FAQItems';
 import HelpText from '@/components/forms/HelpText';
 import Label from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
@@ -46,6 +48,11 @@ interface EditGridBaseProps<T> {
    * assist users in filling out the field correctly.
    */
   tooltip?: React.ReactNode;
+  /**
+   * Optional FAQ tooltips to provide additional information that is not crucial but may
+   * assist users in filling out the field correctly.
+   */
+  faqItems?: FAQItem[];
   /**
    * Callback to return the heading for a single item. Gets passed the item values and
    * index in the array of values.
@@ -125,6 +132,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
   tooltip,
   getItemHeading,
   canRemoveItem,
+  faqItems = [],
   removeItemLabel = '',
   emptyItem = null,
   addButtonLabel = '',
@@ -259,6 +267,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
       {hasFieldLevelError && errorMessageId && (
         <ValidationErrors error={error} id={errorMessageId} />
       )}
+      <FAQItems items={faqItems} />
     </FormField>
   );
 }

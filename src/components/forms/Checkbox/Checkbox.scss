@@ -109,6 +109,11 @@
         grid-column-end: description;
       }
 
+      .openforms-faq-items {
+        grid-column-start: input;
+        grid-column-end: description;
+      }
+
       // description for the option itself
       .utrecht-form-field-description:not(
         .utrecht-form-field-description--openforms-helptext,

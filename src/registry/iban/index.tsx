@@ -14,16 +14,17 @@ export interface FormioIBANProps {
 }
 
 export const FormioIBAN: React.FC<FormioIBANProps> = ({componentDefinition}) => {
-  const {key, label, tooltip, description, validate} = componentDefinition;
+  const {key, label, tooltip, description, validate, faqItems} = componentDefinition;
   const sharedProps: Pick<
     React.ComponentProps<typeof TextField>,
-    'name' | 'label' | 'description' | 'tooltip' | 'isRequired'
+    'name' | 'label' | 'description' | 'tooltip' | 'isRequired' | 'faqItems'
   > = {
     name: key,
     label,
     description,
     tooltip,
     isRequired: validate?.required,
+    faqItems,
   };
 
   return componentDefinition.multiple ? (

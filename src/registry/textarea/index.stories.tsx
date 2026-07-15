@@ -58,6 +58,37 @@ export const WithPlaceholder: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'textarea',
+      key: 'my.textarea',
+      label: 'A simple textarea',
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+      autoExpand: false,
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        my: {
+          textarea: '',
+        },
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   args: {
     componentDefinition: {

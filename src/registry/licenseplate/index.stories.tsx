@@ -38,6 +38,38 @@ export const MinimalConfiguration: Story = {
   },
 };
 
+export const WithFAQItems: Story = {
+  ...MinimalConfiguration,
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'licenseplate',
+      key: 'license.plate',
+      label: 'License plate',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      faqItems: [
+        {
+          label: 'How do I fill in this field?',
+          content: 'The values required to fill out this field can be retrieved from XYZ.',
+        },
+        {
+          label: 'Is this field applicable to me?',
+          content: 'This field is applicable if you are XYZ.',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        license: {
+          plate: '',
+        },
+      },
+    },
+  },
+};
+
 export const WithTooltip: Story = {
   ...MinimalConfiguration,
   args: {
