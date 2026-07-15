@@ -10,12 +10,14 @@ import {describe, expect, test, vi} from 'vitest';
 import {render} from 'vitest-browser-react';
 import {userEvent} from 'vitest/browser';
 
+import type {FormikFileUpload} from '@/registry/file/types';
+
 import FormioForm from './FormioForm';
 import type {Errors, FormStateRef, FormioFormProps} from './FormioForm';
 
 type FormProps = Pick<
   FormioFormProps,
-  'components' | 'onChange' | 'onSubmit' | 'values' | 'children'
+  'components' | 'onChange' | 'onSubmit' | 'values' | 'children' | 'componentParameters'
 >;
 
 const SubmitButton: React.FC = () => {
@@ -1016,5 +1018,90 @@ describe('Regressions', () => {
     await expect
       .poll(() => onSubmit)
       .toHaveBeenCalledWith({editgrid: [{container: {field: '123'}}]});
+  });
+
+  test('File uploads inside editgrid', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'editgrid',
+            id: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'file',
+                key: 'file',
+                type: 'file',
+                label: 'File',
+                filePattern: '.pdf',
+                file: {
+                  name: '',
+                  type: ['application/pdf'],
+                  allowedTypesLabels: ['pdf'],
+                },
+              },
+            ],
+          },
+        ]}
+        values={{editgrid: []}}
+        onSubmit={onSubmit}
+        componentParameters={{
+          file: {
+            upload: async () => {
+              return {
+                result: 'success',
+                url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+              };
+            },
+            destroy: async () => {},
+          },
+        }}
+      />
+    );
+
+    await screen.getByRole('button', {name: 'Add another'}).click();
+
+    // Upload a file. Mock the random UUID generator to get a file client ID on which we can make
+    // assertions.
+    const uploadInput = screen.getByTestId('file-input');
+    vi.spyOn(window.crypto, 'randomUUID').mockReturnValue('33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7');
+    await userEvent.upload(uploadInput, './files/test.pdf');
+
+    // Save editgrid item and submit the form
+    await screen.getByRole('button', {name: 'Save'}).click();
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect
+      .poll(() => onSubmit)
+      .toHaveBeenCalledWith({
+        editgrid: [
+          {
+            file: [
+              {
+                clientId: '33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7',
+                data: {
+                  baseUrl: 'https://example.com/irrelevant',
+                  form: '',
+                  name: 'test.pdf',
+                  project: '',
+                  size: 12,
+                  url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+                },
+                name: 'test.pdf',
+                originalName: 'test.pdf',
+                size: 12,
+                state: 'success',
+                storage: 'url',
+                type: 'application/pdf',
+                url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+              },
+            ] satisfies FormikFileUpload[],
+          },
+        ],
+      });
   });
 });

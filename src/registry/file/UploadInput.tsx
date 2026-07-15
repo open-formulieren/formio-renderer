@@ -98,6 +98,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
     id: inputId,
     'aria-describedby': [descriptionId, ariaDescribedBy].filter(Boolean).join(' '),
     onBlur: onBlur,
+    'data-testid': 'file-input',
   });
   if (limitReached) {
     inputProps['aria-disabled'] = 'true';
