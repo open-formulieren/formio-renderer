@@ -6,7 +6,7 @@ import {FieldConfigContext, FormSettingsContext} from './context';
 export const useFormSettings = () => useContext(FormSettingsContext);
 
 /**
- * Given the field config context, calculated the (possibly) prefixed name.
+ * Given the field config context, calculate the (possibly) prefixed name.
  *
  * The prefix (if provided) is prepended with a `.` separator.
  *
