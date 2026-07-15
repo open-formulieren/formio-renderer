@@ -1204,4 +1204,51 @@ describe('Regressions', () => {
     await expect.poll(() => onSubmit).toHaveBeenCalledOnce();
     expect(onSubmit).toHaveBeenCalledWith({selectboxes: {b: true}});
   });
+
+  // Suspected bug similar to open-formulieren/open-forms#6423
+  test('Selectboxes inside editgrid', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'editgrid',
+            id: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'selectboxes',
+                type: 'selectboxes',
+                key: 'selectboxes',
+                label: 'Dynamic options',
+                values: [
+                  {value: 'a', label: 'A'},
+                  {value: 'b', label: 'B'},
+                ],
+                openForms: {dataSrc: 'manual'},
+              },
+            ],
+          },
+        ]}
+        values={{editgrid: []}}
+        onSubmit={onSubmit}
+      />
+    );
+
+    await screen.getByRole('button', {name: 'Add another'}).click();
+    await screen.getByRole('checkbox', {name: 'A', exact: true}).click();
+    await screen.getByRole('checkbox', {name: 'B', exact: true}).click();
+
+    // Save editgrid item and submit the form
+    await screen.getByRole('button', {name: 'Save'}).click();
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect
+      .poll(() => onSubmit)
+      .toHaveBeenCalledWith({
+        editgrid: [{selectboxes: {a: true, b: true}}],
+      });
+  });
 });
