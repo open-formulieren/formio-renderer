@@ -52,21 +52,29 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
 
   // 🩹 - options can be changed dynamically and we need to ensure when they change,
   // that new options are properly injected into the Formik state, otherwise we lose the
-  // boolean nature of the value and browser defaults (``[on]```) are used.
+  // boolean nature of the value and browser defaults (``[on]``) are used.
   // See open-formulieren/open-forms#6420
   useEffect(() => {
     const updatedValue: Record<string, boolean> = selectboxesState;
+    const optionKeysPresentInValue = new Set(Object.keys(updatedValue));
     let hasUpdates = false;
+
     // check which options aren't in the state yet and add them with their initial value
     // if necessary
     for (const {value} of options) {
-      if (updatedValue[value] === undefined) {
+      if (optionKeysPresentInValue.has(value)) {
+        optionKeysPresentInValue.delete(value);
+      } else {
         updatedValue[value] = initialValues[value];
         hasUpdates = true;
       }
     }
 
-    // TODO: ensure that removed options are *not* in the Formik state any longer!
+    // remove stale values from options that are obsoleted
+    if (!hasUpdates && optionKeysPresentInValue.size > 0) hasUpdates = true;
+    for (const staleValue of optionKeysPresentInValue) {
+      delete updatedValue[staleValue];
+    }
 
     if (hasUpdates) {
       setValue(updatedValue);

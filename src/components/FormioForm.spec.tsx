@@ -1156,4 +1156,52 @@ describe('Regressions', () => {
     await expect.poll(() => onSubmit).toHaveBeenCalledOnce();
     expect(onSubmit).toHaveBeenCalledWith({selectboxes: {a: true, b: true}});
   });
+
+  // open-formulieren/open-forms#6420
+  test('Dynamic selectboxes items clear values of removed options', async () => {
+    const onSubmit = vi.fn();
+
+    const Test: React.FC = () => {
+      const [component, setComponent] = useState<SelectboxesComponentSchema>({
+        id: 'selectboxes',
+        type: 'selectboxes',
+        key: 'selectboxes',
+        label: 'Dynamic options',
+        values: [{value: 'a', label: 'A'}],
+        openForms: {dataSrc: 'manual'},
+      });
+      return (
+        <>
+          <Form components={[component]} onSubmit={onSubmit} />
+          <button
+            type="button"
+            onClick={() => {
+              setComponent({
+                ...component,
+                values: [{value: 'b', label: 'B'}],
+              });
+            }}
+          >
+            Update component options
+          </button>
+        </>
+      );
+    };
+
+    const screen = await render(<Test />);
+
+    await screen.getByRole('checkbox', {name: 'A', exact: true}).click();
+    await screen.getByRole('button', {name: 'Update component options'}).click();
+    await screen.getByRole('checkbox', {name: 'B', exact: true}).click();
+    await expect
+      .element(screen.getByRole('checkbox', {name: 'A', exact: true}))
+      .not.toBeInTheDocument();
+    await expect.element(screen.getByRole('checkbox', {name: 'B', exact: true})).toBeChecked();
+
+    const submitButton = screen.getByRole('button', {name: 'Submit'});
+    await expect.element(submitButton, {timeout: 1000}).toHaveAttribute('data-is-valid', 'true');
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect.poll(() => onSubmit).toHaveBeenCalledOnce();
+    expect(onSubmit).toHaveBeenCalledWith({selectboxes: {b: true}});
+  });
 });
