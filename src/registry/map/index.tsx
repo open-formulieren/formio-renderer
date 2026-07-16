@@ -65,9 +65,10 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
           }
           interactions={interactions}
           overlays={overlays}
-          onGeoJsonGeometrySet={(geoJsonGeometry: GeoJsonGeometry) => {
-            setTouched(true, false);
-            setValue(geoJsonGeometry, true);
+          onGeoJsonGeometrySet={async (geoJsonGeometry: GeoJsonGeometry) => {
+            setTouched(true);
+            await setValue(geoJsonGeometry);
+            await validateField(name);
           }}
           onBlur={() => {
             // unsure why the microtask approach works here, but without the
