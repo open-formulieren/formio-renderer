@@ -115,8 +115,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   };
 
   const onFeatureDelete = () => {
-    // The value `null` is needed to make sure that Formio actually updates the value.
-    // node_modules/formiojs/components/_classes/component/Component.js:2528
     onGeoJsonGeometrySet?.(null);
   };
 
