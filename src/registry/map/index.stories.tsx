@@ -653,7 +653,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       key: 'my.map',
       label: 'A map',
       validate: {required: true},
-      errors: {required: 'Custom errom message for required'},
+      errors: {required: 'Custom error message for required'},
     } satisfies MapComponentSchema,
   },
   play: async ({canvasElement}) => {
@@ -666,7 +666,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
     });
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Custom errom message for required')).toBeVisible();
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
   },
 };
 
