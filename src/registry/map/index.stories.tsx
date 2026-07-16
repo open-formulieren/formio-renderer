@@ -653,7 +653,7 @@ export const ValidateOnBlur: ValidationStory = {
       validate: {required: true},
       interactions: {
         marker: true,
-        polygon: false,
+        polygon: true,
         polyline: false,
       },
     } satisfies MapComponentSchema,
@@ -667,6 +667,8 @@ export const ValidateOnBlur: ValidationStory = {
       expect(map).toBeVisible();
     });
 
+    await userEvent.click(canvas.getByRole('link', {name: 'Marker'}));
+    expect(map).toHaveFocus();
     map.blur();
 
     expect(await canvas.findByText('The required field A map must be filled in.')).toBeVisible();
