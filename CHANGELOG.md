@@ -1,5 +1,37 @@
 # Changes
 
+## 1.8.0 (2026-07-17)
+
+Feature and bugfix release.
+
+**New features**
+
+- [`OF#6315`][OF#6315] Added support for "FAQ Items" below fields, displaying additional information
+  to successfully fill out a field.
+
+[OF#6315]: https://github.com/open-formulieren/open-forms/issues/6315
+
+**Bugfixes**
+
+- [`OF#6423`][OF#6423] Fixed file uploads in editgrids (repeating groups) not being added to the
+  item data.
+- [`OF#6420`][OF#6420] Fixed dynamically updated options in `selectboxes` components not being
+  processed in the submission data correctly.
+- [`OF#6434`][OF#6434] Fixed interactions with a map component triggering form validation for
+  untouched fields.
+- [`OF#6449`][OF#6449] Fixed dates not being properly displayed in validation errors messages.
+
+[OF#6423]: https://github.com/open-formulieren/open-forms/issues/6423
+[OF#6420]: https://github.com/open-formulieren/open-forms/issues/6420
+[OF#6434]: https://github.com/open-formulieren/open-forms/issues/6434
+[OF#6449]: https://github.com/open-formulieren/open-forms/issues/6449
+
+**Project maintenance**
+
+- Upgraded to latest design tokens version for the Open Forms theme.
+- Upgraded to `@utrecht/component-library-react` 14.0.2 containing some cleanups and bugfixes.
+- Replaced the `microscope-sass` library BEM-helpers usage.
+
 ## 1.7.0 (2026-07-03)
 
 Small feature and bugfix release.
