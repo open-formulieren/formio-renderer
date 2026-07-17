@@ -653,7 +653,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       key: 'my.map',
       label: 'A map',
       validate: {required: true},
-      errors: {required: 'Custom errom message for required'},
+      errors: {required: 'Custom error message for required'},
     } satisfies MapComponentSchema,
   },
   play: async ({canvasElement}) => {
@@ -666,7 +666,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
     });
 
     await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-    expect(await canvas.findByText('Custom errom message for required')).toBeVisible();
+    expect(await canvas.findByText('Custom error message for required')).toBeVisible();
   },
 };
 
@@ -701,14 +701,17 @@ export const ValidateOnBlur: ValidationStory = {
   },
 };
 
-export const ValidateOnChange: Story = {
+export const ValidateOnChange: ValidationStory = {
+  ...BaseValidationStory,
   args: {
+    onSubmit: fn(),
     componentDefinition: {
       id: 'map',
       type: 'map',
       key: 'my.map',
       label: 'A map',
       validate: {required: true},
+      errors: {required: 'I am required!'},
       interactions: {
         marker: true,
         polygon: false,
@@ -716,32 +719,7 @@ export const ValidateOnChange: Story = {
       },
     } satisfies MapComponentSchema,
   },
-  parameters: {
-    formik: {
-      initialValues: {
-        my: {
-          map: {
-            type: 'LineString',
-            coordinates: [
-              [4.7493255, 52.6405471],
-              [4.6493255, 52.4405471],
-            ],
-          },
-        },
-      },
-      initialErrors: {
-        my: {
-          map: 'Line not allowed.',
-        },
-      },
-      initialTouched: {
-        my: {
-          map: true,
-        },
-      },
-    },
-  },
-  play: async ({canvasElement, step}) => {
+  play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     const map = await canvas.findByTestId('leaflet-map');
 
@@ -750,20 +728,19 @@ export const ValidateOnChange: Story = {
       expect(map).toBeVisible();
     });
 
-    expect(await canvas.findByText('Line not allowed.')).toBeVisible();
+    // Submit without a shape to trigger an error
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    const error = await canvas.findByText('I am required!');
+    expect(error).toBeVisible();
 
-    await step('Draw a marker', async () => {
-      // Click the "marker" button, to enter "interaction" mode
-      await userEvent.click(canvas.getByRole('link', {name: 'Marker'}));
+    // Click the "marker" button to enter "interaction" mode, draw a marker, and ensure it was
+    // placed.
+    await userEvent.click(canvas.getByRole('link', {name: 'Marker'}));
+    // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
+    await userEvent.click(map, {x: 100, y: 100});
+    expect(canvas.getByRole('button', {name: 'Marker'})).toBeVisible();
 
-      // @ts-expect-error the x/y coordinates don't seem to be defined in testing-library
-      await userEvent.click(map, {x: 100, y: 100});
-
-      // This 'button' is the placed marker on the map
-      expect(await canvas.findByRole('button', {name: 'Marker'})).toBeVisible();
-
-      // Having a valid value should pass validation and therefore remove the error message
-      expect(canvas.queryByTitle('Line not allowed.')).not.toBeInTheDocument();
-    });
+    // Ensure interacting with the map has removed the error
+    expect(error).not.toBeVisible();
   },
 };

@@ -1251,4 +1251,56 @@ describe('Regressions', () => {
         editgrid: [{selectboxes: {a: true, b: true}}],
       });
   });
+
+  test('Interacting with map should not trigger form validation', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'editgrid',
+            id: 'editgrid',
+            key: 'editgrid',
+            label: 'Editgrid',
+            disableAddingRemovingRows: false,
+            validate: {required: true},
+            groupLabel: 'Item',
+            components: [
+              {
+                id: 'textfield',
+                key: 'textfield',
+                type: 'textfield',
+                label: 'Textfield',
+              },
+            ],
+          },
+          {
+            id: 'map',
+            type: 'map',
+            key: 'map',
+            label: 'Map',
+            validate: {required: false},
+            interactions: {
+              marker: true,
+              polygon: false,
+              polyline: false,
+            },
+          },
+        ]}
+        values={{editgrid: [], map: null}}
+        onSubmit={onSubmit}
+      />
+    );
+
+    // Click the "marker" button to enter "interaction" mode, draw a marker, and ensure it was
+    // placed.
+    await userEvent.click(screen.getByRole('link', {name: 'Marker'}));
+    await userEvent.click(screen.getByTestId('leaflet-map'));
+    expect(screen.getByRole('button', {name: 'Marker'})).toBeVisible();
+
+    // Ensure the editgrid required error is not shown
+    await expect
+      .element(screen.getByText('The required field Editgrid must be filled in.'))
+      .not.toBeInTheDocument();
+  });
 });
