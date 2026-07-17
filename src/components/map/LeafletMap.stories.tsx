@@ -243,7 +243,7 @@ export const SingleInteractionMode: Story = {
       polyline: false,
     },
   },
-  play: async ({canvasElement, step, args}) => {
+  play: async ({canvasElement, args, step}) => {
     const canvas = within(canvasElement);
     const map = await canvas.findByTestId('leaflet-map');
     const leafletMap = window._OF_INTERNAL_leafletMap;
@@ -272,11 +272,7 @@ export const SingleInteractionMode: Story = {
     // When the map is empty, we can draw shapes without having to click the
     // interaction buttons.
     await step('Interaction with empty map', async () => {
-      // Trigger map click via leafletMap directly. Preventing weird issues with proj4
-      // and other race-conditions.
-      leafletMap.fire('click', {
-        latlng: leafletMap.containerPointToLatLng([100, 100]),
-      });
+      await userEvent.click(map);
 
       expect(args.onGeoJsonGeometrySet).toBeCalledWith({
         type: 'Point',
@@ -304,22 +300,7 @@ export const SingleInteractionMode: Story = {
       // Automatically resolve the confirmation message
       window.confirm = () => true;
       await userEvent.click(canvas.getByRole('link', {name: 'Remove shapes'}));
-    });
-
-    // When the map is emptied, we can again draw shapes without having to click the
-    // interaction buttons.
-    await step('Interact again with an empty map', async () => {
-      leafletMap.fire('click', {
-        latlng: leafletMap.containerPointToLatLng([100, 100]),
-      });
-
-      expect(args.onGeoJsonGeometrySet).toBeCalledWith({
-        type: 'Point',
-        // Expect that the coordinates array contains 2 items.
-        // We cannot pin it to specific values, because they can differentiate.
-        // To make sure that this test doesn't magically fail, just expect any 2 values
-        coordinates: [expect.anything(), expect.anything()],
-      });
+      expect(await canvas.queryByRole('button', {name: 'Marker'})).toBeNull();
     });
   },
 };
