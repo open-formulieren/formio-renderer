@@ -1,5 +1,5 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
-import {endOfDay, isValid, parseISO} from 'date-fns';
+import {endOfDay, isValid, parseISO, startOfDay} from 'date-fns';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
 
@@ -34,17 +34,30 @@ const getValidationSchema: GetValidationSchema<DateComponentSchema> = (
   const minDate = datePicker?.minDate;
   const maxDate = datePicker?.maxDate;
 
+  const formatDate = (dateValue: Date): string =>
+    intl.formatDate(dateValue, {
+      year: 'numeric',
+      day: 'numeric',
+      month: 'long',
+    });
+
   let dateSchema = z.coerce.date();
   if (minDate) {
-    dateSchema = dateSchema.min(parseISO(minDate), {
+    const minBoundary = startOfDay(parseISO(minDate));
+    dateSchema = dateSchema.min(minBoundary, {
       message:
-        errors?.minDate || intl.formatMessage(DATE_LESS_THAN_MIN_DATE_MESSAGE, {min: minDate}),
+        errors?.minDate ||
+        intl.formatMessage(DATE_LESS_THAN_MIN_DATE_MESSAGE, {min: formatDate(minBoundary)}),
     });
   }
   if (maxDate) {
-    dateSchema = dateSchema.max(endOfDay(parseISO(maxDate)), {
+    const maxBoundary = endOfDay(parseISO(maxDate));
+    dateSchema = dateSchema.max(maxBoundary, {
       message:
-        errors?.maxDate || intl.formatMessage(DATE_GREATER_THAN_MAX_DATE_MESSAGE, {max: maxDate}),
+        errors?.maxDate ||
+        intl.formatMessage(DATE_GREATER_THAN_MAX_DATE_MESSAGE, {
+          max: formatDate(maxBoundary),
+        }),
     });
   }
 
