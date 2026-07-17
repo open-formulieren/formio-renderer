@@ -177,6 +177,36 @@ describe('date component validation', () => {
 
     expect(success).toBe(valid);
   });
+
+  // regression test for https://github.com/open-formulieren/open-forms/issues/6449
+  test('min date with default message', () => {
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, minDate: '2025-07-17T00:00:00+02:00'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('2024-09-09');
+
+    expect(result.error?.errors[0].message).toBe(
+      'The date must be later than or equal to July 17, 2025.'
+    );
+  });
+
+  // regression test for https://github.com/open-formulieren/open-forms/issues/6449
+  test('max date with default message', () => {
+    const component: DateComponentSchema = {
+      ...BASE_COMPONENT,
+      datePicker: {...BASE_DATEPICKER, maxDate: '2026-07-17T00:00:00+02:00'},
+    };
+    const schema = buildValidationSchema(component);
+
+    const result = schema.safeParse('2027-09-09');
+
+    expect(result.error?.errors[0].message).toBe(
+      'The date must be earlier than or equal to July 17, 2026.'
+    );
+  });
 });
 
 describe('date component with multiple: true', () => {
