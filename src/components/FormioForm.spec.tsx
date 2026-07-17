@@ -1303,4 +1303,35 @@ describe('Regressions', () => {
       .element(screen.getByText('The required field Editgrid must be filled in.'))
       .not.toBeInTheDocument();
   });
+
+  test('Clicking outside with map component should not break single interaction mode', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'map',
+            type: 'map',
+            key: 'map',
+            label: 'Map',
+            validate: {required: false},
+            interactions: {
+              marker: true,
+              polygon: false,
+              polyline: false,
+            },
+          },
+        ]}
+        values={{editgrid: [], map: null}}
+        onSubmit={onSubmit}
+      />
+    );
+
+    // Click the submit button first
+    await userEvent.click(screen.getByRole('button', {name: 'Submit'}));
+
+    // The map is in single interaction mode, so clicking on it should place a marker immediately.
+    await userEvent.click(screen.getByTestId('leaflet-map'));
+    expect(screen.getByRole('button', {name: 'Marker'})).toBeVisible();
+  });
 });
