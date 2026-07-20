@@ -448,3 +448,58 @@ test('selectboxes in editgrid is properly marked as touched', async () => {
 
   await expect.element(screen.getByText('You must select at least 2 items')).toBeVisible();
 });
+
+test('visibility processing in draft edit grid item does not leak to the outer scope', async () => {
+  const screen = await render(
+    <Form
+      components={[
+        {
+          id: 'editgrid',
+          type: 'editgrid',
+          key: 'editgrid',
+          label: 'Edit grid',
+          groupLabel: 'Item',
+          addAnother: 'Add item',
+          disableAddingRemovingRows: false,
+          components: [
+            {
+              id: 'textfield',
+              type: 'textfield',
+              key: 'textfield',
+              label: 'Trigger',
+            } satisfies TextFieldComponentSchema,
+            {
+              id: 'textfieldBeingHidden',
+              type: 'textfield',
+              key: 'textfieldBeingHidden',
+              label: 'Textfield being hidden',
+              conditional: {
+                show: false,
+                when: 'editgrid.textfield',
+                eq: 'hide other field',
+              },
+              clearOnHide: true,
+            } satisfies TextFieldComponentSchema,
+          ],
+        },
+      ]}
+      onSubmit={vi.fn()}
+      values={{
+        editgrid: [
+          {
+            textfield: '',
+            textfieldBeingHidden: 'do not clear me',
+          },
+        ],
+      }}
+    />
+  );
+  // trigger local change, but cancel it so the editgrid reverts to its initial state
+  await expect.element(screen.getByText('do not clear me')).toBeVisible();
+  await screen.getByRole('button', {name: 'Edit item 1'}).click();
+  await screen.getByLabelText('Trigger').fill('hide other field');
+  await expect.element(screen.getByLabelText('Textfield being hidden')).not.toBeInTheDocument();
+  // cancel the edit, which should revert to preview mode
+  await screen.getByRole('button', {name: 'Cancel'}).click();
+  await expect.element(screen.getByText('do not clear me')).toBeVisible();
+});
