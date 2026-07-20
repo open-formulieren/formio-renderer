@@ -267,13 +267,24 @@ const SingleInteractionMode: React.FC<SingleInteractionModeProps> = ({
     // If there is no map, no draw control ref, or the map already has a value, do nothing.
     if (!map || !drawControlRef.current || !!geoJsonGeometry) return;
     const drawControl = drawControlRef.current;
+    const container = map.getContainer();
 
-    // Enable the drawing mode for the provided shape.
-    if (drawControl.enableDrawingMode) drawControl.enableDrawingMode(shape);
+    const handleMouseEnter = () => {
+      if (drawControl.enableDrawingMode) {
+        drawControl.enableDrawingMode(shape);
+      }
+    };
+    const handleMouseLeave = () => {
+      if (drawControl.disableDrawingMode) {
+        drawControl.disableDrawingMode(shape);
+      }
+    };
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      // On unmounting, disable the drawing mode.
-      if (drawControl.disableDrawingMode) drawControl.disableDrawingMode(shape);
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeave);
     };
     // Re-enable drawing mode when the shape, the map, or the current geojson changes.
   }, [shape, map, geoJsonGeometry, drawControlRef]);
