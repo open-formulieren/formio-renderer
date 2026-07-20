@@ -1,5 +1,6 @@
 import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
 import {getIn, replace, setIn, useFormikContext} from 'formik';
+import type {FormikErrors} from 'formik';
 import {createContext, useContext, useEffect, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
@@ -47,6 +48,11 @@ export interface ItemBodyProps {
   parentValues: JSONObject;
   parentComponentsMap: Record<string, AnyComponentSchema>;
   initialValues: JSONObject;
+  /**
+   * Values from the parent editgrid component, as they have last been committed through
+   * a user-save button click *or* a programmatic update in preview/non-expanded mode.
+   */
+  committedValues: JSONObject;
   onItemValuesUpdated: (itemValues: JSONObject) => void;
   onItemErrorsUpdated: (itemErrors: Errors) => void;
   onValidationSchemaChange: (index: number, schema: z.ZodSchema<JSONObject>) => void;
@@ -62,13 +68,17 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   parentValues,
   parentComponentsMap,
   initialValues,
+  committedValues,
   onItemValuesUpdated,
   onItemErrorsUpdated,
   onValidationSchemaChange,
   expanded,
 }) => {
   const intl = useIntl();
-  const {values, errors} = useFormikContext<WrappedJSONObject>();
+  // this formik context is the isolated context for a single item in editgrid isolation
+  // mode - it holds the local edits that are not yet committed up to the parent
+  // Formik state.
+  const {values, errors, setValues, setErrors} = useFormikContext<WrappedJSONObject>();
   const {validatePluginCallback} = useFormSettings();
 
   // ensure we peek deep inside the formik data skipping over any prefixes applied by
@@ -77,7 +87,28 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   const rawNamePrefix = useFieldConfig('');
   if (!rawNamePrefix.endsWith('.')) throw new Error('Unexpected name prefix');
   const namePrefix = rawNamePrefix.slice(0, -1);
-  const itemValues: JSONObject = getIn(values, namePrefix);
+
+  const draftItemValues: JSONObject = getIn(values, namePrefix);
+  // decide which itemValues to use for visibility processing. The reasoning is:
+  //
+  // When `expanded` is false, we're in preview mode. Local edits are not being made at
+  // all, since no form controls are shown. In this case, local value updates can only
+  // come from parent scope updates -> use the `committedValues` as source.
+  //
+  // When `expanded` is true, we're in local edit mode, and it's likely that the locally
+  // scoped item values are ahead of the committed values. Edits to these values can
+  // only affect the same local scope, so we use the `draftItemValues` as source.
+  //
+  // There is an edge case here when a trigger/reference key in a parent of the item
+  // being edited is used in the conditional of a component inside the item, e.g. a
+  // field in the editgrid is only shown if a checkbox outside the editgrid is toggle.
+  // The interaction with `clearOnHide` requires this to be processed still. This
+  // results in a change in `parentValues`. We still use the draft items here, and can
+  // safely merge the evaluation context - by definition there is no conflict with draft
+  // item fields and updated item values can thus also only be draft item updates, so
+  // we should also only update the draft state.
+  const itemValues = expanded ? draftItemValues : committedValues;
+
   const itemErrors: Errors = getIn(errors, namePrefix);
 
   const componentsMap = useMemo(() => {
@@ -140,21 +171,41 @@ const ItemBody: React.FC<ItemBodyProps> = ({
   // element when rendering in preview mode. This in turns leads to the necessary item
   // value state updates.
   useEffect(() => {
+    // See reasoning above where the `itemValues` value is determined - depending on
+    // whether the item is in edit or preview mode, we have different update targets
+    // when values/errors change due to visibility processing.
+    const canUpdateCommittedState: boolean = !expanded;
+
     // update the formik values with the calculated values with side-effects applied
     // until this converges/resolves. We rely on the object identity here to detect
     // (deep) differences!
     if (updatedItemValues !== itemValues) {
-      onItemValuesUpdated(updatedItemValues);
+      if (canUpdateCommittedState) {
+        onItemValuesUpdated(updatedItemValues);
+      } else {
+        const updatedDraftItemValues: WrappedJSONObject = {[namePrefix]: updatedItemValues};
+        setValues(updatedDraftItemValues);
+      }
     }
 
     if (updatedItemErrors !== itemErrors) {
-      onItemErrorsUpdated(updatedItemErrors);
+      if (canUpdateCommittedState) {
+        onItemErrorsUpdated(updatedItemErrors);
+      } else {
+        // type cast is necessary because FormikErrors can't properly handle nested
+        // objects, in particular with generics like JSONObject
+        setErrors({[namePrefix]: updatedItemErrors} as FormikErrors<WrappedJSONObject>);
+      }
     }
   }, [
+    namePrefix,
+    expanded,
     onItemValuesUpdated,
+    setValues,
     itemValues,
     updatedItemValues,
     onItemErrorsUpdated,
+    setErrors,
     itemErrors,
     updatedItemErrors,
   ]);
@@ -241,7 +292,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   // ensure we keep setting a deeper scope when dealing with nesting
   const parentScope = !isRoot ? setIn(grandParentValues, keyPrefix, parentValues) : parentValues;
 
-  // deepMergeValues is required to deep-assign the dotted key paths, and theoverrides
+  // deepMergeValues is required to deep-assign the dotted key paths, and the overrides
   // object is empty because there are never overrides for a new item being added
   const initialValues = deepMergeValues(extractInitialValues(components, getRegistryEntry), {});
   const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
@@ -266,36 +317,42 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
       enableIsolation
       faqItems={faqItems}
       getItemHeading={(_, index: number) => (groupLabel ? `${groupLabel} ${index + 1}` : undefined)}
-      getItemBody={(_, index: number, {expanded}) => (
-        <ItemBody
-          index={index}
-          renderNested={FormioComponent}
-          getRegistryEntry={getRegistryEntry}
-          components={components}
-          parentKey={keyPrefix ? `${keyPrefix}.${key}` : key}
-          parentValues={parentScope}
-          parentComponentsMap={componentsMap}
-          initialValues={initialValues}
-          onItemValuesUpdated={newItemValues => {
-            const updatedFieldValue = replace(value, index, newItemValues);
-            setFieldValue(key, updatedFieldValue);
-          }}
-          onItemErrorsUpdated={newItemErrors => {
-            // we can only replace the item errors if the field errors are an array of
-            // item-level errors. Possibly there are:
-            // - no errors at all (undefined)
-            // - a string error, for the editgrid as a whole
-            if (Array.isArray(fieldError)) {
-              const updatedFieldErrors = replace(fieldError, index, newItemErrors);
-              // @ts-expect-error the formik type expects a string, but we're working
-              // with nested objects here
-              setFieldError(key, updatedFieldErrors);
-            }
-          }}
-          onValidationSchemaChange={setSchema}
-          expanded={expanded}
-        />
-      )}
+      getItemBody={(itemValues, index: number, {expanded}) => {
+        // the item values here are the values that have been committed into the parent
+        // state - they don't capture local edits made inside an item that's being
+        // edited
+        return (
+          <ItemBody
+            index={index}
+            renderNested={FormioComponent}
+            getRegistryEntry={getRegistryEntry}
+            components={components}
+            parentKey={keyPrefix ? `${keyPrefix}.${key}` : key}
+            parentValues={parentScope}
+            parentComponentsMap={componentsMap}
+            initialValues={initialValues}
+            committedValues={itemValues}
+            onItemValuesUpdated={newItemValues => {
+              const updatedFieldValue = replace(value, index, newItemValues);
+              setFieldValue(key, updatedFieldValue);
+            }}
+            onItemErrorsUpdated={newItemErrors => {
+              // we can only replace the item errors if the field errors are an array of
+              // item-level errors. Possibly there are:
+              // - no errors at all (undefined)
+              // - a string error, for the editgrid as a whole
+              if (Array.isArray(fieldError)) {
+                const updatedFieldErrors = replace(fieldError, index, newItemErrors);
+                // @ts-expect-error the formik type expects a string, but we're working
+                // with nested objects here
+                setFieldError(key, updatedFieldErrors);
+              }
+            }}
+            onValidationSchemaChange={setSchema}
+            expanded={expanded}
+          />
+        );
+      }}
       emptyItem={emptyItem}
       addButtonLabel={addAnother}
       canEditItem={() => true}
