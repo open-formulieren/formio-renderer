@@ -1,6 +1,11 @@
-import type {EditGridComponentSchema} from '@open-formulieren/types';
+import type {
+  EditGridComponentSchema,
+  SelectboxesComponentSchema,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import {getComponentsMap} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
 import type {Errors} from '@/visibility';
@@ -189,7 +194,7 @@ test('Nested components gets default value when it becomes visible', () => {
     parentHidden: false,
     initialValues: initialValues,
     getRegistryEntry,
-    componentsMap: {},
+    componentsMap: getComponentsMap([component]),
   });
 
   expect(updatedValues).toEqual({
@@ -204,4 +209,58 @@ test('Nested components gets default value when it becomes visible', () => {
       },
     ],
   });
+});
+
+// GH-357 - this lead to an infinite rendering bug because the nested selectboxes
+// component could not be resolved in the outer data update, while the inner rendering
+// code *was* able to resolve this
+test('Selectboxes conditionals behave correctly', () => {
+  interface Values extends JSONObject {
+    editgrid: {
+      selectboxes: {a: boolean};
+      textfield?: string;
+    }[];
+  }
+  const component: EditGridComponentSchema = {
+    id: 'editgrid',
+    type: 'editgrid',
+    key: 'editgrid',
+    label: 'editgrid',
+    groupLabel: 'Item',
+    disableAddingRemovingRows: false,
+    components: [
+      {
+        id: 'selectboxes',
+        type: 'selectboxes',
+        key: 'selectboxes',
+        label: 'selectboxes',
+        values: [{value: 'a', label: 'A'}],
+        openForms: {dataSrc: 'manual'},
+      } satisfies SelectboxesComponentSchema,
+      {
+        id: 'textfield',
+        type: 'textfield',
+        key: 'textfield',
+        label: 'textfield',
+        conditional: {
+          show: true,
+          when: 'editgrid.selectboxes',
+          eq: 'a',
+        },
+      } satisfies TextFieldComponentSchema,
+    ],
+  };
+
+  const values: Values = {editgrid: [{selectboxes: {a: true}, textfield: 'foo'}]};
+  const initialValues: Values = {editgrid: []};
+  const errors: Errors = {};
+
+  const {updatedValues} = applyVisibility(component, values, errors, {
+    parentHidden: false,
+    initialValues: initialValues,
+    getRegistryEntry,
+    componentsMap: getComponentsMap([component]),
+  });
+
+  expect(updatedValues).toEqual({editgrid: [{selectboxes: {a: true}, textfield: 'foo'}]});
 });
