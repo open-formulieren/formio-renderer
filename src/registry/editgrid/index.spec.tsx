@@ -1,4 +1,9 @@
-import type {EditGridComponentSchema, TextFieldComponentSchema} from '@open-formulieren/types';
+import '@open-formulieren/design-tokens/dist/root.css';
+import type {
+  EditGridComponentSchema,
+  SelectboxesComponentSchema,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 import {IntlProvider} from 'react-intl';
 import {expect, test, vi} from 'vitest';
 import {render} from 'vitest-browser-react';
@@ -400,4 +405,46 @@ test('defaultValue: null does not crash', async () => {
   );
 
   await expect.element(screen.getByRole('button', {name: 'Add item'})).toBeVisible();
+});
+
+test('selectboxes in editgrid is properly marked as touched', async () => {
+  const screen = await render(
+    <Form
+      components={[
+        {
+          id: 'editgrid',
+          type: 'editgrid',
+          key: 'editgrid',
+          label: 'Edit grid',
+          groupLabel: 'Item',
+          addAnother: 'Add item',
+          disableAddingRemovingRows: false,
+          components: [
+            {
+              id: 'selectboxes',
+              type: 'selectboxes',
+              key: 'selectboxes',
+              label: 'selectboxes',
+              openForms: {dataSrc: 'manual'},
+              values: [
+                {value: 'a', label: 'A'},
+                {value: 'b', label: 'B'},
+                {value: 'c', label: 'C'},
+              ],
+              validate: {minSelectedCount: 2},
+            } satisfies SelectboxesComponentSchema,
+          ],
+        },
+      ]}
+      onSubmit={vi.fn()}
+      values={{editgrid: [{selectboxes: {a: false, b: false, c: false}}]}}
+    />
+  );
+  await screen.getByRole('button', {name: 'Edit item 1'}).click();
+  await screen.getByRole('checkbox', {name: 'A', exact: true}).click();
+
+  // try to save
+  await screen.getByRole('button', {name: 'Save'}).click();
+
+  await expect.element(screen.getByText('You must select at least 2 items')).toBeVisible();
 });
