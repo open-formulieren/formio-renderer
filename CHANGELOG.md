@@ -10,6 +10,16 @@ Bugfix release.
 
 [OF#6434]: https://github.com/open-formulieren/open-forms/issues/6434
 
+## 1.1.6 (2026-07-20)
+
+Bugfix release.
+
+- [`OF#6434`][OF#6434] Fixed map component stealing focus. Note that this fix is a bit of a
+  workaround that may affect the UX of components that only have a single interaction mode - we're
+  still looking into a better fix.
+
+[OF#6434]: https://github.com/open-formulieren/open-forms/issues/6434
+
 ## 1.8.0 (2026-07-17)
 
 Feature and bugfix release.
