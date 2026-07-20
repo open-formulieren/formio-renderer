@@ -756,6 +756,60 @@ describe('Regressions', () => {
     consoleErrorSpy.mockRestore();
   });
 
+  test('Prevent infinite render loop with selectboxes conditional', async () => {
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'component1',
+            type: 'editgrid',
+            key: 'editgrid',
+            label: 'Repeating group',
+            disableAddingRemovingRows: false,
+            groupLabel: 'Nested item',
+            validate: {
+              required: true,
+              maxLength: 2,
+            },
+            components: [
+              {
+                id: 'component2',
+                type: 'selectboxes',
+                key: 'selectboxes',
+                label: 'Selectboxes',
+                values: [
+                  {value: 'a', label: 'A'},
+                  {value: 'b', label: 'B'},
+                ],
+                openForms: {dataSrc: 'manual'},
+              },
+              {
+                id: 'component3',
+                type: 'textfield',
+                key: 'my.textfield',
+                label: 'A simple textfield',
+                conditional: {
+                  show: true,
+                  when: 'editgrid.selectboxes',
+                  eq: 'b',
+                },
+              },
+            ],
+          } satisfies EditGridComponentSchema,
+        ]}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    await screen.getByRole('button', {name: 'Add another'}).click();
+    await screen.getByRole('checkbox', {name: 'B', exact: true}).click();
+    await expect.element(screen.getByLabelText('A simple textfield')).toBeVisible();
+
+    // the infinite render prevents this click from being properly registered
+    await screen.getByRole('checkbox', {name: 'B', exact: true}).click();
+    await expect.element(screen.getByRole('checkbox', {name: 'B', exact: true})).not.toBeChecked();
+  });
+
   test('Properly clears hidden fields in nested editgrids', async () => {
     const onSubmit = vi.fn();
     const screen = await render(
