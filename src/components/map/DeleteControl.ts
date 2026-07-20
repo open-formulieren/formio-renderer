@@ -14,7 +14,7 @@ import type {IntlShape} from 'react-intl';
  * @param intl React-intl instance
  */
 const overloadLeafletDeleteControl = (
-  featureGroupRef: React.RefObject<LeafletFeatureGroup>,
+  featureGroupRef: React.RefObject<LeafletFeatureGroup | null>,
   intl: IntlShape
 ) => {
   const deleteShapeConfirmMessage = intl.formatMessage({

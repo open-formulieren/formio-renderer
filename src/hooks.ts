@@ -90,7 +90,7 @@ export function useDebounce<T>(value: T, delay: number) {
  * @param delay Delay in milliseconds.
  */
 export function useDebouncedCallback(callback: () => void, delay: number) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   return useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

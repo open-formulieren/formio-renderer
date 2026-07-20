@@ -250,7 +250,7 @@ const EnsureTestId = () => {
 
 interface SingleInteractionModeProps {
   shape: keyof Interactions;
-  drawControlRef: React.RefObject<L.Control.Draw>;
+  drawControlRef: React.RefObject<L.Control.Draw | null>;
   geoJsonGeometry?: GeoJsonGeometry | null;
 }
 
@@ -294,7 +294,7 @@ const SingleInteractionMode: React.FC<SingleInteractionModeProps> = ({
 
 interface GeometryProps {
   geoJsonGeometry?: GeoJsonGeometry;
-  featureGroupRef: React.RefObject<L.FeatureGroup>;
+  featureGroupRef: React.RefObject<L.FeatureGroup | null>;
 }
 
 const Geometry: React.FC<GeometryProps> = ({geoJsonGeometry, featureGroupRef}) => {
