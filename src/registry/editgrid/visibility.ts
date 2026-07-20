@@ -1,6 +1,7 @@
-import type {EditGridComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, EditGridComponentSchema} from '@open-formulieren/types';
 import {getIn, replace, setIn} from 'formik';
 
+import {getComponentsMap} from '@/formio';
 import type {ApplyVisibility} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {extractInitialValues} from '@/values';
@@ -14,6 +15,17 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
   context
 ) => {
   const {key, components} = componentDefinition;
+
+  // Similar to the rendering code, ensure we keep the prefixed editgrid child
+  // components in the components map, so that `component.conditional` can be evaluated
+  // in the right context of a component (like selectboxes and files)
+  const localComponentsMap: Record<string, AnyComponentSchema> = Object.fromEntries(
+    Object.entries(getComponentsMap(components)).map(([childKey, component]) => [
+      `${key}.${childKey}`,
+      component,
+    ])
+  );
+
   const initialValues = extractInitialValues(components, context.getRegistryEntry);
 
   // ensure we keep adding to the parent scope in case of nested edit grids
@@ -59,6 +71,7 @@ const applyVisibility: ApplyVisibility<EditGridComponentSchema> = (
     const {updatedValues: updatedItemValues, updatedErrors: updatedRelevantItemErrors} =
       processVisibility(components, itemValues, relevantItemErrors, {
         ...context,
+        componentsMap: {...context.componentsMap, ...localComponentsMap},
         initialValues,
         getEvaluationScope,
       });
