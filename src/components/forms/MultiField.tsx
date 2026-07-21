@@ -43,7 +43,7 @@ export interface MultiFieldProps<T extends MultiFieldValue> {
   /**
    * Component taking `RenderFieldProps` to render an individual item/field.`
    */
-  renderField: React.FC<RenderFieldProps>;
+  renderField: (props: RenderFieldProps) => React.ReactNode;
   /**
    * The (accessible) label for the field - anything that can be rendered.
    *
@@ -262,7 +262,7 @@ const useMultiFieldEffects = (
   itemCount: number,
   newItemValue: MultiFieldValue,
   getAutoFocusQuerySelector: (itemName: string) => string = defaultGetAutoFocusQuerySelector
-): React.RefObject<HTMLDivElement> => {
+): React.RefObject<HTMLDivElement | null> => {
   const {setFieldValue} = useFormikContext<JSONObject>();
   const containerRef = useRef<HTMLDivElement>(null);
   const getAutoFocusQuerySelectorRef = useRef(getAutoFocusQuerySelector);

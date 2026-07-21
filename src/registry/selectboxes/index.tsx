@@ -10,6 +10,7 @@ import HelpText from '@/components/forms/HelpText';
 import {LabelContent} from '@/components/forms/Label';
 import Tooltip from '@/components/forms/Tooltip';
 import ValidationErrors from '@/components/forms/ValidationErrors';
+import {useFieldConfig} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 
 import ValueDisplay from './ValueDisplay';
@@ -28,7 +29,6 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
   getRegistryEntry,
 }) => {
   const {
-    key,
     label,
     tooltip,
     description,
@@ -37,10 +37,13 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
     faqItems = [],
   } = componentDefinition;
   const {required = false, maxSelectedCount} = validate;
+
+  const name = useFieldConfig(componentDefinition.key);
+
   const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
   const [{value: selectboxesState = {}}, {error = ''}, {setValue}] = useField<
     Record<string, boolean> | undefined
-  >(key);
+  >(name);
   const id = useId();
 
   const initialValues: Record<string, boolean> = useMemo(
@@ -54,7 +57,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
   // derive the component touched state from the individual checkboxes that make up the
   // component
   const touched = options.some(({value}) => {
-    const nestedFieldName = `${key}.['${value}']`;
+    const nestedFieldName = `${name}.['${value}']`;
     const {touched} = getFieldMeta<boolean>(nestedFieldName);
     return touched;
   });
@@ -96,7 +99,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
     const container = fieldsetRef.current;
     if (!container) return;
 
-    const {value} = getFieldProps(key);
+    const {value} = getFieldProps(name);
 
     // Run validation only if the value has changed since the last validate call.
     const maybeRunValidation = () => {
@@ -107,7 +110,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
       // 'touched'
       if (!touched) return;
 
-      validateField(key);
+      validateField(name);
       lastValidatedValueRef.current = value;
     };
 
@@ -146,7 +149,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
       document.removeEventListener('click', handleClick);
       document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [getFieldProps, validateField, key, touched, maxSelectedCount]);
+  }, [getFieldProps, validateField, name, touched, maxSelectedCount]);
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
@@ -179,7 +182,8 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
       {options.map(({value, label: optionLabel, description}) => (
         <Checkbox
           key={value}
-          name={`${key}.['${value}']`}
+          // key instead of name, the checkbox takes care of the prefixing!
+          name={`${componentDefinition.key}.['${value}']`}
           label={optionLabel}
           description={description}
           descriptionAsHelpText={false}
