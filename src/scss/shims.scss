@@ -23,3 +23,13 @@
   // as fallback, which results in a visual regression otherwise
   --utrecht-ordered-list-item-padding-inline-start: 8px;
 }
+
+// 4.0.0 - utrecht-form-field-description--invalid has changed to
+// utrecht-form-field-error-message which has its own design tokens
+// TODO: document breaking change
+:root {
+  --utrecht-form-field-error-message-color: var(--utrecht-form-field-description-invalid-color);
+  --utrecht-form-field-error-message-line-height: var(
+    --of-utrecht-form-field-description-errors-line-height
+  );
+}
