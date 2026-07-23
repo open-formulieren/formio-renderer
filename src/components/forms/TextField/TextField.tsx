@@ -1,5 +1,4 @@
 import type {FAQItem} from '@open-formulieren/types';
-import {Paragraph} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import type {TextboxProps} from '@utrecht/textbox-react';
 import {Textbox} from '@utrecht/textbox-react';
@@ -87,6 +86,10 @@ export interface TextFieldProps {
  *
  * The form field state is managed with Formik, but this should only be an
  * implementation detail within this library.
+ *
+ * @todo Refactor this to `FormFieldTextbox` or whatever the NL DS component will be,
+ * but it requires some more cleanups for our custom modifier class names (labels,
+ * descriptions, ...)
  */
 const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   name,
@@ -127,7 +130,19 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
       >
         {label}
       </Label>
-      <Paragraph>
+
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      <div className="utrecht-form-field__input">
         <Textbox
           // ensure unsetting values doesn't ping-pong us between controlled/uncontrolled
           // components
@@ -148,13 +163,13 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           placeholder={placeholder}
           {...extraProps}
         />
-      </Paragraph>
+      </div>
       {showCharCount && (value?.length ?? 0) > 0 && (
-        <CharCount id={characterCountId} text={value} limit={maxLength} />
+        <div className="utrecht-form-field__status">
+          <CharCount id={characterCountId} text={value} limit={maxLength} />
+        </div>
       )}
       {children}
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </FormField>
   );
