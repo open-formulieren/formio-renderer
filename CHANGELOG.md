@@ -1,5 +1,18 @@
 # Changes
 
+## 1.1.7 (2026-07-27)
+
+Bugfix release.
+
+- [`#357`][#357] Fixed some `editgrid` / `selectboxes` bugs when used together:
+  - Fixed infinite render loop when using a selectboxes `conditional` inside an editgrid.
+  - Fixed item value updates due to visibility processing being persisted in the editgrid state
+    itself _before_ the "Save" button was clicked.
+  - Fixed incorrect determination of the "touched" state of a `selectboxes` field when it's inside
+    an `editgrid`.
+
+[#357]: https://github.com/open-formulieren/formio-renderer/issues/357
+
 ## 1.1.6 (2026-07-20)
 
 Bugfix release.
