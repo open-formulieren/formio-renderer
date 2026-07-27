@@ -328,6 +328,7 @@ jobs:
             *"-alpha."*) npm_tag=next ;;
             *"-beta."*) npm_tag=next ;;
             *"-rc."*) npm_tag=next ;;
+            "1.8."*) npm_tag=stable-1.8.x ;;
             *) npm_tag=latest ;;
           esac
 
