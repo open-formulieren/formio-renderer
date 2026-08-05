@@ -1,6 +1,6 @@
 @use '@/components/forms/TextField/TextField';
+
 @use '@/scss/bem';
-@use '@/scss/form-field-override';
 
 .utrecht-textbox {
   // copied over from the upstream CSS rules and dumped in private vars to easier pass

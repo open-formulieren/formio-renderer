@@ -34,6 +34,15 @@ export interface DateInputGroupProps {
    */
   label: React.ReactNode;
   /**
+   * Optional description element, displayed below the label if provided.
+   */
+  description?: React.ReactNode;
+  /**
+   * Optional error message element, displayed below the label/above the input, if
+   * provided.
+   */
+  errorMessage?: React.ReactNode;
+  /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
    */
@@ -67,6 +76,8 @@ export interface DateInputGroupProps {
 const DateInputGroup: React.FC<DateInputGroupProps> = ({
   name,
   label,
+  description,
+  errorMessage,
   tooltip,
   isRequired,
   isReadOnly,
@@ -126,30 +137,34 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   };
 
   return (
-    <InputGroup
-      label={label}
-      tooltip={tooltip}
-      isRequired={isRequired}
-      isReadOnly={isReadOnly}
-      name={name}
-    >
-      <DateInputItems
-        year={year}
-        month={month}
-        day={day}
+    <div>
+      <InputGroup
+        label={label}
+        description={description}
+        errorMessage={errorMessage}
+        tooltip={tooltip}
+        isRequired={isRequired}
         isReadOnly={isReadOnly}
-        isInvalid={touched && !!error}
-        onChange={onPartChange}
-        onBlur={async () => {
-          setTouched(true);
-          if (year && month && day) {
-            await validateField(name);
-          }
-        }}
-        autoComplete={autoComplete}
-        aria-describedby={ariaDescribedBy}
-      />
-    </InputGroup>
+        name={name}
+      >
+        <DateInputItems
+          year={year}
+          month={month}
+          day={day}
+          isReadOnly={isReadOnly}
+          isInvalid={touched && !!error}
+          onChange={onPartChange}
+          onBlur={async () => {
+            setTouched(true);
+            if (year && month && day) {
+              await validateField(name);
+            }
+          }}
+          autoComplete={autoComplete}
+          aria-describedby={ariaDescribedBy}
+        />
+      </InputGroup>
+    </div>
   );
 };
 

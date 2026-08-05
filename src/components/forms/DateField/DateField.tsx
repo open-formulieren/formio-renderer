@@ -131,6 +131,11 @@ const DateField: React.FC<DateFieldProps> = ({
   const isInvalid = touched && !!error;
   const errorMessageId = isInvalid ? `${id}-error-message` : undefined;
 
+  const descriptionNode: React.ReactNode = description && <HelpText>{description}</HelpText>;
+  const errorMessageNode: React.ReactNode = touched && errorMessageId && (
+    <ValidationErrors error={error} id={errorMessageId} />
+  );
+
   let dateInput: React.ReactElement;
   switch (props.widget) {
     case 'inputGroup': {
@@ -138,6 +143,8 @@ const DateField: React.FC<DateFieldProps> = ({
         <DateInputGroup
           name={name}
           label={label}
+          description={descriptionNode}
+          errorMessage={errorMessageNode}
           tooltip={tooltip}
           isRequired={isRequired}
           isReadOnly={isReadOnly}
@@ -152,6 +159,8 @@ const DateField: React.FC<DateFieldProps> = ({
         <DatePicker
           name={name}
           label={label}
+          description={descriptionNode}
+          errorMessage={errorMessageNode}
           tooltip={tooltip}
           isRequired={isRequired}
           isReadOnly={isReadOnly}
@@ -165,8 +174,6 @@ const DateField: React.FC<DateFieldProps> = ({
   return (
     <FormField type="text" invalid={isInvalid} className="utrecht-form-field--openforms">
       {dateInput}
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </FormField>
   );

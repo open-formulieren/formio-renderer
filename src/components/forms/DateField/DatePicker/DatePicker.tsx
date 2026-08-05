@@ -1,5 +1,5 @@
-import {Paragraph} from '@utrecht/component-library-react';
 import {Textbox} from '@utrecht/textbox-react';
+import {clsx} from 'clsx';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useId} from 'react';
@@ -27,6 +27,15 @@ interface DatePickerFieldProps {
    * assistive technologies.
    */
   label: React.ReactNode;
+  /**
+   * Optional description element, displayed below the label if provided.
+   */
+  description?: React.ReactNode;
+  /**
+   * Optional error message element, displayed below the label/above the input, if
+   * provided.
+   */
+  errorMessage?: React.ReactNode;
   /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
@@ -79,6 +88,8 @@ interface DatePickerFieldProps {
 const DatePickerField: React.FC<DatePickerFieldProps> = ({
   name,
   label,
+  description,
+  errorMessage,
   tooltip,
   isRequired,
   isReadOnly,
@@ -139,39 +150,46 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         {label}
       </Label>
 
+      {description && <div className="utrecht-form-field__description">{description}</div>}
+      {errorMessage && <div className="utrecht-form-field__error-message">{errorMessage}</div>}
+
       <DatePickerRoot onOpen={() => setTouched(true)} onFocusOut={() => validateField(name)}>
         {({refs, setIsOpen}) => (
           <>
-            <Paragraph className="openforms-datepicker-textbox">
-              <Textbox
-                ref={refs.setPositionReference}
-                name={name}
-                value={textboxValue}
-                onChange={onChange}
-                onBlur={event => {
-                  const value = event.target.value;
-                  // Attempt to create a date object using the locale meta
-                  const date = parseDate(value, dateLocaleMeta);
-                  // If we were able to create a date object, format it to an ISO-8601 string and set it
-                  // as the field value. Otherwise, just set the entered value to the field directly.
-                  // It's up to the validation libraries to check it.
-                  const newValue = date ? formatISO(date, {representation: 'date'}) : value;
-                  setValue(newValue);
-                  onBlur(event);
-                }}
-                className="utrecht-textbox--openforms"
-                id={id}
-                readOnly={isReadOnly}
-                invalid={touched && !!error}
-                aria-describedby={ariaDescribedBy}
-                placeholder={placeholder}
-                autoComplete="off"
-              />
-              <DatePickerTrigger
-                className="openforms-datepicker-textbox__calendar-toggle"
-                disabled={isReadOnly}
-              />
-            </Paragraph>
+            <div
+              className={clsx('utrecht-form-field__input')}
+            >
+              <div className="openforms-datepicker-textbox">
+                <Textbox
+                  ref={refs.setPositionReference}
+                  name={name}
+                  value={textboxValue}
+                  onChange={onChange}
+                  onBlur={event => {
+                    const value = event.target.value;
+                    // Attempt to create a date object using the locale meta
+                    const date = parseDate(value, dateLocaleMeta);
+                    // If we were able to create a date object, format it to an ISO-8601 string and set it
+                    // as the field value. Otherwise, just set the entered value to the field directly.
+                    // It's up to the validation libraries to check it.
+                    const newValue = date ? formatISO(date, {representation: 'date'}) : value;
+                    setValue(newValue);
+                    onBlur(event);
+                  }}
+                  className="utrecht-textbox--openforms"
+                  id={id}
+                  readOnly={isReadOnly}
+                  invalid={touched && !!error}
+                  aria-describedby={ariaDescribedBy}
+                  placeholder={placeholder}
+                  autoComplete="off"
+                />
+                <DatePickerTrigger
+                  className="openforms-datepicker-textbox__calendar-toggle"
+                  disabled={isReadOnly}
+                />
+              </div>
+            </div>
             <DatePicker
               onCalendarClick={async selectedDate => {
                 // Need to truncate, because the selected date is in datetime format
