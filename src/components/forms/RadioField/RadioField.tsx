@@ -184,7 +184,7 @@ const RadioField: React.FC<RadioFieldProps> = ({
   return (
     <Fieldset
       ref={fieldsetRef}
-      className="utrecht-form-fieldset--openforms"
+      className="utrecht-form-fieldset--openforms utrecht-form-fieldset--openforms-radio"
       invalid={invalid}
       role="radiogroup"
       aria-describedby={[descriptionId, ariaDescribedby].filter(Boolean).join(' ')}
@@ -200,22 +200,26 @@ const RadioField: React.FC<RadioFieldProps> = ({
         </FieldsetLegend>
       )}
 
-      {options.map(({value, label: optionLabel, description}, index) => (
-        <RadioOption
-          key={value}
-          name={name}
-          value={value}
-          label={optionLabel}
-          description={description}
-          id={id}
-          index={index}
-          aria-describedby={errorMessageId}
-          isReadOnly={isReadOnly}
-        />
-      ))}
-
+      {/* Fieldsets don't support the __description and __error-message elements */}
       <HelpText id={descriptionId}>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
+      <div className="openforms-radio-group">
+        {options.map(({value, label: optionLabel, description}, index) => (
+          <RadioOption
+            key={value}
+            name={name}
+            value={value}
+            label={optionLabel}
+            description={description}
+            id={id}
+            index={index}
+            aria-describedby={errorMessageId}
+            isReadOnly={isReadOnly}
+          />
+        ))}
+      </div>
+
       <FAQItems items={faqItems} />
     </Fieldset>
   );
