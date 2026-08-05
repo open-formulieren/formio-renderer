@@ -1,4 +1,4 @@
-import {FormFieldDescription} from '@utrecht/form-field-description-react';
+import {FormFieldErrorMessage} from '@utrecht/form-field-error-message-react';
 
 import './ValidationErrors.scss';
 
@@ -10,13 +10,9 @@ export interface ValidationErrorsProps {
 const ValidationErrors: React.FC<ValidationErrorsProps> = ({error = '', id}) => {
   if (!error) return null;
   return (
-    <FormFieldDescription
-      id={id}
-      invalid
-      className="utrecht-form-field-description--openforms-errors"
-    >
+    <FormFieldErrorMessage id={id} className="utrecht-form-field-error-message--openforms-errors">
       {error}
-    </FormFieldDescription>
+    </FormFieldErrorMessage>
   );
 };
 
