@@ -1,136 +1,61 @@
 @use '@utrecht/form-field-css';
 @use '@utrecht/custom-checkbox-css';
 
-@use '@/scss/bem';
-@use '@/scss/form-field-override';
+// extension to be able to position the faq items
+.utrecht-form-field--checkbox.utrecht-form-field--openforms {
+  grid-template-areas:
+    'error-message error-message'
+    'input label'
+    'input description'
+    'faqitems faqitems';
 
-// TODO - likely we can play around with the design tokens and scope the CSS to our
-// own theme to modify the appearance and bring it closer to vanilla NL DS, but that
-// will cause some breaking changes so we have to be careful about it. Right now, the
-// CSS here is just a port of the SDK CSS.
+  // handle the readonly styles
+  input[aria-readonly='true'] {
+    cursor: var(--utrecht-action-disabled-cursor, revert);
+    background-color: var(
+      --utrecht-checkbox-disabled-background-color,
+      var(--utrecht-form-control-read-only-background-color)
+    );
+    background-image: none;
 
-// Design tokens: see src/components/checkbox-field.tokens.json
-
-// Extensions on NL DS components
-.utrecht-form-field {
-  @include bem.modifier('openforms') {
-    &.utrecht-form-field--checkbox {
-      --_of-utrecht-form-field-checkbox-background-color: var(
-        --of-utrecht-form-field-checkbox-background-color,
-        var(--of-checkbox-bg)
+    // adapted from utrecht "checked + disabled" stories/styles
+    &:checked {
+      border-color: var(
+        --utrecht-checkbox-disabled-border-color,
+        var(--utrecht-checkbox-border-color)
       );
-      --_of-checkbox-label-shift: calc(
-        var(--of-utrecht-form-label-checkbox-padding-block-start) + var(--utrecht-checkbox-size)
+
+      background-image: var(
+        --of-utrecht-checkbox-read-only-background-image,
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23767676' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e")
       );
-
-      grid-template-columns: var(--utrecht-checkbox-size) minmax(0, 100fr);
-
-      & + & {
-        margin-block-start: var(--of-utrecht-form-field-checkbox-margin-block-start);
-      }
-
-      .utrecht-custom-checkbox,
-      .utrecht-checkbox--custom {
-        margin-block-start: var(--of-utrecht-form-label-checkbox-padding-block-start);
-        margin-inline-start: var(--of-utrecht-form-label-checkbox-padding-inline-start);
-        z-index: 0;
-
-        &:focus ~ .utrecht-form-field__label--checkbox {
-          outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
-        }
-
-        // more specific - overrides the hover/focus styles *as intended*
-        &[aria-readonly='true'] {
-          cursor: var(--utrecht-action-disabled-cursor, not-allowed);
-          background-color: var(
-            --utrecht-checkbox-disabled-background-color,
-            var(--utrecht-form-control-read-only-background-color)
-          );
-          background-image: none;
-
-          // adapted from utrecht "checked + disabled" stories/styles
-          &:checked {
-            border-color: var(
-              --utrecht-checkbox-disabled-border-color,
-              var(--utrecht-checkbox-border-color)
-            );
-
-            background-image: var(
-              --of-utrecht-checkbox-read-only-background-image,
-              url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23767676' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e")
-            );
-          }
-        }
-      }
-
-      .utrecht-form-field__label {
-        --utrecht-form-field-label-margin-block-end: var(
-          --of-utrecht-form-field-checkbox-label-margin-block-end
-        );
-
-        background-color: var(--_of-utrecht-form-field-checkbox-background-color);
-        padding-inline-start: var(--_of-checkbox-label-shift);
-        margin-inline-start: calc(var(--_of-checkbox-label-shift) * -1);
-      }
-
-      .utrecht-form-label--checkbox {
-        padding-block-end: var(--of-utrecht-form-label-checkbox-padding-block-end);
-        padding-block-start: var(--of-utrecht-form-label-checkbox-padding-block-start);
-        padding-inline-end: var(--of-utrecht-form-label-checkbox-padding-inline-end);
-        padding-inline-start: var(--of-utrecht-form-label-checkbox-padding-inline-start);
-      }
     }
   }
-}
 
-.openforms-theme {
-  .utrecht-custom-checkbox--openforms:not(:checked) {
-    background-color: var(--utrecht-checkbox-background-color);
+  .openforms-faq-items {
+    grid-area: faqitems;
   }
 
-  .utrecht-form-field {
-    @include bem.modifier('checkbox') {
-      &:not(:has(.utrecht-form-field-description--openforms-helptext)) {
-        // always focus the entire bar with the grey background, instead of the just the
-        // label
-        &:focus-within {
-          outline: var(--of-utrecht-form-label-checkbox-focus-within-outline);
-        }
+  .utrecht-form-label--checkbox {
+    font-size: var(--of-utrecht-form-label-checkbox-font-size, var(--utrecht-form-label-font-size));
+    line-height: var(--of-utrecht-form-label-checkbox-line-height, var(--utrecht-checkbox-size));
+  }
 
-        .utrecht-form-field__label.utrecht-form-field__label--checkbox {
-          outline: none !important;
-        }
-      }
+  .utrecht-form-field__label {
+    margin-block-end: var(
+      --of-utrecht-form-field-checkbox-label-margin-block-end,
+      var(--utrecht-form-field-label-margin-block-end)
+    );
+  }
 
-      // description as help text
-      .utrecht-form-field-description.utrecht-form-field-description--openforms-helptext,
-      .utrecht-form-field-description.utrecht-form-field-description--invalid {
-        grid-column-start: input;
-        grid-column-end: description;
-      }
-
-      .openforms-faq-items {
-        grid-column-start: input;
-        grid-column-end: description;
-      }
-
-      // description for the option itself
-      .utrecht-form-field-description:not(
-        .utrecht-form-field-description--openforms-helptext,
-        .utrecht-form-field-description--invalid
-      ) {
-        background: var(--_of-utrecht-form-field-checkbox-background-color);
-        grid-column-start: input;
-        grid-column-end: description;
-        margin: 0;
-        padding-block-end: var(--of-utrecht-form-label-checkbox-padding-block-end);
-        padding-inline-end: var(--of-utrecht-form-label-checkbox-padding-inline-end);
-        padding-inline-start: calc(
-          var(--_of-checkbox-label-shift) +
-            var(--of-utrecht-form-label-checkbox-padding-block-start) + 2 *
-            var(--utrecht-checkbox-border-width)
-        );
-      }
-    }
+  .utrecht-form-field-description {
+    color: var(
+      --of-utrecht-form-field-checkbox-description-color,
+      var(--utrecht-form-field-description-color)
+    );
+    font-style: var(
+      --of-utrecht-form-field-checkbox-description-font-style,
+      var(--utrecht-form-field-description-font-style)
+    );
   }
 }
