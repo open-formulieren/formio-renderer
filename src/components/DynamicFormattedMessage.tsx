@@ -1,6 +1,6 @@
 import {formatMessage as coreFormatMessage} from '@formatjs/intl';
 import type {ResolvedIntlConfig} from '@formatjs/intl/src/types';
-import {DEFAULT_INTL_CONFIG} from '@formatjs/intl/src/utils';
+import {DEFAULT_INTL_CONFIG} from '@formatjs/intl/src/utils.js';
 import {Subscript, Superscript} from '@utrecht/component-library-react';
 import DOMPurify from 'dompurify';
 import type {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
