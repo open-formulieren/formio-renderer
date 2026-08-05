@@ -1,6 +1,5 @@
 import type {FAQItem} from '@open-formulieren/types';
 import {Checkbox as UtrechtCheckbox} from '@utrecht/checkbox-react';
-import {FormFieldDescription} from '@utrecht/form-field-description-react';
 import {FormField} from '@utrecht/form-field-react';
 import {clsx} from 'clsx';
 import {useField, useFormikContext} from 'formik';
@@ -41,20 +40,11 @@ export interface CheckboxProps {
    */
   isReadOnly?: boolean;
   /**
-   * Whether the checkbox should be disabled or not.
-   */
-  disabled?: boolean;
-  /**
    * Additional description displayed close to the field - use this to document any
    * validation requirements that are crucial to successfully submit the form. More
    * information that is contextual/background typically belongs in a tooltip.
    */
   description?: React.ReactNode;
-  /**
-   * Whether to treat the description as help text for a standalone field or blend the
-   * description in more with the label.
-   */
-  descriptionAsHelpText?: boolean;
   /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
@@ -72,7 +62,6 @@ const Checkbox: React.FC<CheckboxProps> = ({
   label = '',
   isRequired = false,
   description = '',
-  descriptionAsHelpText = true,
   isReadOnly = false,
   ignoreRequired = false,
   tooltip,
@@ -91,12 +80,23 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
   const invalid = touched && !!error;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
-  const descriptionId = description && !descriptionAsHelpText ? `${id}-description` : undefined;
+  // TODO: enable this when we add the description to the aria-describedby for *all*
+  // components
+  // const descriptionId = description ? `${id}-description` : undefined;
+  const descriptionId = undefined;
 
   const ariaDescribedBy = [errorMessageId, descriptionId].filter(Boolean).join(' ');
 
   return (
     <FormField type="checkbox" invalid={invalid} className="utrecht-form-field--openforms">
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      {/* Input *beside* the label so that the grid styles position it correctly and
+      prevent long labels from wrapping under the checkbox itself */}
       <UtrechtCheckbox
         id={id}
         className="utrecht-form-field__input utrecht-custom-checkbox utrecht-custom-checkbox--html-input utrecht-custom-checkbox--openforms"
@@ -133,17 +133,12 @@ const Checkbox: React.FC<CheckboxProps> = ({
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </div>
 
-      {descriptionAsHelpText ? (
-        <HelpText>{description}</HelpText>
-      ) : (
-        description && (
-          <FormFieldDescription id={descriptionId} className="utrecht-form-field__description">
-            {description}
-          </FormFieldDescription>
-        )
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText id={descriptionId}>{description}</HelpText>
+        </div>
       )}
 
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </FormField>
   );
