@@ -1,17 +1,2 @@
 @use '@utrecht/button-css';
 @use '@utrecht/calendar-css';
-
-@use '@/scss/button-override';
-
-.openforms-theme .utrecht-calendar {
-  .utrecht-calendar {
-    &__table-days-item-day {
-      &--selected {
-        text-decoration: var(
-          --of-datepicker-table-days-item-day-selected-text-decoration,
-          underline
-        );
-      }
-    }
-  }
-}

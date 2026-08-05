@@ -8,7 +8,7 @@
     // Note that display: flex is not an option because fieldset/legend don't honour
     // this layout mode.
     @include bem.element('legend') {
-      margin-block-end: var(--of-utrecht-form-fieldset-margin-block-end);
+      margin-block-end: var(--of-utrecht-form-fieldset-legend-margin-block-end);
 
       &.sr-only {
         display: block;
