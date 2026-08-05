@@ -366,7 +366,7 @@ const InnerFormioForm = forwardRef<FormStateRef, InnerFormioFormProps>(
       // trying to determine the order from the component definition or error messages
       // object structure...
       const firstErrorMessage = formContainer.current?.querySelector(
-        '.utrecht-form-field--invalid, .openforms-fieldset--invalid'
+        '.utrecht-form-field--invalid, .utrecht-form-fieldset--invalid'
       );
       if (!firstErrorMessage) return;
       const reqId = requestAnimationFrame(() => {
