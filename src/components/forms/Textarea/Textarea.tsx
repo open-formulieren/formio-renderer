@@ -74,6 +74,11 @@ export interface TextareaProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
@@ -88,6 +93,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
   ...extraProps
 }) => {
@@ -169,6 +175,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
           placeholder={placeholder}
           {...extraProps}
         />
+        {afterInput}
       </div>
 
       {showCharCount && (value?.length ?? 0) > 0 && (

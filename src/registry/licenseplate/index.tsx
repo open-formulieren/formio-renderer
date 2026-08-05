@@ -30,13 +30,14 @@ export const FormioLicensePlate: React.FC<FormioLicensePlateProps> = ({component
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
           pattern={validate.pattern}
           placeholder="0-AAA-12"
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

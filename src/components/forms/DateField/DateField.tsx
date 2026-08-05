@@ -96,6 +96,11 @@ interface DateFieldCommonProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 export type DateFieldProps = DateFieldCommonProps & WidgetProps;
@@ -119,6 +124,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
   ...props
 }) => {
@@ -150,6 +156,8 @@ const DateField: React.FC<DateFieldProps> = ({
           isReadOnly={isReadOnly}
           autoComplete={autoComplete}
           aria-describedby={errorMessageId}
+          isMultiValue={isMultiValue}
+          afterInput={afterInput}
         />
       );
       break;
@@ -165,6 +173,8 @@ const DateField: React.FC<DateFieldProps> = ({
           isRequired={isRequired}
           isReadOnly={isReadOnly}
           aria-describedby={errorMessageId}
+          isMultiValue={isMultiValue}
+          afterInput={afterInput}
           {...props.widgetProps}
         />
       );

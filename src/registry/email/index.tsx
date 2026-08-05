@@ -45,8 +45,15 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label}) => (
-        <TextField name={name} label={label} type="email" autoComplete={autocomplete} isMultiValue>
+      renderField={({name, label, controls}) => (
+        <TextField
+          name={name}
+          label={label}
+          type="email"
+          autoComplete={autocomplete}
+          isMultiValue
+          afterInput={controls}
+        >
           {isVerificationRequired && (
             <VerificationStatus prefixedComponentKey={prefixedKey} name={name} />
           )}

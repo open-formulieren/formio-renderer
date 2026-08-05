@@ -74,6 +74,16 @@ interface DatePickerFieldProps {
    * By default this is enabled/shown.
    */
   displayYearNavigation?: boolean;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 /**
@@ -99,6 +109,8 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   disabledDates,
   displayWeekend,
   displayYearNavigation,
+  isMultiValue,
+  afterInput,
 }) => {
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
@@ -157,7 +169,9 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         {({refs, setIsOpen}) => (
           <>
             <div
-              className={clsx('utrecht-form-field__input')}
+              className={clsx('utrecht-form-field__input', {
+                'openforms-multifield__input-container': isMultiValue,
+              })}
             >
               <div className="openforms-datepicker-textbox">
                 <Textbox
@@ -189,6 +203,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
                   disabled={isReadOnly}
                 />
               </div>
+              {afterInput}
             </div>
             <DatePicker
               onCalendarClick={async selectedDate => {

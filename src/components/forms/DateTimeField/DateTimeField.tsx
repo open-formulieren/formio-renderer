@@ -70,6 +70,11 @@ export interface DateTimeFieldProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 interface DateTimePartValues {
@@ -113,6 +118,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   maxDate,
   'aria-describedby': ariaDescribedBy,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
 }) => {
   name = useFieldConfig(name);
@@ -226,7 +232,9 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         {({refs, setIsOpen}) => (
           <>
             <div
-              className={clsx('utrecht-form-field__input')}
+              className={clsx('utrecht-form-field__input', {
+                'openforms-multifield__input-container': isMultiValue,
+              })}
             >
               <div className="openforms-datepicker-textbox">
                 <Textbox
@@ -258,6 +266,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                   disabled={isReadOnly}
                 />
               </div>
+              {afterInput}
             </div>
             <DatePicker
               onCalendarClick={selectedDate => {

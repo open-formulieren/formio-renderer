@@ -31,7 +31,7 @@ export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -40,6 +40,7 @@ export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
           isReadOnly={isReadOnly}
           type="time"
           step="60"
+          afterInput={controls}
           isMultiValue
         />
       )}

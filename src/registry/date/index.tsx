@@ -39,7 +39,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <DateField
           name={name}
           label={label}
@@ -53,6 +53,7 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
               : undefined
           }
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

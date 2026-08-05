@@ -39,7 +39,7 @@ export const FormioDateTime: React.FC<FormioDateTimeProps> = ({componentDefiniti
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <DateTimeField
           name={name}
           label={label}
@@ -47,6 +47,7 @@ export const FormioDateTime: React.FC<FormioDateTimeProps> = ({componentDefiniti
           minDate={parsedMin ?? undefined}
           isReadOnly={isReadOnly}
           isMultiValue
+          afterInput={controls}
         />
       )}
     />

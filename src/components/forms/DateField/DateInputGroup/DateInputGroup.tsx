@@ -60,6 +60,16 @@ export interface DateInputGroupProps {
    */
   autoComplete?: string;
   'aria-describedby'?: string;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 /**
@@ -83,6 +93,8 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   isReadOnly,
   autoComplete,
   'aria-describedby': ariaDescribedBy,
+  isMultiValue,
+  afterInput,
 }) => {
   const {validateField} = useFormikContext();
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
@@ -137,7 +149,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   };
 
   return (
-    <div>
+    <div className={isMultiValue ? 'openforms-multifield__input-container' : undefined}>
       <InputGroup
         label={label}
         description={description}
@@ -164,6 +176,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
           aria-describedby={ariaDescribedBy}
         />
       </InputGroup>
+      {afterInput}
     </div>
   );
 };

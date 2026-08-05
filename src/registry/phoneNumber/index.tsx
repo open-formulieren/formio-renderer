@@ -38,7 +38,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -46,6 +46,7 @@ export const PhoneNumberField: React.FC<PhoneNumberFieldProps> = ({componentDefi
           inputMode="tel"
           autoComplete={autocomplete}
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

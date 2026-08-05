@@ -43,7 +43,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -52,6 +52,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
           maxLength={validate?.maxLength}
           autoComplete={autocomplete}
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

@@ -80,6 +80,11 @@ export interface TextFieldProps {
    * Any additional content, positioned between the text field and the description (if any).
    */
   children?: React.ReactNode;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 /**
@@ -106,6 +111,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
   nameForValidate = undefined,
   faqItems = [],
   children,
+  afterInput,
   ...extraProps
 }) => {
   name = useFieldConfig(name);
@@ -168,6 +174,7 @@ const TextField: React.FC<TextFieldProps & TextboxProps> = ({
           placeholder={placeholder}
           {...extraProps}
         />
+        {afterInput}
       </div>
       {showCharCount && (value?.length ?? 0) > 0 && (
         <div className="utrecht-form-field__status">

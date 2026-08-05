@@ -32,7 +32,7 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -41,6 +41,7 @@ export const FormioBSN: React.FC<FormioBSNProps> = ({componentDefinition}) => {
           inputMode="numeric"
           placeholder="XXXXXXXXX"
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}
