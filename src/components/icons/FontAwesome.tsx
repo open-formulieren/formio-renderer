@@ -4,20 +4,22 @@ import {forwardRef} from 'react';
 import './FontAwesomeSolidIcon.scss';
 import type {RendererIcon} from './types';
 
+type FAVariant = 'regular' | 'solid';
+
 /**
  * Mapping of semantic icon names to the font-awesome icon name.
  */
-const FA_MAP: Record<RendererIcon, string> = {
-  add: 'plus',
-  'arrow-right': 'arrow-right',
-  edit: 'edit',
-  remove: 'trash-can',
-  tooltip: 'question-circle',
-  close: 'xmark',
-  warning: 'exclamation-triangle',
-  calendar: 'calendar-days',
-  refresh: 'refresh',
-  error: 'exclamation-circle',
+const FA_MAP: Record<RendererIcon, [string, FAVariant]> = {
+  add: ['plus', 'regular'],
+  'arrow-right': ['arrow-right', 'solid'],
+  edit: ['edit', 'regular'],
+  remove: ['trash-can', 'regular'],
+  tooltip: ['circle-question', 'regular'],
+  close: ['xmark', 'solid'],
+  warning: ['exclamation-triangle', 'solid'],
+  calendar: ['calendar-days', 'regular'],
+  refresh: ['refresh', 'solid'],
+  error: ['exclamation-circle', 'solid'],
 };
 
 interface FontAwesomeSolidIconProps {
@@ -54,9 +56,9 @@ const FontAwesomeSolidIcon = forwardRef<HTMLElement, FontAwesomeSolidIconProps>(
     ref
   ) => {
     const isDisabled = [true, 'true'].includes(ariaDisabled);
-    const iconName = FA_MAP[icon] ?? icon;
+    const [iconName, variant] = FA_MAP[icon] ?? icon;
     const className = clsx(
-      'fa-solid',
+      `fa-${variant}`,
       `fa-${iconName}`,
       isDisabled && 'icon-disabled',
       extraClassName
