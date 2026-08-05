@@ -1,9 +1,7 @@
 @use '@utrecht/form-field-css';
-@use '@utrecht/paragraph-css';
 @use '@utrecht/textarea-css';
 
 @use '@/scss/bem';
-@use '@/scss/form-field-override';
 
 .utrecht-textarea {
   @include bem.modifier('openforms-no-resize') {
