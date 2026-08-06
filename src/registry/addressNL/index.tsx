@@ -96,6 +96,15 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
       })}
       aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ') || undefined}
     >
+      {/*
+        no point wrapping these as the __description and __error-message elements don't
+        exist for the fieldset component :(
+      */}
+      <HelpText id={descriptionid}>{description}</HelpText>
+      {touched && errorMessageId && addressError && (
+        <ValidationErrors error={addressError} id={errorMessageId} />
+      )}
+
       <div className="openforms-addressnl__form-field-container">
         <PostCodeField namePrefix={key} isRequired={isRequired || hasHouseNumber} />
         <HouseNumberField namePrefix={key} isRequired={isRequired || hasPostcode} />
@@ -116,10 +125,6 @@ export const FormioAddressNL: React.FC<FormioAddressNLProps> = ({
           </>
         )}
       </div>
-      <HelpText id={descriptionid}>{description}</HelpText>
-      {touched && errorMessageId && addressError && (
-        <ValidationErrors error={addressError} id={errorMessageId} />
-      )}
 
       <FAQItems items={faqItems} />
     </Fieldset>

@@ -53,40 +53,52 @@ export const FormioMap: React.FC<FormioMapProps> = ({componentDefinition}) => {
       >
         {label}
       </Label>
-      <React.Suspense>
-        <LeafletMap
-          geoJsonGeometry={value}
-          defaultZoomLevel={defaultZoom ?? undefined}
-          tileLayerUrl={tileLayerUrl}
-          defaultCenter={
-            initialCenter && initialCenter.lng && initialCenter.lat
-              ? [initialCenter.lat, initialCenter.lng]
-              : undefined
-          }
-          interactions={interactions}
-          overlays={overlays}
-          onGeoJsonGeometrySet={async (geoJsonGeometry: GeoJsonGeometry) => {
-            setTouched(true);
-            await setValue(geoJsonGeometry);
-            await validateField(name);
-          }}
-          onBlur={() => {
-            // unsure why the microtask approach works here, but without the
-            // `DeleteButton` story follows the `#` anchor of the delete button (link)
-            // in storybook. This doesn't seem to happen in production builds.
-            // Using a useCallback approach doesn't seem to make a difference. One
-            // suspicion was also that the `window.confirm` messed up things, but so
-            // far only the microtask approach seems to work :shrug:
-            window.queueMicrotask(async () => {
-              setTouched(true);
-              validateField(name);
-            });
-          }}
-        />
-      </React.Suspense>
 
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      <div className="utrecht-form-field__input">
+        <React.Suspense>
+          <LeafletMap
+            geoJsonGeometry={value}
+            defaultZoomLevel={defaultZoom ?? undefined}
+            tileLayerUrl={tileLayerUrl}
+            defaultCenter={
+              initialCenter && initialCenter.lng && initialCenter.lat
+                ? [initialCenter.lat, initialCenter.lng]
+                : undefined
+            }
+            interactions={interactions}
+            overlays={overlays}
+            onGeoJsonGeometrySet={async (geoJsonGeometry: GeoJsonGeometry) => {
+              setTouched(true);
+              await setValue(geoJsonGeometry);
+              await validateField(name);
+            }}
+            onBlur={() => {
+              // unsure why the microtask approach works here, but without the
+              // `DeleteButton` story follows the `#` anchor of the delete button (link)
+              // in storybook. This doesn't seem to happen in production builds.
+              // Using a useCallback approach doesn't seem to make a difference. One
+              // suspicion was also that the `window.confirm` messed up things, but so
+              // far only the microtask approach seems to work :shrug:
+              window.queueMicrotask(async () => {
+                setTouched(true);
+                validateField(name);
+              });
+            }}
+          />
+        </React.Suspense>
+      </div>
+
       <FAQItems items={faqItems} />
     </FormField>
   );

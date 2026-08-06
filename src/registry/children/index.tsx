@@ -94,6 +94,13 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
       aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ') || undefined}
       className="openforms-children"
     >
+      {/*
+        no point wrapping these as the __description and __error-message elements don't
+        exist for the fieldset component :(
+      */}
+      <HelpText id={descriptionId}>{description}</HelpText>
+      {invalid && errorMessageId && <ValidationErrors error={fieldError} id={errorMessageId} />}
+
       <FieldArray name={key} validateOnChange={false}>
         {arrayHelpers => (
           <>
@@ -133,9 +140,6 @@ export const FormioChildrenField: React.FC<FormioChildrenFieldProps> = ({
           </>
         )}
       </FieldArray>
-
-      <HelpText id={descriptionId}>{description}</HelpText>
-      {invalid && errorMessageId && <ValidationErrors error={fieldError} id={errorMessageId} />}
 
       {canAddChildrenManually && (
         <SecondaryActionButton type="button" onClick={() => setIsModalOpen(true)}>

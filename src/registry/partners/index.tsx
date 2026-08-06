@@ -55,6 +55,12 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
         </>
       }
     >
+      {/*
+        no point wrapping these as the __description and __error-message elements don't
+        exist for the fieldset component :(
+      */}
+      <HelpText>{description}</HelpText>
+
       {showPartnersList && <PartnersPreview partners={partners} />}
       {canEditPartner && (
         <FormFieldContainer>
@@ -85,7 +91,6 @@ export const FormioPartnersField: React.FC<FormioPartnersFieldProps> = ({
         </SecondaryActionButton>
       )}
 
-      <HelpText>{description}</HelpText>
       <FAQItems items={faqItems} />
     </Fieldset>
   );

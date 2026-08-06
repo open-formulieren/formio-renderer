@@ -129,7 +129,19 @@ export const FormioSignatureField: React.FC<FormioSignatureFieldProps> = ({
       >
         {label}
       </Label>
-      <div ref={containerRef}>
+
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      <div ref={containerRef} className="utrecht-form-field__input">
         <Icon
           icon="refresh"
           className="openforms-signature-refresh"
@@ -151,8 +163,7 @@ export const FormioSignatureField: React.FC<FormioSignatureFieldProps> = ({
         />
         <div className="openforms-signature-footer">{footer}</div>
       </div>
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
       <FAQItems items={faqItems} />
     </FormField>
   );
