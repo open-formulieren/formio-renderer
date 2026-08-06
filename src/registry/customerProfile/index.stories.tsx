@@ -343,7 +343,7 @@ export const WithDigitalAddressValidationError: Story = {
         customerProfile: [{address: true}],
       },
       initialErrors: {
-        customerProfile: ['Generic error message from digital address validation.'],
+        customerProfile: [{address: 'Generic error message from digital address validation.'}],
       },
     },
   },
