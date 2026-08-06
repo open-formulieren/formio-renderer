@@ -6,6 +6,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*",
+    "./scss/*": "./src/scss/*",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -26,7 +27,9 @@
   },
   "files": [
     "dist/",
-    "i18n"
+    "i18n",
+    "src/scss/theme-overrides.scss",
+    "src/scss/responsive.scss"
   ],
   "repository": {
     "type": "git",
