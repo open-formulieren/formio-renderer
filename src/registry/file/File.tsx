@@ -87,8 +87,7 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
   const fieldError = typeof error === 'string' && error;
   const fileErrors = (Array.isArray(error) && error) || [];
 
-  const invalid =
-    touched && Boolean(fieldError || fileErrors.length || Object.keys(localUploadErrors).length);
+  const invalid = touched && !!fieldError;
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
   const maxFilesToSelect = maxNumberOfFiles
@@ -105,11 +104,19 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
         {label}
       </Label>
 
-      <div className="openforms-file-upload">
-        <div className="openforms-file-upload__description">
+      {description && (
+        <div className="utrecht-form-field__description">
           <HelpText>{description}</HelpText>
         </div>
+      )}
 
+      {fieldError && errorMessageId && (
+        <div className="utrecht-form-field__error-message openforms-file-upload__errors">
+          <ValidationErrors error={fieldError} id={errorMessageId} />
+        </div>
+      )}
+
+      <div className="utrecht-form-field__input openforms-file-upload">
         {(!uploads.length || multiple) && (
           <UploadInput
             inputId={id}
@@ -140,15 +147,9 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
             />
           </div>
         )}
-
-        {fieldError && errorMessageId && (
-          <div className="openforms-file-upload__errors">
-            <ValidationErrors error={fieldError} id={errorMessageId} />
-          </div>
-        )}
-
-        <FAQItems items={faqItems} />
       </div>
+
+      <FAQItems items={faqItems} />
     </FormField>
   );
 };
