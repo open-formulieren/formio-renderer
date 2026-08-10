@@ -21,6 +21,8 @@
   --utrecht-icon-color: var(--of-faq-item-icon-color);
   --utrecht-link-text-decoration: var(--of-faq-item-title-text-decoration);
 
+  --utrecht-button-min-block-size: var(--of-faq-item-min-block-size, 0);
+
   @include bem.element('title') {
     color: var(--of-faq-item-title-color);
     font-size: var(--of-faq-item-title-font-size);
@@ -29,6 +31,22 @@
 
     &:hover {
       text-decoration: var(--of-faq-item-title-hover-text-decoration);
+    }
+  }
+
+  .utrecht-icon {
+    --utrecht-icon-size: var(--of-faq-item-icon-size, auto);
+
+    background-color: var(--of-faq-item-icon-background-color);
+    color: var(--of-faq-item-icon-color, var(--utrecht-icon-color));
+    border-radius: var(--of-faq-item-icon-border-radius);
+    display: var(--of-faq-item-icon-display, inline-flex);
+    justify-content: var(--of-faq-item-icon-justify-content, center);
+    align-items: var(--of-faq-item-icon-align-items, center);
+
+    // font-awesome specific overrides
+    .fa-regular {
+      --fa: var(--of-faq-item-fa-icon, '\f059');
     }
   }
 }
