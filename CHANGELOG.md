@@ -1,5 +1,57 @@
 # Changes
 
+## 2.0.0 (2026-08-11)
+
+Breaking changes release.
+
+**Breaking changes**
+
+The layout of form fields has been updated so that field descriptions and validation errors are now
+displayed between field label and field input, rather than after the field input. This has been a
+long-standing request for Open Forms, and aligns the UI and UX with NL Design System
+recommendations.
+
+This results in changed markup/element structure, changed class names and a substantial amount of
+CSS removal that was no longer compatible with the updated layout. Custom themes that relied on Open
+Forms-specific design tokens (especially from before we used NL Design System) will need to be
+updated.
+
+There is detailed information in Storybook about the migration.
+
+There are no programmatic (public) API changes.
+
+**New features**
+
+- [`OF#6182`][OF#6182] Updated the markup and styling of form fields:
+  - Updated element order to be "field label", "field description", "error message", "input".
+  - Updated the "Fira Sans" assets and include the font-weight `600` (SemiBold) variant.
+  - Updated the validation errors to use the `utrecht-form-field-error-message` NL Design System
+    component - you can now specify its design token values for theming.
+  - We now use the font-awesome `regular` icons where possible, rather than `solid`. Both remain
+    available.
+  - Added custom design tokens for radio field and checkbox group components.
+  - Added design tokens to theme the `FAQItem` component.
+  - Converted the "open forms fieldset" to be based on the `utrecht-form-fieldset`, and added
+    additional theming options for the legend.
+  - Styling overrides that are specific to our own theme (`.openforms-theme`) are no longer bundled
+    in the renderer CSS.
+
+**Bugfixes**
+
+- Fixed import path of the `@formatjs/intl` utils to be fully resolved.
+
+**Project maintenance**
+
+- Updated (development) dependencies to latest security release(s).
+- Upgraded to Storybook 10.5.
+- Added documentation about the supported branches and version aligment.
+- [`OF#6276`][OF#6276] Removed backend compatibility code for `processVisiblity`.
+- Removed the `microscope-sass` dependency.
+- Added migration/update documentation.
+
+[OF#6276]: https://github.com/open-formulieren/open-forms/issues/6276
+[OF#6182]: https://github.com/open-formulieren/open-forms/issues/6182
+
 ## 1.8.2 (2026-07-27)
 
 Bugfix release.
