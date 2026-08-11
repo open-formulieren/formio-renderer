@@ -1,31 +1,15 @@
 @use '@utrecht/form-field-css';
 
 @use '@/scss/bem';
-@use '@/scss/form-field-override';
 
 /**
  * Styling and layout for the file upload as a whole, including the description, errors,
  * dropzone/upload button and list/ of the uploaded files.
- *
- * The layout is a grid layout so that design tokens can be used to change the position
- * of elements.
  */
 .openforms-file-upload {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: var(
-    --of-file-upload-grid-areas,
-    'dropzone' 'uploads' 'description' 'errors'
-  );
-  grid-row-gap: var(--of-file-upload-row-gap);
-
-  @include bem.element('description') {
-    grid-area: description;
-  }
-
-  .openforms-upload-input {
-    grid-area: dropzone;
-  }
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--of-file-upload-row-gap);
 
   &:has(.openforms-upload-input:not(.sr-only)) {
     --_of-file-upload-uploads-padding-block-start: var(
@@ -34,15 +18,10 @@
   }
 
   @include bem.element('uploads') {
-    grid-area: uploads;
     padding-block-end: var(--of-file-upload-uploads-padding-block-end);
     padding-block-start: var(
       --_of-file-upload-uploads-padding-block-start,
       var(--of-file-upload-uploads-padding-block-start)
     );
-  }
-
-  @include bem.element('errors') {
-    grid-area: errors;
   }
 }

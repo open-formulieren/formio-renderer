@@ -1,5 +1,5 @@
 import type {CosignV1ComponentSchema} from '@open-formulieren/types';
-import {Alert, ButtonLink, Paragraph, Icon as UtrechtIcon} from '@utrecht/component-library-react';
+import {Alert, ButtonLink, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import {useId} from 'react';
 import {FormattedMessage} from 'react-intl';
@@ -105,7 +105,14 @@ export const FormioCosignOldField: React.FC<FormioCosignOldProps> = ({
   return (
     <FormField className="utrecht-form-field--openforms">
       <Label id={id}>{label}</Label>
-      <Paragraph className="openforms-co-sign-old">
+
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+
+      <div className="utrecht-form-field__input openforms-co-sign-old">
         {getCosignStatus && getLoginOption ? (
           <CosignAuthentication
             getCosignStatus={getCosignStatus}
@@ -127,8 +134,7 @@ export const FormioCosignOldField: React.FC<FormioCosignOldProps> = ({
             />
           </Alert>
         )}
-      </Paragraph>
-      <HelpText>{description}</HelpText>
+      </div>
     </FormField>
   );
 };

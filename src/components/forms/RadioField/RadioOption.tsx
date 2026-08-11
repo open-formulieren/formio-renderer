@@ -42,17 +42,19 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         }}
         value={value}
       />
-      <div className="utrecht-form-field__label utrecht-form-field__label--radio">
-        <FormLabel
-          htmlFor={`${id}-opt-${index}`}
-          disabled={isReadOnly}
-          type="radio"
-          className="utrecht-form-label--openforms"
-        >
-          {label}
-        </FormLabel>
-      </div>
-      {description && <div className="utrecht-form-description--openforms">{description}</div>}
+      <FormLabel
+        htmlFor={`${id}-opt-${index}`}
+        disabled={isReadOnly}
+        type="radio"
+        className="utrecht-form-label--openforms"
+      >
+        {label}
+      </FormLabel>
+      {description && (
+        <div className="utrecht-form-field-description utrecht-form-field__description">
+          {description}
+        </div>
+      )}
     </FormField>
   );
 };

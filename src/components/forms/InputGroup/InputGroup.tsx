@@ -9,6 +9,15 @@ export interface InputGroupProps {
   children?: React.ReactNode;
   label: React.ReactNode;
   /**
+   * Optional description element, displayed below the label if provided.
+   */
+  description?: React.ReactNode;
+  /**
+   * Optional error message element, displayed below the label/above the inputs, if
+   * provided.
+   */
+  errorMessage?: React.ReactNode;
+  /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
    */
@@ -21,6 +30,8 @@ export interface InputGroupProps {
 const InputGroup: React.FC<InputGroupProps> = ({
   children,
   label,
+  description,
+  errorMessage,
   tooltip,
   isRequired = false,
   isReadOnly = false,
@@ -39,6 +50,10 @@ const InputGroup: React.FC<InputGroupProps> = ({
       </LabelContent>
       {tooltip && <Tooltip>{tooltip}</Tooltip>}
     </FieldsetLegend>
+
+    {description}
+    {errorMessage}
+
     <Paragraph className="openforms-input-group">{children}</Paragraph>
   </Fieldset>
 );

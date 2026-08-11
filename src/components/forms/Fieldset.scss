@@ -1,76 +1,62 @@
 @use '@/scss/bem';
 
-.openforms-fieldset {
-  border-width: 2px 0 0 0;
-  border-style: solid;
-  border-color: black;
-  padding: 0;
-  margin: 0;
+// Extensions available to all themes - the styling options for the utrecht-form-fieldset
+// component are very limited.
+.utrecht-form-fieldset {
+  @include bem.modifier('openforms') {
+    // the actual fieldset, containing legend & content.
+    // Note that display: flex is not an option because fieldset/legend don't honour
+    // this layout mode.
+    @include bem.element('legend') {
+      margin-block-end: var(--of-utrecht-form-fieldset-legend-margin-block-end);
 
-  // fix for file upload overflowing, https://github.com/open-formulieren/open-forms/issues/1316
-  min-inline-size: 100%; // instead of browser default of min-content
-  box-sizing: border-box;
+      &.sr-only {
+        display: block;
+      }
 
-  @include bem.modifier('no-header') {
-    border-width: 0;
-  }
+      @include bem.modifier('with-border') {
+        display: flex;
+        align-items: center;
+        gap: var(--of-utrecht-form-fieldset-legend-border-gap);
 
-  @include bem.modifier('invalid') {
-    --of-utrecht-form-field-background-color: var(
-      --utrecht-alert-error-background-color,
-      var(--of-alert-error-bg)
-    );
-    background-color: var(--of-utrecht-form-field-background-color);
-    padding-inline-end: var(--utrecht-form-field-invalid-padding-inline-start);
-    padding-block-start: var(--utrecht-form-field-invalid-padding-inline-start);
-    padding-block-end: var(--utrecht-form-field-invalid-padding-inline-start);
+        &:before,
+        &:after {
+          content: '';
+          border-block-start-style: var(--of-utrecht-form-fieldset-legend-border-style);
+          border-block-start-width: var(--of-utrecht-form-fieldset-legend-border-width);
+          border-block-start-color: var(--of-utrecht-form-fieldset-legend-border-color);
+        }
 
-    border-inline-start-color: var(
-      --utrecht-form-fieldset-invalid-border-inline-start-color,
-      var(--utrecht-form-field-invalid-border-inline-start-color)
-    );
-    border-inline-start-style: solid;
-    border-inline-start-width: var(
-      --utrecht-form-fieldset-invalid-border-inline-start-width,
-      var(--utrecht-form-field-invalid-border-inline-start-width)
-    );
-    padding-inline-start: var(
-      --utrecht-form-fieldset-invalid-padding-inline-start,
-      var(--utrecht-form-field-invalid-padding-inline-start)
-    );
-  }
+        &:before {
+          inline-size: var(--of-utrecht-form-fieldset-legend-border-before-inline-size, auto);
+          flex-grow: var(--of-utrecht-form-fieldset-legend-border-before-flex-grow, 0);
+        }
 
-  @include bem.element('legend') {
-    margin-inline-start: 1em;
-    padding-block: 1em;
-    padding-inline: 5px;
-    color: var(--of-fieldset-legend-color);
-    font-family: var(--of-typography-sans-serif-font-family);
-    font-size: 1.25rem;
-    font-weight: 400;
-    letter-spacing: normal;
-    line-height: 1.333;
+        &:after {
+          inline-size: var(--of-utrecht-form-fieldset-legend-border-after-inline-size, auto);
+          flex-grow: var(--of-utrecht-form-fieldset-legend-border-after-flex-grow, 0);
+        }
+      }
 
-    @include bem.modifier('tooltip') {
-      // See src/components/forms/Tooltip.scss - over time this custom component will be
-      // replaced with the utrecht-fieldset component.
-      display: flex;
-      align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
-      column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
+      @include bem.modifier('openforms-tooltip') {
+        .openforms-fieldset-legend-content {
+          display: flex;
+          align-items: var(--of-utrecht-form-field-label-tooltip-align-items, center);
+          column-gap: var(--of-utrecht-form-field-label-tooltip-column-gap, 4px);
 
-      // prevent the tooltip from taking the same color as the legend itself, but
-      // allow overrides via --of-tooltip-color
-      .openforms-tooltip {
-        color: var(--utrecht-document-color, var(--utrecht-form-label-color));
+          // prevent the tooltip from taking the same color as the legend itself
+          .openforms-tooltip {
+            color: var(--utrecht-document-color, var(--utrecht-form-label-color));
+          }
+        }
       }
     }
-  }
-}
 
-.openforms-theme {
-  .openforms-fieldset {
-    .utrecht-form-field-description {
-      --utrecht-space-around: 1;
+    // margins of the legend & error message components don't collapse
+    @include bem.element('legend') {
+      & ~ .utrecht-form-field-error-message {
+        margin-block-start: var(--of-utrecht-form-fieldset-error-message-margin-block-start, 0);
+      }
     }
   }
 }

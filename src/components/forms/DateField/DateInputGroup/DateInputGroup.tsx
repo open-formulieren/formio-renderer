@@ -34,6 +34,15 @@ export interface DateInputGroupProps {
    */
   label: React.ReactNode;
   /**
+   * Optional description element, displayed below the label if provided.
+   */
+  description?: React.ReactNode;
+  /**
+   * Optional error message element, displayed below the label/above the input, if
+   * provided.
+   */
+  errorMessage?: React.ReactNode;
+  /**
    * Optional tooltip to provide additional information that is not crucial but may
    * assist users in filling out the field correctly.
    */
@@ -51,6 +60,16 @@ export interface DateInputGroupProps {
    */
   autoComplete?: string;
   'aria-describedby'?: string;
+  /**
+   * Marker to signal this field is used in a multi-value field parent, which requires
+   * some special attention w/r to validation errors.
+   */
+  isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 /**
@@ -67,11 +86,15 @@ export interface DateInputGroupProps {
 const DateInputGroup: React.FC<DateInputGroupProps> = ({
   name,
   label,
+  description,
+  errorMessage,
   tooltip,
   isRequired,
   isReadOnly,
   autoComplete,
   'aria-describedby': ariaDescribedBy,
+  isMultiValue,
+  afterInput,
 }) => {
   const {validateField} = useFormikContext();
   // value is an ISO-8601 string _if_ a valid date was provided at some point.
@@ -126,30 +149,35 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   };
 
   return (
-    <InputGroup
-      label={label}
-      tooltip={tooltip}
-      isRequired={isRequired}
-      isReadOnly={isReadOnly}
-      name={name}
-    >
-      <DateInputItems
-        year={year}
-        month={month}
-        day={day}
+    <div className={isMultiValue ? 'openforms-multifield__input-container' : undefined}>
+      <InputGroup
+        label={label}
+        description={description}
+        errorMessage={errorMessage}
+        tooltip={tooltip}
+        isRequired={isRequired}
         isReadOnly={isReadOnly}
-        isInvalid={touched && !!error}
-        onChange={onPartChange}
-        onBlur={async () => {
-          setTouched(true);
-          if (year && month && day) {
-            await validateField(name);
-          }
-        }}
-        autoComplete={autoComplete}
-        aria-describedby={ariaDescribedBy}
-      />
-    </InputGroup>
+        name={name}
+      >
+        <DateInputItems
+          year={year}
+          month={month}
+          day={day}
+          isReadOnly={isReadOnly}
+          isInvalid={touched && !!error}
+          onChange={onPartChange}
+          onBlur={async () => {
+            setTouched(true);
+            if (year && month && day) {
+              await validateField(name);
+            }
+          }}
+          autoComplete={autoComplete}
+          aria-describedby={ariaDescribedBy}
+        />
+      </InputGroup>
+      {afterInput}
+    </div>
   );
 };
 

@@ -1,8 +1,12 @@
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
+import '@fortawesome/fontawesome-free/css/regular.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@open-formulieren/design-tokens/dist/index.css';
 import type {Preview} from '@storybook/react-vite';
 import '@utrecht/document-css';
+
+import '@/scss/shims.scss';
+import '@/scss/theme-overrides.scss';
 
 import {utrechtDocumentDecorator, withModal} from './decorators';
 import './dte-theme.scss';

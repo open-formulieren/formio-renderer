@@ -12,12 +12,20 @@
 }
 
 .openforms-faq-item {
+  // allow themes to define their own spacings - by default this removes all padding
+  --utrecht-button-padding-inline-end: var(--of-faq-item-padding-inline-end);
+  --utrecht-button-padding-inline-start: var(--of-faq-item-padding-inline-start);
+  --utrecht-button-padding-block-end: var(--of-faq-item-padding-block-end);
+  --utrecht-button-padding-block-start: var(--of-faq-item-padding-block-start);
+
+  --utrecht-icon-color: var(--of-faq-item-icon-color);
+  --utrecht-link-text-decoration: var(--of-faq-item-title-text-decoration);
+
   @include bem.element('title') {
     color: var(--of-faq-item-title-color);
     font-size: var(--of-faq-item-title-font-size);
     font-weight: var(--of-faq-item-title-font-weight);
     line-height: var(--of-faq-item-title-line-height);
-    text-decoration: var(--of-faq-item-title-text-decoration);
 
     &:hover {
       text-decoration: var(--of-faq-item-title-hover-text-decoration);

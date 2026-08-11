@@ -167,46 +167,57 @@ const NumberField: React.FC<NumberFieldProps> = ({
         {label}
       </Label>
 
-      <InputContainer
-        inputId={id}
-        labelId={labelId}
-        prefix={prefix}
-        suffix={suffix}
-        renderInput={ariaLabelledBy => (
-          <NumericFormat
-            name={name}
-            value={value ?? ''}
-            onBlur={async e => {
-              onBlur(e);
-              await validateField(name);
-            }}
-            id={id}
-            onValueChange={async values => {
-              const value = values.floatValue !== undefined ? values.floatValue : null;
-              await setValue(value);
-            }}
-            className="utrecht-textbox--openforms"
-            readOnly={isReadOnly}
-            invalid={invalid}
-            allowNegative={allowNegative}
-            type="text"
-            decimalScale={decimalLimit}
-            decimalSeparator={decimalSeparator}
-            thousandSeparator={useThousandSeparator ? thousandSeparator : undefined}
-            valueIsNumericString={valueIsNumericString}
-            customInput={Textbox}
-            aria-labelledby={ariaLabelledBy}
-            aria-describedby={errorMessageId}
-            prefix={valuePrefix}
-            suffix={valueSuffix}
-            fixedDecimalScale={fixedDecimalScale}
-            {...extraProps}
-          />
-        )}
-      />
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
 
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      <div className="utrecht-form-field__input">
+        <InputContainer
+          inputId={id}
+          labelId={labelId}
+          prefix={prefix}
+          suffix={suffix}
+          renderInput={ariaLabelledBy => (
+            <NumericFormat
+              name={name}
+              value={value ?? ''}
+              onBlur={async e => {
+                onBlur(e);
+                await validateField(name);
+              }}
+              id={id}
+              onValueChange={async values => {
+                const value = values.floatValue !== undefined ? values.floatValue : null;
+                await setValue(value);
+              }}
+              className="utrecht-textbox--openforms"
+              readOnly={isReadOnly}
+              invalid={invalid}
+              allowNegative={allowNegative}
+              type="text"
+              decimalScale={decimalLimit}
+              decimalSeparator={decimalSeparator}
+              thousandSeparator={useThousandSeparator ? thousandSeparator : undefined}
+              valueIsNumericString={valueIsNumericString}
+              customInput={Textbox}
+              aria-labelledby={ariaLabelledBy}
+              aria-describedby={errorMessageId}
+              prefix={valuePrefix}
+              suffix={valueSuffix}
+              fixedDecimalScale={fixedDecimalScale}
+              {...extraProps}
+            />
+          )}
+        />
+      </div>
+
       <FAQItems items={faqItems} />
     </FormField>
   );

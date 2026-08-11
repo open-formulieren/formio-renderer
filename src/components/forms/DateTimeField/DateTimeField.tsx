@@ -1,7 +1,7 @@
 import type {FAQItem} from '@open-formulieren/types';
-import {Paragraph} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import {Textbox} from '@utrecht/textbox-react';
+import {clsx} from 'clsx';
 import {formatISO} from 'date-fns';
 import {useField, useFormikContext} from 'formik';
 import {useEffect, useId, useState} from 'react';
@@ -70,6 +70,11 @@ export interface DateTimeFieldProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 interface DateTimePartValues {
@@ -113,6 +118,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   maxDate,
   'aria-describedby': ariaDescribedBy,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
 }) => {
   name = useFieldConfig(name);
@@ -211,39 +217,57 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         {label}
       </Label>
 
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
       <DatePickerRoot onOpen={() => setTouched(true)} onFocusOut={() => validateField(name)}>
         {({refs, setIsOpen}) => (
           <>
-            <Paragraph className="openforms-datepicker-textbox">
-              <Textbox
-                ref={refs.setPositionReference}
-                name={name}
-                value={textboxValue}
-                onChange={onChange}
-                onBlur={event => {
-                  const value = event.target.value;
-                  // Attempt to create a date object using the locale meta
-                  const date = parseDateTime(value, dateLocaleMeta);
-                  // If we were able to create a date object, format it to an ISO-8601 string and set it
-                  // as the field value. Otherwise, just set the entered value to the field directly.
-                  // It's up to the validation libraries to check it.
-                  const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
-                  setValue(newValue);
-                  onBlur(event);
-                }}
-                className="utrecht-textbox--openforms"
-                id={id}
-                readOnly={isReadOnly}
-                invalid={touched && !!error}
-                aria-describedby={ariaDescribedBy}
-                placeholder={placeholder}
-                autoComplete="off"
-              />
-              <DatePickerTrigger
-                className="openforms-datepicker-textbox__calendar-toggle"
-                disabled={isReadOnly}
-              />
-            </Paragraph>
+            <div
+              className={clsx('utrecht-form-field__input', {
+                'openforms-multifield__input-container': isMultiValue,
+              })}
+            >
+              <div className="openforms-datepicker-textbox">
+                <Textbox
+                  ref={refs.setPositionReference}
+                  name={name}
+                  value={textboxValue}
+                  onChange={onChange}
+                  onBlur={event => {
+                    const value = event.target.value;
+                    // Attempt to create a date object using the locale meta
+                    const date = parseDateTime(value, dateLocaleMeta);
+                    // If we were able to create a date object, format it to an ISO-8601 string and set it
+                    // as the field value. Otherwise, just set the entered value to the field directly.
+                    // It's up to the validation libraries to check it.
+                    const newValue = date ? formatISO(date, {representation: 'complete'}) : value;
+                    setValue(newValue);
+                    onBlur(event);
+                  }}
+                  className="utrecht-textbox--openforms"
+                  id={id}
+                  readOnly={isReadOnly}
+                  invalid={touched && !!error}
+                  aria-describedby={ariaDescribedBy}
+                  placeholder={placeholder}
+                  autoComplete="off"
+                />
+                <DatePickerTrigger
+                  className="openforms-datepicker-textbox__calendar-toggle"
+                  disabled={isReadOnly}
+                />
+              </div>
+              {afterInput}
+            </div>
             <DatePicker
               onCalendarClick={selectedDate => {
                 // Need to truncate, because the selected date is in datetime format
@@ -281,8 +305,6 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
         )}
       </DatePickerRoot>
 
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </FormField>
   );

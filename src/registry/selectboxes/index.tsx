@@ -13,6 +13,7 @@ import ValidationErrors from '@/components/forms/ValidationErrors';
 import {useFieldConfig} from '@/hooks';
 import type {GetRegistryEntry, RegistryEntry} from '@/registry/types';
 
+import './CheckboxGroup.scss';
 import ValueDisplay from './ValueDisplay';
 import testConditional from './conditional';
 import isEmpty from './empty';
@@ -166,7 +167,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
   return (
     <Fieldset
       ref={fieldsetRef}
-      className="utrecht-form-fieldset--openforms"
+      className="utrecht-form-fieldset--openforms utrecht-form-fieldset--openforms-selectboxes"
       invalid={invalid}
       aria-describedby={description ? descriptionid : undefined}
     >
@@ -179,21 +180,27 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </FieldsetLegend>
 
-      {options.map(({value, label: optionLabel, description}) => (
-        <Checkbox
-          key={value}
-          // key instead of name, the checkbox takes care of the prefixing!
-          name={`${componentDefinition.key}.['${value}']`}
-          label={optionLabel}
-          description={description}
-          descriptionAsHelpText={false}
-          ignoreRequired
-          isReadOnly={limitReached && !selectedValues.includes(value)}
-        />
-      ))}
-
+      {/* Fieldsets don't support the __description and __error-message elements */}
       <HelpText id={descriptionid}>{description}</HelpText>
       {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
+      {/* Similar to radiofield, wrap in a flexbox container - relying on the
+      form-field-description design tokens leads to spacings that are uncontrollable. */}
+
+      <div className="openforms-checkbox-group">
+        {options.map(({value, label: optionLabel, description}) => (
+          <Checkbox
+            key={value}
+            // key instead of name, the checkbox takes care of the prefixing!
+            name={`${componentDefinition.key}.['${value}']`}
+            label={optionLabel}
+            description={description}
+            ignoreRequired
+            isReadOnly={limitReached && !selectedValues.includes(value)}
+          />
+        ))}
+      </div>
+
       <FAQItems items={faqItems} />
     </Fieldset>
   );

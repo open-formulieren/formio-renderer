@@ -32,7 +32,7 @@
   border-radius: var(--of-uploaded-file-border-radius);
 
   @include bem.modifier('errors') {
-    --of-uploaded-file-border-color: var(--of-uploaded-file-errors-border-color);
+    border-color: var(--of-uploaded-file-errors-border-color, var(--of-uploaded-file-border-color));
   }
 
   @include bem.element('name') {
@@ -55,11 +55,5 @@
       padding-block-start: var(--openforms-uploaded-file-uploading-padding-block-start, 4px);
       padding-inline-end: var(--openforms-uploaded-file-uploading-padding-inline-end, 12px);
     }
-  }
-
-  @include bem.element('errors') {
-    // grid-area: errors;
-    // grid-column: 1 / -1; /* span full width */
-    white-space: preserve-breaks wrap;
   }
 }

@@ -3,7 +3,6 @@
 @use '@utrecht/form-fieldset-css';
 
 @use '@/scss/bem';
-@use '@/scss/form-field-override';
 @use '@/scss/sr-only.scss';
 
 .openforms-multifield {
@@ -16,27 +15,21 @@
 
   @include bem.element('field') {
     list-style-type: none;
-
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    column-gap: var(--of-multifield-field-column-gap, 2px);
-
     max-inline-size: var(--of-multifield-field-max-inline-size, 100%);
-
-    .utrecht-form-field {
-      flex-grow: 1;
-    }
 
     .utrecht-form-field__label {
       @extend .sr-only;
     }
+  }
 
-    // invalid state is reported for the fieldset/component as a whole, not for individual
-    // items
-    .utrecht-form-field.utrecht-form-field--invalid {
-      --utrecht-form-field-invalid-border-inline-start-width: 0;
-      --utrecht-form-field-invalid-padding-inline-start: 0;
-    }
+  @include bem.element('input-container') {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    column-gap: var(
+      --of-multifield-input-container-column-gap,
+      var(--of-multifield-field-column-gap, 2px)
+    );
+    max-inline-size: var(--of-multifield-input-container-max-inline-size, 100%);
   }
 
   @include bem.element('remove-button') {

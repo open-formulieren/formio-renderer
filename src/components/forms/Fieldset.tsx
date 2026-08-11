@@ -1,3 +1,5 @@
+import {FieldsetLegend, Fieldset as UtrechtFieldSet} from '@utrecht/fieldset-react';
+import type {FieldsetProps as UtrechtFieldSetProps} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
 
 import './Fieldset.scss';
@@ -17,7 +19,7 @@ export interface FieldsetProps {
  * @todo See how/if we can merge this with the Fieldset component from the Utrecht
  * component library. There are substantial styling differences though.
  */
-const Fieldset: React.FC<FieldsetProps & React.ComponentProps<'fieldset'>> = ({
+const Fieldset: React.FC<FieldsetProps & UtrechtFieldSetProps> = ({
   header,
   headerHidden,
   hasTooltip,
@@ -26,29 +28,23 @@ const Fieldset: React.FC<FieldsetProps & React.ComponentProps<'fieldset'>> = ({
   'aria-describedby': ariaDescribedBy,
   children,
 }) => (
-  <fieldset
-    className={clsx(
-      'openforms-fieldset',
-      {
-        'openforms-fieldset--invalid': isInvalid,
-        'openforms-fieldset--no-header': !header || headerHidden,
-      },
-      className
-    )}
+  <UtrechtFieldSet
+    invalid={isInvalid}
     aria-describedby={ariaDescribedBy}
+    className={clsx('utrecht-form-fieldset--openforms', className)}
   >
     {header && (
-      <legend
-        className={clsx('openforms-fieldset__legend', {
-          'openforms-fieldset__legend--tooltip': hasTooltip,
+      <FieldsetLegend
+        className={clsx('utrecht-form-fieldset__legend--with-border', {
+          'utrecht-form-fieldset__legend--openforms-tooltip': hasTooltip,
           'sr-only': headerHidden,
         })}
       >
-        {header}
-      </legend>
+        <span className="openforms-fieldset-legend-content">{header}</span>
+      </FieldsetLegend>
     )}
     {children}
-  </fieldset>
+  </UtrechtFieldSet>
 );
 
 export default Fieldset;

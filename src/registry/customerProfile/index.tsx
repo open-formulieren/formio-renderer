@@ -1,7 +1,7 @@
 import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {DigitalAddress} from '@open-formulieren/types/dist/components/customerProfile';
 import type {FormikErrors} from 'formik';
-import {getIn, useFormikContext} from 'formik';
+import {useFormikContext} from 'formik';
 import {useId} from 'react';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -59,7 +59,6 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
     | (string | FormikErrors<DigitalAddress>)[];
 
   const fieldError = typeof error === 'string' && error;
-  const subfieldErrors = Array.isArray(error);
 
   const invalid = touched && !!fieldError;
   const isRequired = validate?.required;
@@ -79,6 +78,13 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
       hasTooltip={!!tooltip}
       aria-describedby={[descriptionId, errorMessageId].filter(Boolean).join(' ')}
     >
+      {/*
+        no point wrapping these as the __description and __error-message elements don't
+        exist for the fieldset component :(
+      */}
+      <HelpText id={descriptionId}>{description}</HelpText>
+      {fieldError && errorMessageId && <ValidationErrors id={errorMessageId} error={fieldError} />}
+
       {loading ? (
         <LoadingIndicator />
       ) : (
@@ -95,14 +101,12 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
                 namePrefix={`${name}.${index}`}
                 isRequired={isSubfieldRequired}
                 digitalAddressGroup={digitalAddress}
-                errors={subfieldErrors ? getIn(error, `${index}`) : undefined}
               />
             );
           })}
         </FormFieldContainer>
       )}
-      <HelpText id={descriptionId}>{description}</HelpText>
-      {fieldError && errorMessageId && <ValidationErrors id={errorMessageId} error={fieldError} />}
+
       <FAQItems items={faqItems} />
     </Fieldset>
   );

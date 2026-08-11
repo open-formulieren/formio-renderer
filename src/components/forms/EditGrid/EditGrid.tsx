@@ -166,6 +166,18 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
         </Label>
       )}
 
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+
+      {hasFieldLevelError && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
       <FieldArray name={name} validateOnChange={false}>
         {arrayHelpers => (
           <div className="openforms-editgrid">
@@ -263,10 +275,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
           </div>
         )}
       </FieldArray>
-      <HelpText>{description}</HelpText>
-      {hasFieldLevelError && errorMessageId && (
-        <ValidationErrors error={error} id={errorMessageId} />
-      )}
+
       <FAQItems items={faqItems} />
     </FormField>
   );

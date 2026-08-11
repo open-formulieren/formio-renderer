@@ -1,5 +1,5 @@
 import type {FAQItem} from '@open-formulieren/types';
-import {Paragraph, Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
+import {Textarea as UtrechtTextarea} from '@utrecht/component-library-react';
 import type {TextareaProps as UtrechtTextareaProps} from '@utrecht/component-library-react';
 import {FormField} from '@utrecht/form-field-react';
 import {clsx} from 'clsx';
@@ -74,6 +74,11 @@ export interface TextareaProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
@@ -88,6 +93,7 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
   maxLength,
   showCharCount = false,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
   ...extraProps
 }) => {
@@ -129,7 +135,23 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
       >
         {label}
       </Label>
-      <Paragraph>
+
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      <div
+        className={clsx('utrecht-form-field__input', {
+          'openforms-multifield__input-container': isMultiValue,
+        })}
+      >
         <UtrechtTextarea
           ref={textareaRef}
           // ensure unsetting values doesn't ping-pong us between controlled/uncontrolled
@@ -153,12 +175,15 @@ const Textarea: React.FC<TextareaProps & UtrechtTextareaProps> = ({
           placeholder={placeholder}
           {...extraProps}
         />
-      </Paragraph>
+        {afterInput}
+      </div>
+
       {showCharCount && (value?.length ?? 0) > 0 && (
-        <CharCount id={characterCountId} text={value} limit={maxLength} />
+        <div className="utrecht-form-field__status">
+          <CharCount id={characterCountId} text={value} limit={maxLength} />
+        </div>
       )}
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
       <FAQItems items={faqItems} />
     </FormField>
   );

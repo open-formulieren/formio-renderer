@@ -44,7 +44,7 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <Textarea
           name={name}
           label={label}
@@ -54,6 +54,7 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
           autoComplete={autocomplete}
           rows={rows}
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

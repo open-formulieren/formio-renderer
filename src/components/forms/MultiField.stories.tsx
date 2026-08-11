@@ -13,8 +13,16 @@ export default {
   args: {
     name: 'test',
     newItemValue: '',
-    renderField: ({name, label, isReadOnly}) => (
-      <TextField name={name} label={label} placeholder="..." isReadOnly={isReadOnly} isMultiValue />
+    renderField: ({name, label, controls, isReadOnly}) => (
+      <TextField
+        name={name}
+        label={label}
+        placeholder="..."
+        isReadOnly={isReadOnly}
+        afterInput={controls}
+        isMultiValue
+        showCharCount
+      />
     ),
     label: 'Multi-value field',
     isRequired: false,

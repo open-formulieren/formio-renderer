@@ -96,6 +96,11 @@ interface DateFieldCommonProps {
    * some special attention w/r to validation errors.
    */
   isMultiValue?: boolean;
+  /**
+   * Slot for content placed after the input element, typically used for the multi
+   * value field controls.
+   */
+  afterInput?: React.ReactNode;
 }
 
 export type DateFieldProps = DateFieldCommonProps & WidgetProps;
@@ -119,6 +124,7 @@ const DateField: React.FC<DateFieldProps> = ({
   tooltip,
   autoComplete,
   isMultiValue = false,
+  afterInput,
   faqItems = [],
   ...props
 }) => {
@@ -131,6 +137,11 @@ const DateField: React.FC<DateFieldProps> = ({
   const isInvalid = touched && !!error;
   const errorMessageId = isInvalid ? `${id}-error-message` : undefined;
 
+  const descriptionNode: React.ReactNode = description && <HelpText>{description}</HelpText>;
+  const errorMessageNode: React.ReactNode = touched && errorMessageId && (
+    <ValidationErrors error={error} id={errorMessageId} />
+  );
+
   let dateInput: React.ReactElement;
   switch (props.widget) {
     case 'inputGroup': {
@@ -138,11 +149,15 @@ const DateField: React.FC<DateFieldProps> = ({
         <DateInputGroup
           name={name}
           label={label}
+          description={descriptionNode}
+          errorMessage={errorMessageNode}
           tooltip={tooltip}
           isRequired={isRequired}
           isReadOnly={isReadOnly}
           autoComplete={autoComplete}
           aria-describedby={errorMessageId}
+          isMultiValue={isMultiValue}
+          afterInput={afterInput}
         />
       );
       break;
@@ -152,10 +167,14 @@ const DateField: React.FC<DateFieldProps> = ({
         <DatePicker
           name={name}
           label={label}
+          description={descriptionNode}
+          errorMessage={errorMessageNode}
           tooltip={tooltip}
           isRequired={isRequired}
           isReadOnly={isReadOnly}
           aria-describedby={errorMessageId}
+          isMultiValue={isMultiValue}
+          afterInput={afterInput}
           {...props.widgetProps}
         />
       );
@@ -165,8 +184,6 @@ const DateField: React.FC<DateFieldProps> = ({
   return (
     <FormField type="text" invalid={isInvalid} className="utrecht-form-field--openforms">
       {dateInput}
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </FormField>
   );

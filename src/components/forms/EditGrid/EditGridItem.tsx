@@ -180,14 +180,9 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
             }}
           >
             <>
-              {props.getBody({expanded: isExpanded})}
+              {itemError && itemErrorId && <ValidationErrors error={itemError} id={itemErrorId} />}
 
-              {itemError && itemErrorId && (
-                // wrapper div to workaround `order` CSS from utrecht-form-field
-                <div>
-                  <ValidationErrors error={itemError} id={itemErrorId} />
-                </div>
-              )}
+              {props.getBody({expanded: isExpanded})}
 
               {isExpanded ? (
                 <IsolationModeButtons

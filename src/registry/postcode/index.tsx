@@ -31,13 +31,14 @@ export const PostCodeField: React.FC<FormioPostCodeProps> = ({componentDefinitio
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
           pattern={validate.pattern}
           isReadOnly={isReadOnly}
           placeholder="1234 AB"
+          afterInput={controls}
           isMultiValue
         />
       )}

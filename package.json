@@ -6,6 +6,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*",
+    "./scss/*": "./src/scss/*",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -26,7 +27,9 @@
   },
   "files": [
     "dist/",
-    "i18n"
+    "i18n",
+    "src/scss/theme-overrides.scss",
+    "src/scss/responsive.scss"
   ],
   "repository": {
     "type": "git",
@@ -50,6 +53,7 @@
     "@utrecht/component-library-react": "^14.0.2",
     "@utrecht/fieldset-react": "^1.0.12",
     "@utrecht/form-field-description-react": "^1.0.11",
+    "@utrecht/form-field-error-message-react": "^1.0.12",
     "@utrecht/form-field-react": "^1.0.12",
     "@utrecht/form-label-react": "^1.0.11",
     "@utrecht/link-react": "^1.0.11",
@@ -76,7 +80,7 @@
     "@formatjs/intl": "^3.1.8",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@maykinmedia/eslint-config": "^2.0.0",
-    "@open-formulieren/design-tokens": "^0.68.1",
+    "@open-formulieren/design-tokens": "^1.0.0",
     "@open-formulieren/leaflet-tools": "^1.0.0",
     "@sinonjs/fake-timers": "^15.0.0",
     "@storybook/addon-docs": "10.5.4",
@@ -107,6 +111,8 @@
     "@utrecht/form-field-css": "^3.0.1",
     "@utrecht/form-field-description-css": "^3.0.1",
     "@utrecht/form-field-description-react": "^1.0.11",
+    "@utrecht/form-field-error-message-css": "^3.0.1",
+    "@utrecht/form-field-error-message-react": "^1.0.12",
     "@utrecht/form-field-react": "^1.0.12",
     "@utrecht/form-fieldset-css": "^3.0.1",
     "@utrecht/form-label-css": "^3.0.1",

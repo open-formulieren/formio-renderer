@@ -1,3 +1,5 @@
+@use '@/scss/bem';
+
 .openforms-uploaded-files-list {
   display: flex;
   flex-direction: column;
@@ -6,4 +8,29 @@
   list-style: none;
   padding: 0;
   margin: 0;
+
+  @include bem.element('file') {
+    &:has(.utrecht-form-field-error-message) {
+      border-inline-start-color: var(
+        --of-uploaded-file-list-file-invalid-border-inline-start-color,
+        var(--utrecht-form-field-invalid-border-inline-start-color)
+      );
+      border-inline-start-style: solid;
+      border-inline-start-width: var(
+        --of-uploaded-file-list-file-invalid-border-inline-start-width,
+        var(--utrecht-form-field-invalid-border-inline-start-width, 0)
+      );
+      padding-inline-start: var(
+        --of-uploaded-file-list-file-invalid-padding-inline-start,
+        var(--utrecht-form-field-invalid-padding-inline-start)
+      );
+
+      .utrecht-form-field-error-message {
+        --utrecht-form-field-error-message-margin-block-start: var(
+          --of-uploaded-file-list-file-invalid-error-message-margin-block-start,
+          0
+        );
+      }
+    }
+  }
 }

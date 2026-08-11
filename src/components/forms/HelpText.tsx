@@ -1,5 +1,4 @@
 import {FormFieldDescription} from '@utrecht/form-field-description-react';
-import {clsx} from 'clsx';
 
 import './HelpText.scss';
 
@@ -12,17 +11,7 @@ const HelpText: React.FC<HelpTextProps & React.HTMLAttributes<HTMLDivElement>> =
   ...props
 }) => {
   if (!children) return null;
-  return (
-    <FormFieldDescription
-      className={clsx(
-        'utrecht-form-field-description--openforms-helptext',
-        'utrecht-form-field__description'
-      )}
-      {...props}
-    >
-      {children}
-    </FormFieldDescription>
-  );
+  return <FormFieldDescription {...props}>{children}</FormFieldDescription>;
 };
 
 HelpText.displayName = 'HelpText';

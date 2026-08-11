@@ -76,6 +76,10 @@
     // legend element doesn't care about the fieldset itself having display: flex, so we
     // must treat this specially
     margin-block-end: var(--of-editgrid-item-heading-margin-block-end, var(--of-editgrid-item-gap));
+
+    & + .utrecht-form-field-error-message {
+      margin-block-start: var(--of-editgrid-item-error-message-margin-block-start, 0);
+    }
   }
 }
 
@@ -86,14 +90,5 @@
     // the alignment is also contextual, so we opt for an open-forms extension that
     // can be tweaked with proprietary design tokens.
     justify-content: var(--of-button-group-editgrid-justify-content, flex-end);
-  }
-}
-
-.openforms-theme {
-  .openforms-editgrid {
-    .openforms-editgrid__item.openforms-editgrid__item--invalid {
-      // see src/scss/form-field-overrides.scss
-      background-color: var(--utrecht-alert-error-background-color, var(--of-alert-error-bg));
-    }
   }
 }

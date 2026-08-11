@@ -67,47 +67,44 @@ const UploadedFile: React.FC<UploadedFileProps> = ({
   const hasError = errors.length > 0;
   const errorMessageId = hasError ? `${id}-error-message` : undefined;
   return (
-    <div
-      className={clsx('openforms-uploaded-file', hasError && 'openforms-uploaded-file--errors')}
-      // TODO: check if this is correctly picked up by screenreaders
-      aria-describedby={errorMessageId}
-    >
+    <>
+      {errorMessageId && <ValidationErrors error={errors.join('\n')} id={errorMessageId} />}
       <div
-        className="openforms-uploaded-file__name"
-        aria-label={intl.formatMessage({
-          description: 'Accessible label for uploaded file name',
-          defaultMessage: 'File name',
-        })}
+        className={clsx('openforms-uploaded-file', hasError && 'openforms-uploaded-file--errors')}
+        // TODO: check if this is correctly picked up by screenreaders
+        aria-describedby={errorMessageId}
       >
-        <a
-          className="utrecht-link utrecht-link--openforms"
-          href={downloadUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          className="openforms-uploaded-file__name"
+          aria-label={intl.formatMessage({
+            description: 'Accessible label for uploaded file name',
+            defaultMessage: 'File name',
+          })}
         >
-          {name}
-        </a>
-      </div>
-
-      {/* FIXME: Labels only apply to interactive elements, which spans/divs are not. */}
-      <div className="openforms-uploaded-file__metadata">
-        ({extension?.toLowerCase()}
-        {extension ? ',' : undefined} <FileSize size={size} />)
-      </div>
-
-      <div className="openforms-uploaded-file__state">
-        <UploadState
-          state={state}
-          removeButton={<RemoveButton fileName={name} onRemove={onRemove} />}
-        />
-      </div>
-
-      {errorMessageId && (
-        <div className="openforms-uploaded-file__errors">
-          <ValidationErrors error={errors.join('\n')} id={errorMessageId} />
+          <a
+            className="utrecht-link utrecht-link--openforms"
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {name}
+          </a>
         </div>
-      )}
-    </div>
+
+        {/* FIXME: Labels only apply to interactive elements, which spans/divs are not. */}
+        <div className="openforms-uploaded-file__metadata">
+          ({extension?.toLowerCase()}
+          {extension ? ',' : undefined} <FileSize size={size} />)
+        </div>
+
+        <div className="openforms-uploaded-file__state">
+          <UploadState
+            state={state}
+            removeButton={<RemoveButton fileName={name} onRemove={onRemove} />}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 

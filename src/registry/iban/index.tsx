@@ -31,7 +31,7 @@ export const FormioIBAN: React.FC<FormioIBANProps> = ({componentDefinition}) => 
     <MultiField<string>
       {...sharedProps}
       newItemValue=""
-      renderField={({name, label, isReadOnly}) => (
+      renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}
           label={label}
@@ -39,6 +39,7 @@ export const FormioIBAN: React.FC<FormioIBANProps> = ({componentDefinition}) => 
           inputMode="text"
           placeholder=""
           isReadOnly={isReadOnly}
+          afterInput={controls}
           isMultiValue
         />
       )}

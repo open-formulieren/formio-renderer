@@ -94,17 +94,13 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
     expect(phoneNumberField).toHaveValue('');
 
     // Because the portal URL is set, we mention it in the description.
-    expect(
-      canvas.getByText(
-        // Because there are html element within this text message,
-        // we need to use a function to target it.
-        (_, element) =>
-          element?.textContent ===
-          'There are multiple email addresses associated with your account. ' +
-            'Use the dropdown to select the email address you want to use for this form. ' +
-            'To update your preferences, use the portal.'
-      )
-    ).toBeVisible();
+    const description = canvas.getByText(
+      /There are multiple email addresses associated with your account./
+    );
+    expect(description).toBeVisible();
+    const portalLink = within(description).getByRole('link', {name: 'portal'});
+    expect(portalLink).toBeVisible();
+    expect(portalLink).toHaveAttribute('href', 'https://example.com');
   },
 };
 

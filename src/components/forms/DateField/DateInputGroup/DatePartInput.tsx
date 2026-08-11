@@ -1,8 +1,9 @@
-import {FormLabel} from '@utrecht/form-label-react';
 import {Textbox} from '@utrecht/textbox-react';
 import {useId} from 'react';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {MessageDescriptor} from 'react-intl';
+
+import {InputGroupItemLabel} from '@/components/forms/InputGroup';
 
 import {PART_PLACEHOLDERS} from '../messages';
 import type {DatePart} from '../types';
@@ -74,9 +75,9 @@ const DatePartInput: React.FC<DatePartInputProps> = ({
 
   return (
     <>
-      <FormLabel htmlFor={id} disabled={isReadOnly} className="openforms-input-group__label">
+      <InputGroupItemLabel htmlFor={id} disabled={isReadOnly}>
         <FormattedMessage {...PART_LABELS[name]} />
-      </FormLabel>
+      </InputGroupItemLabel>
       <Textbox
         name={name}
         id={id}

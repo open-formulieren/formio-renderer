@@ -1,0 +1,129 @@
+@use '@bbt/bem';
+
+@use './responsive';
+
+// Style overrides
+
+.openforms-theme {
+  .utrecht-html {
+    --utrecht-heading-1-margin-block-end: 0.5rem;
+    --utrecht-heading-2-margin-block-end: 0.5rem;
+    --utrecht-heading-3-margin-block-end: 0.5rem;
+    --utrecht-heading-3-margin-block-start: 0;
+    --utrecht-heading-4-margin-block-end: 0.5rem;
+    --utrecht-heading-5-margin-block-end: 0.5rem;
+    --utrecht-heading-6-margin-block-end: 0.5rem;
+    --utrecht-paragraph-line-height: 1.5;
+    --utrecht-paragraph-margin-block-end: 20px;
+
+    p:last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  // Chromium user agent stylesheet adds inline-start margin
+  .utrecht-checkbox--custom {
+    margin-inline-start: 0;
+  }
+
+  // The Open Forms theme applies some utrecht-button overrides that cannot be specified
+  // through design tokens.
+  .utrecht-button,
+  .utrecht-button-link,
+  .utrecht-link-button {
+    // For buttons without any state or buttons being hovered over, apply a 3d effect
+    // by making the top and left border transparent.
+    &,
+    &:hover {
+      // However, if the button has visible focus, apply the border color to all borders
+      // otherwise it looks a bit broken.
+      &:not(:focus, :focus-visible) {
+        border-block-start-color: transparent;
+        border-inline-start-color: transparent;
+      }
+    }
+
+    // approximate browser default behaviour for focus outline
+    &:focus-visible {
+      --utrecht-button-border-radius: 2px;
+    }
+  }
+
+  // Remove vertical spacing between label and description - just always setting this
+  // design token to zero breaks spacing between label and field if there is no
+  // description.
+  .utrecht-form-field:not(.utrecht-form-field--checkbox) {
+    &:has(.utrecht-form-field-description) {
+      --utrecht-form-field-label-margin-block-end: 0;
+    }
+  }
+
+  // no design token for line height exists
+  .utrecht-form-label {
+    line-height: 1.333;
+  }
+
+  .utrecht-table .utrecht-button {
+    --_utrecht-button-background-color: transparent;
+    --utrecht-button-padding-block-start: 0;
+    --utrecht-button-padding-block-end: 0;
+
+    &:hover {
+      --utrecht-button-subtle-hover-background-color: transparent;
+      --utrecht-button-subtle-danger-hover-background-color: transparent;
+    }
+  }
+
+  .utrecht-form-field--checkbox {
+    --utrecht-form-field-description-margin-block-end: 0;
+    --of-utrecht-form-field-label-tooltip-column-gap: 12px;
+
+    // no label above the error, so remove the leading vertical space
+    .utrecht-form-field-error-message {
+      margin-block-start: 0;
+    }
+  }
+
+  .utrecht-form-fieldset {
+    @include bem.modifier('openforms') {
+      .utrecht-form-field-description {
+        // ensure there's vertical spacing after the description
+        --utrecht-space-around: 1;
+      }
+    }
+  }
+
+  // no styles or design tokens exist for these in the NL Design System components
+  .utrecht-form-field-description {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  .utrecht-calendar {
+    .utrecht-calendar {
+      &__table-days-item-day {
+        &--selected {
+          text-decoration: var(
+            --of-datepicker-table-days-item-day-selected-text-decoration,
+            underline
+          );
+        }
+      }
+    }
+  }
+
+  // FIXME: this affects the SDK login button size - needs a cleaner approach.
+  @include responsive.mobile-only {
+    .utrecht-button:not(.openforms-modal__close),
+    .utrecht-button-link {
+      display: flex;
+      inline-size: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  @include responsive.desktop {
+    --of-modal-sheet-inline-size: 60dvw;
+  }
+}

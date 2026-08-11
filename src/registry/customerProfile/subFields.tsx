@@ -3,24 +3,20 @@ import type {
   DigitalAddressType,
 } from '@open-formulieren/types/dist/components/customerProfile';
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {clsx} from 'clsx';
-import type {FormikErrors} from 'formik';
 import {useFormikContext} from 'formik';
-import {useId, useState} from 'react';
+import {useState} from 'react';
 import type {IntlShape} from 'react-intl';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {GroupBase, OptionProps} from 'react-select';
 import {components} from 'react-select';
 
 import {SecondaryActionButton} from '@/components/Button';
-import {ValidationErrors} from '@/components/forms';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
 import Icon from '@/components/icons';
 
 import PortalUrl from './PortalUrl';
-import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
 import {useCustomerProfileComponentParameters} from './hooks';
 import type {DigitalAddressGroup} from './types';
@@ -40,7 +36,6 @@ interface DigitalAddressSubFieldProps {
   type: DigitalAddressType;
   fieldName: string;
   isRequired?: boolean;
-  isFieldInvalid: boolean;
 }
 
 /**
@@ -157,7 +152,6 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   fieldName,
   isRequired,
   textfieldProps,
-  isFieldInvalid,
 }) => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -173,8 +167,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
 
   // Only show the preference button if `updatePreferencesModalEnabled` is true,
   // the field has a value and no error
-  const showPreferencesButton =
-    updatePreferencesModalEnabled && !isFieldInvalid && !error && !!value;
+  const showPreferencesButton = updatePreferencesModalEnabled && !error && !!value;
 
   return (
     <>
@@ -247,7 +240,6 @@ interface DigitalAddressTypeFieldProps {
    * options.
    */
   digitalAddressGroup?: DigitalAddressGroup;
-  errors?: string | FormikErrors<DigitalAddress>;
 }
 
 interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
@@ -277,10 +269,8 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   type,
   isRequired,
   digitalAddressGroup,
-  errors,
   textfieldProps,
 }) => {
-  const id = useId();
   const intl = useIntl();
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const fieldName = `${namePrefix}.address`;
@@ -297,23 +287,9 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   // pre-populated address, then we show a select input. Otherwise, we show a text input.
   const [useSelectInput, setUseSelectInput] = useState(hasAddresses && usesPrePopulatedAddress);
 
-  const fieldError = typeof errors === 'string' && errors;
-
-  const touched = DIGITAL_ADDRESS_FIELD_NAMES.some(subFieldName => {
-    const nestedFieldName = `${namePrefix}.${subFieldName}`;
-    const {touched} = getFieldMeta<boolean>(nestedFieldName);
-    return touched;
-  });
-
-  const invalid = touched && !!fieldError;
-  const errorMessageId = invalid ? `${id}-error-message` : undefined;
-
   return (
     <div
-      className={clsx(
-        'openforms-customer-profile-digital-address',
-        invalid && 'openforms-customer-profile-digital-address--invalid'
-      )}
+      className="openforms-customer-profile-digital-address"
       aria-label={intl.formatMessage(
         {
           description: 'Profile digital address: accessible digital address label',
@@ -325,7 +301,6 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
         },
         {digitalAddressType: type}
       )}
-      aria-describedby={errorMessageId}
     >
       {hasAddresses && useSelectInput ? (
         <DigitalAddressesSelect
@@ -338,7 +313,6 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           }}
           digitalAddressGroup={digitalAddressGroup}
           isRequired={isRequired}
-          isFieldInvalid={invalid}
         />
       ) : (
         <DigitalAddressTextfield
@@ -347,10 +321,8 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           fieldName={fieldName}
           isRequired={isRequired}
           textfieldProps={textfieldProps}
-          isFieldInvalid={invalid}
         />
       )}
-      {errorMessageId && fieldError && <ValidationErrors id={errorMessageId} error={fieldError} />}
     </div>
   );
 };

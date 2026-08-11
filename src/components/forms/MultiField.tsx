@@ -25,10 +25,26 @@ import './MultiField.scss';
 type MultiFieldValue = string | number | null;
 
 export interface RenderFieldProps {
+  /**
+   * Name to use for the input of a single field item.
+   */
   name: string;
+  /**
+   * Index of the item being rendered in the multi-field.
+   */
   index: number;
+  /**
+   * Accessible label value for the input of a single field item.
+   */
   label: React.ReactNode;
+  /**
+   * Indicator whether the field item should be rendered read-only or not.
+   */
   isReadOnly: boolean;
+  /**
+   * Markup for item controls, like the "remove" button.
+   */
+  controls: React.ReactNode;
 }
 
 export interface MultiFieldProps<T extends MultiFieldValue> {
@@ -135,10 +151,6 @@ function MultiField<T extends MultiFieldValue>({
   const descriptionid = `${id}-description`;
 
   const {error = ''} = getFieldMeta<T[]>(name);
-  const hasAnyError =
-    // type cast is necessary because Formik types don't account for the string[] type
-    typeof error === 'string' ? !!error : (error as string[]).some(itemError => !!itemError);
-
   const itemsTouched: (boolean | undefined)[] | undefined = getIn(touched, name);
   const anyItemTouched = Object.values(itemsTouched ?? {}).some(t => !!t);
   const hasFieldLevelError = typeof error === 'string' && anyItemTouched && !!error;
@@ -147,7 +159,8 @@ function MultiField<T extends MultiFieldValue>({
   return (
     <Fieldset
       className="utrecht-form-fieldset--openforms openforms-multifield-container"
-      invalid={hasAnyError}
+      // item-level errors get their own marker/border/styling
+      invalid={hasFieldLevelError}
       aria-describedby={[descriptionid, errorMessageId].filter(Boolean).join(' ')}
       ref={containerRef}
     >
@@ -162,6 +175,13 @@ function MultiField<T extends MultiFieldValue>({
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
       </FieldsetLegend>
 
+      {/*
+        no point wrapping these as the __description and __error-message elements don't
+        exist for the fieldset component :(
+      */}
+      <HelpText id={descriptionid}>{description}</HelpText>
+      {anyItemTouched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
       {/* XXX: aria-live region to announce add/remove operations? */}
 
       <FieldArray name={name} validateOnChange={false}>
@@ -173,6 +193,7 @@ function MultiField<T extends MultiFieldValue>({
                   {renderField({
                     name: `${name}.${index}`,
                     index,
+                    isReadOnly: !!isReadOnly,
                     label: (
                       <FormattedMessage
                         description="Multi-field individual item label at $index. The index variable here is 1-indexed."
@@ -180,34 +201,35 @@ function MultiField<T extends MultiFieldValue>({
                         values={{label, index: index + 1}}
                       />
                     ),
-                    isReadOnly: !!isReadOnly,
-                  })}
-                  <span className="openforms-multifield__remove-button">
-                    <Button
-                      appearance="subtle-button"
-                      hint="danger"
-                      onClick={() => {
-                        arrayHelpers.remove(index);
-                        // Reset possible array-level validation error, to work around the mangled
-                        // validation errors. This effectively masks the problem described in
-                        // https://github.com/jaredpalmer/formik/issues/3352, it does not *solve*
-                        // it. A fresh submit attempt will re-run validation.
-                        setFieldError(name, undefined);
-                      }}
-                      disabled={isReadOnly}
-                    >
-                      <UtrechtIcon>
-                        <Icon icon="remove" />
-                      </UtrechtIcon>
-                      <span className="sr-only">
-                        <FormattedMessage
-                          description="Accessible remove icon/button label for item at $index. The index variable here is 1-indexed."
-                          defaultMessage="Remove ''{label} {index}'"
-                          values={{label, index: index + 1}}
-                        />
+                    controls: (
+                      <span className="openforms-multifield__remove-button">
+                        <Button
+                          appearance="subtle-button"
+                          hint="danger"
+                          onClick={() => {
+                            arrayHelpers.remove(index);
+                            // Reset possible array-level validation error, to work around the mangled
+                            // validation errors. This effectively masks the problem described in
+                            // https://github.com/jaredpalmer/formik/issues/3352, it does not *solve*
+                            // it. A fresh submit attempt will re-run validation.
+                            setFieldError(name, undefined);
+                          }}
+                          disabled={isReadOnly}
+                        >
+                          <UtrechtIcon>
+                            <Icon icon="remove" />
+                          </UtrechtIcon>
+                          <span className="sr-only">
+                            <FormattedMessage
+                              description="Accessible remove icon/button label for item at $index. The index variable here is 1-indexed."
+                              defaultMessage="Remove ''{label} {index}'"
+                              values={{label, index: index + 1}}
+                            />
+                          </span>
+                        </Button>
                       </span>
-                    </Button>
-                  </span>
+                    ),
+                  })}
                 </li>
               ))}
             </ol>
@@ -228,8 +250,6 @@ function MultiField<T extends MultiFieldValue>({
         )}
       </FieldArray>
 
-      <HelpText id={descriptionid}>{description}</HelpText>
-      {anyItemTouched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
       <FAQItems items={faqItems} />
     </Fieldset>
   );

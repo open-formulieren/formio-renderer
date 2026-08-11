@@ -1,11 +1,10 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {FormLabel} from '@utrecht/form-label-react';
 import {Textbox} from '@utrecht/textbox-react';
 import {expect, within} from 'storybook/test';
 
 import '@/components/forms/TextField/TextField.scss';
 
-import {InputGroup, InputGroupItem} from '.';
+import {InputGroup, InputGroupItem, InputGroupItemLabel} from '.';
 import type {InputGroupProps} from './InputGroup';
 
 interface StoryArgs extends InputGroupProps {
@@ -16,9 +15,7 @@ const render = ({labels, ...args}: StoryArgs) => (
   <InputGroup {...args}>
     {labels.map((label, index) => (
       <InputGroupItem key={`${label}-${index}`}>
-        <FormLabel className="openforms-input-group__label" htmlFor={`input-${index}`}>
-          {label}
-        </FormLabel>
+        <InputGroupItemLabel htmlFor={`input-${index}`}>{label}</InputGroupItemLabel>
         <Textbox
           type="text"
           name={`input-${index}`}

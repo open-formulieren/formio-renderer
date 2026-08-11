@@ -1,8 +1,8 @@
 @use '@utrecht/paragraph-css';
 @use '@utrecht/form-fieldset-css';
+@use '@utrecht/form-label-css';
 
 @use '@/scss/bem';
-@use '@/scss/form-field-override';
 
 .openforms-input-group {
   display: flex;
@@ -16,8 +16,12 @@
     gap: var(--of-input-group-item-gap);
   }
 
-  @include bem.element('label') {
-    font-size: var(--of-input-group-label-font-size);
+  @include bem.element('item-label') {
+    font-size: var(--of-input-group-item-label-font-size, var(--of-input-group-label-font-size));
+    font-weight: var(
+      --of-input-group-item-label-font-weight,
+      var(--utrecht-form-label-font-weight)
+    );
   }
 }
 

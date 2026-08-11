@@ -64,7 +64,7 @@ const UploadedFileList: React.FC<UploadedFileListProps> = ({
 
       <ul className="openforms-uploaded-files-list" aria-labelledby={id}>
         {files.map(file => (
-          <li key={file.uniqueId}>
+          <li key={file.uniqueId} className="openforms-uploaded-files-list__file">
             <UploadedFile {...file} onRemove={async () => await onRemove(file.uniqueId)} />
           </li>
         ))}

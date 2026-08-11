@@ -1,0 +1,231 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Upgrade notes / v2.0.0" />
+
+# Upgrading to v2.0.0
+
+The Formio Renderer 2.0.0 contains breaking changes that affect authors of custom NL Design System
+themes for Open Forms.
+
+The structure/markup of our components has been changed in some ways:
+
+- they have been converted to reusable community components, or...
+- they have been updated to their latest available versions (if they were already based on community
+  components)
+
+This breaks in a couple of ways:
+
+- custom CSS overrides targeting a certain HTML structure or particular CSS class names may not work
+  anymore
+- some design tokens may have been removed, causing your variables no longer to have any effect
+- other (new) design tokens have been introduced that may need to be set with a value to make the
+  theme look good
+
+We've documented the changes and recommended actions for your custom themes.
+
+## Major changes
+
+### Field validation error and field description position
+
+Both of these fields are now positioned between the field label and input, aligning with NL Design
+System recommendations and best practices for accessibility.
+
+Whenever both are present, the description is displayed before the validation error.
+
+Your theme will most likely be affected by the spacing tokens set on the error message and
+description. Particularly relevant are the tokens below, with our suggestions:
+
+- `utrecht.form-field-description.margin-block-end`: set a non-zero value for the spacing between
+  description and error message or between description and input.
+- `utrecht.form-field-description.margin-block-start`: set to zero and configure a
+  `margin-block-end` on the label to create vertical spacing, if desired.
+
+For the error message component:
+
+- `utrecht.form-field-error-message.margin-block-end`: set a non-zero value for the spacing between
+  error message and field input.
+- `utrecht.form-field-error-message.margin-block-start`: set a non-zero value value for the spacing
+  between label or description and error message.
+- set `--utrecht-form-field-error-message-color` to the value of
+  `--utrecht-form-field-description-invalid-color`
+- set `--utrecht-form-field-error-message-line-height` to the value of
+  `--utrecht-form-field-description-errors-line-height`
+
+Note that in many cases the margins of labels, description and error message collapse, but when the
+field container is a fieldset rather than field, this margin collapse is not available. At times you
+may need CSS-level overrides.
+
+### Removal of custom error styles
+
+We removed the CSS for setting a component/field background color when it's invalid, as this is no
+longer necessary in our own theme(s) and it's not a standard pattern in NL Design System.
+
+If you need this, you can use our
+[source code](https://github.com/open-formulieren/formio-renderer/blob/eff3cb9f857a91bd0ac35e5817f2df7cf0ab064b/src/scss/form-field-override.scss)
+as inspiration for you own custom CSS.
+
+Effectively, the following design tokens are no longer used:
+
+- `of.utrecht-form-field.background-color`
+
+### Removal of custom description styles
+
+We removed the CSS for setting the background color and border of the
+`utrecht-form-field-description` component. Note that this CSS was scoped to the Open Forms theme.
+
+Effectively, the following design tokens are no longer used:
+
+- `of.utrecht-form-field-description.background-color`
+- `of.utrecht-form-field-description.border-left-color`
+- `of.utrecht-form-field-description.border-left-width`
+- `of.utrecht-form-field-description.line-height`
+- `of.utrecht-form-field-description.padding-block`
+- `of.utrecht-form-field-description.padding-inline`
+
+### Removal of the label CSS overrides
+
+We removed the CSS targetting `.utrecht-form-label--openforms`. If you want to keep this in your own
+theme, incorporate the following CSS:
+
+```css
+.utrecht-form-label {
+  display: block;
+  line-height: 1.333;
+}
+```
+
+### Integration in other libraries/projects
+
+- We now require the font awesome `regular` font files to be loaded as well (we already required the
+  solid variants).
+- `.openforms-theme` CSS overrides must now be loaded from
+  `@open-formulieren/formio-renderer/scss/theme-overrides.scss`, and (for the time being) this
+  requires the `microscope-sass` and `@bbt/bem` dependencies.
+
+## Detailed changes per component type
+
+### Checkbox
+
+The checkbox markup is updated and styles are updated to remove the background color. This removes
+the custom CSS that managed the (focus) outline around the label - now when the checkbox is focused,
+the standard NL Design System of outlining the input itself is applied.
+
+Additionally, we override the CSS to be able to position the error message above the checkbox/label,
+and display the description beside the checkbox and after the label.
+
+The following design tokens are no longer used:
+
+- `of.checkbox.bg`
+- `of.utrecht-form-field.checkbox.background-color`
+- `of.utrecht-form-field.checkbox.label.margin-block-end`
+- `of.utrecht-form-field.checkbox.margin-block-start`
+- `of.utrecht-form-label.checkbox.focus-within.outline`
+- `of.utrecht-form-label.checkbox.padding-block-end`
+- `of.utrecht-form-label.checkbox.padding-block-start`
+- `of.utrecht-form-label.checkbox.padding-inline-end`
+- `of.utrecht-form-label.checkbox.padding-inline-start`
+
+New (custom) design tokens are available to style the checkbox:
+
+- `of.utrecht-form-field.checkbox.description.color`
+- `of.utrecht-form-field.checkbox.description.font-style`
+- `of.utrecht-form-field.checkbox.label.margin-block-end`
+- `of.utrecht-form-label.checkbox.font-size`
+- `of.utrecht-form-label.checkbox.line-height`
+
+### Customer profile
+
+Due to the removal of custom error styles, the following design tokens are no longer used:
+
+- `of.alert.error.bg`
+- `of.customer-profile.digital-address.invalid.border-inline-start-color`
+- `of.customer-profile.digital-address.invalid.border-inline-start-width`
+- `of.customer-profile.digital-address.invalid.padding-block-end`
+- `of.customer-profile.digital-address.invalid.padding-block-start`
+- `of.customer-profile.digital-address.invalid.padding-inline-end`
+- `of.customer-profile.digital-address.invalid.padding-inline-start`
+- `utrecht.alert.error.background-color`
+
+### Fieldset
+
+Open Forms originally had its own fieldset component, before NL Design System even existed. This
+component has now been rewritten to build on top of the `utrecht-form-fieldset` component, so the
+design tokens for that component will affect the appearance of fieldsets.
+
+The following design tokens are no longer used:
+
+- `of.alert.error.bg`
+- `of.fieldset.legend.color`
+
+New (custom) design tokens are available to style the fieldset:
+
+- `of.utrecht-form-fieldset.error-message.margin-block-start`
+- `of.utrecht-form-fieldset.legend.border-color`
+- `of.utrecht-form-fieldset.legend.border-style`
+- `of.utrecht-form-fieldset.legend.border-width`
+- `of.utrecht-form-fieldset.legend.border.after.flex-grow`
+- `of.utrecht-form-fieldset.legend.border.after.inline-size`
+- `of.utrecht-form-fieldset.legend.border.before.flex-grow`
+- `of.utrecht-form-fieldset.legend.border.before.inline-size`
+- `of.utrecht-form-fieldset.legend.border.gap`
+- `of.utrecht-form-fieldset.legend.margin-block-end`
+
+### File upload
+
+The repositioning of description and validation errors simplified the CSS necessary for the file
+upload component.
+
+The following design tokens are no longer used:
+
+- `of.file-upload.grid-areas`
+
+New (custom) design tokens are available to style the file uploads:
+
+- `of.uploaded-file-list.file.invalid.border-inline-start-color`
+- `of.uploaded-file-list.file.invalid.border-inline-start-width`
+- `of.uploaded-file-list.file.invalid.padding-inline-start`
+- `of.uploaded-file-list.file.invalid.error-message.margin-block-start`
+
+### Radio
+
+The radio markup is updated and styles are updated to remove the background color. This removes the
+custom CSS that managed the (focus) outline around the label - now when the radio is focused, the
+standard NL Design System of outlining the input itself is applied.
+
+We also introduced a component with its own design tokens to manage the spacing between radio
+options.
+
+The following design tokens are no longer used:
+
+- `of.checkbox.bg`
+- `of.utrecht-form-field.radio.background-color`
+- `of.utrecht-form-field.radio.label.margin-block-end`
+- `of.utrecht-form-field.radio.margin-block-start`
+- `of.utrecht-form-label.radio.focus-within.outline`
+- `of.utrecht-form-label.radio.padding-block-end`
+- `of.utrecht-form-label.radio.padding-block-start`
+- `of.utrecht-form-label.radio.padding-inline-end`
+- `of.utrecht-form-label.radio.padding-inline-start`
+
+New (custom) design tokens are available to style the radio field:
+
+- `of.radio-group.error-message.margin-block-start`
+- `of.radio-group.option.description.color`
+- `of.radio-group.option.description.font-style`
+- `of.radio-group.option.description.margin-block-end`
+- `of.radio-group.option.label.font-size`
+- `of.radio-group.option.label.line-height`
+- `of.radio-group.option.label.padding-block-start`
+- `of.radio-group.row-gap`
+
+### Selectboxes (checkbox group)
+
+We introduced n component with its own design tokens to manage the spacing between checkbox group
+options.
+
+New (custom) design tokens are available to style the checkbox group:
+
+- `of.checkbox-group.option.description.color`
+- `of.checkbox-group.option.description.font-style`
+- `of.checkbox-group.option.label.margin-block-end`
+- `of.checkbox-group.row-gap`

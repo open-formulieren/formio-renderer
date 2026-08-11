@@ -162,9 +162,3 @@ body:has(.openforms-modal[open]) {
     padding-inline-start: var(--_of-modal-body-bleed-margin);
   }
 }
-
-.openforms-theme {
-  @include responsive.desktop {
-    --of-modal-sheet-inline-size: 60dvw;
-  }
-}

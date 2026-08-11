@@ -1,0 +1,28 @@
+@use '@utrecht/form-fieldset-css';
+
+.openforms-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--of-checkbox-group-row-gap, 12px);
+
+  .utrecht-form-field--checkbox {
+    .utrecht-form-field__label--checkbox {
+      // allow setting specific margins for option labels inside checkbox groups
+      margin-block-end: var(
+        --of-checkbox-group-option-label-margin-block-end,
+        var(--utrecht-form-field-label-margin-block-end)
+      );
+    }
+
+    .utrecht-form-field-description {
+      color: var(
+        --of-checkbox-group-option-description-color,
+        var(--utrecht-form-field-description-color)
+      );
+      font-style: var(
+        --of-checkbox-group-option-description-font-style,
+        var(--utrecht-form-field-description-font-style)
+      );
+    }
+  }
+}

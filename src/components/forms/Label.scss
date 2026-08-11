@@ -4,8 +4,6 @@
 
 .utrecht-form-label {
   @include bem.modifier('openforms') {
-    display: block;
-    line-height: 1.333;
     hyphens: auto;
     overflow-wrap: break-word; // see open-formulieren/open-forms#576
   }

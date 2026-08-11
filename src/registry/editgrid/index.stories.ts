@@ -972,7 +972,7 @@ export const MutationsTriggerRevalidation: ValidationStory = {
 };
 
 export const WithAdressNL: Story = {
-  decorators: [withFormSettingsProvider, withFormik],
+  decorators: [withFormSettingsProvider],
   args: {
     componentDefinition: {
       id: 'component1',

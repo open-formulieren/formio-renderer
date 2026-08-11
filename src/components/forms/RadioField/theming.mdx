@@ -23,23 +23,15 @@ The `RadioField` form field component is implemented on top of some Utrecht comm
 
 ### Extensions
 
-Open Forms extends the `utrecht-radio` component, targetting the `utrecht-form-field--openforms`
-modifier, using a number of custom design tokens. These are available to all themes.
+Open Forms extends the `utrecht-radio` component to manage the layout. It introduces the
+`openforms-radio-group` component for this, with its own set of design tokens. These are available
+to all themes.
 
 <TokensTable container={ofTokens} limitTo="of.utrecht-form-field.radio" autoExpand />
 
 <TokensTable container={ofTokens} limitTo="of.utrecht-form-label.radio" autoExpand />
 
-### Theme-specific overrides
-
-The default Open Forms theme overrides some checkbox styles. You don't get these overrides unless
-you use the `.openforms-theme` or implement similar CSS-level overrides.
-
-- Layout arrangement.
-- Focus outline management to handle the altered layout arrangement.
-
-All the styles are scoped to Open Forms extensions on elements and should not affect elements
-rendered by other means than Open Forms.
+<TokensTable container={ofTokens} limitTo="of.radio-group" autoExpand />
 
 ## Tokens
 
