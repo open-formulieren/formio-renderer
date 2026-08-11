@@ -1,10 +1,22 @@
-// use microscope-sass library for the time being, but extract the responsive lib at some point.
-@forward 'microscope-sass/lib/responsive' with (
-  $breakpoint-mobile-s: 320px !default,
-  $breakpoint-mobile-m: 375px !default,
-  $breakpoint-mobile-l: 425px !default,
-  $breakpoint-tablet: 768px !default,
-  $breakpoint-laptop: 992px !default,
-  $breakpoint-desktop: 1200px !default,
-  $responsive-default-media: all !default
-);
+// Extracted from the (unmaintained) microscope-sass package.
+//
+// Responsive styling is limited to two kinds of viewports: mobile and desktop. We
+// currently do not support intermediate viewports. This means we only consider one
+// breakpoint value.
+
+/// The breakpoint until where mobile-only styling is applied.
+$breakpoint: 768px !default;
+
+// Styling applied to mobile viewports, and only to mobile viewports.
+@mixin mobile-only {
+  @media screen and (max-width: $breakpoint - 1px) {
+    @content;
+  }
+}
+
+// Styling applied to viewports larger than the mobile breakpoint.
+@mixin desktop {
+  @media screen and (min-width: $breakpoint) {
+    @content;
+  }
+}
