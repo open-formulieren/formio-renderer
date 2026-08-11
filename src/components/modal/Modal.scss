@@ -38,7 +38,7 @@ body:has(.openforms-modal[open]) {
   padding-inline-start: var(--_of-modal-padding-inline-start);
   padding-inline-end: var(--_of-modal-padding-inline-end);
 
-  background-color: var(--of-modal-background-color, white);
+  background-color: var(--of-modal-background-color, #ffffff);
   border-color: var(--of-modal-border-color, #eee);
   border-style: solid;
   border-width: var(--of-modal-border-width, 1px);
@@ -50,6 +50,10 @@ body:has(.openforms-modal[open]) {
   box-sizing: border-box;
 
   @include bem.modifier('sheet') {
+    background-color: var(
+      --of-modal-sheet-background-color,
+      var(--of-modal-background-color, #ffffff)
+    );
     max-block-size: var(--of-modal-sheet-max-block-size, 75dvh);
     inline-size: var(--of-modal-sheet-inline-size, 100dvw);
     max-inline-size: var(--of-modal-sheet-max-inline-size, 100vw);
@@ -65,6 +69,10 @@ body:has(.openforms-modal[open]) {
       margin-block-end: revert;
 
       animation: none;
+    }
+
+    @include bem.element('title') {
+      font-size: var(--of-modal-sheet-title-font-size, var(--utrecht-heading-2-font-size, revert));
     }
   }
 
