@@ -70,7 +70,7 @@ export const useFileUploads = (
     async (files: (File | FileRejection)[]) => {
       if (!touched) setTouched(true);
       // clear any errors, in case a previous interaction set them
-      setFieldError(componentDefinition.key, undefined);
+      setFieldError(name, undefined);
 
       const context: HandleUploadContext = {
         intl,
@@ -96,7 +96,7 @@ export const useFileUploads = (
         const error = intl.formatMessage(TOO_MANY_FILES_ERROR, {
           maxNumberOfFiles: componentDefinition.maxNumberOfFiles,
         });
-        setFieldError(componentDefinition.key, error);
+        setFieldError(name, error);
         return;
       }
 
@@ -106,7 +106,12 @@ export const useFileUploads = (
           push,
           (uniqueId: string, errMsg: string) =>
             setLocalUploadErrors(prev => ({...prev, [uniqueId]: errMsg})),
-          replace,
+          (index: number, uploadResult: FormikFileUpload) => {
+            const fieldNameToClear = `${name}.${index}`;
+            // Clear all errors for a specific field whenever an upload completes.
+            setFieldError(fieldNameToClear, undefined);
+            replace(index, uploadResult);
+          },
           context
         );
       }
@@ -122,6 +127,7 @@ export const useFileUploads = (
       componentDefinition,
       touched,
       setTouched,
+      name,
     ]
   );
 
