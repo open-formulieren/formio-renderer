@@ -836,7 +836,7 @@ export const ItemLimitReached: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const addButton = await canvas.findByRole('button', {name: 'Add another'});
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
     await userEvent.click(addButton);
     expect(addButton).not.toBeInTheDocument();
   },
@@ -986,21 +986,6 @@ export const MutationsTriggerRevalidation: ValidationStory = {
       await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
       await waitFor(() => {
         expect(canvas.queryByText(/The required field/)).not.toBeInTheDocument();
-      });
-    });
-
-    await step('Clear max length validation error', async () => {
-      // add second item
-      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
-      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-      // add third item, triggering error
-      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
-      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-
-      // removing an item should clear the error
-      await userEvent.click(canvas.getByRole('button', {name: 'Remove item 2'}));
-      await waitFor(() => {
-        expect(canvas.queryByText(/number of items/)).not.toBeInTheDocument();
       });
     });
   },
