@@ -769,6 +769,41 @@ export const NestedWithSimpleConditionalsAndInitialErrors: Story = {
   },
 };
 
+export const ItemLimitReached: Story = {
+  args: {
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      validate: {maxLength: 3},
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        editgrid: [{textfield: 'First'}, {textfield: 'Second'}],
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const addButton = canvas.getByRole('button', {name: 'Add another'});
+    await userEvent.click(addButton);
+    expect(addButton).not.toBeInTheDocument();
+  },
+};
+
 interface ValidationStoryArgs {
   componentDefinition: EditGridComponentSchema;
   onSubmit: FormioFormProps['onSubmit'];
@@ -913,21 +948,6 @@ export const MutationsTriggerRevalidation: ValidationStory = {
       await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
       await waitFor(() => {
         expect(canvas.queryByText(/The required field/)).not.toBeInTheDocument();
-      });
-    });
-
-    await step('Clear max length validation error', async () => {
-      // add second item
-      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
-      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-      // add third item, triggering error
-      await userEvent.click(canvas.getByRole('button', {name: 'Add another'}));
-      await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
-
-      // removing an item should clear the error
-      await userEvent.click(canvas.getByRole('button', {name: 'Remove item 2'}));
-      await waitFor(() => {
-        expect(canvas.queryByText(/number of items/)).not.toBeInTheDocument();
       });
     });
   },

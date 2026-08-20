@@ -294,7 +294,9 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
   // deepMergeValues is required to deep-assign the dotted key paths, and the overrides
   // object is empty because there are never overrides for a new item being added
   const initialValues = deepMergeValues(extractInitialValues(components, getRegistryEntry), {});
-  const emptyItem: JSONObject | null = disableAddingRemovingRows ? null : initialValues;
+  const limitReached = validate?.maxLength ? value.length >= validate.maxLength : false;
+  const emptyItem: JSONObject | null =
+    disableAddingRemovingRows || limitReached ? null : initialValues;
 
   // if this is the root scope (the most outer edit grid), then we must build the components
   // map from the FormioForm render context.
