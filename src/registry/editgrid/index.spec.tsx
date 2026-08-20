@@ -503,3 +503,40 @@ test('visibility processing in draft edit grid item does not leak to the outer s
   await screen.getByRole('button', {name: 'Cancel'}).click();
   await expect.element(screen.getByText('do not clear me')).toBeVisible();
 });
+
+test('removing excessive elements clears max length validation error', async () => {
+  const screen = await render(
+    <Form
+      components={[
+        {
+          id: 'editgrid',
+          type: 'editgrid',
+          key: 'editgrid',
+          label: 'Edit grid',
+          groupLabel: 'Item',
+          addAnother: 'Add item',
+          disableAddingRemovingRows: false,
+          validate: {maxLength: 2},
+          components: [
+            {
+              id: 'component2',
+              type: 'textfield',
+              key: 'textfield',
+              label: 'A simple textfield',
+            },
+          ],
+        },
+      ]}
+      onSubmit={vi.fn()}
+      values={{editgrid: [{textfield: 'first'}, {textfield: 'second'}, {textfield: 'third'}]}}
+    />
+  );
+
+  // trigger validation error - 3 items is more than 2
+  await screen.getByRole('button', {name: 'Submit'}).click();
+  await expect.element(screen.getByText(/number of items/)).toBeVisible();
+
+  // removing an item must make the error message go away
+  await screen.getByRole('button', {name: 'Remove item 2'}).click();
+  await expect.element(screen.getByText(/number of items/)).not.toBeInTheDocument();
+});
