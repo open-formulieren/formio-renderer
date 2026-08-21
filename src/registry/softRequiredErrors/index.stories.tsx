@@ -237,11 +237,34 @@ export const MissingTextfieldNestedInEditgrid: Story = {
             } satisfies TextFieldComponentSchema,
           ],
         } satisfies EditGridComponentSchema,
+        {
+          id: 'editgrid2',
+          key: 'editgrid2',
+          type: 'editgrid',
+          label: 'Editgrid 2',
+          hideLabel: true,
+          groupLabel: 'Second editgrid item',
+          hidden: false,
+          disableAddingRemovingRows: false,
+          components: [
+            {
+              id: 'textfield2',
+              type: 'textfield',
+              key: 'textfield2',
+              label: 'Textfield 2',
+              openForms: {
+                // @ts-expect-error soft required on textfield is not officially supported yet
+                softRequired: true,
+              },
+            } satisfies TextFieldComponentSchema,
+          ],
+        } satisfies EditGridComponentSchema,
       ],
     },
     formik: {
       initialValues: {
         editgrid: [{textfield: ''}, {textfield: ''}],
+        editgrid2: [{textfield2: ''}],
       },
     },
   },
@@ -253,9 +276,10 @@ export const MissingTextfieldNestedInEditgrid: Story = {
     const list = await canvas.findByRole('list', {name: 'Empty fields'});
     const listItems = within(list).getAllByRole('listitem');
 
-    expect(listItems).toHaveLength(2);
+    expect(listItems).toHaveLength(3);
     expect(listItems[0].textContent).toEqual('Editgrid > Editgrid item 1 > Textfield');
     expect(listItems[1].textContent).toEqual('Editgrid > Editgrid item 2 > Textfield');
+    expect(listItems[2].textContent).toEqual('Second editgrid item 1 > Textfield 2');
   },
 };
 

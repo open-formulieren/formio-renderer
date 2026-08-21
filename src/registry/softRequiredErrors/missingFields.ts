@@ -103,6 +103,13 @@ export const getMissingFields = (
       case 'columns': {
         break;
       }
+      case 'editgrid': {
+        pathParts.push(component.key);
+        if (!component.hideLabel) {
+          labelParts.push(component.label);
+        }
+        break;
+      }
       // content components:
       // * don't hold values at all -> there's nothing to check for emptiness, skip over them
       case 'content': {
