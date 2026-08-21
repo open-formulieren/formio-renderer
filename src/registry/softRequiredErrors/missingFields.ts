@@ -86,12 +86,36 @@ export const getMissingFields = (
     const pathParts = [...keyPrefix];
     const labelParts = [...labelPrefix];
 
-    if (component.type !== 'fieldset' && component.type !== 'columns') {
-      pathParts.push(component.key);
-    }
-    // Not on all components have labels
-    if ('label' in component && component.label) {
-      labelParts.push(component.label);
+    switch (component.type) {
+      // fieldset components:
+      // * do not contribute to the data path (-> don't add component.key to pathParts)
+      // * have an option to hide header -> only add the label part if the header is
+      //   visible
+      case 'fieldset': {
+        if (!component.hideHeader && component.label) {
+          labelParts.push(component.label);
+        }
+        break;
+      }
+      // columns components:
+      // * do not contribute to the data path (-> don't add component.key to pathParts)
+      // * do not have labels
+      case 'columns': {
+        break;
+      }
+      // content components:
+      // * don't hold values at all -> there's nothing to check for emptiness, skip over them
+      case 'content': {
+        continue;
+      }
+      // softRequiredErrors components -> follows the same rules as content
+      case 'softRequiredErrors': {
+        continue;
+      }
+      default: {
+        pathParts.push(component.key);
+        labelParts.push(component.label);
+      }
     }
 
     const isEmpty = registry?.isEmpty;
