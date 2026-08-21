@@ -104,11 +104,31 @@ export const MissingTextfieldNestedInFieldset: Story = {
             } satisfies TextFieldComponentSchema,
           ],
         } satisfies FieldsetComponentSchema,
+        {
+          id: 'fieldset2',
+          key: 'fieldset2',
+          type: 'fieldset',
+          label: 'Fieldset 2',
+          hideHeader: true,
+          components: [
+            {
+              id: 'textfield2',
+              type: 'textfield',
+              key: 'textfield2',
+              label: 'Textfield 2',
+              openForms: {
+                // @ts-expect-error soft required on textfield is not officially supported yet
+                softRequired: true,
+              },
+            } satisfies TextFieldComponentSchema,
+          ],
+        } satisfies FieldsetComponentSchema,
       ],
     },
     formik: {
       initialValues: {
         textfield: '',
+        textfield2: '',
       },
     },
   },
@@ -118,9 +138,10 @@ export const MissingTextfieldNestedInFieldset: Story = {
     await canvas.findByText('Not all required fields are filled out. That can get expensive!');
 
     const list = await canvas.findByRole('list', {name: 'Empty fields'});
-    const listItem = within(list).getByRole('listitem');
+    const listItems = within(list).getAllByRole('listitem');
 
-    expect(listItem.textContent).toEqual('Fieldset > Textfield');
+    expect(listItems[0].textContent).toEqual('Fieldset > Textfield');
+    expect(listItems[1].textContent).toEqual('Textfield 2');
   },
 };
 
