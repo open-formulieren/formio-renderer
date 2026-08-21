@@ -92,6 +92,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
             return (
               <Component
                 key={digitalAddressType}
+                profileFieldName={name}
                 namePrefix={`${name}.${index}`}
                 isRequired={isSubfieldRequired}
                 digitalAddressGroup={digitalAddress}
