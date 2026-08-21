@@ -143,11 +143,17 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
 
 interface DigitalAddressTextfieldProps extends DigitalAddressSubFieldProps {
   namePrefix: string;
+  /**
+   * The name/key of the parent customer profile field. Required to trigger proper
+   * validation for the field as a whole on change.
+   */
+  profileFieldName: string;
   textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
 const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   type,
+  profileFieldName,
   namePrefix,
   fieldName,
   isRequired,
@@ -173,6 +179,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
     <>
       <TextField
         name={fieldName}
+        nameForValidate={profileFieldName}
         label={<FormattedMessage {...FIELD_LABELS[type]} />}
         isRequired={isRequired}
         description={
@@ -221,6 +228,11 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
 
 interface DigitalAddressTypeFieldProps {
   /**
+   * The name/key of the parent customer profile field. Required to trigger proper
+   * validation for the field as a whole on change.
+   */
+  profileFieldName: string;
+  /**
    * The name prefix for the fields.
    */
   namePrefix: string;
@@ -265,6 +277,7 @@ interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
  * (outside of Open Forms) to update their preferences.
  */
 const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
+  profileFieldName,
   namePrefix,
   type,
   isRequired,
@@ -317,6 +330,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
       ) : (
         <DigitalAddressTextfield
           type={type}
+          profileFieldName={profileFieldName}
           namePrefix={namePrefix}
           fieldName={fieldName}
           isRequired={isRequired}
