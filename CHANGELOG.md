@@ -1,5 +1,20 @@
 # Changes
 
+## 1.1.8 (2026-08-21)
+
+Bugfix release.
+
+- [`OF#6499`][OF#6499] Fixed pending file upload state validation errors not being cleared on upload
+  completion.
+- [`OF#6548`][OF#6548] Fixed the "add another" button not being removed when the editgrid item limit
+  is reached.
+- [`OF#6501`][OF#6501] Fixed the `softRequiredErrors` component displaying the fieldset label
+  despite the component being configured not to show the header/label.
+
+[OF#6499]: https://github.com/open-formulieren/open-forms/issues/6499
+[OF#6548]: https://github.com/open-formulieren/open-forms/issues/6548
+[OF#6501]: https://github.com/open-formulieren/open-forms/issues/6501
+
 ## 1.1.7 (2026-07-27)
 
 Bugfix release.
