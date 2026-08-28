@@ -15,7 +15,7 @@ import type {GeoSearchShowLocationEvent} from './LeafletMapSearchControl';
 import NearestAddress from './NearestAddress';
 import {DEFAULT_CENTER_COORDINATES, DEFAULT_ZOOM_LEVEL} from './constants';
 import {overloadLeafletDrawPolylineControl} from './drawPolylineControl';
-import {overloadLeafletDrawToolbarControls} from './drawToolbarControls';
+import {disableDrawingMode, enableDrawingMode} from './drawToolbarControls';
 import {CRS_RD, TILE_LAYER_RD, initialize} from './init';
 import {
   applyLeafletTranslations,
@@ -106,7 +106,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   }, [featureGroupRef, intl]);
 
   useEffect(() => {
-    overloadLeafletDrawToolbarControls();
     overloadLeafletDrawPolylineControl();
   }, []);
 
@@ -266,19 +265,10 @@ const SingleInteractionMode: React.FC<SingleInteractionModeProps> = ({
   useEffect(() => {
     // If there is no map, no draw control ref, or the map already has a value, do nothing.
     if (!map || !drawControlRef.current || !!geoJsonGeometry) return;
-    const drawControl = drawControlRef.current;
     const container = map.getContainer();
 
-    const handleMouseEnter = () => {
-      if (drawControl.enableDrawingMode) {
-        drawControl.enableDrawingMode(shape);
-      }
-    };
-    const handleMouseLeave = () => {
-      if (drawControl.disableDrawingMode) {
-        drawControl.disableDrawingMode(shape);
-      }
-    };
+    const handleMouseEnter = () => enableDrawingMode(drawControlRef, shape);
+    const handleMouseLeave = () => disableDrawingMode(drawControlRef, shape);
     container.addEventListener('mouseenter', handleMouseEnter);
     container.addEventListener('mouseleave', handleMouseLeave);
 
