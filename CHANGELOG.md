@@ -1,5 +1,17 @@
 # Changes
 
+## 2.0.2 (2026-08-31)
+
+Bugfix release.
+
+- [`OF#6605`][OF#6605] Fixed a crash when an `editgrid` component with `validate.maxLength` set is
+  initially hidden and becomes visible.
+- [`OF#6606`][OF#6606] Worked around an issue where the selectboxes component for the
+  `npFamilyMembers` would be extremely sluggish and/or crashed.
+
+[OF#6605]: https://github.com/open-formulieren/open-forms/issues/6605
+[OF#6606]: https://github.com/open-formulieren/open-forms/issues/6606
+
 ## 2.0.1 (2026-08-21)
 
 Bugfix release.
