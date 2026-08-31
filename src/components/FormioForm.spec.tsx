@@ -1404,4 +1404,41 @@ describe('Regressions', () => {
     await screen.getByRole('checkbox', {name: 'Trigger'}).click();
     await expect.element(screen.getByRole('button', {name: 'Add another'})).toBeVisible();
   });
+
+  test('field names with large numeric values do not cause errors', async () => {
+    let touchedValue: Record<string, boolean> = {};
+
+    const Observer: React.FC = () => {
+      const {touched} = useFormikContext();
+      touchedValue = touched;
+      return null;
+    };
+
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'selectboxes',
+            id: 'trigger',
+            // gets interpreted as number and creates an array that's out of range :thisisfine:
+            key: 'selectboxes',
+            label: 'Trigger',
+            values: [{value: '123', label: 'Boom'}],
+            openForms: {dataSrc: 'manual'},
+          },
+        ]}
+        values={{trigger: false}}
+        onSubmit={vi.fn()}
+      >
+        <Observer />
+      </Form>
+    );
+
+    // touch and blur the checkbox, and then assert on the touched state
+    await screen.getByRole('checkbox', {name: 'Boom'}).click();
+    await userEvent.tab();
+    await expect.element(screen.getByRole('button', {name: 'Submit'})).toHaveFocus();
+
+    expect(touchedValue).toEqual({selectboxes: {'123': true}});
+  });
 });
