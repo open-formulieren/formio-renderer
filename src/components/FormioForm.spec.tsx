@@ -1357,4 +1357,51 @@ describe('Regressions', () => {
       .element(screen.getByText('The required field Editgrid must be filled in.'))
       .not.toBeInTheDocument();
   });
+
+  test('editgrid with maxlength inside initially hidden fieldset does not crash when becoming visible', async () => {
+    const screen = await render(
+      <Form
+        components={[
+          {
+            type: 'checkbox',
+            id: 'trigger',
+            key: 'trigger',
+            label: 'Trigger',
+          },
+          {
+            type: 'fieldset',
+            id: 'hiddenFieldset',
+            key: 'hiddenFieldset',
+            label: 'Initially hidden fieldset',
+            components: [
+              {
+                type: 'editgrid',
+                id: 'editgrid',
+                key: 'editgrid',
+                label: 'Editgrid',
+                disableAddingRemovingRows: false,
+                validate: {maxLength: 3},
+                groupLabel: 'Item',
+                components: [
+                  {
+                    id: 'textfield',
+                    key: 'textfield',
+                    type: 'textfield',
+                    label: 'Textfield',
+                  },
+                ],
+              },
+            ],
+            hideHeader: false,
+            conditional: {show: true, when: 'trigger', eq: true},
+          },
+        ]}
+        values={{trigger: false, editgrid: []}}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    await screen.getByRole('checkbox', {name: 'Trigger'}).click();
+    await expect.element(screen.getByRole('button', {name: 'Add another'})).toBeVisible();
+  });
 });

@@ -269,7 +269,7 @@ export const FormioEditGrid: React.FC<EditGridProps> = ({
 }) => {
   const {values, setFieldValue, getFieldProps, getFieldMeta, setFieldError} =
     useFormikContext<WrappedJSONObject>();
-  const {value} = getFieldProps<JSONObject[]>(key);
+  const {value = []} = getFieldProps<JSONObject[] | undefined>(key);
   const {error} = getFieldMeta<JSONObject[]>(key);
   // type cast because the FormikErrors type is plain wrong for nested structures like
   // edit grids
