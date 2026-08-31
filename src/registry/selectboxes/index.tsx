@@ -1,7 +1,7 @@
 import type {SelectboxesComponentSchema} from '@open-formulieren/types';
 import {Fieldset, FieldsetLegend} from '@utrecht/fieldset-react';
 import {clsx} from 'clsx';
-import {useField, useFormikContext} from 'formik';
+import {getIn, setIn, useField, useFormikContext} from 'formik';
 import {useEffect, useId, useMemo, useRef} from 'react';
 
 import Checkbox from '@/components/forms/Checkbox';
@@ -40,7 +40,13 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
 
   const name = useFieldConfig(componentDefinition.key);
 
-  const {getFieldProps, getFieldMeta, validateField} = useFormikContext();
+  const {
+    getFieldProps,
+    getFieldMeta,
+    validateField,
+    touched: formikTouched,
+    setTouched,
+  } = useFormikContext();
   const [{value: selectboxesState = {}}, {error = ''}, {setValue}] = useField<
     Record<string, boolean> | undefined
   >(name);
@@ -53,6 +59,30 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null);
   const lastValidatedValueRef = useRef<Record<string, boolean> | null>(null);
+
+  // workaround for OF#6606 where selectboxes naming scheme with integer-like field names
+  // results in (massive) Arrays being created/cloned rather than objects with low amounts
+  // of keys
+  const selectboxesTouchedState = getIn(formikTouched, name);
+  useEffect(() => {
+    // if we have an undefined touched state, ensure that it's initialized as an object.
+    // We *could* also pass `intialTouched` in `FormioForm` like we do with `initialValues`
+    // and extract it from the component tree, but we opted here to localize it with the
+    // rest of the selectboxes semantics as other components don't suffer from this
+    // problem, and keeping the state in sync with possible component updates/removals/
+    // additions becomes much trickier on the generic level.
+    if (!selectboxesTouchedState) {
+      const initialTouched = Object.fromEntries(options.map(option => [option.value, false]));
+      // we deliberately assign the object as a whole because the bug is in weak-typing
+      // through setIn/lodash.set where keep keys/paths with integer-like segments are
+      // interpreted as Array indices.
+      const updatedTouched = setIn(formikTouched, name, initialTouched);
+      setTouched(updatedTouched);
+    }
+    if (Array.isArray(selectboxesTouchedState)) {
+      throw new Error('Selectboxes touch state should never be an array.');
+    }
+  }, [setTouched, name, formikTouched, selectboxesTouchedState, options]);
 
   // derive the component touched state from the individual checkboxes that make up the
   // component
