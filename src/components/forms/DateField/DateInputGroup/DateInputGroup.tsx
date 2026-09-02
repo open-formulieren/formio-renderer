@@ -3,13 +3,15 @@ import {useEffect, useState} from 'react';
 
 import {InputGroup} from '@/components/forms/InputGroup';
 
-import type {DatePart, DatePartValues} from '../types';
+import type {DatePart, DatePartValues, DateValue} from '../types';
 import {parseDate, partsToUnvalidatedISO8601} from '../utils';
 import DateInputItems from './DateInputItems';
 
-const dateStringToParts = (value: string): DatePartValues => {
+const dateStringToParts = (value: string | null): DatePartValues => {
   const dateValue = parseDate(value);
-  const [fallbackYear = '', fallbackMonth = '', fallbackDay = ''] = value.split('-');
+  const [fallbackYear = '', fallbackMonth = '', fallbackDay = ''] = value
+    ? value.split('-')
+    : ['', '', ''];
   const datePartsFromValue: DatePartValues = dateValue
     ? {
         year: String(dateValue.getFullYear()),
@@ -97,8 +99,9 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
   afterInput,
 }) => {
   const {validateField} = useFormikContext();
-  // value is an ISO-8601 string _if_ a valid date was provided at some point.
-  const [{value}, {error, touched}, {setTouched, setValue}] = useField<string>(name);
+  // value is an ISO-8601 string _if_ a valid date was provided at some point, or `null`
+  // for empty values
+  const [{value}, {error, touched}, {setTouched, setValue}] = useField<DateValue>(name);
 
   const datePartsFromValue = dateStringToParts(value);
   const [{year, month, day}, setDateParts] = useState<DatePartValues>(datePartsFromValue);
@@ -109,7 +112,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
     () => {
       // if an empty part leads to an invalid date, the value in Formik state is reset,
       // but this may not clear the other parts if the user is still making changes.
-      const shouldIgnore = value === '' && (year === '' || month === '' || day === '');
+      const shouldIgnore = value === null && (year === '' || month === '' || day === '');
       const newValueParts = dateStringToParts(value);
 
       const yearInconsistent = parseInt(newValueParts.year) !== parseInt(year);
@@ -140,7 +143,7 @@ const DateInputGroup: React.FC<DateInputGroupProps> = ({
 
     if (!hasAllParts) {
       // as soon as one part is missing, treat as if the entire field was cleared
-      setValue('');
+      setValue(null);
     } else {
       // otherwise we have all parts to construct a date, BUT it may be nonsense. It's
       // up to validation libraries to check this.

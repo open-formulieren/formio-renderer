@@ -10,6 +10,7 @@ import {useFieldConfig, useFieldError} from '@/hooks';
 
 import DateInputGroup from './DateInputGroup';
 import DatePicker from './DatePicker';
+import type {DateValue} from './types';
 
 export interface DatePickerProps {
   /**
@@ -131,7 +132,7 @@ const DateField: React.FC<DateFieldProps> = ({
   const id = useId();
   const {getFieldMeta} = useFormikContext();
   name = useFieldConfig(name);
-  const {touched} = getFieldMeta(name);
+  const {touched} = getFieldMeta<DateValue>(name);
   const error = useFieldError(name, isMultiValue);
 
   const isInvalid = touched && !!error;

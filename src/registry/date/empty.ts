@@ -1,8 +1,9 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
 
+import type {DateValue} from '@/components/forms/DateField/types';
 import type {IsEmpty} from '@/registry/types';
 
-const isEmpty: IsEmpty<DateComponentSchema, string | string[]> = (_component, value) => {
+const isEmpty: IsEmpty<DateComponentSchema, DateValue | DateValue[]> = (_component, value) => {
   // Based on the formio textfield implementation https://github.com/formio/formio.js/blob/29939fc9d66f2b95527c90d3cf7729570c3d3010/src/components/textfield/TextField.js#L300
   if (value == null) {
     return true;
