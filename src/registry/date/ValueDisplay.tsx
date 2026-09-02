@@ -1,4 +1,5 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
+import type {DateValue} from '@open-formulieren/types/dist/components/date';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 import {FormattedDate} from 'react-intl';
 
@@ -6,10 +7,10 @@ import './ValueDisplay.scss';
 
 export interface ValueDisplayProps {
   componentDefinition: DateComponentSchema;
-  value: string | string[] | undefined;
+  value: DateValue | DateValue[] | undefined;
 }
 
-const formatDate = (dateValue: string): React.ReactNode => {
+const formatDate = (dateValue: DateValue): React.ReactNode => {
   if (!dateValue) return '-';
   return <FormattedDate value={dateValue} year="numeric" day="numeric" month="long" />;
 };
@@ -18,7 +19,7 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({
   componentDefinition: {multiple = false},
   value,
 }) => {
-  const emptyValue: string | string[] = multiple ? [] : '';
+  const emptyValue: DateValue | DateValue[] = multiple ? [] : null;
   const normalizedValue = value ?? emptyValue;
 
   // in edge cases the existing data & component.multiple may be misaligned (updating form definitions
