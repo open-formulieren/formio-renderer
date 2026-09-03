@@ -52,6 +52,13 @@ export const CanRemove: Story = {
   },
 };
 
+export const WithLongUnbrokenBodyContent: Story = {
+  args: {
+    getBody: () =>
+      'Pastry carrot cake pie candycanesdonutjujubessoufflébonbonMarzipanwaferlemondropschocolatebrowniecupcakecookieHalvahsweetcakecakecupcakejellybeansbrowniegingerbreadDanishcaketoppinggummiescupcakefruitcakecakechocolatebarsweetrollSugarplumcottoncandybrowniepiebearclawcookieWafermarzipanicecreamcaketoffeeapplepiedonutcandymarzipanFruitcakeliquoricecaramelscottoncandyoatcaketoffeeoatcakeicingbonbonLemondropshalvahmacaroonsesamesnapsgummiesmarshmallowjellymarzipan. ChocolatecandybrowniesoufflésweetsugarplumtiramisupieicecreamChocolatecakepiebearclawbonbonjellywaferdragéecroissantCaramelsapplepiecottoncandyshortbreadgummiescandycanesliquoricepowderToppingcottoncandymuffinmarshmallowsesamesnapscroissantbiscuitLollipopgingerbreadcupcakebonboncandycanesmarzipangummibearsJellymacaroonmacaroontartgummiescupcakebiscuit',
+  },
+};
+
 export const IsolatedMode: Story = {
   args: {
     enableIsolation: true,
@@ -111,5 +118,22 @@ export const IsolatedModeWithZodSchema: Story = {
     await userEvent.tab();
 
     expect(await canvas.findByText('String must contain at most 5 character(s)')).toBeVisible();
+  },
+};
+
+export const IsolatedModeWithLongUnbrokenBodyContent: Story = {
+  args: {
+    ...IsolatedMode.args,
+    enableIsolation: true,
+    getBody: ({expanded}) =>
+      expanded ? (
+        <Paragraph>
+          Pastry carrot cake pie
+          candycanesdonutjujubessoufflébonbonMarzipanwaferlemondropschocolatebrowniecupcakecookieHalvahsweetcakecakecupcakejellybeansbrowniegingerbreadDanishcaketoppinggummiescupcakefruitcakecakechocolatebarsweetrollSugarplumcottoncandybrowniepiebearclawcookieWafermarzipanicecreamcaketoffeeapplepiedonutcandymarzipanFruitcakeliquoricecaramelscottoncandyoatcaketoffeeoatcakeicingbonbonLemondropshalvahmacaroonsesamesnapsgummiesmarshmallowjellymarzipan.
+          ChocolatecandybrowniesoufflésweetsugarplumtiramisupieicecreamChocolatecakepiebearclawbonbonjellywaferdragéecroissantCaramelsapplepiecottoncandyshortbreadgummiescandycanesliquoricepowderToppingcottoncandymuffinmarshmallowsesamesnapscroissantbiscuitLollipopgingerbreadcupcakebonboncandycanesmarzipangummibearsJellymacaroonmacaroontartgummiescupcakebiscuit
+        </Paragraph>
+      ) : (
+        'A preview body'
+      ),
   },
 };
