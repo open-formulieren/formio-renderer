@@ -2,6 +2,8 @@ import type {DateTimeComponentSchema} from '@open-formulieren/types';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 import {FormattedDate} from 'react-intl';
 
+import type {DateTimeValue} from '@/components/forms/DateTimeField/types';
+
 import './ValueDisplay.scss';
 
 export interface ValueDisplayProps {
@@ -9,7 +11,7 @@ export interface ValueDisplayProps {
   value: string | string[] | undefined;
 }
 
-const formatDateTime = (dateTimeValue: string): React.ReactNode => {
+const formatDateTime = (dateTimeValue: DateTimeValue): React.ReactNode => {
   if (!dateTimeValue) return '-';
   return (
     <FormattedDate
@@ -27,7 +29,7 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({
   componentDefinition: {multiple = false},
   value,
 }) => {
-  const emptyValue: string | string[] = multiple ? [] : '';
+  const emptyValue: DateTimeValue | DateTimeValue[] = multiple ? [] : null;
   const normalizedValue = value ?? emptyValue;
 
   // in edge cases the existing data & component.multiple may be misaligned (updating form definitions

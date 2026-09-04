@@ -4,6 +4,7 @@ import isChromatic from 'chromatic/isChromatic';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
+import type {DateTimeValue} from '@/components/forms/DateTimeField/types';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik, withMockDate} from '@/sb-decorators';
 
@@ -32,7 +33,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         date: {
-          time: '',
+          time: null,
         },
       },
     },
@@ -54,7 +55,7 @@ export const WithTooltip: Story = {
     formik: {
       initialValues: {
         date: {
-          time: '',
+          time: null,
         },
       },
     },
@@ -641,7 +642,7 @@ export const ValidateTypedDatetime: ValidationStory = {
 
 interface ValueDisplayStoryArgs {
   componentDefinition: DateTimeComponentSchema;
-  value: string | string[];
+  value: DateTimeValue | DateTimeValue[];
 }
 
 type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
@@ -679,7 +680,7 @@ export const SingleEmptyValueDisplay: ValueDisplayStory = {
       label: 'Datetime',
       multiple: false,
     } satisfies DateTimeComponentSchema,
-    value: '',
+    value: null,
   },
 };
 
@@ -695,7 +696,7 @@ export const MultiValueDisplay: ValueDisplayStory = {
     } satisfies DateTimeComponentSchema,
     value: [
       '1980-01-01T12:34:56',
-      '',
+      null,
       '2025-10-08T14:09:44',
       '2025-12-05T15:10:00+00:00',
       '2024-08-05T14:45:00+02:00',
