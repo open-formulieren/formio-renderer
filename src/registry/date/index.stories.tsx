@@ -3,6 +3,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
+import type {DateValue} from '@/components/forms/DateField/types';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormik, withMockDate} from '@/sb-decorators';
 
@@ -31,7 +32,7 @@ export const MinimalConfigurationInputGroup: Story = {
     formik: {
       initialValues: {
         my: {
-          date: '',
+          date: null,
         },
       },
     },
@@ -52,7 +53,7 @@ export const MinimalConfigurationDatePicker: Story = {
     formik: {
       initialValues: {
         my: {
-          date: '',
+          date: null,
         },
       },
     },
@@ -68,10 +69,12 @@ export const WithFAQItems: Story = {
       label: 'Your date',
       faqItems: [
         {
+          id: '0',
           label: 'How do I fill in this field?',
           content: 'The values required to fill out this field can be retrieved from XYZ.',
         },
         {
+          id: '1',
           label: 'Is this field applicable to me?',
           content: 'This field is applicable if you are XYZ.',
         },
@@ -83,7 +86,7 @@ export const WithFAQItems: Story = {
     formik: {
       initialValues: {
         my: {
-          date: '',
+          date: null,
         },
       },
     },
@@ -106,7 +109,7 @@ export const WithTooltipInputGroup: Story = {
     formik: {
       initialValues: {
         my: {
-          date: '',
+          date: null,
         },
       },
     },
@@ -129,7 +132,7 @@ export const WithTooltipDatePicker: Story = {
     formik: {
       initialValues: {
         my: {
-          date: '',
+          date: null,
         },
       },
     },
@@ -866,7 +869,7 @@ export const ValidateTypedDatePicker: ValidationStory = {
 
 interface ValueDisplayStoryArgs {
   componentDefinition: DateComponentSchema;
-  value: string | string[];
+  value: DateValue | DateValue[];
 }
 
 type ValueDisplayStory = StoryObj<ValueDisplayStoryArgs>;
@@ -906,7 +909,7 @@ export const SingleEmptyValueDisplay: ValueDisplayStory = {
       openForms: {translations: {}, widget: 'inputGroup'},
       multiple: false,
     } satisfies DateComponentSchema,
-    value: '',
+    value: null,
   },
 };
 
@@ -921,6 +924,6 @@ export const MultiValueDisplay: ValueDisplayStory = {
       openForms: {translations: {}, widget: 'inputGroup'},
       multiple: true,
     } satisfies DateComponentSchema,
-    value: ['1980-01-01', '', '2025-03-21'],
+    value: ['1980-01-01', null, '2025-03-21'],
   },
 };

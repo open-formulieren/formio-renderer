@@ -37,6 +37,10 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
   const minDate = datePicker?.minDate ? parseISO(datePicker.minDate) : null;
   const maxDate = datePicker?.maxDate ? parseISO(datePicker.maxDate) : null;
 
+  const requiredMessage = errors?.required || buildRequiredMessage(intl, {fieldLabel: label});
+  const invalidDateMessage =
+    errors?.invalid_datetime || intl.formatMessage(DATETIME_INVALID_MESSAGE);
+
   let dateSchema = z.coerce.date();
   if (minDate) {
     const minDateString = intl.formatDate(minDate, {
@@ -67,22 +71,27 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
     });
   }
 
-  let schema: z.ZodFirstPartySchemaTypes = z
-    .string({
-      required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-    })
+  let innerSchema: z.ZodFirstPartySchemaTypes = z
+    .string({required_error: requiredMessage})
     .refine(
       value => {
         const parsed = parseISO(value);
         return isValid(parsed);
       },
-      {message: errors?.invalid_datetime || intl.formatMessage(DATETIME_INVALID_MESSAGE)}
+      {message: invalidDateMessage}
     )
     .pipe(dateSchema);
 
   if (!required) {
-    schema = schema.optional().or(z.literal(''));
+    innerSchema = innerSchema.optional();
   }
+
+  let schema: z.ZodFirstPartySchemaTypes = z.preprocess((value: unknown) => {
+    // `null` is the empty date value, cast it to undefined as that wat zod expects
+    // for 'no value provided' to trigger the 'required' error
+    if (value === null) return undefined;
+    return value;
+  }, innerSchema);
 
   if (plugins.length) {
     schema = schema.superRefine(async (val, ctx) => {
@@ -99,9 +108,7 @@ const getValidationSchema: GetValidationSchema<DateTimeComponentSchema> = (
     let arraySchema = z.array(schema);
 
     if (required) {
-      arraySchema = arraySchema.min(1, {
-        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-      });
+      arraySchema = arraySchema.min(1, {message: requiredMessage});
     }
 
     schema = arraySchema;

@@ -12,6 +12,7 @@ import Tooltip from '@/components/forms/Tooltip';
 
 import {useDateLocaleMeta} from '../hooks';
 import {PART_PLACEHOLDERS} from '../messages';
+import type {DateValue} from '../types';
 import {getBestInitialDate, parseDate} from '../utils';
 import './DatePicker.scss';
 
@@ -116,7 +117,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
   const [{value, onBlur, onChange}, {error, touched}, {setTouched, setValue}] =
-    useField<string>(name);
+    useField<DateValue>(name);
   const dateLocaleMeta = useDateLocaleMeta();
 
   const placeholderMap = {
@@ -140,7 +141,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           month: 'numeric',
           day: 'numeric',
         })
-      : value;
+      : (value ?? '');
 
   const calendarEvents: React.ComponentProps<typeof DatePickerCalendar>['events'] = disabledDates
     ? disabledDates.map(date => ({

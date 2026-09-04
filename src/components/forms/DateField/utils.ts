@@ -26,7 +26,7 @@ export interface LocaleMeta {
  * If no date could be parsed (either because it's incomplete, wrong format or just
  * non-sensical), returns `null`.
  */
-export const parseDate = (value: string, meta?: LocaleMeta): Date | null => {
+export const parseDate = (value: string | null, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
 
   const partsOrder = meta?.partsOrder ?? ['year', 'month', 'day']; // default ISO-8601 order

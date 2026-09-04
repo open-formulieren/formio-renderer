@@ -1,6 +1,7 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
 
 import {DateField} from '@/components/forms';
+import type {DateValue} from '@/components/forms/DateField/types';
 import {parseDate} from '@/components/forms/DateField/utils';
 import MultiField from '@/components/forms/MultiField';
 import type {RegistryEntry} from '@/registry/types';
@@ -36,9 +37,9 @@ export const FormioDate: React.FC<FormioDateProps> = ({componentDefinition}) => 
   };
 
   return componentDefinition.multiple ? (
-    <MultiField<string>
+    <MultiField<DateValue>
       {...sharedProps}
-      newItemValue=""
+      newItemValue={null}
       renderField={({name, label, controls, isReadOnly}) => (
         <DateField
           name={name}

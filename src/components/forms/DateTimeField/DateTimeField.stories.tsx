@@ -22,7 +22,7 @@ export default {
   parameters: {
     formik: {
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
     },
   },
@@ -42,10 +42,12 @@ export const Default: Story = {
     tooltip: 'A short tooltip.',
     faqItems: [
       {
+        id: '0',
         label: 'How do I fill in this field?',
         content: 'The values required to fill out this field can be retrieved from XYZ.',
       },
       {
+        id: '1',
         label: 'Is this field applicable to me?',
         content: 'This field is applicable if you are XYZ.',
       },
@@ -341,7 +343,7 @@ export const NoErrorWhileFocus: Story = {
     mockDate: new Date('2025-09-29T12:00:00+02:00'),
     formik: {
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
       zodSchema: z.object({
         datetime: z.any().refine(() => false, {message: 'Always invalid'}),
@@ -376,7 +378,7 @@ export const NoErrorWhileFocusInContainer: Story = {
     formik: {
       renderSubmitButton: true,
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
       zodSchema: z.object({
         datetime: z.any().refine(() => false, {message: 'Always invalid'}),
@@ -461,7 +463,7 @@ export const ValidateOnBlur: Story = {
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: '',
+        validateOnBlur: null,
       },
       zodSchema: z.object({
         validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),

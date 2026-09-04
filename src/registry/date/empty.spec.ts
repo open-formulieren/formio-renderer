@@ -1,6 +1,7 @@
 import type {DateComponentSchema} from '@open-formulieren/types';
 import {expect, test} from 'vitest';
 
+import type {DateValue} from '@/components/forms/DateField/types';
 import {getRegistryEntry} from '@/registry';
 
 import isEmpty from './empty';
@@ -33,17 +34,19 @@ test.each([
   [null, true],
   [[], true],
   [[''], true],
+  [[null], true],
   [['', ''], true],
+  [[null, null], true],
   [['      '], true],
   [[undefined], true],
   [[null], true],
   // Non-empty state
   [['1970-01-01'], false],
   [['1970-01-01', '1980-01-01'], false],
-  [['', '1970-01-01'], false],
+  [[null, '1970-01-01'], false],
 ])(
   'Multiple date isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: string[] | undefined, expected: boolean) => {
+  (valueToTest: DateValue[] | null | undefined, expected: boolean) => {
     const component: DateComponentSchema = {
       type: 'date',
       key: 'date',

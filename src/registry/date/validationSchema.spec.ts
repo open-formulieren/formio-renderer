@@ -31,10 +31,7 @@ const buildValidationSchema = (component: DateComponentSchema) => {
 };
 
 describe('date component validation', () => {
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=false (value: %s)', value => {
+  test.each([undefined, null])('validate.required=false (value: %s)', value => {
     const component: DateComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
     const schema = buildValidationSchema(component);
 
@@ -43,10 +40,7 @@ describe('date component validation', () => {
     expect(success).toBe(true);
   });
 
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=true (value: %s)', value => {
+  test.each([undefined, null])('validate.required=true (value: %s)', value => {
     const component: DateComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
@@ -68,22 +62,16 @@ describe('date component validation', () => {
     expect(result.error?.errors[0].message).toBe('Custom error message for required');
   });
 
-  test.each([
-    '2024-10-69',
-    '2024-15-10',
-    '30-10-2024',
-    '10-30-2024',
-    '2024/01/01',
-    42,
-    12.34,
-    null,
-  ])('Invalid date: %s', date => {
-    const schema = buildValidationSchema(BASE_COMPONENT);
+  test.each(['2024-10-69', '2024-15-10', '30-10-2024', '10-30-2024', '2024/01/01', 42, 12.34, ''])(
+    'Invalid date: %s',
+    date => {
+      const schema = buildValidationSchema(BASE_COMPONENT);
 
-    const {success} = schema.safeParse(date);
+      const {success} = schema.safeParse(date);
 
-    expect(success).toBe(false);
-  });
+      expect(success).toBe(false);
+    }
+  );
 
   test('invalid date with custom error message', () => {
     const component: DateComponentSchema = {
@@ -212,11 +200,11 @@ describe('date component validation', () => {
 describe('date component with multiple: true', () => {
   test.each([
     [true, [], false],
-    [true, [''], false],
+    [true, [null], false],
     [true, [undefined], false],
     [true, ['2025-07-19'], true],
     [false, [], true],
-    [false, [''], true],
+    [false, [null], true],
     [false, [undefined], true],
   ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
     const component: DateComponentSchema = {
