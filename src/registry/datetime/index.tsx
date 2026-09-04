@@ -1,4 +1,5 @@
 import type {DateTimeComponentSchema} from '@open-formulieren/types';
+import type {DateTimeValue} from '@open-formulieren/types/dist/components/datetime';
 import {parseISO} from 'date-fns';
 
 import {DateTimeField} from '@/components/forms';
@@ -36,9 +37,9 @@ export const FormioDateTime: React.FC<FormioDateTimeProps> = ({componentDefiniti
   const parsedMax = datePicker?.maxDate ? parseISO(datePicker.maxDate) : null;
   const parsedMin = datePicker?.minDate ? parseISO(datePicker.minDate) : null;
   return componentDefinition.multiple ? (
-    <MultiField<string>
+    <MultiField<DateTimeValue>
       {...sharedProps}
-      newItemValue=""
+      newItemValue={null}
       renderField={({name, label, controls, isReadOnly}) => (
         <DateTimeField
           name={name}

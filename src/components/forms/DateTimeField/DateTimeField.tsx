@@ -1,4 +1,5 @@
 import type {FAQItem} from '@open-formulieren/types';
+import type {DateTimeValue} from '@open-formulieren/types/dist/components/datetime';
 import {FormField} from '@utrecht/form-field-react';
 import {Textbox} from '@utrecht/textbox-react';
 import {clsx} from 'clsx';
@@ -125,7 +126,8 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
   const id = useId();
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
-  const [{value, onBlur, onChange}, {touched}, {setTouched, setValue}] = useField<string>(name);
+  const [{value, onBlur, onChange}, {touched}, {setTouched, setValue}] =
+    useField<DateTimeValue>(name);
   const error = useFieldError(name, isMultiValue);
 
   const dateLocaleMeta = useDateLocaleMeta();
@@ -181,7 +183,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
 
     if (newDateParts.date === '' || newDateParts.time === '') {
       // If one part is missing, treat as if the entire field was cleared.
-      setValue('');
+      setValue(null);
     } else {
       // If we have both parts, we can combine them into an ISO-8601 string, and convert to a date
       // object. This is possible, because the date picker and time input return a date and time
@@ -240,7 +242,7 @@ const DateTimeField: React.FC<DateTimeFieldProps> = ({
                 <Textbox
                   ref={refs.setPositionReference}
                   name={name}
-                  value={textboxValue}
+                  value={textboxValue ?? ''}
                   onChange={onChange}
                   onBlur={event => {
                     const value = event.target.value;

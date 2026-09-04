@@ -22,7 +22,7 @@ export default {
   parameters: {
     formik: {
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
     },
   },
@@ -343,7 +343,7 @@ export const NoErrorWhileFocus: Story = {
     mockDate: new Date('2025-09-29T12:00:00+02:00'),
     formik: {
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
       zodSchema: z.object({
         datetime: z.any().refine(() => false, {message: 'Always invalid'}),
@@ -378,7 +378,7 @@ export const NoErrorWhileFocusInContainer: Story = {
     formik: {
       renderSubmitButton: true,
       initialValues: {
-        datetime: '',
+        datetime: null,
       },
       zodSchema: z.object({
         datetime: z.any().refine(() => false, {message: 'Always invalid'}),
@@ -463,7 +463,7 @@ export const ValidateOnBlur: Story = {
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: '',
+        validateOnBlur: null,
       },
       zodSchema: z.object({
         validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),

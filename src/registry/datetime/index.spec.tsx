@@ -26,16 +26,16 @@ afterEach(() => {
 });
 
 test.each([
-  ['', '2020-01-01', 'January 2020'],
-  ['', '2040-01-01', 'July 2026'],
-  ['2010-01-01', '', 'July 2026'],
-  ['2040-01-01', '', 'January 2040'],
+  [null, '2020-01-01', 'January 2020'],
+  [null, '2040-01-01', 'July 2026'],
+  ['2010-01-01', null, 'July 2026'],
+  ['2040-01-01', null, 'January 2040'],
   ['2010-01-01', '2020-01-01', 'January 2020'],
   ['2040-01-01', '2050-01-01', 'January 2040'],
   ['2010-01-01', '2050-01-01', 'July 2026'],
 ])(
   'initial date picker date uses closest available option (minDate: %s, maxDate: %s)',
-  async (minDate: string, maxDate: string, needle: string) => {
+  async (minDate: string | null, maxDate: string | null, needle: string) => {
     vi.setSystemTime(new Date(2026, 6, 1, 16));
     const onSubmit = vi.fn();
     const component: DateTimeComponentSchema = {
