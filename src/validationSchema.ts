@@ -1,5 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {setIn} from 'formik';
+import {getIn, setIn} from 'formik';
 import {useCallback, useRef} from 'react';
 import {z} from 'zod';
 import {ValidationError} from 'zod-formik-adapter';
@@ -15,6 +15,11 @@ type SchemaTree = {
 };
 
 export type SchemaRecord = Record<string, z.ZodFirstPartySchemaTypes>;
+
+type ResolvedSchema = {
+  schema: z.ZodSchema;
+  path: string;
+};
 
 /**
  * Process key-value pairs where keys are Formio component keys that may have dots in
@@ -102,6 +107,12 @@ export interface UseValidationSchema {
    * It is guaranteed to have a stable identity.
    */
   validate: (obj: JSONObject) => Promise<void>;
+  /**
+   * Validation callback to pass to Formik's `validationSchema` prop, along with the
+   * current field path and the whole object. Throws zod-formik-adapter's ValidationError
+   * when there are schema parsing errors.
+   */
+  validateAt: (path: string, obj: JSONObject) => Promise<void>;
 }
 
 export const useValidationSchema = (schema: Schema): UseValidationSchema => {
@@ -115,9 +126,17 @@ export const useValidationSchema = (schema: Schema): UseValidationSchema => {
     [ref]
   );
 
+  const _validateAt = useCallback(
+    async (path: string, obj: JSONObject): Promise<void> => {
+      await validateAt(ref.current, path, obj);
+    },
+    [ref]
+  );
+
   return {
     setSchema,
     validate: _validate,
+    validateAt: _validateAt,
   };
 };
 
@@ -135,7 +154,96 @@ export interface UseValidationSchemas {
    * It is guaranteed to have a stable identity.
    */
   validate: (index: number, obj: JSONObject) => Promise<void>;
+  /**
+   * Validation callback to pass to index prop, along with the current field path and
+   * the whole object. Throws zod-formik-adapter's ValidationError when there are schema
+   * parsing errors.
+   */
+  validateAt: (index: number, path: string, obj: JSONObject) => Promise<void>;
 }
+
+/**
+ *  Given a Formik path, find the deepest corresponding Zod schema.
+ */
+export const getSchemaAtPath = (schema: Schema, path: string): ResolvedSchema | undefined => {
+  const parts = path.split('.');
+  let current = schema;
+  let resolvedPath = '';
+
+  for (const part of parts) {
+    // formik knows about the deeper value, but we have reached the deepest known path
+    // that we can validate (for example for `selectboxes.['123']` the Zod schema
+    // validates selectboxes as a whole)
+    if (!(current instanceof z.ZodObject)) {
+      break;
+    }
+
+    const next = current.shape[part];
+
+    // Formik's path goes deeper than the validation schema. Keep the deepest schema
+    // that we successfully resolved.
+    if (next === undefined) {
+      break;
+    }
+
+    current = next;
+    resolvedPath = resolvedPath ? `${resolvedPath}.${part}` : part;
+  }
+
+  if (!resolvedPath) {
+    return undefined;
+  }
+
+  return {
+    schema: current,
+    path: resolvedPath,
+  };
+};
+
+/**
+ *  Given the complete Zod schema, a Formik field path, and the complete form values,
+ *  validate only the relevant field.
+ */
+export const validateAt = async <T = JSONObject>(
+  schema: Schema,
+  path: string,
+  obj: T
+): Promise<void> => {
+  const resolved = getSchemaAtPath(schema, path);
+
+  // field-level validation for this path is not possible
+  if (resolved === undefined) {
+    return;
+  }
+
+  const {schema: fieldSchema, path: resolvedPath} = resolved;
+  const value = getIn(obj, resolvedPath);
+
+  const result = await fieldSchema.safeParseAsync(value);
+
+  if (result.success) return;
+
+  const allErrors = result.error.errors;
+  const parentError = allErrors.find(err => err.path.length === 0);
+
+  const error = new ValidationError(result.error.message);
+
+  if (parentError) {
+    error.inner = [
+      {
+        message: parentError.message,
+        path: resolvedPath,
+      },
+    ];
+  } else {
+    error.inner = allErrors.map(err => ({
+      message: err.message,
+      path: resolvedPath + (err.path.length > 0 ? `.${err.path.join('.')}` : ''),
+    }));
+  }
+
+  throw error;
+};
 
 /**
  * Multi-schema variant of useValidationSchema, suitable for edit grids/array values.
@@ -160,9 +268,23 @@ export const useValidationSchemas = (schemas: Schema[]): UseValidationSchemas =>
     [ref]
   );
 
+  const _validateAt = useCallback(
+    async (index: number, path: string, obj: JSONObject): Promise<void> => {
+      const schema = ref.current[index];
+
+      if (schema === undefined) {
+        throw new Error(`No schema at index ${index}`);
+      }
+
+      await validateAt(schema, path, obj);
+    },
+    [ref]
+  );
+
   return {
     setSchema,
     validate: _validate,
+    validateAt: _validateAt,
   };
 };
 

@@ -18,7 +18,13 @@ import type {Errors, FormStateRef, FormioFormProps} from './FormioForm';
 
 type FormProps = Pick<
   FormioFormProps,
-  'components' | 'onChange' | 'onSubmit' | 'values' | 'children' | 'componentParameters'
+  | 'components'
+  | 'onChange'
+  | 'onSubmit'
+  | 'values'
+  | 'children'
+  | 'componentParameters'
+  | 'validatePluginCallback'
 >;
 
 const SubmitButton: React.FC = () => {
@@ -1440,5 +1446,85 @@ describe('Regressions', () => {
     await expect.element(screen.getByRole('button', {name: 'Submit'})).toHaveFocus();
 
     expect(touchedValue).toEqual({selectboxes: {'123': true}});
+  });
+
+  test('plugin validation between focus, blur and submit', async () => {
+    const validatePluginCallback = vi.fn().mockResolvedValue({
+      valid: true,
+    });
+
+    const onSubmit = vi.fn();
+
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'phoneNumber',
+            type: 'phoneNumber',
+            key: 'phoneNumber',
+            label: 'Phone number',
+            validate: {plugins: ['mock1']},
+          },
+          {
+            id: 'email',
+            type: 'email',
+            key: 'email',
+            label: 'Email',
+            validate: {plugins: ['mock1']},
+          },
+        ]}
+        onSubmit={onSubmit}
+        values={{phoneNumber: '3161234567', email: ''}}
+        validatePluginCallback={validatePluginCallback}
+      />
+    );
+
+    const phone = screen.getByRole('textbox', {
+      name: 'Phone number',
+    });
+
+    const email = screen.getByRole('textbox', {
+      name: 'Email',
+    });
+
+    const submit = screen.getByRole('button', {name: 'Submit'});
+
+    // change phone and blur it.
+    await phone.fill('12345678901');
+    await userEvent.click(email);
+
+    expect(validatePluginCallback).toHaveBeenCalledTimes(1);
+    expect(validatePluginCallback).toHaveBeenLastCalledWith('mock1', '12345678901');
+
+    // focus phone again and blur it again without changing the value.
+    // The cached result should be reused.
+    await userEvent.click(phone);
+    await userEvent.click(email);
+
+    expect(validatePluginCallback).toHaveBeenCalledTimes(1);
+
+    // submit with the same value.
+    // the submit-time validation should also use the cached result.
+    await userEvent.click(submit);
+
+    expect(validatePluginCallback).toHaveBeenCalledTimes(1);
+
+    // Change the value and submit again.
+    await phone.fill('3169876543');
+    await userEvent.click(email);
+
+    expect(validatePluginCallback).toHaveBeenCalledTimes(2);
+    expect(validatePluginCallback).toHaveBeenLastCalledWith('mock1', '3169876543');
+
+    await userEvent.click(submit);
+
+    // full-form validation sees the same value, so no additional
+    // plugin request should be made.
+    expect(validatePluginCallback).toHaveBeenCalledTimes(2);
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      phoneNumber: '3169876543',
+      email: '',
+    });
   });
 });
