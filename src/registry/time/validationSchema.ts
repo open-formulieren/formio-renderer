@@ -34,10 +34,10 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   const {key, validate = {}, multiple, errors, label} = componentDefinition;
   const {required, minTime, maxTime, plugins = []} = validate;
 
-  let schema: z.ZodFirstPartySchemaTypes = z
-    .string({
-      message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-    })
+  const requiredMessage = errors?.required || buildRequiredMessage(intl, {fieldLabel: label});
+
+  let innerSchema: z.ZodFirstPartySchemaTypes = z
+    .string({message: requiredMessage})
     .time({message: intl.formatMessage(TIME_STRUCTURE_MESSAGE)})
     .superRefine((value, ctx) => {
       const min = minTime ? parse(minTime, 'HH:mm', new Date()) : null;
@@ -86,8 +86,15 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
     });
 
   if (!required) {
-    schema = schema.or(z.literal('')).optional();
+    innerSchema = innerSchema.optional();
   }
+
+  let schema: z.ZodFirstPartySchemaTypes = z.preprocess((value: unknown) => {
+    // `null` is the empty time value, cast it to undefined as that's what zod expects
+    // for 'no value provided' to trigger the 'required' error
+    if (value === null) return undefined;
+    return value;
+  }, innerSchema);
 
   if (plugins.length) {
     schema = schema.superRefine(async (val, ctx) => {
@@ -103,9 +110,7 @@ const getValidationSchema: GetValidationSchema<TimeComponentSchema> = (
   if (multiple) {
     schema = z.array(schema);
     if (required) {
-      schema = schema.min(1, {
-        message: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
-      });
+      schema = schema.min(1, {message: requiredMessage});
     }
   }
 

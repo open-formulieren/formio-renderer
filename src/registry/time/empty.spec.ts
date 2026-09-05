@@ -36,13 +36,14 @@ test.each([
   [[], true],
   [[''], true],
   [['', ''], true],
+  [[null, null], true],
   [['      '], true],
   [[undefined], true],
   [[null], true],
   // Non-empty state
   [['foo'], false],
   [['foo', 'bar'], false],
-  [['', 'bar'], false],
+  [[null, 'bar'], false],
 ])(
   'Multiple timefield isEmpty compares against defined string with more then 0 characters state of value',
   (valueToTest: undefined | string | string[], expected: boolean) => {

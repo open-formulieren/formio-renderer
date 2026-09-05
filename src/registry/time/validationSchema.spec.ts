@@ -31,10 +31,7 @@ const buildValidationSchema = (component: TimeComponentSchema) => {
 };
 
 describe('time component validation', () => {
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=false (value: %s)', value => {
+  test.each([undefined, null])('validate.required=false (value: %s)', value => {
     const component: TimeComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
     const schema = buildValidationSchema(component);
 
@@ -43,10 +40,7 @@ describe('time component validation', () => {
     expect(success).toBe(true);
   });
 
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=true (value: %s)', value => {
+  test.each([undefined, null])('validate.required=true (value: %s)', value => {
     const component: TimeComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
@@ -68,7 +62,7 @@ describe('time component validation', () => {
     expect(result.error?.errors[0].message).toBe('Custom error message for required');
   });
 
-  test.each(['24:00', '23:60', '23:60', '1:1', '01:1', '1:01', 42, 12.34, null])(
+  test.each(['24:00', '23:60', '23:60', '1:1', '01:1', '1:01', 42, 12.34, ''])(
     'Invalid time: %s',
     value => {
       const schema = buildValidationSchema(BASE_COMPONENT);
@@ -170,11 +164,11 @@ describe('time component validation', () => {
 describe('time component with multiple: true', () => {
   test.each([
     [true, [], false],
-    [true, [''], false],
+    [true, [null], false],
     [true, [undefined], false],
     [true, ['13:52:00'], true],
     [false, [], true],
-    [false, [''], true],
+    [false, [null], true],
     [false, [undefined], true],
   ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
     const component: TimeComponentSchema = {
