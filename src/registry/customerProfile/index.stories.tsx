@@ -66,10 +66,12 @@ export const WithFAQItems: Story = {
       shouldUpdateCustomerData: false,
       faqItems: [
         {
+          id: '0',
           label: 'How do I fill in this field?',
           content: 'The values required to fill out this field can be retrieved from XYZ.',
         },
         {
+          id: '1',
           label: 'Is this field applicable to me?',
           content: 'This field is applicable if you are XYZ.',
         },
