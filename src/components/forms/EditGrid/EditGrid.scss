@@ -22,6 +22,8 @@
       display: flex;
       flex-direction: column;
       gap: var(--of-editgrid-item-gap);
+      hyphens: auto;
+      overflow-wrap: break-word; // see open-formulieren/open-forms#6523
     }
 
     border: var(--of-editgrid-item-border);
