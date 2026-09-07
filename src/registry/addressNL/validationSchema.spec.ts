@@ -98,7 +98,6 @@ describe('addressNL subfields validation', () => {
   });
 
   test.each([
-    {postcode: '9999 AA', houseNumber: ''},
     {postcode: '9999 AA', houseNumber: '9A'},
     {postcode: '9999 AA', houseNumber: 'A'},
     {postcode: '9999 AA', houseNumber: 'c'},

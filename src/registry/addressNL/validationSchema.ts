@@ -67,7 +67,7 @@ const buildPostcodeSchema = (
     });
   }
   if (!isRequired) {
-    postcodeSchema = postcodeSchema.optional();
+    postcodeSchema = z.union([z.literal(''), postcodeSchema]).optional();
   }
   return postcodeSchema;
 };
@@ -86,7 +86,7 @@ const buildHouseNumberSchema = (
       message: intl.formatMessage(HOUSE_NUMBER_INVALID_MESSAGE),
     });
   if (!isRequired) {
-    houseNumberSchema = houseNumberSchema.optional();
+    houseNumberSchema = z.union([z.literal(''), houseNumberSchema]).optional();
   }
   return houseNumberSchema;
 };
@@ -192,14 +192,20 @@ const getValidationSchema: GetValidationSchema<AddressNLComponentSchema> = (
       postcode: postcodeSchema,
       houseNumber: houseNumberSchema,
       houseLetter: z
-        .string()
-        .regex(/^[a-zA-Z]$/, {message: intl.formatMessage(HOUSE_LETTER_INVALID_MESSAGE)})
+        .union([
+          z.literal(''),
+          z
+            .string()
+            .regex(/^[a-zA-Z]$/, {message: intl.formatMessage(HOUSE_LETTER_INVALID_MESSAGE)}),
+        ])
         .optional(),
       houseNumberAddition: z
-        .string()
-        .regex(/^([a-zA-Z0-9]){1,4}$/, {
-          message: intl.formatMessage(HOUSE_NUMBER_ADDITION_INVALID_MESSAGE),
-        })
+        .union([
+          z.literal(''),
+          z.string().regex(/^([a-zA-Z0-9]){1,4}$/, {
+            message: intl.formatMessage(HOUSE_NUMBER_ADDITION_INVALID_MESSAGE),
+          }),
+        ])
         .optional(),
       streetName: streetNameSchema,
       city: citySchema,

@@ -1,7 +1,7 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import type {FormikErrors} from 'formik';
 import {Form, Formik, setIn, setNestedObjectValues, useFormikContext} from 'formik';
-import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
+import {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
 import {useIntl} from 'react-intl';
 import type {z} from 'zod';
 
@@ -152,11 +152,37 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
     const initialValues = extractInitialValues(components, getRegistryEntry);
     values = deepMergeValues(initialValues, values);
 
-    const {setSchema, validate} = useValidationSchema(
+    // we are using cached objects in order to to reduce the number of API calls made,
+    // even when a field value hasn't changed (in combination with the validateAt which
+    // runs the validation specifically for a certain field).
+    const pluginValidationCache = useRef(
+      new Map<string, ReturnType<Required<FormioFormProps>['validatePluginCallback']>>()
+    );
+
+    const cachedValidatePluginCallback = useCallback(
+      (
+        plugin: string,
+        value: JSONValue
+      ): ReturnType<Required<FormioFormProps>['validatePluginCallback']> => {
+        const key = `${plugin}:${JSON.stringify(value)}`;
+
+        const cached = pluginValidationCache.current.get(key);
+        if (cached) {
+          return cached;
+        }
+
+        const result = validatePluginCallback(plugin, value);
+        pluginValidationCache.current.set(key, result);
+        return result;
+      },
+      [validatePluginCallback]
+    );
+
+    const {setSchema, validate, validateAt} = useValidationSchema(
       buildValidationSchema(components, {
         intl,
         getRegistryEntry,
-        validatePlugins: validatePlugins.bind(null, validatePluginCallback),
+        validatePlugins: validatePlugins.bind(null, cachedValidatePluginCallback),
       })
     );
 
@@ -165,7 +191,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
         requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
         components={components}
         componentParameters={componentParameters}
-        validatePluginCallback={validatePluginCallback}
+        validatePluginCallback={cachedValidatePluginCallback}
       >
         <Formik<JSONObject>
           initialValues={values}
@@ -174,7 +200,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
           initialTouched={errors ? setNestedObjectValues(errors, true) : undefined}
           validateOnChange={false}
           validateOnBlur={false}
-          validationSchema={{validate}}
+          validationSchema={{validate, validateAt}}
           onSubmit={async values => {
             await onSubmit(values);
           }}
@@ -188,7 +214,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
               components={components}
               ref={ref}
               onValidationSchemaChange={setSchema}
-              validatePluginCallback={validatePluginCallback}
+              validatePluginCallback={cachedValidatePluginCallback}
             >
               {children}
             </InnerFormioForm>
