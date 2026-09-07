@@ -98,6 +98,5 @@ The table below describes which versions of the renderer map to version of the S
 | SDK version | Renderer version | End of life date |
 | ----------- | ---------------- | ---------------- |
 | main        | `2.x`            | -                |
-| 4.x         | `2.y`            | April 2027       |
+| 4.0.x       | `2.0.y`          | April 2027       |
 | 3.5.x       | `1.8.y`          | January 2027     |
-| 3.4.x       | `1.1.y`          | September 2026   |
