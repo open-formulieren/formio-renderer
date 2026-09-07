@@ -12,6 +12,7 @@ import {
   flip,
   offset,
   shift,
+  size,
   useDismiss,
   useFloating,
   useFocus,
@@ -39,7 +40,21 @@ const Tooltip: React.FC<TooltipProps> = ({children}) => {
   const {update, refs, elements, floatingStyles, context, placement} = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    middleware: [offset(10), flip(), shift()],
+    middleware: [
+      offset(10),
+      size({
+        padding: 10,
+        apply({availableWidth, elements}) {
+          Object.assign(elements.floating.style, {
+            // Use a dynamic tooltip width based on the available space, with a
+            // configurable maximum width.
+            maxInlineSize: `min(var(--of-tooltip-max-inline-size, 500px), ${availableWidth}px)`,
+          });
+        },
+      }),
+      flip(),
+      shift(),
+    ],
     placement: 'right',
   });
 
