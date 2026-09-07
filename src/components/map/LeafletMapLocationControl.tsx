@@ -1,12 +1,12 @@
 import {createControlComponent} from '@react-leaflet/core';
 import * as Leaflet from 'leaflet';
 import type {IntlShape} from 'react-intl';
-import {injectIntl} from 'react-intl';
+import {useIntl} from 'react-intl';
 
 import {locationControlMessages} from './translations';
 
 interface CreateLocationControlProps extends Leaflet.ControlOptions {
-  intl: IntlShape; // Injected by `injectIntl`
+  intl: IntlShape;
 }
 
 const createLocationControl = ({intl, position = 'bottomright'}: CreateLocationControlProps) => {
@@ -97,7 +97,13 @@ const createLocationControl = ({intl, position = 'bottomright'}: CreateLocationC
   return new LocationControl();
 };
 
-const LocationControl: React.FC<CreateLocationControlProps> =
-  createControlComponent(createLocationControl);
+const LocationControlWithIntl = createControlComponent<Leaflet.Control, CreateLocationControlProps>(
+  createLocationControl
+);
 
-export default injectIntl(LocationControl);
+const LocationControlComponent: React.FC<Leaflet.ControlOptions> = props => {
+  const intl = useIntl();
+  return <LocationControlWithIntl {...props} intl={intl} />;
+};
+
+export default LocationControlComponent;

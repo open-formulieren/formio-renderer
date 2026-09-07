@@ -8,6 +8,7 @@ export default {
   args: {
     items: [
       {
+        id: '0',
         label: 'Title text',
         content: 'HTML content inside the <strong>tooltip</strong>',
         openForms: {
@@ -20,6 +21,7 @@ export default {
         },
       },
       {
+        id: '1',
         label: 'Other title text',
         content: 'HTML content inside the <strong>tooltip</strong>',
         openForms: {
