@@ -8,7 +8,7 @@ import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
 import type {JSONObject} from '@/types';
 
-import {FormioEmail} from '../';
+import {FormioEmail} from './';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
