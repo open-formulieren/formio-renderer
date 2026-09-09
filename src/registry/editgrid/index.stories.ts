@@ -909,6 +909,44 @@ export const ValidateNoIncompleteItems: ValidationStory = {
   },
 };
 
+export const UnsavedRowsError: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'editgrid',
+      key: 'editgrid',
+      label: 'Repeating group',
+      disableAddingRemovingRows: false,
+      groupLabel: 'Nested item',
+      components: [
+        {
+          id: 'component2',
+          type: 'textfield',
+          key: 'textfield',
+          label: 'A simple textfield',
+        },
+      ],
+    } satisfies EditGridComponentSchema,
+    values: {
+      editgrid: [{textfield: 'First'}],
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const errorMessage = 'Save all rows before proceeding.';
+
+    // just opening the input should not trigger the error
+    await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+    expect(canvas.queryByText(errorMessage)).not.toBeInTheDocument();
+
+    // but submitting the form with expanded items should
+    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+    expect(await canvas.findByText(errorMessage)).toBeVisible();
+  },
+};
+
 export const ValidateRequired: ValidationStory = {
   ...BaseValidationStory,
   args: {
