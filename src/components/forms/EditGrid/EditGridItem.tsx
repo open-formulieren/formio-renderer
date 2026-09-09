@@ -86,7 +86,7 @@ interface WithIsolation<T> {
   /**
    * Callback invoked when confirming the item changes.
    */
-  onChange: (newValue: T) => void;
+  onChange: (newValue: T, shouldValidate?: boolean) => void;
   /**
    * Validate hook to pass to Formik's `validationSchema` prop. It must validate the
    * shape of a single item.
@@ -224,7 +224,7 @@ function EditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                         expandedPropertyPath,
                         true
                       );
-                      props.onChange(markedItem);
+                      props.onChange(markedItem, false);
                     }}
                     aria-label={intl.formatMessage(
                       {

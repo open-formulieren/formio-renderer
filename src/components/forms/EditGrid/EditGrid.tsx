@@ -204,7 +204,7 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                     getItemBody={props.getItemBody}
                     canEditItem={props.canEditItem}
                     saveItemLabel={props.saveItemLabel}
-                    onChange={async (newValue: T) => {
+                    onChange={async (newValue: T, shouldValidate: boolean = true) => {
                       // force the Formik state update so that the validate call sees
                       // the up-to-date state for a new validation run
                       flushSync(() => {
@@ -218,7 +218,9 @@ function EditGrid<T extends {[K in keyof T]: JSONValue} = JSONObject>({
                           setError(undefined);
                         }
                       });
-                      await validateField(name);
+                      if (shouldValidate) {
+                        await validateField(name);
+                      }
                     }}
                     canRemoveItem={canRemoveItem}
                     removeItemLabel={removeItemLabel}
@@ -314,7 +316,7 @@ type IsolatedEditGridItemProps<T> = {
    * - a nested object of errors, with errors for the nested fields of the item
    */
   errors: FormikErrors<T> | string | undefined;
-  onChange: (newValue: T) => void;
+  onChange: (newValue: T, shouldValidate: boolean) => void;
   onRemove: () => void;
 } & Pick<EditGridProps<T>, 'getItemHeading' | 'canRemoveItem' | 'removeItemLabel'> &
   Pick<WithIsolation<T>, 'canEditItem' | 'saveItemLabel' | 'getItemBody' | 'validate'>;
@@ -387,9 +389,9 @@ function IsolatedEditGridItem<T extends {[K in keyof T]: JSONValue} = JSONObject
         errors={prefixedErrors}
         itemError={typeof errors === 'string' ? errors : undefined}
         saveLabel={saveItemLabel}
-        onChange={(newValue: WrappedItemData<T>) => {
+        onChange={(newValue: WrappedItemData<T>, shouldValidate: boolean = true) => {
           const itemValue: T = getIn(newValue, namePrefix);
-          onChange(itemValue);
+          onChange(itemValue, shouldValidate);
         }}
         canRemove={canRemoveItem?.(values, index) ?? true}
         removeLabel={removeItemLabel}
