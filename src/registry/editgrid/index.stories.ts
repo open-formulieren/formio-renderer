@@ -890,6 +890,7 @@ export const ValidateNoIncompleteItems: ValidationStory = {
 
     await step('Submit attempt with item 1 expanded', async () => {
       await userEvent.click(canvas.getByRole('button', {name: 'Edit item 1'}));
+      await userEvent.type(canvas.getByLabelText('A simple textfield'), ' (modified)');
       await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
       expect(await canvas.findByText('Save all rows before proceeding.')).toBeVisible();
       expect(context.args.onSubmit).not.toHaveBeenCalled();
@@ -899,7 +900,10 @@ export const ValidateNoIncompleteItems: ValidationStory = {
       await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
       await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
       expect(context.args.onSubmit).toHaveBeenCalledWith({
-        editgrid: [{my: {textfield: 'Item 1 textfield'}}, {my: {textfield: 'Item 2 textfield'}}],
+        editgrid: [
+          {my: {textfield: 'Item 1 textfield (modified)'}},
+          {my: {textfield: 'Item 2 textfield'}},
+        ],
       });
     });
   },
