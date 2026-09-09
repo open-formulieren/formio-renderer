@@ -149,6 +149,9 @@ function ReactSelectWrapper<O extends BaseOption = BaseOption>({
       openMenuOnFocus={isReadOnly ? false : undefined}
       menuIsOpen={isReadOnly ? false : undefined}
       aria-readonly={isReadOnly}
+      placeholder={
+        <FormattedMessage description="Select placeholder message" defaultMessage="Select" />
+      }
       loadingMessage={() => (
         <FormattedMessage
           description="(Async) select options loading message"
