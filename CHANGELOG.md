@@ -1,5 +1,27 @@
 # Changes
 
+## 1.8.4 (2026-09-10)
+
+Bugfix release.
+
+- [`OF#6588`][OF#6588] Fixed `editgrid` items showing th 'You must save all rows' error too soon.
+- [`OF#6616`][OF#6616] Fixed the `select` component placeholder not being translated.
+- [`#386`][#386] Fixed tooltips with long content overflowing the page.
+- [`OF#6587`][OF#6587] Fixed components with async plugin validation making excessive API calls.
+- [`OF#6523`][OF#6523] Fixed long `editgrid` item content overflowing the container.
+- [`OF#6606`][OF#6606] Fixed `selectboxes` with (large) integer-like option values degrading the
+  performance, usually experienced as broken `npFamilyMembers` components.
+- [`OF#6605`][OF#6605] Fixed `editgrid` crash when it has `validate.maxLength` set and becomes
+  visible through logic.
+
+[OF#6588]: https://github.com/open-formulieren/open-forms/issues/6588
+[OF#6616]: https://github.com/open-formulieren/open-forms/issues/6616
+[#386]: https://github.com/open-formulieren/formio-renderer/issues/386
+[OF#6587]: https://github.com/open-formulieren/open-forms/issues/6587
+[OF#6523]: https://github.com/open-formulieren/open-forms/issues/6523
+[OF#6606]: https://github.com/open-formulieren/open-forms/issues/6606
+[OF#6605]: https://github.com/open-formulieren/open-forms/issues/6605
+
 ## 1.8.3 (2026-08-21)
 
 Bugfix release.
