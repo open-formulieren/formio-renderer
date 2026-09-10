@@ -389,6 +389,11 @@
     "description": "Datepicker: accessible calendar toggle label",
     "originalDefault": "Toggle calendar"
   },
+  "JyzCvQ": {
+    "defaultMessage": "Select",
+    "description": "Select placeholder message",
+    "originalDefault": "Select"
+  },
   "K+ha3D": {
     "defaultMessage": "Initials",
     "description": "Partners component: label for partners initials",
