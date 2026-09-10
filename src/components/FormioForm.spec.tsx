@@ -1527,4 +1527,28 @@ describe('Regressions', () => {
       email: '',
     });
   });
+
+  test('Required field validation shows correct error message', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'textfield',
+            type: 'textfield',
+            key: 'textfield',
+            label: 'Required field',
+            validate: {required: true},
+          },
+        ]}
+        onSubmit={onSubmit}
+      />
+    );
+
+    const field = screen.getByLabelText('Required field');
+    await field.click(); // focus field to make it touched
+    await userEvent.keyboard('{Tab}'); // shift focus and blur text field
+    const errorMessage = 'The required field Required field must be filled in.';
+    await expect.element(screen.getByText(errorMessage)).toBeVisible();
+  });
 });

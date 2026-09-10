@@ -1,5 +1,5 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
-import {getIn, setIn} from 'formik';
+import {getIn, prepareDataForValidation, setIn} from 'formik';
 import {useCallback, useRef} from 'react';
 import {z} from 'zod';
 import {ValidationError} from 'zod-formik-adapter';
@@ -128,7 +128,10 @@ export const useValidationSchema = (schema: Schema): UseValidationSchema => {
 
   const _validateAt = useCallback(
     async (path: string, obj: JSONObject): Promise<void> => {
-      await validateAt(ref.current, path, obj);
+      // mimick Formik's internal validation hook - prepareDataForValidation is not
+      // called for the validateAt branch
+      const normalizedValues = prepareDataForValidation(obj);
+      await validateAt(ref.current, path, normalizedValues);
     },
     [ref]
   );
