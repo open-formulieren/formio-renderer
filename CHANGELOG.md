@@ -1,5 +1,17 @@
 # Changes
 
+## 2.0.4 (2026-09-10)
+
+Hotfix release.
+
+- Fixed a regression introduced by the `OF#6587` patch.
+
+## 1.8.5 (2026-09-10)
+
+Hotfix release.
+
+- Fixed a regression introduced by the `OF#6587` patch.
+
 ## 2.0.3 (2026-09-10)
 
 Bugfix release.
