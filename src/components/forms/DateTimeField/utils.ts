@@ -34,7 +34,7 @@ export interface LocaleMeta {
  * If no date could be parsed (either because it's incomplete, wrong format or just nonsensical),
  * returns `null`.
  */
-export const parseDateTime = (value: string, meta?: LocaleMeta): Date | null => {
+export const parseDateTime = (value: string | null, meta?: LocaleMeta): Date | null => {
   if (!value) return null;
 
   // If meta is not passed, we parse it as an ISO-8601 string. Note that we do not use `parseISO`
