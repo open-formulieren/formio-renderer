@@ -14,6 +14,7 @@ import {SecondaryActionButton} from '@/components/Button';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
+import {VerificationStatus} from '@/components/forms/Verification';
 import Icon from '@/components/icons';
 
 import PortalUrl from './PortalUrl';
@@ -76,6 +77,7 @@ const OptionWithDescription: React.FC<OptionProps<Option>> = props => {
 interface DigitalAddressesSelectProps extends DigitalAddressSubFieldProps {
   onAddDigitalAddress: () => void;
   digitalAddressGroup: DigitalAddressGroup;
+  selectFieldProps?: Partial<React.ComponentProps<typeof Select>>;
 }
 
 const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
@@ -84,6 +86,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
   isRequired,
   digitalAddressGroup,
   onAddDigitalAddress,
+  selectFieldProps,
 }) => {
   const intl = useIntl();
   const {portalUrl} = useCustomerProfileComponentParameters();
@@ -123,6 +126,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
             />
           )
         }
+        {...selectFieldProps}
       />
       <ButtonGroup>
         <SecondaryActionButton onClick={onAddDigitalAddress}>
@@ -148,7 +152,7 @@ interface DigitalAddressTextfieldProps extends DigitalAddressSubFieldProps {
    * validation for the field as a whole on change.
    */
   profileFieldName: string;
-  textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
+  textFieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
 const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
@@ -157,7 +161,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   namePrefix,
   fieldName,
   isRequired,
-  textfieldProps,
+  textFieldProps,
 }) => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -196,7 +200,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
             />
           )
         }
-        {...textfieldProps}
+        {...textFieldProps}
       />
       {showPreferencesButton && (
         <>
@@ -262,7 +266,7 @@ interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
   /**
    * Additional props to pass to the text input.
    */
-  textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
+  textFieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
 /**
@@ -282,7 +286,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   type,
   isRequired,
   digitalAddressGroup,
-  textfieldProps,
+  textFieldProps,
 }) => {
   const intl = useIntl();
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
@@ -292,6 +296,19 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   const {setValue: setPreference} = getFieldHelpers<DigitalAddress['preferenceUpdate']>(
     `${namePrefix}.preferenceUpdate`
   );
+
+  const subFieldProps =
+    type === 'email'
+      ? {
+          children: (
+            <VerificationStatus
+              componentType={'customerProfile'}
+              prefixedComponentKey={fieldName}
+              name={profileFieldName}
+            />
+          ),
+        }
+      : undefined;
 
   // When the digital addresses are loaded, we check if we need to show a text input.
   const hasAddresses = !!digitalAddressGroup?.options?.length;
@@ -316,6 +333,9 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
       )}
     >
       {hasAddresses && useSelectInput ? (
+        // TODO: show verification status inside the select options?
+        // Selecting a option to determine if it is verified seems like a hassle
+        // with multiple options.
         <DigitalAddressesSelect
           type={type}
           fieldName={fieldName}
@@ -326,6 +346,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           }}
           digitalAddressGroup={digitalAddressGroup}
           isRequired={isRequired}
+          selectFieldProps={subFieldProps}
         />
       ) : (
         <DigitalAddressTextfield
@@ -334,7 +355,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           namePrefix={namePrefix}
           fieldName={fieldName}
           isRequired={isRequired}
-          textfieldProps={textfieldProps}
+          textFieldProps={{...subFieldProps, ...textFieldProps}}
         />
       )}
     </div>
@@ -344,7 +365,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
 export const EmailField: React.FC<DigitalAddressTypeFieldProps> = props => (
   <DigitalAddressField
     type="email"
-    textfieldProps={{
+    textFieldProps={{
       type: 'email',
       autoComplete: 'email',
     }}
@@ -355,7 +376,7 @@ export const EmailField: React.FC<DigitalAddressTypeFieldProps> = props => (
 export const PhoneNumberField: React.FC<DigitalAddressTypeFieldProps> = props => (
   <DigitalAddressField
     type="phoneNumber"
-    textfieldProps={{
+    textFieldProps={{
       pattern: '^[+0-9][- 0-9]+$',
       inputMode: 'tel',
       autoComplete: 'tel',

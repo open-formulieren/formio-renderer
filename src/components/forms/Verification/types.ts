@@ -1,3 +1,5 @@
+import type {CustomerProfileComponentSchema, EmailComponentSchema} from '@open-formulieren/types';
+
 export type Mode = 'sendCode' | 'enterCode';
 
 /**
@@ -50,3 +52,12 @@ export type VerifyCode = (
   email: string,
   code: string
 ) => Promise<VerificationResult>;
+
+export interface VerificationParameters {
+  requestVerificationCode: RequestVerificationCode;
+  verifyCode: VerifyCode;
+}
+
+export type verificationComponentType =
+  | EmailComponentSchema['type']
+  | CustomerProfileComponentSchema['type'];

@@ -1,10 +1,10 @@
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import React from 'react';
 
+import type {VerificationParameters} from './components/forms/Verification/types';
 import type {AddressNLParameters} from './registry/addressNL/types';
 import type {CosignOldParameters} from './registry/cosignOld/types';
 import type {CustomerProfileParameters} from './registry/customerProfile/types';
-import type {EmailParameters} from './registry/email/types';
 import type {FileParameters} from './registry/file/types';
 import type {MapParameters} from './registry/map/types';
 import type {ValidatePluginCallback} from './validationSchema';
@@ -27,7 +27,7 @@ export interface FormSettings {
     addressNL?: AddressNLParameters;
     coSign?: CosignOldParameters;
     customerProfile?: CustomerProfileParameters;
-    email?: EmailParameters;
+    email?: VerificationParameters;
     file?: FileParameters;
     map?: MapParameters;
   };
