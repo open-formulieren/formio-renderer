@@ -82,6 +82,10 @@ export interface SelectProps {
    * Custom component used for the select dropdown options.
    */
   optionComponent?: React.FC<OptionProps<Option>>;
+  /**
+   * Any additional content, positioned between the text field and the description (if any).
+   */
+  children?: React.ReactNode;
 }
 
 const EMPTY_MULTI_SELECT_VALUE: string[] = [];
@@ -99,6 +103,7 @@ const Select: React.FC<SelectProps> = ({
   tooltip,
   noOptionSelectedValue = undefined,
   optionComponent,
+  children,
   faqItems = [],
 }) => {
   name = useFieldConfig(name);
@@ -197,6 +202,7 @@ const Select: React.FC<SelectProps> = ({
           aria-invalid={invalid ? invalid : undefined}
         />
       </div>
+      {children}
       <FAQItems items={faqItems} />
     </FormField>
   );

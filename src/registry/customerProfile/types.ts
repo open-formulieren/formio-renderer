@@ -3,6 +3,8 @@ import type {
   DigitalAddressType,
 } from '@open-formulieren/types/dist/components/customerProfile';
 
+import type {VerificationParameters} from '@/components/forms/Verification/types';
+
 export type CustomerProfileData = DigitalAddress[];
 
 /**
@@ -35,7 +37,7 @@ export type DigitalAddressesResponseBody = DigitalAddressGroup[];
  * component won't automatically re-fetch the data.
  * https://github.com/open-formulieren/formio-renderer/pull/213#discussion_r2564636570
  */
-export interface CustomerProfileParameters {
+export interface CustomerProfileParameters extends VerificationParameters {
   fetchDigitalAddresses: (
     profileComponentName: string
   ) => Promise<DigitalAddressesResponseBody | null>;
