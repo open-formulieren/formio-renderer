@@ -20,7 +20,7 @@ import Icon from '@/components/icons';
 import PortalUrl from './PortalUrl';
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
 import {useCustomerProfileComponentParameters} from './hooks';
-import type {DigitalAddressGroup} from './types';
+import type {CommunicationPreference, DigitalAddressGroup} from './types';
 
 export const FIELD_LABELS = defineMessages<DigitalAddressType>({
   email: {
@@ -48,7 +48,7 @@ const getDigitalAddressOptions = (
   intl: IntlShape,
   digitalAddressGroup: DigitalAddressGroup
 ): Option[] =>
-  digitalAddressGroup.options.map(address => ({
+  digitalAddressGroup.options.map(({address}: CommunicationPreference) => ({
     label: address,
     value: address,
     description:
@@ -312,7 +312,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
 
   // When the digital addresses are loaded, we check if we need to show a text input.
   const hasAddresses = !!digitalAddressGroup?.options?.length;
-  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a === address);
+  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a.address === address);
   // If there are pre-populated addresses and the current address value is of a
   // pre-populated address, then we show a select input. Otherwise, we show a text input.
   const [useSelectInput, setUseSelectInput] = useState(hasAddresses && usesPrePopulatedAddress);

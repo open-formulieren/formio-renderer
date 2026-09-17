@@ -45,7 +45,8 @@ const VerificationStatus: React.FC<VerificationStatusProps> = ({
   const id = useId();
 
   const {value: email = ''} = getFieldProps<string | undefined>(prefixedComponentKey);
-  const isVerified = verificationStatus?.[prefixedComponentKey]?.[email];
+  const statusPrefix = componentType === 'customerProfile' ? name : prefixedComponentKey;
+  const isVerified = verificationStatus?.[statusPrefix]?.[email];
 
   if (isVerified) {
     return (

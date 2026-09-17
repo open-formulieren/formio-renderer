@@ -7,6 +7,11 @@ import type {VerificationParameters} from '@/components/forms/Verification/types
 
 export type CustomerProfileData = DigitalAddress[];
 
+export interface CommunicationPreference {
+  address: string;
+  verificationDate: string | null;
+}
+
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the
  * CustomerProfile component.
@@ -20,7 +25,7 @@ export type FormValues = {
 
 export interface DigitalAddressGroup {
   type: DigitalAddressType;
-  options: string[];
+  options: CommunicationPreference[];
   preferred?: string;
 }
 

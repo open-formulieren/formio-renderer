@@ -3,10 +3,23 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import selectEvent from 'react-select-event';
 import {expect, userEvent, within} from 'storybook/test';
 
+import type {VerificationParameters} from '@/components/forms/Verification/types';
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {sleep} from '@/tests/utils';
 
 import {FormioCustomerProfile} from './index';
+
+const defaultVerificationParameters = {
+  requestVerificationCode: async () => {
+    await sleep(100);
+    return {success: true};
+  },
+  verifyCode: async () => {
+    await sleep(100);
+    return {success: true};
+  },
+} satisfies VerificationParameters;
 
 export default {
   title: 'Component registry / special / profile / pre-populated',
@@ -33,11 +46,12 @@ export const WithOnePrepopulatedAddress: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com']},
-            {type: 'phoneNumber', options: ['0612345678']},
+            {type: 'email', options: [{address: 'foo@test.com', verificationDate: null}]},
+            {type: 'phoneNumber', options: [{address: '0612345678', verificationDate: null}]},
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -51,8 +65,11 @@ export const WithOnePrepopulatedAddress: Story = {
     expect(emailField).toHaveRole('combobox');
     expect(phoneNumberField).toHaveRole('combobox');
 
-    // The fetched addresses are displayed in the dropdowns
-    expect(canvas.getByText('foo@test.com')).toBeVisible();
+    // The fetched addresses are displayed in the dropdowns.
+    // Note that the email is also shown in the verification modal, hence the
+    // first item is selected (which should be the email input).
+    expect(canvas.getAllByText('foo@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('foo@test.com')[1]).not.toBeVisible();
     expect(canvas.getByText('0612345678')).toBeVisible();
 
     // Because only one email and phone number where returned,
@@ -69,11 +86,19 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'bar@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
+            },
             {type: 'phoneNumber', options: []},
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -88,8 +113,11 @@ export const WithOneEmptyAndOnePrepopulatedAddressType: Story = {
     expect(phoneNumberField).toHaveRole('textbox');
 
     // The first email address should be selected in the dropdown.
-    expect(canvas.getByText('foo@test.com')).toBeVisible();
-    expect(canvas.getByText('foo@test.com')).not.toHaveRole('option');
+    // Note that the email is also shown in the verification modal, hence the
+    // first item is selected (which should be the email input).
+    expect(canvas.getAllByText('foo@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('foo@test.com')[0]).not.toHaveRole('option');
+    expect(canvas.getAllByText('foo@test.com')[1]).not.toBeVisible();
     // The phone number field should be empty.
     expect(phoneNumberField).toHaveValue('');
 
@@ -111,11 +139,26 @@ export const WithPrepopulatedDigitalAddresses: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', options: ['0612345678', '0687654321', '0612387645']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'bar@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
+            },
+            {
+              type: 'phoneNumber',
+              options: [
+                {address: '0612345678', verificationDate: null},
+                {address: '0687654321', verificationDate: null},
+                {address: '0612387645', verificationDate: null},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -131,8 +174,9 @@ export const WithPrepopulatedDigitalAddresses: Story = {
 
     // The first fetched addresses are displayed in the dropdowns.
     // Verify that we don't target combobox options.
-    expect(canvas.getByText('foo@test.com')).toBeVisible();
-    expect(canvas.getByText('foo@test.com')).not.toHaveRole('option');
+    expect(canvas.getAllByText('foo@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('foo@test.com')[0]).not.toHaveRole('option');
+    expect(canvas.getAllByText('foo@test.com')[1]).not.toBeVisible();
     expect(canvas.getByText('0612345678')).toBeVisible();
     expect(canvas.getByText('0612345678')).not.toHaveRole('option');
 
@@ -154,17 +198,26 @@ export const WithPreferredDigitalAddresses: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              options: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'preferred.long.email.address@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
               preferred: 'preferred.long.email.address@test.com',
             },
             {
               type: 'phoneNumber',
-              options: ['0612345678', '0687654321', '0612387645'],
+              options: [
+                {address: '0612345678', verificationDate: null},
+                {address: '0687654321', verificationDate: null},
+                {address: '0612387645', verificationDate: null},
+              ],
               preferred: '0612387645',
             },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -180,8 +233,11 @@ export const WithPreferredDigitalAddresses: Story = {
 
     // Both preferred addresses are selected in the dropdowns.
     // Verify that we don't target combobox options.
-    expect(canvas.getByText('preferred.long.email.address@test.com')).toBeVisible();
-    expect(canvas.getByText('preferred.long.email.address@test.com')).not.toHaveRole('option');
+    expect(canvas.getAllByText('preferred.long.email.address@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('preferred.long.email.address@test.com')[0]).not.toHaveRole(
+      'option'
+    );
+    expect(canvas.getAllByText('preferred.long.email.address@test.com')[1]).not.toBeVisible();
     expect(canvas.getByText('0612387645')).toBeVisible();
     expect(canvas.getByText('0612387645')).not.toHaveRole('option');
 
@@ -219,15 +275,24 @@ export const WithoutPortalUrl: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              options: ['foo@test.com', 'preferred.long.email.address@test.com', 'baz@test.com'],
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'preferred.long.email.address@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
             },
             {
               type: 'phoneNumber',
-              options: ['0612345678', '0687654321', '0612387645'],
+              options: [
+                {address: '0612345678', verificationDate: null},
+                {address: '0687654321', verificationDate: null},
+                {address: '0612387645', verificationDate: null},
+              ],
             },
           ],
           portalUrl: '',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -269,11 +334,15 @@ export const ChangeSelection: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              options: ['foo@test.com', 'baz@test.com'],
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
             },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -284,13 +353,15 @@ export const ChangeSelection: Story = {
 
     // The email field should be displayed as a combobox, and the first address selected
     expect(emailField).toHaveRole('combobox');
-    expect(canvas.getByText('foo@test.com')).toBeVisible();
-    expect(canvas.getByText('foo@test.com')).not.toHaveRole('option');
+    expect(canvas.getAllByText('foo@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('foo@test.com')[0]).not.toHaveRole('option');
+    expect(canvas.getAllByText('foo@test.com')[1]).not.toBeVisible();
 
     // eslint-disable-next-line import/no-named-as-default-member
     await selectEvent.select(emailField, 'baz@test.com');
-    expect(canvas.getByText('baz@test.com')).toBeVisible();
-    expect(canvas.getByText('baz@test.com')).not.toHaveRole('option');
+    expect(canvas.getAllByText('baz@test.com')[0]).toBeVisible();
+    expect(canvas.getAllByText('baz@test.com')[0]).not.toHaveRole('option');
+    expect(canvas.getAllByText('baz@test.com')[1]).not.toBeVisible();
   },
 };
 
@@ -313,11 +384,15 @@ export const AddNewAddress: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              options: ['foo@test.com', 'baz@test.com'],
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
             },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -402,11 +477,12 @@ export const PrepopulateDoesNotChangeUserData: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['fetched@mail.com']},
-            {type: 'phoneNumber', options: ['0612345678']},
+            {type: 'email', options: [{address: 'fetched@mail.com', verificationDate: null}]},
+            {type: 'phoneNumber', options: [{address: '0612345678', verificationDate: null}]},
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -462,13 +538,23 @@ export const PrepopulateWithUserDataIncludedInPopulation: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'email',
-              options: ['initial@mail.com', 'preferred@mail.com'],
+              options: [
+                {address: 'initial@mail.com', verificationDate: null},
+                {address: 'preferred@mail.com', verificationDate: null},
+              ],
               preferred: 'preferred@mail.com',
             },
-            {type: 'phoneNumber', options: ['0612345678', '0631313131']},
+            {
+              type: 'phoneNumber',
+              options: [
+                {address: '0612345678', verificationDate: null},
+                {address: '0631313131', verificationDate: null},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -514,11 +600,12 @@ export const PrepopulateReturnsUnsupportedAddressTypes: Story = {
           fetchDigitalAddresses: async () => [
             {
               type: 'phoneNumber',
-              options: ['06 123 456 78'],
+              options: [{address: '06 123 456 78', verificationDate: null}],
             },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -557,6 +644,7 @@ export const LookupFailureSimulation: Story = {
           fetchDigitalAddresses: async () => null,
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...defaultVerificationParameters,
         },
       } satisfies FormSettings['componentParameters'],
     },
