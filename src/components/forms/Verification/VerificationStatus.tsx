@@ -9,7 +9,7 @@ import Icon from '@/components/icons';
 import VerificationModal from './VerificationModal';
 import './VerificationStatus.scss';
 import {useVerificationStatus} from './hooks';
-import type {EmailVerificationStatus, verificationComponentType} from './types';
+import type {EmailVerificationStatus} from './types';
 
 export interface VerificationStatusProps {
   /**
@@ -21,10 +21,6 @@ export interface VerificationStatusProps {
    * Name of the form field to look up the current value from the Formik state.
    */
   name: string;
-  /**
-   * Component type that is being used for verification.
-   */
-  componentType: verificationComponentType;
 }
 
 interface VerificationStatusState {
@@ -34,17 +30,13 @@ interface VerificationStatusState {
 /**
  * Display the verification status and interaction elements to start email verification.
  */
-const VerificationStatus: React.FC<VerificationStatusProps> = ({
-  prefixedComponentKey,
-  name,
-  componentType,
-}) => {
+const VerificationStatus: React.FC<VerificationStatusProps> = ({prefixedComponentKey, name}) => {
   const {getFieldProps, setStatus, status} = useFormikContext<Partial<VerificationStatusState>>();
   const verificationStatus = useVerificationStatus();
   const [modalOpen, setIsModalOpen] = useState<boolean>(false);
   const id = useId();
 
-  const {value: email = ''} = getFieldProps<string | undefined>(prefixedComponentKey);
+  const {value: email = ''} = getFieldProps<string | undefined>(name);
   const isVerified = verificationStatus?.[prefixedComponentKey]?.[email];
 
   if (isVerified) {
@@ -95,10 +87,9 @@ const VerificationStatus: React.FC<VerificationStatusProps> = ({
       <VerificationModal
         isOpen={modalOpen}
         closeModal={() => setIsModalOpen(false)}
-        // TODO - update the backend to handle prefixes correctly
-        componentKey={name}
+        // TODO - add test that verifies prefixed keys are supported now
+        componentKey={prefixedComponentKey}
         emailAddress={email}
-        componentType={componentType}
         onVerified={() => {
           const newVerificationStatus = {...verificationStatus};
           if (!newVerificationStatus[prefixedComponentKey])

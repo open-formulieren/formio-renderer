@@ -3,9 +3,12 @@ import type {
   DigitalAddressType,
 } from '@open-formulieren/types/dist/components/customerProfile';
 
-import type {VerificationParameters} from '@/components/forms/Verification/types';
-
 export type CustomerProfileData = DigitalAddress[];
+
+export interface CommunicationPreference {
+  address: string;
+  isVerified: boolean;
+}
 
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the
@@ -20,7 +23,7 @@ export type FormValues = {
 
 export interface DigitalAddressGroup {
   type: DigitalAddressType;
-  options: string[];
+  options: CommunicationPreference[];
   preferred?: string;
 }
 
@@ -37,7 +40,7 @@ export type DigitalAddressesResponseBody = DigitalAddressGroup[];
  * component won't automatically re-fetch the data.
  * https://github.com/open-formulieren/formio-renderer/pull/213#discussion_r2564636570
  */
-export interface CustomerProfileParameters extends VerificationParameters {
+export interface CustomerProfileParameters {
   fetchDigitalAddresses: (
     profileComponentName: string
   ) => Promise<DigitalAddressesResponseBody | null>;

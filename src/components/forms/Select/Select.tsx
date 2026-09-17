@@ -83,7 +83,7 @@ export interface SelectProps {
    */
   optionComponent?: React.FC<OptionProps<Option>>;
   /**
-   * Any additional content, positioned between the text field and the description (if any).
+   * Any additional content, positioned below the select.
    */
   children?: React.ReactNode;
 }

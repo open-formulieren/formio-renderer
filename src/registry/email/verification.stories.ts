@@ -3,14 +3,12 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, waitFor, waitForElementToBeRemoved, within} from 'storybook/test';
 
 import type {FormioFormProps} from '@/components/FormioForm';
-import type {FormSettings} from '@/context';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {sleep} from '@/tests/utils';
 import type {JSONObject} from '@/types';
 
 import {FormioEmail} from './';
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   title: 'Component registry / basic / email / verification',
@@ -35,18 +33,16 @@ export default {
       },
     },
     formSettings: {
-      componentParameters: {
-        email: {
-          requestVerificationCode: async () => {
-            await sleep(100);
-            return {success: true};
-          },
-          verifyCode: async () => {
-            await sleep(100);
-            return {success: true};
-          },
+      emailVerificationParameters: {
+        requestVerificationCode: async () => {
+          await sleep(100);
+          return {success: true};
         },
-      } satisfies FormSettings['componentParameters'],
+        verifyCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+      },
     },
   },
 } satisfies Meta<typeof FormioEmail>;
@@ -183,16 +179,14 @@ const BaseErrorFlowStory: Story = {
       },
     },
     formSettings: {
-      componentParameters: {
-        email: {
-          requestVerificationCode: async () => {
-            return {success: false, errorMessage: 'Simulated server error.'};
-          },
-          verifyCode: async () => {
-            return {success: false, errors: {code: 'Simulated invalid code.'}};
-          },
+      emailVerificationParameters: {
+        requestVerificationCode: async () => {
+          return {success: false, errorMessage: 'Simulated server error.'};
         },
-      } satisfies FormSettings['componentParameters'],
+        verifyCode: async () => {
+          return {success: false, errors: {code: 'Simulated invalid code.'}};
+        },
+      },
     },
   },
 };
@@ -284,6 +278,18 @@ export const InEditGrid: StoryObj<InEditGridArgs> = {
   parameters: {
     formik: {
       disable: true,
+    },
+    formSettings: {
+      emailVerificationParameters: {
+        requestVerificationCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+        verifyCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+      },
     },
   },
   args: {

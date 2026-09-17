@@ -55,11 +55,7 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
           afterInput={controls}
         >
           {isVerificationRequired && (
-            <VerificationStatus
-              componentType={'email'}
-              prefixedComponentKey={prefixedKey}
-              name={name}
-            />
+            <VerificationStatus prefixedComponentKey={prefixedKey} name={name} />
           )}
         </TextField>
       )}
@@ -67,11 +63,7 @@ export const FormioEmail: React.FC<FormioEmailProps> = ({componentDefinition}) =
   ) : (
     <TextField {...sharedProps} type="email" autoComplete={autocomplete}>
       {isVerificationRequired && (
-        <VerificationStatus
-          componentType={'email'}
-          prefixedComponentKey={prefixedKey}
-          name={prefixedKey}
-        />
+        <VerificationStatus prefixedComponentKey={prefixedKey} name={prefixedKey} />
       )}
     </TextField>
   );
