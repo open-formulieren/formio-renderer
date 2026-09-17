@@ -6,11 +6,10 @@ import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {sleep} from '@/tests/utils';
 import type {JSONObject} from '@/types';
 
-import {FormioEmail} from '../';
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+import {FormioEmail} from './';
 
 export default {
   title: 'Component registry / basic / email / verification',

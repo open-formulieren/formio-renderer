@@ -6,6 +6,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
+import {sleep} from '@/tests/utils';
 
 import {FormioCustomerProfile} from './index';
 
@@ -47,6 +48,14 @@ const BaseValidationStory: ValidationStory = {
           fetchDigitalAddresses: async () => [],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          requestVerificationCode: async () => {
+            await sleep(100);
+            return {success: true};
+          },
+          verifyCode: async () => {
+            await sleep(100);
+            return {success: true};
+          },
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -105,11 +114,32 @@ export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressT
         componentParameters: {
           customerProfile: {
             fetchDigitalAddresses: async () => [
-              {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-              {type: 'phoneNumber', options: ['0612345678', '0612348765']},
+              {
+                type: 'email',
+                options: [
+                  {address: 'foo@test.com', verificationDate: null},
+                  {address: 'bar@test.com', verificationDate: null},
+                  {address: 'baz@test.com', verificationDate: null},
+                ],
+              },
+              {
+                type: 'phoneNumber',
+                options: [
+                  {address: '0612345678', verificationDate: null},
+                  {address: '0612348765', verificationDate: null},
+                ],
+              },
             ],
             portalUrl: 'https://example.com',
             updatePreferencesModalEnabled: true,
+            requestVerificationCode: async () => {
+              await sleep(100);
+              return {success: true};
+            },
+            verifyCode: async () => {
+              await sleep(100);
+              return {success: true};
+            },
           },
         } satisfies FormSettings['componentParameters'],
       },

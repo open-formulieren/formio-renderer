@@ -3,10 +3,12 @@ import type {DigitalAddress} from '@open-formulieren/types/dist/components/custo
 import {useFormikContext} from 'formik';
 import {useAsync} from 'react-use';
 
+import {useVerificationStatus} from '@/components/forms/Verification/hooks';
+import type {EmailVerificationStatus} from '@/components/forms/Verification/types';
 import {useFormSettings} from '@/hooks';
 import type {JSONObject} from '@/types';
 
-import type {DigitalAddressesResponseBody} from './types';
+import type {CommunicationPreference, DigitalAddressesResponseBody} from './types';
 
 interface UseDigitalAddresses {
   digitalAddresses: DigitalAddressesResponseBody | undefined;
@@ -17,8 +19,9 @@ export const useDigitalAddresses = (
   profileComponentName: string,
   digitalAddressTypes: CustomerProfileComponentSchema['digitalAddressTypes']
 ): UseDigitalAddresses => {
-  const {getFieldHelpers, getFieldMeta} = useFormikContext<JSONObject>();
+  const {getFieldHelpers, getFieldMeta, setStatus, status} = useFormikContext<JSONObject>();
   const {fetchDigitalAddresses} = useCustomerProfileComponentParameters();
+  const verificationStatus = useVerificationStatus();
 
   const {value: digitalAddresses, loading} = useAsync(async () => {
     const result = await fetchDigitalAddresses(profileComponentName);
@@ -37,13 +40,29 @@ export const useDigitalAddresses = (
       const addressData = result.find(address => address.type === type);
       // The default value is the preferred address or the first address in the list.
       // If neither is present, the default value is an empty string.
-      const defaultAddress = addressData?.preferred || addressData?.options?.[0] || '';
+      const defaultAddress = addressData?.preferred || addressData?.options?.[0]?.address || '';
 
       setValue({
         address: defaultAddress,
         type: type,
         preferenceUpdate: defaultAddress === '' ? 'useOnlyOnce' : undefined,
       });
+
+      // Only email preferences should update the verification state
+      if (type !== 'email') return;
+
+      const newVerificationState = addressData?.options?.reduce<EmailVerificationStatus>(
+        (
+          verificationState: EmailVerificationStatus,
+          addressEntry: CommunicationPreference
+        ): EmailVerificationStatus => {
+          const currentProfileComponentState = verificationState[profileComponentName] ?? {};
+          currentProfileComponentState[addressEntry.address] = !!addressEntry.verificationDate;
+          return {...verificationState, [profileComponentName]: currentProfileComponentState};
+        },
+        verificationStatus
+      );
+      setStatus({...status, emailVerification: newVerificationState});
     });
 
     return result;

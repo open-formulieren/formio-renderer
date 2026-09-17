@@ -8,6 +8,7 @@ import Modal from '@/components/modal';
 import {useFormSettings} from '@/hooks';
 
 import VerificationForm from './VerificationForm';
+import type {verificationComponentType} from './types';
 
 export interface VerificationModalProps {
   /**
@@ -37,6 +38,11 @@ export interface VerificationModalProps {
    * Callback to invoke when the email was successfully verified.
    */
   onVerified: () => void;
+  /**
+   * Component type that is being used for verification. This is used to determine
+   * the correct of componentParameters that should be used for verification.
+   */
+  componentType: verificationComponentType;
 }
 
 /**
@@ -53,17 +59,18 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   componentKey,
   emailAddress,
   onVerified,
+  componentType,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const {componentParameters} = useFormSettings();
-  if (!componentParameters?.email) {
+  if (!componentParameters?.[componentType]) {
     throw new Error(
       `The 'email verification' feature can only be used if verification parameters
       are provided. Check that the componentParameters are passed correctly in the
       FormioForm call.`
     );
   }
-  const {requestVerificationCode, verifyCode} = componentParameters.email;
+  const {requestVerificationCode, verifyCode} = componentParameters[componentType];
   return (
     <Modal
       title={

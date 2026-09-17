@@ -2,12 +2,43 @@ import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, within} from 'storybook/test';
 
+import type {VerificationParameters} from '@/components/forms/Verification/types';
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {sleep} from '@/tests/utils';
 
 import ValueDisplay from './ValueDisplay';
 import {FormioCustomerProfile} from './index';
 import type {CustomerProfileData} from './types';
+
+const verificationParameterProps: Pick<
+  VerificationParameters,
+  'requestVerificationCode' | 'verifyCode'
+> = {
+  requestVerificationCode: async () => {
+    await sleep(100);
+    return {success: true};
+  },
+  verifyCode: async () => {
+    await sleep(100);
+    return {success: true};
+  },
+};
+
+const defaultParameters = {
+  parameters: {
+    formSettings: {
+      componentParameters: {
+        customerProfile: {
+          fetchDigitalAddresses: async () => [],
+          portalUrl: 'https://example.com',
+          updatePreferencesModalEnabled: true,
+          ...verificationParameterProps,
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+};
 
 export default {
   title: 'Component registry / special / profile / presentation',
@@ -23,17 +54,7 @@ export default {
       shouldUpdateCustomerData: false,
     },
   },
-  parameters: {
-    formSettings: {
-      componentParameters: {
-        customerProfile: {
-          fetchDigitalAddresses: async () => [],
-          portalUrl: 'https://example.com',
-          updatePreferencesModalEnabled: true,
-        },
-      } satisfies FormSettings['componentParameters'],
-    },
-  },
+  ...defaultParameters,
 } satisfies Meta<typeof FormioCustomerProfile>;
 
 type Story = StoryObj<typeof FormioCustomerProfile>;
@@ -101,6 +122,7 @@ export const WithInitialValue: Story = {
           },
         ],
       },
+      ...defaultParameters.parameters,
     },
   },
   play: async ({canvasElement}) => {
@@ -137,6 +159,7 @@ export const OpenPreferencesModal: Story = {
       digitalAddressTypes: ['email'],
       shouldUpdateCustomerData: false,
     },
+    ...defaultParameters,
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
@@ -198,6 +221,7 @@ export const OpenPreferencesModalWithInitialValue: Story = {
         ],
       },
     },
+    ...defaultParameters.parameters,
   },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
@@ -248,6 +272,7 @@ export const OpenPreferencesModalWithoutPortalUrl: Story = {
           fetchDigitalAddresses: async () => [],
           portalUrl: '',
           updatePreferencesModalEnabled: true,
+          ...verificationParameterProps,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -295,6 +320,7 @@ export const WithUpdatePreferencesModalEnabledSetToFalse: Story = {
           fetchDigitalAddresses: async () => [],
           portalUrl: '',
           updatePreferencesModalEnabled: false,
+          ...verificationParameterProps,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -319,6 +345,7 @@ export const WithComponentValidationError: Story = {
         customerProfile: 'Generic error message from component validation.',
       },
     },
+    ...defaultParameters.parameters,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -348,6 +375,7 @@ export const WithDigitalAddressValidationError: Story = {
         customerProfile: [{address: 'Generic error message from digital address validation.'}],
       },
     },
+    ...defaultParameters.parameters,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
@@ -380,11 +408,25 @@ export const RequiredWithPrepopulatedAddresses: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', options: ['0612345678', '0612387654']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'bar@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
+            },
+            {
+              type: 'phoneNumber',
+              options: [
+                {address: '0612345678', verificationDate: null},
+                {address: '0612387654', verificationDate: null},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...verificationParameterProps,
         },
       } satisfies FormSettings['componentParameters'],
     },
@@ -410,10 +452,18 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', verificationDate: null},
+                {address: 'bar@test.com', verificationDate: null},
+                {address: 'baz@test.com', verificationDate: null},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
+          ...verificationParameterProps,
         },
       } satisfies FormSettings['componentParameters'],
     },
