@@ -1,4 +1,5 @@
 import type {FAQItem} from '@open-formulieren/types';
+import type {DateValue} from '@open-formulieren/types/dist/components/date';
 import {FormField} from '@utrecht/form-field-react';
 import {useFormikContext} from 'formik';
 import {useId} from 'react';
@@ -131,7 +132,7 @@ const DateField: React.FC<DateFieldProps> = ({
   const id = useId();
   const {getFieldMeta} = useFormikContext();
   name = useFieldConfig(name);
-  const {touched} = getFieldMeta(name);
+  const {touched} = getFieldMeta<DateValue>(name);
   const error = useFieldError(name, isMultiValue);
 
   const isInvalid = touched && !!error;

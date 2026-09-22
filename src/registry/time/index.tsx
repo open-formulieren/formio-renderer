@@ -1,4 +1,5 @@
 import type {TimeComponentSchema} from '@open-formulieren/types';
+import type {TimeValue} from '@open-formulieren/types/dist/components/time';
 
 import {TextField} from '@/components/forms';
 import MultiField from '@/components/forms/MultiField';
@@ -28,9 +29,9 @@ export const TimeField: React.FC<TimeFieldProps> = ({componentDefinition}) => {
     faqItems,
   };
   return componentDefinition.multiple ? (
-    <MultiField<string>
+    <MultiField<TimeValue>
       {...sharedProps}
-      newItemValue=""
+      newItemValue={null}
       renderField={({name, label, controls, isReadOnly}) => (
         <TextField
           name={name}

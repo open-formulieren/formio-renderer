@@ -1,3 +1,4 @@
+import type {DateValue} from '@open-formulieren/types/dist/components/date';
 import {Textbox} from '@utrecht/textbox-react';
 import {clsx} from 'clsx';
 import {formatISO} from 'date-fns';
@@ -116,7 +117,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   const {formatDate, formatMessage} = useIntl();
   const {validateField} = useFormikContext();
   const [{value, onBlur, onChange}, {error, touched}, {setTouched, setValue}] =
-    useField<string>(name);
+    useField<DateValue>(name);
   const dateLocaleMeta = useDateLocaleMeta();
 
   const placeholderMap = {
@@ -140,7 +141,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           month: 'numeric',
           day: 'numeric',
         })
-      : value;
+      : (value ?? '');
 
   const calendarEvents: React.ComponentProps<typeof DatePickerCalendar>['events'] = disabledDates
     ? disabledDates.map(date => ({

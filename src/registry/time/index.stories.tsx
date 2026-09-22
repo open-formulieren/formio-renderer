@@ -30,7 +30,7 @@ export const MinimalConfiguration: Story = {
     formik: {
       initialValues: {
         my: {
-          time: '',
+          time: null,
         },
       },
     },
@@ -62,7 +62,7 @@ export const WithFAQItems: Story = {
     formik: {
       initialValues: {
         my: {
-          time: '',
+          time: null,
         },
       },
     },
@@ -83,7 +83,7 @@ export const WithTooltip: Story = {
     formik: {
       initialValues: {
         my: {
-          time: '',
+          time: null,
         },
       },
     },

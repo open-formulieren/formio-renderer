@@ -1,8 +1,9 @@
 import type {TimeComponentSchema} from '@open-formulieren/types';
+import type {TimeValue} from '@open-formulieren/types/dist/components/time';
 
 import type {GetInitialValues} from '@/registry/types';
 
-const getInitialValues: GetInitialValues<TimeComponentSchema, string | string[]> = ({
+const getInitialValues: GetInitialValues<TimeComponentSchema, TimeValue | TimeValue[]> = ({
   key,
   defaultValue,
   multiple = false,
@@ -10,13 +11,13 @@ const getInitialValues: GetInitialValues<TimeComponentSchema, string | string[]>
   // if no default value is explicitly specified, return the empty value, depending on
   // whether it's multiple false/true on this component.
   if (defaultValue === undefined) {
-    defaultValue = multiple ? [] : '';
+    defaultValue = multiple ? [] : null;
   }
 
   // ensure there's always at least one item to start with (matches Formio.js latest
   // behaviour, where the last item in the default value cannot be removed.
-  if (multiple && defaultValue.length === 0) {
-    defaultValue = [''];
+  if (multiple && Array.isArray(defaultValue) && defaultValue.length === 0) {
+    defaultValue = [null];
   }
 
   return {[key]: defaultValue};

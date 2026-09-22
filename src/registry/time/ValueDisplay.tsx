@@ -1,4 +1,5 @@
 import type {TimeComponentSchema} from '@open-formulieren/types';
+import type {TimeValue} from '@open-formulieren/types/dist/components/time';
 import {OrderedList, OrderedListItem} from '@utrecht/component-library-react';
 import {FormattedTime} from 'react-intl';
 
@@ -9,7 +10,7 @@ export interface ValueDisplayProps {
   value: string | string[] | undefined;
 }
 
-const formatTime = (timeValue: string): React.ReactNode => {
+const formatTime = (timeValue: TimeValue): React.ReactNode => {
   if (!timeValue) return '-';
 
   // FormattedTime expects a Date object
@@ -30,7 +31,7 @@ const ValueDisplay: React.FC<ValueDisplayProps> = ({
   componentDefinition: {multiple = false},
   value,
 }) => {
-  const emptyValue: string | string[] = multiple ? [] : '';
+  const emptyValue: TimeValue | TimeValue[] = multiple ? [] : null;
   const normalizedValue = value ?? emptyValue;
 
   // in edge cases the existing data & component.multiple may be misaligned (updating form definitions

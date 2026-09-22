@@ -31,10 +31,7 @@ const buildValidationSchema = (component: DateTimeComponentSchema) => {
 };
 
 describe('datetime component validation', () => {
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=false (value: %s)', value => {
+  test.each([undefined, null])('validate.required=false (value: %s)', value => {
     const component: DateTimeComponentSchema = {...BASE_COMPONENT, validate: {required: false}};
     const schema = buildValidationSchema(component);
 
@@ -43,10 +40,7 @@ describe('datetime component validation', () => {
     expect(success).toBe(true);
   });
 
-  test.each([
-    undefined,
-    '', // formio uses empty strings
-  ])('validate.required=true (value: %s)', value => {
+  test.each([undefined, null])('validate.required=true (value: %s)', value => {
     const component: DateTimeComponentSchema = {...BASE_COMPONENT, validate: {required: true}};
     const schema = buildValidationSchema(component);
 
@@ -81,7 +75,7 @@ describe('datetime component validation', () => {
     '2025-10-08T22:33:66',
     42,
     12.34,
-    null,
+    '',
   ])('Invalid datetime: %s', date => {
     const schema = buildValidationSchema(BASE_COMPONENT);
 
@@ -193,11 +187,11 @@ describe('datetime component validation', () => {
 describe('datetime component with multiple: true', () => {
   test.each([
     [true, [], false],
-    [true, [''], false],
+    [true, [null], false],
     [true, [undefined], false],
     [true, ['2024-01-01T00:00:00'], true],
     [false, [], true],
-    [false, [''], true],
+    [false, [null], true],
     [false, [undefined], true],
   ])('required %s (value: %s)', (required: boolean, value: string[], valid: boolean) => {
     const component: DateTimeComponentSchema = {

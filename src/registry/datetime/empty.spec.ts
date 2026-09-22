@@ -1,4 +1,5 @@
 import type {DateTimeComponentSchema} from '@open-formulieren/types';
+import type {DateTimeValue} from '@open-formulieren/types/dist/components/datetime';
 import {expect, test} from 'vitest';
 
 import {getRegistryEntry} from '@/registry';
@@ -34,16 +35,17 @@ test.each([
   [[], true],
   [[''], true],
   [['', ''], true],
+  [[null, null], true],
   [['      '], true],
   [[undefined], true],
   [[null], true],
   // Non-empty state
   [['1970-01-01T12:34:56Z'], false],
   [['1970-01-01T12:34:56Z', '1980-01-01T12:34:56Z'], false],
-  [['', '1980-01-01T12:34:56Z'], false],
+  [[null, '1980-01-01T12:34:56Z'], false],
 ])(
   'Multiple date isEmpty compares against defined string with more then 0 characters state of value',
-  (valueToTest: string[] | undefined, expected: boolean) => {
+  (valueToTest: DateTimeValue[] | null | undefined, expected: boolean) => {
     const component: DateTimeComponentSchema = {
       type: 'datetime',
       key: 'datetime',
