@@ -6,6 +6,7 @@ import {expect, fn, userEvent, within} from 'storybook/test';
 import type {FormioFormProps} from '@/components/FormioForm';
 import type {FormSettings} from '@/context';
 import {renderComponentInForm} from '@/registry/storybook-helpers';
+import {sleep} from '@/tests/utils';
 
 import {FormioCustomerProfile} from './index';
 
@@ -20,6 +21,19 @@ interface ValidationStoryArgs {
 }
 
 type ValidationStory = StoryObj<ValidationStoryArgs>;
+
+const defaultFormSettings: Partial<FormSettings> = {
+  emailVerificationParameters: {
+    requestVerificationCode: async () => {
+      await sleep(100);
+      return {success: true};
+    },
+    verifyCode: async () => {
+      await sleep(100);
+      return {success: true};
+    },
+  } satisfies FormSettings['emailVerificationParameters'],
+};
 
 const BaseValidationStory: ValidationStory = {
   render: renderComponentInForm,
@@ -42,6 +56,7 @@ const BaseValidationStory: ValidationStory = {
       disable: true,
     },
     formSettings: {
+      ...defaultFormSettings,
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
@@ -102,11 +117,25 @@ export const ValidateRequiredWithPrepopulatedAddressesAndMultipleDigitalAddressT
         disable: true,
       },
       formSettings: {
+        ...defaultFormSettings,
         componentParameters: {
           customerProfile: {
             fetchDigitalAddresses: async () => [
-              {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-              {type: 'phoneNumber', options: ['0612345678', '0612348765']},
+              {
+                type: 'email',
+                options: [
+                  {address: 'foo@test.com', isVerified: false},
+                  {address: 'bar@test.com', isVerified: false},
+                  {address: 'baz@test.com', isVerified: false},
+                ],
+              },
+              {
+                type: 'phoneNumber',
+                options: [
+                  {address: '0612345678', isVerified: false},
+                  {address: '0612348765', isVerified: false},
+                ],
+              },
             ],
             portalUrl: 'https://example.com',
             updatePreferencesModalEnabled: true,

@@ -11,6 +11,7 @@ export interface FormSettingsProviderProps {
    */
   requiredFieldsWithAsterisk?: boolean;
   components: AnyComponentSchema[];
+  emailVerificationParameters?: FormSettings['emailVerificationParameters'];
   componentParameters?: FormSettings['componentParameters'];
   validatePluginCallback?: FormSettings['validatePluginCallback'];
   children?: React.ReactNode;
@@ -19,12 +20,19 @@ export interface FormSettingsProviderProps {
 const FormSettingsProvider: React.FC<FormSettingsProviderProps> = ({
   requiredFieldsWithAsterisk,
   components,
+  emailVerificationParameters,
   componentParameters,
   validatePluginCallback = fallbackValidatePlugin,
   children,
 }) => (
   <FormSettingsContext.Provider
-    value={{requiredFieldsWithAsterisk, components, componentParameters, validatePluginCallback}}
+    value={{
+      requiredFieldsWithAsterisk,
+      components,
+      emailVerificationParameters,
+      componentParameters,
+      validatePluginCallback,
+    }}
   >
     {children}
   </FormSettingsContext.Provider>

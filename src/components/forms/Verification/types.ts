@@ -50,3 +50,8 @@ export type VerifyCode = (
   email: string,
   code: string
 ) => Promise<VerificationResult>;
+
+export interface EmailVerificationParameters {
+  requestVerificationCode: RequestVerificationCode;
+  verifyCode: VerifyCode;
+}

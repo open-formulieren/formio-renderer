@@ -5,6 +5,11 @@ import type {
 
 export type CustomerProfileData = DigitalAddress[];
 
+export interface CommunicationPreference {
+  address: string;
+  isVerified: boolean;
+}
+
 /**
  * A subset of the Formik state/values, scoped to the data belonging to the
  * CustomerProfile component.
@@ -18,7 +23,7 @@ export type FormValues = {
 
 export interface DigitalAddressGroup {
   type: DigitalAddressType;
-  options: string[];
+  options: CommunicationPreference[];
   preferred?: string;
 }
 

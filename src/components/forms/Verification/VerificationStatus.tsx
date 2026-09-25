@@ -9,6 +9,7 @@ import Icon from '@/components/icons';
 import VerificationModal from './VerificationModal';
 import './VerificationStatus.scss';
 import {useVerificationStatus} from './hooks';
+import type {EmailVerificationStatus} from './types';
 
 export interface VerificationStatusProps {
   /**
@@ -22,11 +23,15 @@ export interface VerificationStatusProps {
   name: string;
 }
 
+interface VerificationStatusState {
+  emailVerification: EmailVerificationStatus;
+}
+
 /**
  * Display the verification status and interaction elements to start email verification.
  */
 const VerificationStatus: React.FC<VerificationStatusProps> = ({prefixedComponentKey, name}) => {
-  const {getFieldProps, setStatus, status} = useFormikContext();
+  const {getFieldProps, setStatus, status} = useFormikContext<Partial<VerificationStatusState>>();
   const verificationStatus = useVerificationStatus();
   const [modalOpen, setIsModalOpen] = useState<boolean>(false);
   const id = useId();
@@ -82,7 +87,7 @@ const VerificationStatus: React.FC<VerificationStatusProps> = ({prefixedComponen
       <VerificationModal
         isOpen={modalOpen}
         closeModal={() => setIsModalOpen(false)}
-        // TODO - update the backend to handle prefixes correctly
+        // TODO - add test that verifies prefixed keys are supported now
         componentKey={prefixedComponentKey}
         emailAddress={email}
         onVerified={() => {

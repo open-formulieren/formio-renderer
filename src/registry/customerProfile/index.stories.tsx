@@ -4,6 +4,7 @@ import {expect, userEvent, within} from 'storybook/test';
 
 import type {FormSettings} from '@/context';
 import {withFormSettingsProvider, withFormik} from '@/sb-decorators';
+import {sleep} from '@/tests/utils';
 
 import ValueDisplay from './ValueDisplay';
 import {FormioCustomerProfile} from './index';
@@ -25,6 +26,16 @@ export default {
   },
   parameters: {
     formSettings: {
+      emailVerificationParameters: {
+        requestVerificationCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+        verifyCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+      } satisfies FormSettings['emailVerificationParameters'],
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [],
@@ -380,8 +391,21 @@ export const RequiredWithPrepopulatedAddresses: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
-            {type: 'phoneNumber', options: ['0612345678', '0612387654']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', isVerified: false},
+                {address: 'bar@test.com', isVerified: false},
+                {address: 'baz@test.com', isVerified: false},
+              ],
+            },
+            {
+              type: 'phoneNumber',
+              options: [
+                {address: '0612345678', isVerified: false},
+                {address: '0612387654', isVerified: false},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,
@@ -410,7 +434,14 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
       componentParameters: {
         customerProfile: {
           fetchDigitalAddresses: async () => [
-            {type: 'email', options: ['foo@test.com', 'bar@test.com', 'baz@test.com']},
+            {
+              type: 'email',
+              options: [
+                {address: 'foo@test.com', isVerified: false},
+                {address: 'bar@test.com', isVerified: false},
+                {address: 'baz@test.com', isVerified: false},
+              ],
+            },
           ],
           portalUrl: 'https://example.com',
           updatePreferencesModalEnabled: true,

@@ -1,4 +1,4 @@
-import type {RequestVerificationCode, VerifyCode} from './verification/types';
+import type {RequestVerificationCode, VerifyCode} from '@/components/forms/Verification/types';
 
 /**
  * Dependency injection parameters for the email component.
