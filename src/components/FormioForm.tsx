@@ -88,6 +88,10 @@ export interface FormioFormProps {
    */
   requiredFieldsWithAsterisk?: boolean;
   /**
+   * Configuration parameters required for email verification.
+   */
+  emailVerificationParameters?: FormSettings['emailVerificationParameters'];
+  /**
    * Configuration necessary specific to certain Formio component types.
    */
   componentParameters?: FormSettings['componentParameters'];
@@ -131,6 +135,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
       requiredFieldsWithAsterisk,
       componentParameters,
       validatePluginCallback = fallbackValidatePlugin,
+      emailVerificationParameters,
     },
     ref
   ) => {
@@ -190,6 +195,7 @@ const FormioForm = forwardRef<FormStateRef, FormioFormProps>(
       <FormSettingsProvider
         requiredFieldsWithAsterisk={requiredFieldsWithAsterisk}
         components={components}
+        emailVerificationParameters={emailVerificationParameters}
         componentParameters={componentParameters}
         validatePluginCallback={cachedValidatePluginCallback}
       >
