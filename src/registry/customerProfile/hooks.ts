@@ -3,6 +3,7 @@ import type {DigitalAddress} from '@open-formulieren/types/dist/components/custo
 import {useFormikContext} from 'formik';
 import {useAsync} from 'react-use';
 
+import {useVerificationStatus} from '@/components/forms/Verification/hooks';
 import {useFormSettings} from '@/hooks';
 import type {JSONObject} from '@/types';
 
@@ -19,6 +20,7 @@ export const useDigitalAddresses = (
 ): UseDigitalAddresses => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<JSONObject>();
   const {fetchDigitalAddresses} = useCustomerProfileComponentParameters();
+  const {updateVerificationStatus} = useVerificationStatus();
 
   const {value: digitalAddresses, loading} = useAsync(async () => {
     const result = await fetchDigitalAddresses(profileComponentName);
@@ -31,19 +33,29 @@ export const useDigitalAddresses = (
       const {value} = getFieldMeta<DigitalAddress>(profileComponentKey);
       const {setValue} = getFieldHelpers<DigitalAddress>(profileComponentKey);
 
-      // If there already is a value, we shouldn't set a default value.
-      if (value?.address) return;
-
       const addressData = result.find(address => address.type === type);
-      // The default value is the preferred address or the first address in the list.
-      // If neither is present, the default value is an empty string.
-      const defaultAddress = addressData?.preferred || addressData?.options?.[0] || '';
 
-      setValue({
-        address: defaultAddress,
-        type: type,
-        preferenceUpdate: defaultAddress === '' ? 'useOnlyOnce' : undefined,
-      });
+      // Only set a default if there isn't already a value.
+      if (!value?.address) {
+        // The default value is the preferred address or the first address in the list.
+        // If neither is present, the default value is an empty string.
+        const defaultAddress = addressData?.preferred || addressData?.options?.[0]?.address || '';
+
+        setValue({
+          address: defaultAddress,
+          type,
+          preferenceUpdate: defaultAddress === '' ? 'useOnlyOnce' : undefined,
+        });
+      }
+
+      // Only email preferences should update the verification state
+      if (type !== 'email' || !addressData) return;
+
+      const componentVerificationStatus = Object.fromEntries(
+        addressData.options.map(({address, isVerified}) => [address, isVerified])
+      );
+
+      updateVerificationStatus(profileComponentName, componentVerificationStatus);
     });
 
     return result;

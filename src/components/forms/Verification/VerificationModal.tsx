@@ -55,15 +55,15 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   onVerified,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const {componentParameters} = useFormSettings();
-  if (!componentParameters?.email) {
+  const {emailVerificationParameters} = useFormSettings();
+  if (!emailVerificationParameters) {
     throw new Error(
       `The 'email verification' feature can only be used if verification parameters
-      are provided. Check that the componentParameters are passed correctly in the
+      are provided. Check that the emailVerificationParameters are passed correctly in the
       FormioForm call.`
     );
   }
-  const {requestVerificationCode, verifyCode} = componentParameters.email;
+  const {requestVerificationCode, verifyCode} = emailVerificationParameters;
   return (
     <Modal
       title={

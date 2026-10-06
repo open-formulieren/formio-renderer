@@ -3,27 +3,24 @@ import type {
   DigitalAddressType,
 } from '@open-formulieren/types/dist/components/customerProfile';
 import {ButtonGroup} from '@utrecht/button-group-react';
-import {clsx} from 'clsx';
-import type {FormikErrors} from 'formik';
 import {useFormikContext} from 'formik';
-import {useId, useState} from 'react';
+import {useState} from 'react';
 import type {IntlShape} from 'react-intl';
 import {FormattedMessage, defineMessages, useIntl} from 'react-intl';
 import type {GroupBase, OptionProps} from 'react-select';
 import {components} from 'react-select';
 
 import {SecondaryActionButton} from '@/components/Button';
-import {ValidationErrors} from '@/components/forms';
 import Select from '@/components/forms/Select';
 import type {Option} from '@/components/forms/Select/Select';
 import TextField from '@/components/forms/TextField';
+import {VerificationStatus} from '@/components/forms/Verification';
 import Icon from '@/components/icons';
 
 import PortalUrl from './PortalUrl';
-import {DIGITAL_ADDRESS_FIELD_NAMES} from './constants';
 import DigitalAddressPreferencesModal from './digitalAddressPreferencesModal';
 import {useCustomerProfileComponentParameters} from './hooks';
-import type {DigitalAddressGroup} from './types';
+import type {CommunicationPreference, DigitalAddressGroup} from './types';
 
 export const FIELD_LABELS = defineMessages<DigitalAddressType>({
   email: {
@@ -40,7 +37,6 @@ interface DigitalAddressSubFieldProps {
   type: DigitalAddressType;
   fieldName: string;
   isRequired?: boolean;
-  isFieldInvalid: boolean;
 }
 
 /**
@@ -52,7 +48,7 @@ const getDigitalAddressOptions = (
   intl: IntlShape,
   digitalAddressGroup: DigitalAddressGroup
 ): Option[] =>
-  digitalAddressGroup.options.map(address => ({
+  digitalAddressGroup.options.map(({address}: CommunicationPreference) => ({
     label: address,
     value: address,
     description:
@@ -81,6 +77,7 @@ const OptionWithDescription: React.FC<OptionProps<Option>> = props => {
 interface DigitalAddressesSelectProps extends DigitalAddressSubFieldProps {
   onAddDigitalAddress: () => void;
   digitalAddressGroup: DigitalAddressGroup;
+  selectFieldProps?: Partial<React.ComponentProps<typeof Select>>;
 }
 
 const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
@@ -89,6 +86,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
   isRequired,
   digitalAddressGroup,
   onAddDigitalAddress,
+  selectFieldProps,
 }) => {
   const intl = useIntl();
   const {portalUrl} = useCustomerProfileComponentParameters();
@@ -128,6 +126,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
             />
           )
         }
+        {...selectFieldProps}
       />
       <ButtonGroup>
         <SecondaryActionButton onClick={onAddDigitalAddress}>
@@ -153,7 +152,7 @@ interface DigitalAddressTextfieldProps extends DigitalAddressSubFieldProps {
    * validation for the field as a whole on change.
    */
   profileFieldName: string;
-  textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
+  textFieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
 const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
@@ -162,8 +161,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
   namePrefix,
   fieldName,
   isRequired,
-  textfieldProps,
-  isFieldInvalid,
+  textFieldProps,
 }) => {
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -179,8 +177,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
 
   // Only show the preference button if `updatePreferencesModalEnabled` is true,
   // the field has a value and no error
-  const showPreferencesButton =
-    updatePreferencesModalEnabled && !isFieldInvalid && !error && !!value;
+  const showPreferencesButton = updatePreferencesModalEnabled && !error && !!value;
 
   return (
     <>
@@ -203,7 +200,7 @@ const DigitalAddressTextfield: React.FC<DigitalAddressTextfieldProps> = ({
             />
           )
         }
-        {...textfieldProps}
+        {...textFieldProps}
       />
       {showPreferencesButton && (
         <>
@@ -259,7 +256,6 @@ interface DigitalAddressTypeFieldProps {
    * options.
    */
   digitalAddressGroup?: DigitalAddressGroup;
-  errors?: string | FormikErrors<DigitalAddress>;
 }
 
 interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
@@ -270,7 +266,7 @@ interface DigitalAddressFieldProps extends DigitalAddressTypeFieldProps {
   /**
    * Additional props to pass to the text input.
    */
-  textfieldProps: Partial<React.ComponentProps<typeof TextField>>;
+  textFieldProps: Partial<React.ComponentProps<typeof TextField>>;
 }
 
 /**
@@ -290,10 +286,8 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
   type,
   isRequired,
   digitalAddressGroup,
-  errors,
-  textfieldProps,
+  textFieldProps,
 }) => {
-  const id = useId();
   const intl = useIntl();
   const {getFieldHelpers, getFieldMeta} = useFormikContext<DigitalAddress>();
   const fieldName = `${namePrefix}.address`;
@@ -303,30 +297,23 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
     `${namePrefix}.preferenceUpdate`
   );
 
+  const subFieldProps =
+    type === 'email'
+      ? {
+          children: <VerificationStatus prefixedComponentKey={profileFieldName} name={fieldName} />,
+        }
+      : undefined;
+
   // When the digital addresses are loaded, we check if we need to show a text input.
   const hasAddresses = !!digitalAddressGroup?.options?.length;
-  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a === address);
+  const usesPrePopulatedAddress = digitalAddressGroup?.options?.some(a => a.address === address);
   // If there are pre-populated addresses and the current address value is of a
   // pre-populated address, then we show a select input. Otherwise, we show a text input.
   const [useSelectInput, setUseSelectInput] = useState(hasAddresses && usesPrePopulatedAddress);
 
-  const fieldError = typeof errors === 'string' && errors;
-
-  const touched = DIGITAL_ADDRESS_FIELD_NAMES.some(subFieldName => {
-    const nestedFieldName = `${namePrefix}.${subFieldName}`;
-    const {touched} = getFieldMeta<boolean>(nestedFieldName);
-    return touched;
-  });
-
-  const invalid = touched && !!fieldError;
-  const errorMessageId = invalid ? `${id}-error-message` : undefined;
-
   return (
     <div
-      className={clsx(
-        'openforms-customer-profile-digital-address',
-        invalid && 'openforms-customer-profile-digital-address--invalid'
-      )}
+      className="openforms-customer-profile-digital-address"
       aria-label={intl.formatMessage(
         {
           description: 'Profile digital address: accessible digital address label',
@@ -338,9 +325,11 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
         },
         {digitalAddressType: type}
       )}
-      aria-describedby={errorMessageId}
     >
       {hasAddresses && useSelectInput ? (
+        // TODO: show verification status inside the select options?
+        // Selecting a option to determine if it is verified seems like a hassle
+        // with multiple options.
         <DigitalAddressesSelect
           type={type}
           fieldName={fieldName}
@@ -351,7 +340,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           }}
           digitalAddressGroup={digitalAddressGroup}
           isRequired={isRequired}
-          isFieldInvalid={invalid}
+          selectFieldProps={subFieldProps}
         />
       ) : (
         <DigitalAddressTextfield
@@ -360,11 +349,9 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
           namePrefix={namePrefix}
           fieldName={fieldName}
           isRequired={isRequired}
-          textfieldProps={textfieldProps}
-          isFieldInvalid={invalid}
+          textFieldProps={{...subFieldProps, ...textFieldProps}}
         />
       )}
-      {errorMessageId && fieldError && <ValidationErrors id={errorMessageId} error={fieldError} />}
     </div>
   );
 };
@@ -372,7 +359,7 @@ const DigitalAddressField: React.FC<DigitalAddressFieldProps> = ({
 export const EmailField: React.FC<DigitalAddressTypeFieldProps> = props => (
   <DigitalAddressField
     type="email"
-    textfieldProps={{
+    textFieldProps={{
       type: 'email',
       autoComplete: 'email',
     }}
@@ -383,7 +370,7 @@ export const EmailField: React.FC<DigitalAddressTypeFieldProps> = props => (
 export const PhoneNumberField: React.FC<DigitalAddressTypeFieldProps> = props => (
   <DigitalAddressField
     type="phoneNumber"
-    textfieldProps={{
+    textFieldProps={{
       pattern: '^[+0-9][- 0-9]+$',
       inputMode: 'tel',
       autoComplete: 'tel',

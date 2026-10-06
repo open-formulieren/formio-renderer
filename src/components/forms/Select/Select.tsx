@@ -82,6 +82,10 @@ export interface SelectProps {
    * Custom component used for the select dropdown options.
    */
   optionComponent?: React.FC<OptionProps<Option>>;
+  /**
+   * Any additional content, positioned below the select.
+   */
+  children?: React.ReactNode;
 }
 
 const EMPTY_MULTI_SELECT_VALUE: string[] = [];
@@ -99,6 +103,7 @@ const Select: React.FC<SelectProps> = ({
   tooltip,
   noOptionSelectedValue = undefined,
   optionComponent,
+  children,
   faqItems = [],
 }) => {
   name = useFieldConfig(name);
@@ -144,47 +149,60 @@ const Select: React.FC<SelectProps> = ({
       >
         {label}
       </Label>
-      <ReactSelectWrapper<Option>
-        name={name}
-        inputId={id}
-        isLoading={isLoading}
-        options={options}
-        isMulti={isMulti}
-        isClearable={!isRequired && !(autoSelectOnlyOption && options.length === 1)}
-        isRequired={isRequired}
-        isReadOnly={isReadOnly}
-        formikValue={wrapperValue}
-        components={{
-          ...(optionComponent ? {Option: optionComponent} : undefined),
-        }}
-        onChange={optionOrOptions => {
-          if (isReadOnly) return;
-          let rawValue: string | string[] | undefined;
-          // need to cast here because type narrowing doesn't work for the SingleValue | MultiValue
-          // construct
-          if (isMulti) {
-            rawValue = (optionOrOptions as MultiValue<Option>).map(o => o.value);
-          } else {
-            // when it's null, the field is being cleared. Formio uses empty string when
-            // there's no value selected, even though it's not an explicit option.
-            rawValue = (optionOrOptions as SingleValue<Option>)?.value ?? noOptionSelectedValue;
-          }
-          setValue(rawValue);
-        }}
-        onBlur={async () => {
-          // we need to manually set the field as touched because the search input does
-          // not have the `name` of the actual field, which leads to another, unrelated,
-          // name being marked as 'touched'
-          // See https://github.com/jaredpalmer/formik/blob/0e0cf9ea09ec864dd63c52cf775f862795ef2cf4/packages/formik/src/Formik.tsx#L693
-          // for the upstream code
-          await setTouched(true);
-          await validateField(name);
-        }}
-        aria-describedby={errorMessageId}
-        aria-invalid={invalid ? invalid : undefined}
-      />
-      <HelpText>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+
+      {description && (
+        <div className="utrecht-form-field__description">
+          <HelpText>{description}</HelpText>
+        </div>
+      )}
+      {touched && errorMessageId && (
+        <div className="utrecht-form-field__error-message">
+          <ValidationErrors error={error} id={errorMessageId} />
+        </div>
+      )}
+
+      <div className="utrecht-form-field__input">
+        <ReactSelectWrapper<Option>
+          name={name}
+          inputId={id}
+          isLoading={isLoading}
+          options={options}
+          isMulti={isMulti}
+          isClearable={!isRequired && !(autoSelectOnlyOption && options.length === 1)}
+          isRequired={isRequired}
+          isReadOnly={isReadOnly}
+          formikValue={wrapperValue}
+          components={{
+            ...(optionComponent ? {Option: optionComponent} : undefined),
+          }}
+          onChange={optionOrOptions => {
+            if (isReadOnly) return;
+            let rawValue: string | string[] | undefined;
+            // need to cast here because type narrowing doesn't work for the SingleValue | MultiValue
+            // construct
+            if (isMulti) {
+              rawValue = (optionOrOptions as MultiValue<Option>).map(o => o.value);
+            } else {
+              // when it's null, the field is being cleared. Formio uses empty string when
+              // there's no value selected, even though it's not an explicit option.
+              rawValue = (optionOrOptions as SingleValue<Option>)?.value ?? noOptionSelectedValue;
+            }
+            setValue(rawValue);
+          }}
+          onBlur={async () => {
+            // we need to manually set the field as touched because the search input does
+            // not have the `name` of the actual field, which leads to another, unrelated,
+            // name being marked as 'touched'
+            // See https://github.com/jaredpalmer/formik/blob/0e0cf9ea09ec864dd63c52cf775f862795ef2cf4/packages/formik/src/Formik.tsx#L693
+            // for the upstream code
+            await setTouched(true);
+            await validateField(name);
+          }}
+          aria-describedby={errorMessageId}
+          aria-invalid={invalid ? invalid : undefined}
+        />
+      </div>
+      {children}
       <FAQItems items={faqItems} />
     </FormField>
   );

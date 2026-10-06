@@ -2,6 +2,7 @@ import type {EmailComponentSchema} from '@open-formulieren/types';
 
 import MultiField from '@/components/forms/MultiField';
 import TextField from '@/components/forms/TextField';
+import {VerificationStatus} from '@/components/forms/Verification';
 import {useFieldConfig} from '@/hooks';
 import type {RegistryEntry} from '@/registry/types';
 
@@ -9,7 +10,6 @@ import ValueDisplay from './ValueDisplay';
 import isEmpty from './empty';
 import getInitialValues from './initialValues';
 import getValidationSchema from './validationSchema';
-import {VerificationStatus} from './verification';
 
 export interface FormioEmailProps {
   componentDefinition: EmailComponentSchema;

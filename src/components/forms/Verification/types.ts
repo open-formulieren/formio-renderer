@@ -9,8 +9,8 @@ export type Mode = 'sendCode' | 'enterCode';
  * boolish values, indicating the verification status for each email value.
  */
 export type EmailVerificationStatus = Partial<{
-  [CompKey: string]: Partial<{
-    [Email: string]: boolean;
+  [compKey: string]: Partial<{
+    [email: string]: boolean;
   }>;
 }>;
 
@@ -50,3 +50,8 @@ export type VerifyCode = (
   email: string,
   code: string
 ) => Promise<VerificationResult>;
+
+export interface EmailVerificationParameters {
+  requestVerificationCode: RequestVerificationCode;
+  verifyCode: VerifyCode;
+}
