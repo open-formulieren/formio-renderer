@@ -1,7 +1,7 @@
 import type {CustomerProfileComponentSchema} from '@open-formulieren/types';
 import type {DigitalAddress} from '@open-formulieren/types/dist/components/customerProfile';
 import type {FormikErrors} from 'formik';
-import {useFormikContext} from 'formik';
+import {getIn, useFormikContext} from 'formik';
 import {useId} from 'react';
 
 import FormFieldContainer from '@/components/FormFieldContainer';
@@ -59,6 +59,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
     | (string | FormikErrors<DigitalAddress>)[];
 
   const fieldError = typeof error === 'string' && error;
+  const subfieldErrors = Array.isArray(error);
 
   const invalid = touched && !!fieldError;
   const isRequired = validate?.required;
@@ -95,6 +96,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
                 namePrefix={`${name}.${index}`}
                 isRequired={isSubfieldRequired}
                 digitalAddressGroup={digitalAddress}
+                errors={subfieldErrors ? getIn(error, `${index}`) : undefined}
               />
             );
           })}
