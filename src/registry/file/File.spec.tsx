@@ -8,6 +8,7 @@ import {afterEach, expect, test, vi} from 'vitest';
 import {render} from 'vitest-browser-react';
 
 import FormSettingsProvider from '@/components/FormSettingsProvider';
+import {sleep} from '@/tests/utils';
 
 import {useFileUploads} from './hooks';
 import {getFileConfiguration} from './test-utils';
@@ -20,8 +21,6 @@ const BASE_COMPONENT: FileComponentSchema = {
   key: 'attachments',
   label: 'Attachments',
 };
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const DEFAULT_PARAMETERS: FileParameters = {
   upload: async (file: File) => {

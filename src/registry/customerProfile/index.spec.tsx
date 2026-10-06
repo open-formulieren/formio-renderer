@@ -5,6 +5,7 @@ import {render} from 'vitest-browser-react';
 
 import FormioForm from '@/components/FormioForm';
 import type {FormioFormProps} from '@/components/FormioForm';
+import {sleep} from '@/tests/utils';
 
 type FormProps = Pick<
   FormioFormProps,
@@ -17,6 +18,16 @@ const Form: React.FC<FormProps> = props => (
       {...props}
       id="test-form"
       requiredFieldsWithAsterisk
+      emailVerificationParameters={{
+        requestVerificationCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+        verifyCode: async () => {
+          await sleep(100);
+          return {success: true};
+        },
+      }}
       componentParameters={{
         customerProfile: {
           fetchDigitalAddresses: async () => [],

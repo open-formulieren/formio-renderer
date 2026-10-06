@@ -27,6 +27,7 @@ export const renderComponentInForm = (args: RenderArgs, context?: StoryContext<u
       values={args.values}
       id="formio-form"
       requiredFieldsWithAsterisk
+      emailVerificationParameters={context?.parameters?.formSettings?.emailVerificationParameters}
       componentParameters={context?.parameters?.formSettings?.componentParameters}
       validatePluginCallback={context?.parameters?.formSettings?.validatePluginCallback}
     >
