@@ -7,10 +7,14 @@ import FormioForm from '@/components/FormioForm';
 import type {FormioFormProps} from '@/components/FormioForm';
 import {sleep} from '@/tests/utils';
 
+import type {DigitalAddressGroup} from './types';
+
 type FormProps = Pick<
   FormioFormProps,
   'components' | 'onChange' | 'onSubmit' | 'values' | 'children'
->;
+> & {
+  existingDigitalAddresses?: DigitalAddressGroup[];
+};
 
 const Form: React.FC<FormProps> = props => (
   <IntlProvider locale="en" messages={{}}>
@@ -30,7 +34,7 @@ const Form: React.FC<FormProps> = props => (
       }}
       componentParameters={{
         customerProfile: {
-          fetchDigitalAddresses: async () => [],
+          fetchDigitalAddresses: async () => props.existingDigitalAddresses ?? [],
           portalUrl: '',
           updatePreferencesModalEnabled: false,
         },
@@ -69,4 +73,45 @@ test('required customer profile validation state resets on input', async () => {
   expect(screen.getByText(errorMessage)).not.toBeInTheDocument();
   await screen.getByRole('button', {name: 'Submit'}).click();
   expect(onSubmit).toHaveBeenCalledOnce();
+});
+
+test('clearing select value results in empty string value', async () => {
+  const onSubmit = vi.fn();
+  const component: CustomerProfileComponentSchema = {
+    id: 'customerProfile',
+    type: 'customerProfile',
+    key: 'customerProfile',
+    label: 'Profile',
+    digitalAddressTypes: ['email', 'phoneNumber'],
+    validate: {required: false},
+    shouldUpdateCustomerData: false,
+  };
+  const screen = await render(
+    <Form
+      components={[component]}
+      onSubmit={onSubmit}
+      existingDigitalAddresses={[
+        {
+          type: 'email',
+          preferred: '',
+          options: [
+            {address: 'info@example.com', isVerified: true},
+            {address: 'other@example.com', isVerified: true},
+          ],
+        },
+      ]}
+    />
+  );
+
+  await expect.element(screen.getByLabelText('Email', {exact: true})).toBeVisible();
+  // clear the email
+  await screen.getByRole('button', {name: 'Clear selection'}).click();
+
+  await screen.getByRole('button', {name: 'Submit'}).click();
+  expect(onSubmit).toHaveBeenCalledExactlyOnceWith({
+    customerProfile: [
+      {type: 'email', address: '', preferenceUpdate: undefined},
+      {type: 'phoneNumber', address: '', preferenceUpdate: 'useOnlyOnce'},
+    ],
+  });
 });
