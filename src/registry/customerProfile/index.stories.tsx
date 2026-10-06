@@ -451,6 +451,58 @@ export const RequiredWithPrepopulatedAddressAndOneDigitalAddressType: Story = {
   },
 };
 
+export const WithoutAsteriskForRequiredFieldsOptional: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      tooltip: 'This is a tooltip',
+      description: '',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+      validate: {required: false},
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [],
+      },
+    },
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
+    } satisfies Partial<FormSettings>,
+  },
+};
+
+export const WithoutAsteriskForRequiredFieldsRequired: Story = {
+  args: {
+    componentDefinition: {
+      id: 'customerProfile',
+      type: 'customerProfile',
+      key: 'customerProfile',
+      label: 'Profile',
+      tooltip: 'This is a tooltip',
+      description: '',
+      digitalAddressTypes: ['email', 'phoneNumber'],
+      shouldUpdateCustomerData: false,
+      validate: {required: true},
+    },
+  },
+  parameters: {
+    formik: {
+      initialValues: {
+        customerProfile: [],
+      },
+    },
+    formSettings: {
+      requiredFieldsWithAsterisk: false,
+    } satisfies Partial<FormSettings>,
+  },
+};
+
 interface ValueDisplayStoryArgs {
   componentDefinition: CustomerProfileComponentSchema;
   value: CustomerProfileData;
