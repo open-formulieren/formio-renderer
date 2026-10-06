@@ -131,6 +131,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
             />
           )
         }
+        noOptionSelectedValue=""
         {...selectFieldProps}
       />
       <ButtonGroup>
