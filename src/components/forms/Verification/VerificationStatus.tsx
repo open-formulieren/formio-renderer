@@ -5,6 +5,7 @@ import {FormattedMessage} from 'react-intl';
 
 import {PrimaryActionButton} from '@/components/Button';
 import Icon from '@/components/icons';
+import type {JSONObject} from '@/types';
 
 import VerificationModal from './VerificationModal';
 import './VerificationStatus.scss';
@@ -26,8 +27,8 @@ export interface VerificationStatusProps {
  * Display the verification status and interaction elements to start email verification.
  */
 const VerificationStatus: React.FC<VerificationStatusProps> = ({prefixedComponentKey, name}) => {
-  const {getFieldProps, setStatus, status} = useFormikContext();
-  const verificationStatus = useVerificationStatus();
+  const {getFieldProps} = useFormikContext<JSONObject>();
+  const {verificationStatus, updateVerificationStatus} = useVerificationStatus();
   const [modalOpen, setIsModalOpen] = useState<boolean>(false);
   const id = useId();
 
@@ -82,18 +83,14 @@ const VerificationStatus: React.FC<VerificationStatusProps> = ({prefixedComponen
       <VerificationModal
         isOpen={modalOpen}
         closeModal={() => setIsModalOpen(false)}
-        // TODO - update the backend to handle prefixes correctly
+        // TODO - add test that verifies prefixed keys are supported now
         componentKey={prefixedComponentKey}
         emailAddress={email}
         onVerified={() => {
-          const newVerificationStatus = {...verificationStatus};
-          if (!newVerificationStatus[prefixedComponentKey])
-            newVerificationStatus[prefixedComponentKey] = {} satisfies Partial<
-              Record<string, boolean>
-            >;
-          newVerificationStatus[prefixedComponentKey][email] = true;
-          const newStatus = {...status, emailVerification: newVerificationStatus};
-          setStatus(newStatus);
+          updateVerificationStatus(prefixedComponentKey, {
+            [email]: true,
+          });
+
           setIsModalOpen(false);
         }}
       />
