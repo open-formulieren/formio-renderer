@@ -2,7 +2,7 @@ import {FormLabel} from '@utrecht/form-label-react';
 import {clsx} from 'clsx';
 import {FormattedMessage} from 'react-intl';
 
-import {useFormSettings} from '@/hooks';
+import {useFormSettings, useLabelSettings} from '@/hooks';
 
 import './Label.scss';
 
@@ -20,9 +20,10 @@ export interface LabelContentProps {
   labelId?: string;
   /**
    * Sometimes the label should never get an asterisk or suffix for the required state,
-   * e.g. when the checkbox is part of a larger component (like selectboxes).
+   * e.g. the label of a checkbox, when the checkbox is part of a larger component (like
+   * selectboxes).
    */
-  noOptionalSuffix?: boolean;
+  showOptionalSuffix?: boolean;
 }
 
 /**
@@ -35,12 +36,17 @@ export const LabelContent: React.FC<LabelContentProps> = ({
   type,
   noLabelTag = false,
   labelId,
-  noOptionalSuffix = false,
+  showOptionalSuffix,
   children,
 }) => {
   const {requiredFieldsWithAsterisk} = useFormSettings();
 
-  const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk && !noOptionalSuffix;
+  const {showOptionalSuffix: contextShowOptionalSuffix} = useLabelSettings();
+  // prop wins over context
+  if (showOptionalSuffix === undefined) {
+    showOptionalSuffix = contextShowOptionalSuffix;
+  }
+  const addNotRequiredSuffix = !isRequired && !requiredFieldsWithAsterisk && showOptionalSuffix;
 
   const Component = noLabelTag ? 'span' : FormLabel;
 

@@ -1,9 +1,11 @@
 import {getIn, useFormikContext} from 'formik';
 import {useCallback, useContext, useEffect, useRef, useState} from 'react';
 
-import {FieldConfigContext, FormSettingsContext} from './context';
+import {FieldConfigContext, FormSettingsContext, LabelSettingsContext} from './context';
 
 export const useFormSettings = () => useContext(FormSettingsContext);
+
+export const useLabelSettings = () => useContext(LabelSettingsContext);
 
 /**
  * Given the field config context, calculate the (possibly) prefixed name.
