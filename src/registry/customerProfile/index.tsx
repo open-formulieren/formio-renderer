@@ -45,7 +45,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
   const {getFieldMeta} = useFormikContext<FormValues>();
   const id = useId();
   name = useFieldConfig(name);
-  const {value, error: formikError} = getFieldMeta<CustomerProfileData>(name);
+  const {value, error: formikError} = getFieldMeta<CustomerProfileData | undefined>(name);
   const {digitalAddresses, loading} = useDigitalAddresses(name, digitalAddressTypes);
 
   const touched = value?.some((_, index) =>
@@ -106,7 +106,7 @@ export const FormioCustomerProfile: React.FC<FormioCustomerProfileProps> = ({
               );
 
               const anyOtherFieldFilledOut = value
-                .filter(({type}) => type !== digitalAddressType)
+                ?.filter(({type}) => type !== digitalAddressType)
                 .some(({address}) => address.length > 0);
 
               // when asterisks are not used to mark fields required, optional fields
