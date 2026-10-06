@@ -126,7 +126,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
           id={id}
           isDisabled={isReadOnly}
           isRequired={isRequired}
-          noOptionalSuffix={ignoreRequired}
+          showOptionalSuffix={!ignoreRequired}
         >
           {label}
         </LabelContent>

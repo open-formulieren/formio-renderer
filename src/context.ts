@@ -45,6 +45,22 @@ const FormSettingsContext = React.createContext<FormSettings>({
 
 FormSettingsContext.displayName = 'FormSettingsContext';
 
+export interface LabelSettings {
+  /**
+   * Sometimes the label should never get an asterisk or suffix for the required state,
+   * e.g. the label of a checkbox, when the checkbox is part of a larger component (like
+   * selectboxes) or composite components with complex required states like
+   * customerProfile.
+   */
+  showOptionalSuffix: boolean;
+}
+
+const LabelSettingsContext = React.createContext<LabelSettings>({
+  showOptionalSuffix: true,
+});
+
+LabelSettingsContext.displayName = 'LabelSettingsContext';
+
 export interface FieldConfig {
   /**
    * Optional prefix to add to the `name` attribute of a field, to ensure that scopes
@@ -59,4 +75,4 @@ export interface FieldConfig {
 const FieldConfigContext = React.createContext<FieldConfig>({namePrefix: ''});
 FieldConfigContext.displayName = 'FieldConfigContext';
 
-export {FormSettingsContext, FieldConfigContext};
+export {FormSettingsContext, FieldConfigContext, LabelSettingsContext};
