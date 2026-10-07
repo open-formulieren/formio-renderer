@@ -4,6 +4,14 @@
 @use '@/scss/bem';
 @use '@/scss/responsive';
 
+.openforms-customer-profile-required-marker {
+  &:after {
+    content: ' *';
+    color: var(--of-color-danger);
+    z-index: 0; // otherwise this is above the progress indicator in some browsers
+  }
+}
+
 .openforms-customer-profile-digital-address {
   display: flex;
   flex-direction: column;

@@ -126,6 +126,7 @@ const DigitalAddressesSelect: React.FC<DigitalAddressesSelectProps> = ({
             />
           )
         }
+        noOptionSelectedValue=""
         {...selectFieldProps}
       />
       <ButtonGroup>
@@ -371,7 +372,7 @@ export const PhoneNumberField: React.FC<DigitalAddressTypeFieldProps> = props =>
   <DigitalAddressField
     type="phoneNumber"
     textFieldProps={{
-      pattern: '^[+0-9][- 0-9]+$',
+      pattern: '^[+0-9][\\- 0-9]+$',
       inputMode: 'tel',
       autoComplete: 'tel',
     }}
