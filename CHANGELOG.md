@@ -1,5 +1,20 @@
 # Changes
 
+## 2.0.5 (2026-10-07)
+
+Bugfix and feature backport release.
+
+- [`OF#6622`][OF#6622] Backported the email verification feature in the customer profile component.
+- [`OF#6755`][OF#6755] Fixed incorrect address field "(not required)" suffix being shown on
+  `customerProfile` components that are required when the "use asterisks for required fields" option
+  is disabled.
+
+[OF#6622]: https://github.com/open-formulieren/open-forms/issues/6622
+[OF#6755]: https://github.com/open-formulieren/open-forms/issues/6755
+
+**Note** Normally we don't backport features. External factors required it this time, so we advise
+extensive testing of the `customerProfile` component before updating to production.
+
 ## 2.0.4 (2026-09-10)
 
 Hotfix release.
