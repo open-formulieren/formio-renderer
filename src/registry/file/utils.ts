@@ -1,3 +1,5 @@
+import type {MimeTypeStr} from './types';
+
 // Reference: formio's file component translateScalars method, but without the weird
 // units that don't make sense for files...
 // Copied from https://github.com/open-formulieren/formio-builder/blob/e296210515949eae8bc2267af95a912c04b43aee/src/registry/file/edit-validation.ts
@@ -35,4 +37,17 @@ export const humanFileSize = (size: number): HumanFileSize => {
   const newSize = parseFloat((size / Math.pow(1024, index)).toFixed(2));
   const unit = (['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'] as const)[index];
   return {size: newSize, unit};
+};
+
+export const mimeTypeHasWildcard = (mimeType: MimeTypeStr): boolean => mimeType.includes('*');
+
+/**
+ * Strip the wildcard from the end of the mime type.
+ *
+ * Only wildcards at the end are supported.
+ */
+export const getMimeTypePrefix = (mimeType: MimeTypeStr): MimeTypeStr => {
+  if (!mimeType.endsWith('*')) throw new Error('Only wildcards at the end are supported');
+  // type cast necessary because TS doesn't know how we're trimming the subtype only
+  return mimeType.slice(0, -1) as MimeTypeStr;
 };

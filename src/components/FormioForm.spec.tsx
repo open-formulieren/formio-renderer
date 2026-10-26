@@ -1166,6 +1166,76 @@ describe('Regressions', () => {
       });
   });
 
+  test('File uploads with wildcard mime type', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'file',
+            key: 'file',
+            type: 'file',
+            label: 'File',
+            filePattern: 'application/vnd.oasis.opendocument.*',
+            file: {
+              name: '',
+              type: [
+                'image/png',
+                'application/vnd.oasis.opendocument.*,application/vnd.stardivision.*,application/vnd.sun.xml.*',
+              ],
+              allowedTypesLabels: ['.png', 'Open Office'],
+            },
+          },
+        ]}
+        values={{file: []}}
+        onSubmit={onSubmit}
+        componentParameters={{
+          file: {
+            upload: async () => {
+              return {
+                result: 'success',
+                url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+              };
+            },
+            destroy: async () => {},
+          },
+        }}
+      />
+    );
+
+    // Upload a file. Mock the random UUID generator to get a file client ID on which we can make
+    // assertions.
+    const uploadInput = screen.getByTestId('file-input');
+    vi.spyOn(window.crypto, 'randomUUID').mockReturnValue('33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7');
+    await userEvent.upload(uploadInput, './files/valid.odt');
+
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect
+      .poll(() => onSubmit)
+      .toHaveBeenCalledWith({
+        file: [
+          {
+            clientId: '33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7',
+            data: {
+              baseUrl: 'https://example.com/irrelevant',
+              form: '',
+              name: 'valid.odt',
+              project: '',
+              size: 1067,
+              url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+            },
+            name: 'valid.odt',
+            originalName: 'valid.odt',
+            size: 1067,
+            state: 'success',
+            storage: 'url',
+            type: 'application/vnd.oasis.opendocument.text',
+            url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+          },
+        ] satisfies FormikFileUpload[],
+      });
+  });
+
   // open-formulieren/open-forms#6420
   test('Dynamic selectboxes items produce boolean values', async () => {
     const onSubmit = vi.fn();
