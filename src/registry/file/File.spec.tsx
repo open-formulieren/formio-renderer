@@ -257,7 +257,11 @@ test('process file rejection eagerly', async () => {
   const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
   const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
   const upload: FileRejection = {
-    file: new File(['dummy'], 'dummy.png', {type: 'image/png'}),
+    file: {
+      ...new File(['dummy'], 'dummy.png', {type: 'image/png'}),
+      path: '',
+      relativePath: '',
+    },
     errors: [
       // the error messages are built based on the code, so the react-dropzone messages
       // are effectively discarded

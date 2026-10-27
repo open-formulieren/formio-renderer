@@ -190,7 +190,7 @@
     "formik": "^2.4.5",
     "ibantools": "^4.5.1",
     "lodash": "^4.17.23",
-    "react-dropzone": "^14.3.8",
+    "react-dropzone": "^20.1.4",
     "react-number-format": "^5.4.4",
     "react-signature-canvas": "^1.0.7",
     "zod": "^3.24.1",
