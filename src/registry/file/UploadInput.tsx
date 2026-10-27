@@ -1,6 +1,6 @@
 import {Paragraph} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import type {Accept, FileRejection} from 'react-dropzone';
 import {FormattedMessage} from 'react-intl';
@@ -8,6 +8,45 @@ import {FormattedMessage} from 'react-intl';
 import FileSize from './FileSize';
 import './UploadInput.scss';
 import {DEFAULT_MAX_SIZE} from './constants';
+import type {MimeTypeStr} from './types';
+import {mimeTypeHasWildcard} from './utils';
+
+/**
+ * Process the provided accepted mime types.
+ *
+ * Processing is necessary when wildcards are present. react-dropzone does not support
+ * wildcards at arbitrary positions, e.g. `application/vnd.oasis.opendocument.*`, while
+ * it does support wildcards for the entire subtype like `image/*`.
+ *
+ * When we encounter wildcards (historically supported in Open Forms because of how
+ * formio.js uploads worked), we process the accept pattern and remove it entirely. The
+ * zod validation still catches the mime type validation.
+ */
+const transformAccept = (accept?: Accept): {accept?: Accept} => {
+  if (!accept) return {accept};
+
+  let hasSomeFileTypeWithWildcard = false;
+  for (const mimeTypeString of Object.keys(accept)) {
+    // multiple mime types are split with commas, e.g. `image/png,image/jpeg`
+    // type cast is necessary because TS cannot infer this from the accept type
+    const mimeTypes = mimeTypeString.split(',') as MimeTypeStr[];
+    // react-dropzone *does* support wildcards like `image/*`
+    const hasWildcard = mimeTypes.some(
+      mimeType => mimeTypeHasWildcard(mimeType) && !mimeType.endsWith('/*')
+    );
+    if (hasWildcard) hasSomeFileTypeWithWildcard = true;
+  }
+
+  // if there's wildcards detected that react-dropzone can't handle, we have to drop the
+  // 'accept' prop entirely as it will prevent uploads of valid files, see OF#6871.
+  // Instead, we must move to handling this in custom validation. If no wildcards is
+  // detected, we can keep using it as-is.
+  if (hasSomeFileTypeWithWildcard) {
+    return {accept: undefined};
+  }
+
+  return {accept};
+};
 
 export interface UploadInputProps {
   /**
@@ -79,8 +118,9 @@ const UploadInput: React.FC<UploadInputProps> = ({
     },
     [onFilesAdded]
   );
+  const {accept: transformedAccept} = useMemo(() => transformAccept(accept), [accept]);
   const {getRootProps, getInputProps, isDragActive, isDragReject} = useDropzone({
-    accept,
+    accept: transformedAccept,
     disabled: limitReached,
     maxFiles: maxFilesToSelect ?? 0,
     maxSize,
