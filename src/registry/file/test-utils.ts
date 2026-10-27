@@ -47,7 +47,7 @@ export const getFileConfiguration = (
 interface FileFactoryOpts {
   name: string;
   size: number;
-  type: ExampleMimeType;
+  type: Exclude<ExampleMimeType, '*'>;
   state: FormikFileUpload['state'] | undefined;
   omitClientState?: boolean;
 }

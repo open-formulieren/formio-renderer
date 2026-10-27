@@ -1,4 +1,3 @@
-import type {FileComponentSchema} from '@open-formulieren/types';
 import type {FileUploadData} from '@open-formulieren/types/dist/components/file';
 
 /**
@@ -63,5 +62,3 @@ export interface FileParameters {
   upload: (file: File) => Promise<UploadResult>;
   destroy: (url: string) => Promise<void>;
 }
-
-export type MimeTypeStr = FileComponentSchema['file']['type'][number];

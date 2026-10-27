@@ -8,8 +8,7 @@ import {FormattedMessage} from 'react-intl';
 import FileSize from './FileSize';
 import './UploadInput.scss';
 import {DEFAULT_MAX_SIZE} from './constants';
-import type {MimeTypeStr} from './types';
-import {mimeTypeHasWildcard} from './utils';
+import {mimeTypeHasWildcard, unwrapMimeTypes} from './utils';
 
 /**
  * Process the provided accepted mime types.
@@ -26,14 +25,9 @@ const transformAccept = (accept?: Accept): {accept?: Accept} => {
   if (!accept) return {accept};
 
   let hasSomeFileTypeWithWildcard = false;
-  for (const mimeTypeString of Object.keys(accept)) {
-    // multiple mime types are split with commas, e.g. `image/png,image/jpeg`
-    // type cast is necessary because TS cannot infer this from the accept type
-    const mimeTypes = mimeTypeString.split(',') as MimeTypeStr[];
+  for (const mimeType of unwrapMimeTypes(Object.keys(accept))) {
     // react-dropzone *does* support wildcards like `image/*`
-    const hasWildcard = mimeTypes.some(
-      mimeType => mimeTypeHasWildcard(mimeType) && !mimeType.endsWith('/*')
-    );
+    const hasWildcard = mimeTypeHasWildcard(mimeType) && !mimeType.endsWith('/*');
     if (hasWildcard) hasSomeFileTypeWithWildcard = true;
   }
 

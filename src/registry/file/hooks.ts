@@ -1,4 +1,5 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
+import type {MimeType} from '@open-formulieren/types/dist/components/file';
 import {useFormikContext} from 'formik';
 import type {ArrayHelpers, FieldHelperProps} from 'formik';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -180,7 +181,9 @@ const fileToFormikUploadData = (file: File): [string, FormikFileUpload] => {
     originalName: file.name,
     size: file.size,
     storage: 'url',
-    type: file.type,
+    // typecast necessary - the browser types only define string but not the particular
+    // mime type shape of `type/subtype`.
+    type: file.type as MimeType | '',
     url: tempUrl,
     data: {
       url: tempUrl,
