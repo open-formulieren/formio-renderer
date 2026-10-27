@@ -1,5 +1,14 @@
 # Changes
 
+## 2.0.6 (2026-10-27)
+
+Bugfix release.
+
+- [`OF#6871`][OF#6871] Fixed the file upload component rejecting file types that match media types
+  with a wildcard.
+
+[OF#6871]: https://github.com/open-formulieren/open-forms/issues/6871
+
 ## 2.0.5 (2026-10-07)
 
 Bugfix and feature backport release.
