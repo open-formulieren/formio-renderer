@@ -9,7 +9,8 @@ import type {GetValidationSchema} from '@/registry/types';
 import {buildRequiredMessage} from '@/validationSchemas/errorMessages';
 
 import {DEFAULT_MAX_SIZE} from './constants';
-import {getSizeInBytes, humanFileSize} from './utils';
+import type {MimeTypeStr} from './types';
+import {getMimeTypePrefix, getSizeInBytes, humanFileSize, mimeTypeHasWildcard} from './utils';
 
 const FILE_TOO_LARGE_ERROR = defineMessage({
   description: 'File upload error message: file too large',
@@ -91,7 +92,18 @@ export const transformReactDropzoneErrors = (
     .join('\n');
 };
 
-type MimeTypeStr = FileComponentSchema['file']['type'][number];
+function* unwrapMimeTypes(mimeTypes: MimeTypeStr[]): Generator<MimeTypeStr> {
+  for (const mimeTypeStr of mimeTypes) {
+    // mimetypes may be a comma separated string of mime types, e.g. for Open Office
+    // documents.
+    // Type cast necessary because we can't infer that the comma-split value is still
+    // a mime type - the type definition in the types library needs to be refined.
+    const mimeTypes = mimeTypeStr.split(',') as MimeTypeStr[];
+    for (const mimeType of mimeTypes) {
+      yield mimeType;
+    }
+  }
+}
 
 /**
  * Build the validation schema for a single file in the uploads array.
@@ -119,8 +131,28 @@ const buildFileValidationSchema = (
   let typeSchema: z.ZodString | z.ZodEffects<z.ZodString> = z.string();
   // empty mime types array or wildcard inside it imply that any file type is allowed
   if (allowedMimeTypes.length !== 0 && !allowedMimeTypes.includes('*')) {
+    // break out mime types in partial and fully qualified mimetypes so that we can do
+    // exact or prefix matching for validation
+    const fullyQualifiedMimeTypes: MimeTypeStr[] = [];
+    const mimeTypePrefixes: MimeTypeStr[] = [];
+    for (const mimeType of unwrapMimeTypes(allowedMimeTypes)) {
+      if (mimeType === '*') throw new Error('Unexpected wildcard file type found.');
+      if (mimeTypeHasWildcard(mimeType)) {
+        mimeTypePrefixes.push(getMimeTypePrefix(mimeType));
+      } else {
+        fullyQualifiedMimeTypes.push(mimeType);
+      }
+    }
+
     typeSchema = typeSchema.refine(
-      mimeType => allowedMimeTypes.includes(mimeType.toLowerCase() as MimeTypeStr),
+      mimeType => {
+        // z.string() does not narrow to MimeTypeStr, so type cast is necessary.
+        const lowerCaseMimeType = mimeType.toLowerCase() as MimeTypeStr;
+        return (
+          fullyQualifiedMimeTypes.includes(lowerCaseMimeType) ||
+          mimeTypePrefixes.some(prefix => lowerCaseMimeType.startsWith(prefix))
+        );
+      },
       {
         message: intl.formatMessage(INVALID_TYPE_ERROR, {
           allowedTypes: formattedTypeLabels(intl, allowedTypesLabels),
