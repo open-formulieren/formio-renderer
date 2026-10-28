@@ -318,6 +318,65 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
   },
 };
 
+export const ValidateRequiredOnBlur: ValidationStory = {
+  ...BaseValidationStory,
+  args: {
+    onSubmit: fn(),
+    componentDefinition: {
+      id: 'component1',
+      type: 'selectboxes',
+      key: 'my.selectboxes',
+      label: 'A selectboxes field',
+      defaultValue: {option1: false, option2: true, option3: false},
+      values: [
+        {value: 'option1', label: 'Option 1'},
+        {value: 'option2', label: 'Option 2'},
+        {value: 'option3', label: 'Option 3'},
+      ],
+      validate: {
+        required: true,
+      },
+      ...extensionBoilerplate,
+    } satisfies SelectboxesComponentSchema,
+  },
+
+  play: async ({canvasElement, args, step}) => {
+    const canvas = within(canvasElement);
+    const errorMessage = 'The required field A selectboxes field must be filled in.';
+
+    const selectboxesLabel = canvas.getByText('A selectboxes field');
+    expect(selectboxesLabel).toBeVisible();
+
+    await step('valid state', async () => {
+      expect(canvas.getByLabelText('Option 2')).toBeChecked();
+      await userEvent.click(canvas.getByLabelText('Option 2'));
+      // The component now has no value, yet validation should not yet have triggered
+      expect(canvas.queryByText(errorMessage)).not.toBeInTheDocument();
+
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
+      expect(args.onSubmit).toHaveBeenCalledOnce();
+    });
+
+    await step('validate on blur', async () => {
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      expect(canvas.queryByText(errorMessage)).not.toBeInTheDocument();
+      const submitButton = canvas.getByRole('button', {name: 'Submit'});
+      submitButton.focus();
+      expect(await canvas.findByText(errorMessage)).toBeVisible();
+    });
+
+    await step('validate on non-checkbox click', async () => {
+      const error = canvas.getByText(errorMessage);
+      await userEvent.click(canvas.getByLabelText('Option 3'));
+      expect(error).toBeVisible();
+      // clicking the fieldset itself blurs the checkboxes and retriggers validation
+      waitForElementToBeRemoved(error);
+      await userEvent.click(canvas.getByRole('group'));
+    });
+  },
+};
+
 export const ValidateMinRequiredOnBlur: ValidationStory = {
   ...BaseValidationStory,
   args: {
