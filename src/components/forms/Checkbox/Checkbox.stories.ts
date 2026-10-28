@@ -135,42 +135,34 @@ export const NoAsterisks: Story = {
   },
 };
 
-export const ValidateOnBlur: Story = {
+export const ValidateOnChange: Story = {
   args: {
-    name: 'validateOnBlur',
-    label: 'Validate on blur',
+    name: 'validateOnChange',
+    label: 'Validate on change',
   },
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: false,
+        validateOnChange: false,
       },
       zodSchema: z.object({
-        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+        validateOnChange: z.any().refine(() => false, {message: 'Always invalid'}),
       }),
     },
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const checkbox = await canvas.findByLabelText('Validate on blur');
+    const checkbox = await canvas.findByLabelText('Validate on change');
     expect(checkbox).not.toHaveAttribute('aria-invalid');
 
     // check it
     await userEvent.click(checkbox);
-    expect(checkbox).toHaveFocus();
-    expect(checkbox).not.toHaveAttribute('aria-invalid');
     expect(checkbox).toBeChecked();
-
-    // uncheck it again
-    await userEvent.click(checkbox);
     expect(checkbox).toHaveFocus();
-    expect(checkbox).not.toHaveAttribute('aria-invalid');
-    expect(checkbox).not.toBeChecked();
 
-    checkbox.blur();
-    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    // Expect validation to trigger while the checkbox still has focus
     expect(checkbox).toHaveAttribute('aria-invalid', 'true');
-    expect(checkbox).not.toBeChecked();
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
   },
 };
 
