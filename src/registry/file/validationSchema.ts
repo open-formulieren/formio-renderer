@@ -118,8 +118,6 @@ const buildFileValidationSchema = (
     sizeSchema = sizeSchema.max(sizeInBytes, {message});
   }
 
-  // TODO: check what invalid mime type detection from the browser does here, e.g. a `.msg`
-  // file
   let typeSchema: z.ZodString | z.ZodEffects<z.ZodString> = z.string();
   // empty mime types array or wildcard inside it imply that any file type is allowed
   if (allowedMimeTypes.length !== 0 && !allowedMimeTypes.includes('*')) {
@@ -139,6 +137,11 @@ const buildFileValidationSchema = (
     typeSchema = typeSchema.refine(
       mimeType => {
         const lowerCaseMimeType = mimeType.toLowerCase();
+        // if the browser could not determine the mime type, we let it through and let
+        // the backend validation handle it - matching extensions to mime types depends
+        // on which applications are installed on the client machine (e.g. for .msg you
+        // need Outlook for example, it's not present in /etc/mime.types).
+        if (lowerCaseMimeType === '') return true;
         return (
           fullyQualifiedMimeTypes.includes(lowerCaseMimeType) ||
           mimeTypePrefixes.some(prefix => lowerCaseMimeType.startsWith(prefix))
@@ -174,7 +177,10 @@ const buildFileValidationSchema = (
         originalName: z.string().min(3), // filename, . and extension
         size: sizeSchema,
         storage: z.literal('url'),
-        type: typeSchema,
+        // .msg is unknown on Linux systems -> empty string mime type returned, which Formik
+        // converts to undefined for validation purposes, which means we must chain .optional()
+        // to it.
+        type: typeSchema.optional(),
         // `blob://` protocol for temporary local urls, `http(s)://` for files persisted to
         // the backend.
         url: z.string().url(),
