@@ -1297,7 +1297,7 @@ describe('Regressions', () => {
             size: 11264,
             state: 'success',
             storage: 'url',
-            type: '',
+            type: 'application/vnd.ms-outlook', // provided through file-selector
             url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
           },
         ] satisfies FormikFileUpload[],

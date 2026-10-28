@@ -1,5 +1,6 @@
 import {Paragraph} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
+import {fromEvent} from 'file-selector';
 import {useCallback, useMemo, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import type {Accept, FileRejection} from 'react-dropzone';
@@ -7,7 +8,7 @@ import {FormattedMessage} from 'react-intl';
 
 import FileSize from './FileSize';
 import './UploadInput.scss';
-import {DEFAULT_MAX_SIZE} from './constants';
+import {DEFAULT_MAX_SIZE, SUPPORTED_MIME_TYPES} from './constants';
 import {mimeTypeHasWildcard, unwrapMimeTypes} from './utils';
 
 /**
@@ -126,6 +127,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
       setReadyForDrop(false);
     },
     onDrop,
+    getFilesFromEvent: event => fromEvent(event, {mimeTypes: SUPPORTED_MIME_TYPES}),
   });
 
   const inputProps: React.ComponentProps<'input'> = getInputProps({
