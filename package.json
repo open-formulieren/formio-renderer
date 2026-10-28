@@ -1,6 +1,6 @@
 {
   "name": "@open-formulieren/formio-renderer",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "description": "Alternative Form.io renderer made for Open Forms.",
   "type": "module",
   "exports": {
