@@ -1236,6 +1236,74 @@ describe('Regressions', () => {
       });
   });
 
+  test('.msg file upload is not rejected', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'file',
+            key: 'file',
+            type: 'file',
+            label: 'File',
+            filePattern: '*',
+            file: {
+              name: '',
+              type: ['*'],
+              allowedTypesLabels: ['any file type'],
+            },
+            validate: {required: true},
+          },
+        ]}
+        values={{file: []}}
+        onSubmit={onSubmit}
+        componentParameters={{
+          file: {
+            upload: async () => {
+              return {
+                result: 'success',
+                url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+              };
+            },
+            destroy: async () => {},
+          },
+        }}
+      />
+    );
+
+    // Upload a file. Mock the random UUID generator to get a file client ID on which we can make
+    // assertions.
+    const uploadInput = screen.getByTestId('file-input');
+    vi.spyOn(window.crypto, 'randomUUID').mockReturnValue('33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7');
+    await userEvent.upload(uploadInput, './files/test.msg');
+
+    await screen.getByRole('button', {name: 'Submit'}).click();
+    await expect
+      .poll(() => onSubmit)
+      .toHaveBeenCalledWith({
+        file: [
+          {
+            clientId: '33ee6d9d-7c55-4cc8-b8f7-1f423259d3c7',
+            data: {
+              baseUrl: 'https://example.com/irrelevant',
+              form: '',
+              name: 'test.msg',
+              project: '',
+              size: 11264,
+              url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+            },
+            name: 'test.msg',
+            originalName: 'test.msg',
+            size: 11264,
+            state: 'success',
+            storage: 'url',
+            type: '',
+            url: 'https://example.com/api/v2/uploads/9849f870-6649-4403-be30-52e463dc3083',
+          },
+        ] satisfies FormikFileUpload[],
+      });
+  });
+
   // open-formulieren/open-forms#6420
   test('Dynamic selectboxes items produce boolean values', async () => {
     const onSubmit = vi.fn();
