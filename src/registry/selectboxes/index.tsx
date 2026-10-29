@@ -182,7 +182,11 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
     };
   }, [getFieldProps, validateField, name, touched, maxSelectedCount]);
 
-  const invalid = touched && !!error;
+  // check if there's an error for the selectboxes field *itself* rather than one of the
+  // subfields
+  const selectboxesError: string | undefined = typeof error === 'string' ? error : undefined;
+
+  const invalid = touched && !!selectboxesError;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
 
@@ -212,7 +216,9 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
 
       {/* Fieldsets don't support the __description and __error-message elements */}
       <HelpText id={descriptionid}>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      {touched && errorMessageId && selectboxesError && (
+        <ValidationErrors error={selectboxesError} id={errorMessageId} />
+      )}
 
       {/* Similar to radiofield, wrap in a flexbox container - relying on the
       form-field-description design tokens leads to spacings that are uncontrollable. */}
@@ -227,6 +233,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
             description={description}
             ignoreRequired
             isReadOnly={limitReached && !selectedValues.includes(value)}
+            hideErrorMessage={!!selectboxesError}
           />
         ))}
       </div>
