@@ -72,7 +72,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
   // the value should not be passed down to underlying checkbox
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [{value, ...props}, {error = '', touched}] = useField<boolean | undefined>({
+  const [{value, ...props}, {error = '', touched}, {setTouched}] = useField<boolean | undefined>({
     name,
     type: 'checkbox',
   });
@@ -105,14 +105,15 @@ const Checkbox: React.FC<CheckboxProps> = ({
         aria-describedby={ariaDescribedBy || undefined}
         aria-readonly={isReadOnly}
         {...props}
-        onChange={e => {
+        onChange={async e => {
           // block form value changes if readonly - checkbox inputs don't support `readonly`
           // out of the box
           if (isReadOnly) return;
           props.onChange(e);
-        }}
-        onBlur={async e => {
-          props.onBlur(e);
+
+          // The checkbox component validation is triggered on change.
+          // This is a deliberate break from our normal validation trigger (on blur).
+          await setTouched(true);
           await validateField(name);
         }}
       />
