@@ -145,18 +145,18 @@ export const NoAsterisks: Story = {
   },
 };
 
-export const ValidateOnBlur: Story = {
+export const ValidateOnChange: Story = {
   args: {
-    name: 'validateOnBlur',
-    label: 'Validate on blur',
+    name: 'validateOnChange',
+    label: 'Validate on change',
   },
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: '',
+        validateOnChange: '',
       },
       zodSchema: z.object({
-        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+        validateOnChange: z.any().refine(() => false, {message: 'Always invalid'}),
       }),
     },
   },
@@ -168,15 +168,12 @@ export const ValidateOnBlur: Story = {
     expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
     await userEvent.click(input);
+    expect(input).toBeChecked();
     expect(input).toHaveFocus();
-    expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
-    // simulate the user clicking anywhere else on the page, which removes focus from
-    // the input
-    await userEvent.click(canvasElement);
-    expect(input).not.toHaveFocus();
-    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    // Expect validation to trigger while the radio input still has focus
     expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
   },
 };
 
