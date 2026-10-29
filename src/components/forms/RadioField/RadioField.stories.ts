@@ -145,18 +145,18 @@ export const NoAsterisks: Story = {
   },
 };
 
-export const ValidateOnBlur: Story = {
+export const ValidateOnChange: Story = {
   args: {
-    name: 'validateOnBlur',
-    label: 'Validate on blur',
+    name: 'validateOnChange',
+    label: 'Validate on change',
   },
   parameters: {
     formik: {
       initialValues: {
-        validateOnBlur: '',
+        validateOnChange: '',
       },
       zodSchema: z.object({
-        validateOnBlur: z.any().refine(() => false, {message: 'Always invalid'}),
+        validateOnChange: z.any().refine(() => false, {message: 'Always invalid'}),
       }),
     },
   },
@@ -168,23 +168,19 @@ export const ValidateOnBlur: Story = {
     expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
     await userEvent.click(input);
+    expect(input).toBeChecked();
     expect(input).toHaveFocus();
-    expect(radioGroup).not.toHaveAttribute('aria-invalid');
 
-    // simulate the user clicking anywhere else on the page, which removes focus from
-    // the input
-    await userEvent.click(canvasElement);
-    expect(input).not.toHaveFocus();
-    expect(await canvas.findByText('Always invalid')).toBeVisible();
+    // Expect validation to trigger while the radio input still has focus
     expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
   },
 };
 
-// don't display validation errors if there's still focus on a radio input
-export const NoErrorWhileFocus: Story = {
+export const ValidateOnKeyboardInteraction: Story = {
   args: {
     name: 'radio',
-    label: 'No error displayed while keyboard navigation happens',
+    label: 'Validate selected option on keyboard interaction',
   },
   parameters: {
     formik: {
@@ -199,6 +195,7 @@ export const NoErrorWhileFocus: Story = {
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole('radiogroup');
 
     const firstRadio = await canvas.findByLabelText('Sherlock');
     firstRadio.focus();
@@ -207,6 +204,10 @@ export const NoErrorWhileFocus: Story = {
     const secondRadio = canvas.getByLabelText('Watson');
     expect(secondRadio).toBeChecked();
     expect(secondRadio).toHaveFocus();
+
+    // Expect validation to trigger while the radio input still has focus
+    expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
   },
 };
 
