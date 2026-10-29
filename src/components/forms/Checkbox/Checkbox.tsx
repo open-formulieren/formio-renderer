@@ -65,6 +65,11 @@ export interface CheckboxProps {
    * assist users in filling out the field correctly.
    */
   faqItems?: FAQItem[];
+  /**
+   * Hide the error message. This is useful when the error message is already shown in a
+   * parent component, like in a selectboxes component.
+   */
+  hideErrorMessage?: boolean;
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -77,6 +82,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   ignoreRequired = false,
   tooltip,
   faqItems = [],
+  hideErrorMessage = false,
 }) => {
   const {validateField} = useFormikContext();
   name = useFieldConfig(name);
@@ -89,7 +95,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   });
   const id = useId();
 
-  const invalid = touched && !!error;
+  const invalid = touched && !!error && !hideErrorMessage;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionId = description && !descriptionAsHelpText ? `${id}-description` : undefined;
 

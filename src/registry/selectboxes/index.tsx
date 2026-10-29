@@ -181,7 +181,11 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
     };
   }, [getFieldProps, validateField, name, touched, maxSelectedCount]);
 
-  const invalid = touched && !!error;
+  // check if there's an error for the selectboxes field *itself* rather than one of the
+  // subfields
+  const selectboxesError: string | undefined = typeof error === 'string' ? error : undefined;
+
+  const invalid = touched && !!selectboxesError;
   const errorMessageId = invalid ? `${id}-error-message` : undefined;
   const descriptionid = `${id}-description`;
 
@@ -219,11 +223,15 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
           descriptionAsHelpText={false}
           ignoreRequired
           isReadOnly={limitReached && !selectedValues.includes(value)}
+          hideErrorMessage={!!selectboxesError}
         />
       ))}
 
       <HelpText id={descriptionid}>{description}</HelpText>
-      {touched && errorMessageId && <ValidationErrors error={error} id={errorMessageId} />}
+      {touched && errorMessageId && selectboxesError && (
+        <ValidationErrors error={selectboxesError} id={errorMessageId} />
+      )}
+
       <FAQItems items={faqItems} />
     </Fieldset>
   );
