@@ -177,11 +177,10 @@ export const ValidateOnChange: Story = {
   },
 };
 
-// don't display validation errors if there's still focus on a radio input
-export const NoErrorWhileFocus: Story = {
+export const ValidateOnKeyboardInteraction: Story = {
   args: {
     name: 'radio',
-    label: 'No error displayed while keyboard navigation happens',
+    label: 'Validate selected option on keyboard interaction',
   },
   parameters: {
     formik: {
@@ -196,6 +195,7 @@ export const NoErrorWhileFocus: Story = {
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole('radiogroup');
 
     const firstRadio = await canvas.findByLabelText('Sherlock');
     firstRadio.focus();
@@ -204,6 +204,10 @@ export const NoErrorWhileFocus: Story = {
     const secondRadio = canvas.getByLabelText('Watson');
     expect(secondRadio).toBeChecked();
     expect(secondRadio).toHaveFocus();
+
+    // Expect validation to trigger while the radio input still has focus
+    expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+    expect(await canvas.findByText('Always invalid')).toBeVisible();
   },
 };
 
