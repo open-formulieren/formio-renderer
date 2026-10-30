@@ -1,5 +1,33 @@
 # Changes
 
+## 2.0.7 (2026-10-30)
+
+Bugfix release.
+
+- [`#399`][#399] Fixed checkbox/radio interaction not retriggering validation immediately, which
+  could lead to confusing disabled submit button states.
+- [`OF#6880`][OF#6880] Fixed selectboxes accidentally displaying parts of the error message when
+  numeric-looking option values are used.
+- Fixed the `softRequiredErrors` component displaying for hidden fields inside `editgrid`
+  components.
+
+[#399]: https://github.com/open-formulieren/formio-renderer/issues/399
+[OF#6880]: https://github.com/open-formulieren/open-forms/issues/6880
+
+## 1.8.8 (2026-10-30)
+
+Bugfix release.
+
+- [`#399`][#399] Fixed checkbox/radio interaction not retriggering validation immediately, which
+  could lead to confusing disabled submit button states.
+- [`OF#6880`][OF#6880] Fixed selectboxes accidentally displaying parts of the error message when
+  numeric-looking option values are used.
+- Fixed the `softRequiredErrors` component displaying for hidden fields inside `editgrid`
+  components.
+
+[#399]: https://github.com/open-formulieren/formio-renderer/issues/399
+[OF#6880]: https://github.com/open-formulieren/open-forms/issues/6880
+
 ## 2.0.6 (2026-10-27)
 
 Bugfix release.
