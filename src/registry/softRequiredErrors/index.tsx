@@ -6,7 +6,7 @@ import {useMemo} from 'react';
 import Icon from '@/components/icons';
 import {getComponentsMap} from '@/formio';
 import {useFormSettings} from '@/hooks';
-import type {RegistryEntry, RenderComponentProps} from '@/registry/types';
+import type {RegistryEntry, RenderComponentProps, VisibilityContext} from '@/registry/types';
 import type {JSONObject} from '@/types';
 import {processVisibility} from '@/visibility';
 
@@ -33,6 +33,12 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
   // Maybe a `useProcessVisibility` hook could solve some of the issues/lighten the
   // workload.
   const missingFields: MissingFields[] = useMemo(() => {
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues,
+      getRegistryEntry,
+      componentsMap,
+    };
     // We only show visible components in the soft-required list.
     const {visibleComponents, updatedValues} = processVisibility(
       components,
@@ -40,12 +46,7 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
       // the error state is irrelevant for this processing, we only need to know which
       // components are visible
       {},
-      {
-        parentHidden: false,
-        initialValues,
-        getRegistryEntry,
-        componentsMap,
-      }
+      visibilityContext
     );
 
     // Filter the list of visible components to the components that are actually
@@ -53,7 +54,7 @@ export const FormioSoftRequiredErrors: React.FC<SoftRequiredErrorsProps> = ({
     const softRequiredComponents = getSoftRequiredComponents(visibleComponents);
 
     // Get the missing/empty soft-required fields, and return them.
-    return getMissingFields(softRequiredComponents, updatedValues, getRegistryEntry);
+    return getMissingFields(softRequiredComponents, updatedValues, visibilityContext);
   }, [components, componentsMap, getRegistryEntry, initialValues, values]);
 
   if (!missingFields.length) {
