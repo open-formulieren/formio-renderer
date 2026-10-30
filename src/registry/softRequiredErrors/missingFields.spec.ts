@@ -12,9 +12,11 @@ import type {
 } from '@open-formulieren/types';
 import {describe, expect, test} from 'vitest';
 
+import {getComponentsMap} from '@/formio';
 import {getRegistryEntry} from '@/registry';
 import type {JSONObject} from '@/types';
 
+import type {VisibilityContext} from '../types';
 import {getMissingFields, getSoftRequiredComponents} from './missingFields';
 
 const SOFT_REQUIRED_FILE_COMPONENT = {
@@ -552,7 +554,13 @@ describe('getMissingFields', () => {
     const values = {filledInSoftRequiredTextfield: 'some value'};
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, values, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, values, visibilityContext);
     expect(missingFields).toStrictEqual([
       {
         label: 'File upload',
@@ -589,7 +597,13 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, formValues, visibilityContext);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'file',
@@ -635,7 +649,13 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, formValues, visibilityContext);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'file',
@@ -667,7 +687,13 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, formValues, visibilityContext);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.file',
@@ -715,7 +741,13 @@ describe('getMissingFields', () => {
     };
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValues, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, formValues, visibilityContext);
     expect(missingFields).toStrictEqual([
       {
         pathToComponent: 'editgrid.0.nestededitgrid.0.file',
@@ -989,7 +1021,13 @@ test.each([
     const components: AnyComponentSchema[] = [component as unknown as AnyComponentSchema];
 
     const softRequiredComponents = getSoftRequiredComponents(components);
-    const missingFields = getMissingFields(softRequiredComponents, formValue, getRegistryEntry);
+    const visibilityContext: VisibilityContext = {
+      parentHidden: false,
+      initialValues: {},
+      getRegistryEntry,
+      componentsMap: getComponentsMap(components),
+    };
+    const missingFields = getMissingFields(softRequiredComponents, formValue, visibilityContext);
     expect(missingFields).toStrictEqual(expected);
   }
 );
