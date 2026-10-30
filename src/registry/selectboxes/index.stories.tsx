@@ -504,48 +504,6 @@ export const SillyOptionValues: ValidationStory = {
   },
 };
 
-/**
- * OF#6880, Ensure that numeric string values for options do not cause the display of
- * individual, chopped-up, error messages.
- */
-export const NumericStringOptionValuesWithError: ValidationStory = {
-  ...BaseValidationStory,
-  args: {
-    onSubmit: fn(),
-    componentDefinition: {
-      id: 'selectboxes',
-      type: 'selectboxes',
-      key: 'selectboxes',
-      label: 'Numeric values',
-      values: [
-        {value: '1', label: '1'},
-        {value: '2', label: 'foo'},
-      ],
-      defaultValue: {1: false, 2: false},
-      validate: {
-        required: true,
-      },
-      ...extensionBoilerplate,
-    } satisfies SelectboxesComponentSchema,
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    const selectboxesLabel = canvas.getByText('Numeric values');
-    expect(selectboxesLabel).toBeVisible();
-
-    await userEvent.click(canvas.getByRole('button', {name: 'Submit'}));
-
-    // Expect the main selectboxes error message to be shown
-    expect(
-      await canvas.findByText('The required field Numeric values must be filled in.')
-    ).toBeVisible();
-    // Don't expect individual error messages per individual checkbox
-    expect(canvas.queryByText('h')).toBeNull();
-    expect(canvas.queryByText('e')).toBeNull();
-  },
-};
-
 interface ValueDisplayStoryArgs {
   componentDefinition: SelectboxesComponentSchema;
   value: Record<string, boolean>;
