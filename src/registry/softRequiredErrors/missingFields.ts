@@ -4,10 +4,11 @@ import type {
   EditGridComponentSchema,
   FieldsetComponentSchema,
 } from '@open-formulieren/types';
-import {getIn} from 'formik';
+import {getIn, setIn} from 'formik';
 
-import type {GetRegistryEntry} from '@/registry/types';
+import type {VisibilityContext} from '@/registry/types';
 import type {JSONObject} from '@/types';
+import {processVisibility} from '@/visibility';
 
 export interface MissingFields {
   /**
@@ -76,10 +77,11 @@ const LABEL_SEPARATOR = ' > ';
 export const getMissingFields = (
   components: AnyComponentSchema[],
   values: JSONObject,
-  getRegistryEntry: GetRegistryEntry,
+  visibilityContext: VisibilityContext,
   keyPrefix: string[] = [],
   labelPrefix: string[] = []
 ): MissingFields[] => {
+  const {getRegistryEntry} = visibilityContext;
   const missingFields: MissingFields[] = [];
   for (const component of components) {
     const registry = getRegistryEntry(component);
@@ -134,7 +136,13 @@ export const getMissingFields = (
     switch (component.type) {
       case 'fieldset':
         missingFields.push(
-          ...getMissingFields(component.components, values, getRegistryEntry, pathParts, labelParts)
+          ...getMissingFields(
+            component.components,
+            values,
+            visibilityContext,
+            pathParts,
+            labelParts
+          )
         );
         break;
 
@@ -146,7 +154,7 @@ export const getMissingFields = (
                 ...getMissingFields(
                   column.components,
                   values,
-                  getRegistryEntry,
+                  visibilityContext,
                   pathParts,
                   labelParts
                 )
@@ -168,11 +176,29 @@ export const getMissingFields = (
         }
 
         for (let childIndex = 0; childIndex < componentValue.length; childIndex++) {
+          // Make sure to check the visibility of the child components before reporting
+          // on them.
+          const childValues: JSONObject = componentValue[childIndex] ?? {};
+          const {visibleComponents} = processVisibility(
+            component.components,
+            childValues,
+            // the error state is irrelevant for this processing, we only need to know which
+            // components are visible
+            {},
+            {
+              ...visibilityContext,
+              getEvaluationScope: (currentValues: JSONObject): JSONObject => {
+                const result: JSONObject = setIn(values, pathParts.join('.'), currentValues);
+                return result;
+              },
+            }
+          );
+
           missingFields.push(
             ...getMissingFields(
-              component.components,
+              visibleComponents,
               values,
-              getRegistryEntry,
+              visibilityContext,
               [...pathParts, childIndex.toString()],
               [...labelParts, `${component.groupLabel} ${childIndex + 1}`]
             )
