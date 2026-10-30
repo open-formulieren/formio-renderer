@@ -1,7 +1,7 @@
 import {FormField} from '@utrecht/form-field-react';
 import {FormLabel} from '@utrecht/form-label-react';
 import {RadioButton} from '@utrecht/radio-button-react';
-import {useField} from 'formik';
+import {useField, useFormikContext} from 'formik';
 
 export interface RadioOptionProps {
   name: string;
@@ -24,7 +24,8 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   ['aria-describedby']: ariaDescribedBy,
   isReadOnly,
 }) => {
-  const [props] = useField({name, value, type: 'radio'});
+  const {validateField} = useFormikContext();
+  const [props, , {setTouched}] = useField({name, value, type: 'radio'});
 
   return (
     <FormField type="radio" className="utrecht-form-field--openforms">
@@ -34,11 +35,19 @@ const RadioOption: React.FC<RadioOptionProps> = ({
         aria-describedby={ariaDescribedBy}
         aria-readonly={isReadOnly}
         {...props}
-        onChange={e => {
+        onChange={async e => {
           // block form value changes if readonly - radio inputs don't support `readonly`
           // out of the box
           if (isReadOnly) return;
           props.onChange(e);
+
+          // The radio component validation is now triggered on change. This is a
+          // deliberate break from our normal validation trigger (on blur).
+          // This is fine as long as we only support `required` validation on the radio
+          // component. If any other validation is needed, we will require a different
+          // solution.
+          await setTouched(true);
+          await validateField(name);
         }}
         value={value}
       />
