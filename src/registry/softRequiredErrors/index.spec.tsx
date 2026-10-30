@@ -978,6 +978,74 @@ describe('Soft required components nested in editgrid', () => {
       .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
       .not.toBeInTheDocument();
   });
+
+  test('Conditionally hidden empty field is not picked-up by softRequired component', async () => {
+    const onSubmit = vi.fn();
+    const screen = await render(
+      <Form
+        components={[
+          {
+            id: 'editgrid',
+            key: 'editgrid',
+            type: 'editgrid',
+            label: 'Repeating group',
+            groupLabel: 'Group item',
+            hidden: false,
+            disableAddingRemovingRows: false,
+            components: [
+              {
+                id: 'trigger',
+                type: 'checkbox',
+                key: 'trigger',
+                label: 'Trigger',
+              },
+              {
+                id: 'textfield',
+                type: 'textfield',
+                key: 'textfield',
+                label: 'Textfield',
+                openForms: {
+                  // @ts-expect-error soft required on textfield is not officially supported yet
+                  softRequired: true,
+                },
+                conditional: {
+                  show: true,
+                  when: 'editgrid.trigger',
+                  eq: true,
+                },
+              } satisfies TextFieldComponentSchema,
+            ],
+          } satisfies EditGridComponentSchema,
+          {
+            id: 'softRequiredErrors',
+            type: 'softRequiredErrors',
+            key: 'softRequiredErrors',
+            html: `
+        <p>Not all required fields are filled out. That can get expensive!</p>
+
+        {{ missingFields }}
+
+        <p>Are you sure you want to continue?</p>
+          `,
+          } satisfies SoftRequiredErrorsComponentSchema,
+        ]}
+        values={{
+          editgrid: [
+            {
+              trigger: false,
+              textfield: '',
+            },
+          ],
+        }}
+        onSubmit={onSubmit}
+      />
+    );
+
+    await expect.element(screen.getByText('Group item 1', {exact: true})).toBeVisible();
+    await expect
+      .element(screen.getByText('Not all required fields are filled out. That can get expensive!'))
+      .not.toBeInTheDocument();
+  });
 });
 
 describe('Soft required components nested in nested editgrid', () => {
