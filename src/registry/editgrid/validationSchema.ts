@@ -34,7 +34,7 @@ const getValidationSchema: GetValidationSchema<EditGridComponentSchema> = (
     schema = schema.min(1, {message: buildRequiredMessage(intl, {fieldLabel: label})});
   }
 
-  if (maxLength !== undefined) {
+  if (maxLength != null) {
     schema = schema.max(maxLength, {
       message: intl.formatMessage(EDIT_GRID_MAX_LENGTH_MESSAGE, {maxLength}),
     });

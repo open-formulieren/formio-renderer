@@ -50,7 +50,7 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
           label={label}
           placeholder={placeholder}
           showCharCount={showCharCount}
-          maxLength={validate?.maxLength}
+          maxLength={validate?.maxLength ?? undefined}
           autoComplete={autocomplete}
           rows={rows}
           isReadOnly={isReadOnly}
@@ -64,7 +64,7 @@ export const FormioTextarea: React.FC<FormioTextareaProps> = ({componentDefiniti
       {...sharedProps}
       placeholder={placeholder}
       showCharCount={showCharCount}
-      maxLength={validate?.maxLength}
+      maxLength={validate?.maxLength ?? undefined}
       autoComplete={autocomplete}
       rows={rows}
     />

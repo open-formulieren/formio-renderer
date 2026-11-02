@@ -49,7 +49,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
           label={label}
           placeholder={placeholder}
           showCharCount={showCharCount}
-          maxLength={validate?.maxLength}
+          maxLength={validate?.maxLength ?? undefined}
           autoComplete={autocomplete}
           isReadOnly={isReadOnly}
           afterInput={controls}
@@ -62,7 +62,7 @@ export const FormioTextField: React.FC<FormioTextFieldProps> = ({componentDefini
       {...sharedProps}
       placeholder={placeholder}
       showCharCount={showCharCount}
-      maxLength={validate?.maxLength}
+      maxLength={validate?.maxLength ?? undefined}
       autoComplete={autocomplete}
     />
   );

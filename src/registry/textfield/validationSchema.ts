@@ -25,7 +25,7 @@ const getValidationSchema: GetValidationSchema<TextFieldComponentSchema> = (
   let schema: z.ZodFirstPartySchemaTypes = z.string({
     required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
-  if (maxLength !== undefined)
+  if (maxLength != undefined)
     schema = schema.max(maxLength, {
       message:
         errors?.maxLength || intl.formatMessage(TEXTFIELD_MAX_LENGTH_MESSAGE, {field: label}),

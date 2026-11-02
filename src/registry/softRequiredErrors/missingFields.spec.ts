@@ -29,12 +29,11 @@ const SOFT_REQUIRED_FILE_COMPONENT = {
     type: [],
     allowedTypesLabels: [],
   },
-  filePattern: '.jpg',
-  multiple: false,
   openForms: {
     translations: {},
     softRequired: true,
   },
+  validate: {maxLength: 1},
 } satisfies FileComponentSchema;
 
 describe('getSoftRequiredFields', () => {
