@@ -770,7 +770,6 @@ export const SoftRequiredFileComponentInsideEditgridWithLogic: Story = {
             type: 'file',
             label: 'File',
             openForms: {softRequired: true},
-            filePattern: '.pdf',
             file: {
               name: '',
               type: ['application/pdf'],

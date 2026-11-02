@@ -95,7 +95,9 @@ export const useFileUploads = (
       // add error and abort early
       if (maxNumFilesExceeded) {
         const error = intl.formatMessage(TOO_MANY_FILES_ERROR, {
-          maxNumberOfFiles: componentDefinition.maxNumberOfFiles,
+          // the fact we got here implies that validate.maxLength is set to a number,
+          // but we can be better-safe-than-sorry :)
+          maxNumberOfFiles: componentDefinition.validate?.maxLength ?? 1,
         });
         setFieldError(name, error);
         return;

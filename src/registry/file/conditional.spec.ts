@@ -37,7 +37,6 @@ test.each([
         type: ['*'],
         allowedTypesLabels: ['anything'],
       },
-      filePattern: '*',
     };
 
     const result = testConditional(component, compareValue, valueToTest as unknown as JSONValue[]);

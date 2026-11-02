@@ -64,9 +64,10 @@ export const transformReactDropzoneErrors = (
   componentDefinition: FileComponentSchema,
   fileWithErrors: FileRejection
 ): string => {
-  const {fileMaxSize, maxNumberOfFiles, file: fileTypeConfiguration} = componentDefinition;
+  const {fileMaxSize, validate, file: fileTypeConfiguration} = componentDefinition;
   const {errors} = fileWithErrors;
   const {allowedTypesLabels} = fileTypeConfiguration;
+  const maxNumberOfFiles: number | null = validate?.maxLength ?? null;
   return errors
     .map(({code, message}) => {
       // there is an enum of possible error codes, but it could also be any string. We
@@ -219,14 +220,12 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
   const {
     key,
     validate = {},
-    multiple,
     fileMaxSize = '',
-    maxNumberOfFiles,
     file: fileTypeConfiguration,
     errors,
     label,
   } = componentDefinition;
-  const {required} = validate;
+  const {required, maxLength: maxNumberOfFiles} = validate;
 
   const fileSchema = buildFileValidationSchema(
     intl,
@@ -235,10 +234,7 @@ const getValidationSchema: GetValidationSchema<FileComponentSchema> = (
   );
 
   let schema: z.ZodFirstPartySchemaTypes = z.array(fileSchema);
-
-  // TODO: there's a backlog issue to merge/sort out the multiple/maxNumberOfFiles
-  // possibly inconsistencies
-  if (!multiple || maxNumberOfFiles != null) {
+  if (maxNumberOfFiles != null) {
     const limit = maxNumberOfFiles ?? 1;
     schema = schema.max(limit, {
       message: intl.formatMessage(TOO_MANY_FILES_ERROR, {maxNumberOfFiles: limit}),
