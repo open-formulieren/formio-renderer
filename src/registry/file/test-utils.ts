@@ -31,11 +31,9 @@ const MIME_TO_LABEL: Record<ExampleMimeType, string> = {
 
 export const getFileConfiguration = (
   mimeTypes: ExampleMimeType[]
-): Pick<FileComponentSchema, 'file' | 'filePattern'> => {
-  const patternString = mimeTypes.join(',');
+): Pick<FileComponentSchema, 'file'> => {
   const labels = mimeTypes.map(mimeType => MIME_TO_LABEL[mimeType]);
   return {
-    filePattern: patternString,
     file: {
       name: '', // used by the backend as a file name template
       type: mimeTypes,

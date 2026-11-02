@@ -42,7 +42,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
       if (!required && numChecked === 0) return;
 
       // minSelectedCount has prio over required checks
-      if (minSelectedCount !== undefined) {
+      if (minSelectedCount != undefined) {
         if (numChecked < minSelectedCount) {
           ctx.addIssue({
             code: z.ZodIssueCode.too_small,
@@ -63,7 +63,7 @@ const getValidationSchema: GetValidationSchema<SelectboxesComponentSchema> = (
         });
       }
 
-      if (maxSelectedCount !== undefined && numChecked > maxSelectedCount) {
+      if (maxSelectedCount != undefined && numChecked > maxSelectedCount) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
           maximum: maxSelectedCount,

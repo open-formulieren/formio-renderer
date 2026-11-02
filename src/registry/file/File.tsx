@@ -50,15 +50,13 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
     label,
     description,
     tooltip,
-    multiple,
-    maxNumberOfFiles,
     fileMaxSize,
     file: {type},
     validate = {},
     faqItems = [],
   } = componentDefinition;
   const name = useFieldConfig(key);
-  const {required: isRequired = false} = validate;
+  const {required: isRequired = false, maxLength: maxNumberOfFiles} = validate;
   const {getFieldProps, getFieldMeta, getFieldHelpers} = useFormikContext();
   const id = useId();
 
@@ -90,6 +88,7 @@ const Inner: React.FC<InnerProps> = ({componentDefinition, arrayHelpers}) => {
   const invalid = touched && !!fieldError;
   const errorMessageId = fieldError ? `${id}-error-message` : undefined;
 
+  const multiple = maxNumberOfFiles !== 1;
   const maxFilesToSelect = maxNumberOfFiles
     ? Math.max(maxNumberOfFiles - uploads.length, 0)
     : undefined;

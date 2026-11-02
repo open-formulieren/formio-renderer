@@ -28,11 +28,11 @@ const getValidationSchema: GetValidationSchema<NumberComponentSchema> = (
     required_error: errors?.required || buildRequiredMessage(intl, {fieldLabel: label}),
   });
 
-  if (max !== undefined)
+  if (max != null)
     schema = schema.lte(max, {
       message: errors?.max || intl.formatMessage(NUMBER_GREATER_THAN_MAX_MESSAGE, {max}),
     });
-  if (min !== undefined)
+  if (min != null)
     schema = schema.gte(min, {
       message: errors?.min || intl.formatMessage(NUMBER_LESS_THAN_MIN_MESSAGE, {min}),
     });

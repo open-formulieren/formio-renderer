@@ -161,7 +161,7 @@ test('successful uploads are correctly added to the state', async () => {
   vi.useFakeTimers();
   const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
   const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
-  const component: FileComponentSchema = {...BASE_COMPONENT, multiple: true};
+  const component: FileComponentSchema = {...BASE_COMPONENT, validate: {maxLength: null}};
   const uploads: File[] = [
     new File(['dummy'], 'dummy1.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
@@ -198,7 +198,7 @@ test('failed uploads are correctly updated in the state', async () => {
   vi.useFakeTimers();
   const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
   const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL');
-  const component: FileComponentSchema = {...BASE_COMPONENT, multiple: true};
+  const component: FileComponentSchema = {...BASE_COMPONENT, validate: {maxLength: null}};
   const uploads: File[] = [
     new File(['dummy'], 'error.pdf', {type: 'application/pdf'}),
     new File(['dummy'], 'dummy2.pdf', {type: 'application/pdf'}),
@@ -275,7 +275,7 @@ test('process file rejection eagerly', async () => {
 
   const screen = await render(
     <TestComponentContainer
-      componentDefinition={{...BASE_COMPONENT, fileMaxSize: '1 MB', maxNumberOfFiles: 3}}
+      componentDefinition={{...BASE_COMPONENT, fileMaxSize: '1 MB', validate: {maxLength: 3}}}
       simulatedUploads={[upload]}
     />
   );
@@ -307,11 +307,7 @@ test('too-many-files uploaded error clear on new attepts', async () => {
 
   const screen = await render(
     <TestComponentContainer
-      componentDefinition={{
-        ...BASE_COMPONENT,
-        multiple: true,
-        maxNumberOfFiles: 2,
-      }}
+      componentDefinition={{...BASE_COMPONENT, validate: {maxLength: 2}}}
       simulatedUploads={uploads}
     />
   );

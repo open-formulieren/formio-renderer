@@ -123,8 +123,7 @@ export const SingleFileUpload: Story = {
       key: 'my.file',
       label: 'Your file',
       description: 'Click or drag a file to upload.',
-      maxNumberOfFiles: 1,
-      multiple: false,
+      validate: {maxLength: 1},
     } satisfies FileComponentSchema,
   },
   parameters: {
@@ -154,7 +153,7 @@ export const MultipleFilesUpload: Story = {
       key: 'my.file',
       label: 'Your file',
       description: 'Click or drag a file to upload.',
-      multiple: true,
+      validate: {maxLength: null},
     } satisfies FileComponentSchema,
   },
   parameters: {
@@ -190,8 +189,7 @@ export const WithRestrictions: Story = {
       key: 'my.file',
       label: 'Your file',
       description: 'Click or drag a file to upload.',
-      maxNumberOfFiles: 3,
-      multiple: true,
+      validate: {maxLength: 3},
       fileMaxSize: '2 MB',
     } satisfies FileComponentSchema,
   },
@@ -222,8 +220,7 @@ export const MaxFilesLimitReached: Story = {
       key: 'my.file',
       label: 'Your file',
       description: 'Upload button/dropzone not shown if the file limit is reached',
-      maxNumberOfFiles: 3,
-      multiple: true,
+      validate: {maxLength: 3},
     } satisfies FileComponentSchema,
   },
   parameters: {
@@ -383,8 +380,7 @@ export const ValidateMaxSizeAndMaxNumberOfFiles: ValidationStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: true,
-      maxNumberOfFiles: 2,
+      validate: {maxLength: 2},
       fileMaxSize: '3 kB',
     } satisfies FileComponentSchema,
     values: {
@@ -450,8 +446,7 @@ export const ValidateRequired: ValidationStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: false,
-      validate: {required: true},
+      validate: {required: true, maxLength: 1},
     } satisfies FileComponentSchema,
     values: {
       my: {
@@ -481,8 +476,7 @@ export const ValidateRequiredWithCustomErrorMessage: ValidationStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: false,
-      validate: {required: true},
+      validate: {required: true, maxLength: 1},
       errors: {required: 'Custom error message for required'},
     } satisfies FileComponentSchema,
     values: {
@@ -515,7 +509,7 @@ export const ValidateNoPendingOrErroredUploads: ValidationStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: true,
+      validate: {maxLength: null},
     } satisfies FileComponentSchema,
     values: {
       my: {
@@ -570,7 +564,7 @@ export const SingleValueDisplay: ValueDisplayStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: false,
+      validate: {maxLength: 1},
     } satisfies FileComponentSchema,
     value: [
       buildFile({
@@ -596,7 +590,7 @@ export const MultiValueDisplay: ValueDisplayStory = {
       type: 'file',
       key: 'my.file',
       label: 'Your file',
-      multiple: true,
+      validate: {maxLength: null},
     } satisfies FileComponentSchema,
     value: [
       buildFile({

@@ -195,8 +195,7 @@ export const FormioSelectboxes: React.FC<FormioSelectboxesProps> = ({
   const selectedValues = Object.entries(selectboxesState)
     .filter(([, selected]) => selected)
     .map(([value]) => value);
-  const limitReached =
-    maxSelectedCount === undefined ? false : selectedValues.length >= maxSelectedCount;
+  const limitReached = maxSelectedCount == null ? false : selectedValues.length >= maxSelectedCount;
 
   return (
     <Fieldset

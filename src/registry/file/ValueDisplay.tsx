@@ -10,9 +10,10 @@ export interface ValueDisplayProps {
 }
 
 const ValueDisplay: React.FC<ValueDisplayProps> = ({
-  componentDefinition: {multiple = false},
+  componentDefinition: {validate = {}},
   value,
 }) => {
+  const multiple = validate?.maxLength !== 1;
   const normalizedValue = value ?? [];
   if (!normalizedValue.length) return '';
 

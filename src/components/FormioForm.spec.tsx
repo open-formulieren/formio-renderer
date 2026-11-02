@@ -1099,7 +1099,6 @@ describe('Regressions', () => {
                 key: 'file',
                 type: 'file',
                 label: 'File',
-                filePattern: '.pdf',
                 file: {
                   name: '',
                   type: ['application/pdf'],
@@ -1176,7 +1175,6 @@ describe('Regressions', () => {
             key: 'file',
             type: 'file',
             label: 'File',
-            filePattern: 'application/vnd.oasis.opendocument.*',
             file: {
               name: '',
               type: [
@@ -1246,7 +1244,6 @@ describe('Regressions', () => {
             key: 'file',
             type: 'file',
             label: 'File',
-            filePattern: '*',
             file: {
               name: '',
               type: ['*'],

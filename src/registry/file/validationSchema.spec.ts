@@ -132,7 +132,7 @@ describe('file component validation', () => {
   });
 
   test('rejects too many files', () => {
-    const component: FileComponentSchema = {...BASE_COMPONENT, multiple: true, maxNumberOfFiles: 2};
+    const component: FileComponentSchema = {...BASE_COMPONENT, validate: {maxLength: 2}};
     const schema = buildValidationSchema(component);
     // the success state is questionable - the react-dropzone checks for max file selection
     // configuration would already lead to an error state, but the valiation schema is
@@ -170,8 +170,7 @@ describe('file component validation', () => {
         'image/png',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       ]),
-      multiple: true,
-      maxNumberOfFiles: 5,
+      validate: {maxLength: 5},
       fileMaxSize: '10 MB',
     };
     const schema = buildValidationSchema(component);
