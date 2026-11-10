@@ -328,13 +328,12 @@ export const EmptyFileValidation: Story = {
 
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-
     const emptyFile = new File([], 'empty.txt', {type: 'application/pdf'});
     const input = await canvas.findByLabelText('Your file');
 
     await userEvent.upload(input, emptyFile);
 
-    expect(await canvas.findByText('The file is too small.')).toBeVisible();
+    expect(await canvas.findByText('The uploaded file is empty.')).toBeVisible();
   },
 };
 
