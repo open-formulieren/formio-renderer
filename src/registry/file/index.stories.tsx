@@ -309,6 +309,35 @@ export const DisplayFileValidationError: Story = {
   },
 };
 
+export const EmptyFileValidation: Story = {
+  ...MinimalConfiguration,
+  parameters: {
+    ...MinimalConfiguration.parameters,
+    formSettings: {
+      componentParameters: {
+        file: {
+          upload: async () => ({
+            result: 'failed',
+            errors: ['An error.'],
+          }),
+          destroy: async () => {},
+        },
+      } satisfies FormSettings['componentParameters'],
+    },
+  },
+
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const emptyFile = new File([], 'empty.txt', {type: 'application/pdf'});
+    const input = await canvas.findByLabelText('Your file');
+
+    await userEvent.upload(input, emptyFile);
+
+    expect(await canvas.findByText('The file is too small.')).toBeVisible();
+  },
+};
+
 export const SimulateBackendRejection: Story = {
   ...MinimalConfiguration,
   parameters: {

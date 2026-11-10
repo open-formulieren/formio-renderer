@@ -2,8 +2,8 @@ import {Paragraph} from '@utrecht/component-library-react';
 import {clsx} from 'clsx';
 import {fromEvent} from 'file-selector';
 import {useCallback, useMemo, useState} from 'react';
-import {useDropzone} from 'react-dropzone';
 import type {Accept, FileRejection} from 'react-dropzone';
+import {useDropzone} from 'react-dropzone';
 import {FormattedMessage} from 'react-intl';
 
 import FileSize from './FileSize';
@@ -120,6 +120,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
     maxFiles: maxFilesToSelect ?? 0,
     maxSize,
     multiple,
+    minSize: 1,
     onDragEnter: () => {
       setReadyForDrop(true);
     },
