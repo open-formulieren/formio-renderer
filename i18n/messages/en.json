@@ -29,6 +29,11 @@
     "description": "Draw handler polyline tooltip continue.",
     "originalDefault": "Click to continue drawing line"
   },
+  "+gcuZO": {
+    "defaultMessage": "The uploaded file is empty.",
+    "description": "File upload error message: file empty",
+    "originalDefault": "The uploaded file is empty."
+  },
   "+xOWBM": {
     "defaultMessage": "Remove",
     "description": "Edit grid item default remove button label",

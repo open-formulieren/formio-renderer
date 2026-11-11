@@ -20,12 +20,12 @@ permissions: {}
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref_name }}' # unique builds for branch/tag name
-  cancel-in-progress: false  # do not cancel in progress, but only in-between builds
+  cancel-in-progress: false # do not cancel in progress, but only in-between builds
 
 jobs:
   setup:
     name: Set up the build variables
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       # see https://github.com/orgs/community/discussions/26671
       version: ${{ steps.vars.outputs.version }}
@@ -40,13 +40,13 @@ jobs:
 
   storybook:
     name: Create storybook build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
@@ -64,13 +64,13 @@ jobs:
 
   build-package:
     name: Create 'production' build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
@@ -98,13 +98,13 @@ jobs:
 
   prettier:
     name: prettier (code formatting)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
@@ -117,7 +117,7 @@ jobs:
 
   zizmor:
     name: GitHub Actions Security Analysis with zizmor 🌈
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       security-events: write
       contents: read
@@ -133,13 +133,13 @@ jobs:
 
   unit-tests:
     name: Run unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
@@ -160,7 +160,7 @@ jobs:
 
   interaction-tests:
     name: Run Storybook tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - storybook
 
@@ -168,7 +168,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
@@ -193,7 +193,7 @@ jobs:
 
   i18n-check:
     name: Check i18n messages extracted
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -212,7 +212,7 @@ jobs:
           locales: nl
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - storybook
       - unit-tests
@@ -242,7 +242,7 @@ jobs:
 
   chromatic:
     name: Visual regression test with Chromatic
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - storybook
 
@@ -280,7 +280,7 @@ jobs:
 
   publish:
     name: Publish the NPM package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - setup
       - build-package
@@ -303,7 +303,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: 'false'
