@@ -1,6 +1,6 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
-import {ErrorCode} from 'react-dropzone';
 import type {FileRejection} from 'react-dropzone';
+import {ErrorCode} from 'react-dropzone';
 import type {IntlShape} from 'react-intl';
 import {defineMessage} from 'react-intl';
 import {z} from 'zod';
@@ -60,7 +60,7 @@ export const transformReactDropzoneErrors = (
   fileWithErrors: FileRejection
 ): string => {
   const {fileMaxSize, maxNumberOfFiles, file: fileTypeConfiguration} = componentDefinition;
-  const {errors} = fileWithErrors;
+  const {errors, file} = fileWithErrors;
   const {allowedTypesLabels} = fileTypeConfiguration;
   return errors
     .map(({code, message}) => {
@@ -76,6 +76,12 @@ export const transformReactDropzoneErrors = (
           return intl.formatMessage(FILE_TOO_LARGE_ERROR, {fileMaxSize});
         }
         case ErrorCode.FileTooSmall: {
+          if (file.size === 0)
+            return intl.formatMessage({
+              description: 'File upload error message: file empty',
+              defaultMessage: 'The uploaded file is empty.',
+            });
+
           return intl.formatMessage({
             description: 'File upload error message: file too small',
             defaultMessage: 'The file is too small.',
