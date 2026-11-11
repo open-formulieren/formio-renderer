@@ -1,8 +1,8 @@
 import type {FileComponentSchema} from '@open-formulieren/types';
-import {ErrorMessage, FieldArray, Formik} from 'formik';
 import type {ArrayHelpers} from 'formik';
-import {ErrorCode} from 'react-dropzone';
+import {ErrorMessage, FieldArray, Formik} from 'formik';
 import type {FileRejection, FileWithPath} from 'react-dropzone';
+import {ErrorCode} from 'react-dropzone';
 import {IntlProvider} from 'react-intl';
 import {afterEach, expect, test, vi} from 'vitest';
 import {render} from 'vitest-browser-react';
