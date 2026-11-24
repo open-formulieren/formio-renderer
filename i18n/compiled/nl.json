@@ -1458,7 +1458,17 @@
           "value": [
             {
               "type": 0,
-              "value": "Sleep een bestand of klik om een bestand te selecteren."
+              "value": "Sleep een bestand of klik om een bestand toe te voegen. Een bestand mag niet groter zijn dan "
+            },
+            {
+              "children": [
+              ],
+              "type": 8,
+              "value": "fileSize"
+            },
+            {
+              "type": 0,
+              "value": "."
             }
           ]
         },
@@ -1492,27 +1502,23 @@
             },
             {
               "type": 0,
-              "value": " bestanden toe te voegen."
+              "value": " bestanden toe te voegen. Elk bestand mag niet groter zijn dan "
+            },
+            {
+              "children": [
+              ],
+              "type": 8,
+              "value": "fileSize"
+            },
+            {
+              "type": 0,
+              "value": "."
             }
           ]
         }
       },
       "type": 5,
       "value": "multiple"
-    },
-    {
-      "type": 0,
-      "value": " Een bestand mag hoogstens "
-    },
-    {
-      "children": [
-      ],
-      "type": 8,
-      "value": "fileSize"
-    },
-    {
-      "type": 0,
-      "value": " groot zijn."
     }
   ],
   "ixMIBJ": [
