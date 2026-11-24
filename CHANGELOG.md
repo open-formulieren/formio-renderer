@@ -1,5 +1,21 @@
 # Changes
 
+## 2.0.8 (2026-11-24)
+
+Bugfix release.
+
+- [`OF#6896`][OF#6896] Fixed confusing validation error messages for empty/too small files.
+
+[OF#6896]: https://github.com/open-formulieren/open-forms/issues/6896
+
+## 1.8.9 (2026-11-24)
+
+Bugfix release.
+
+- [`OF#6896`][OF#6896] Fixed confusing validation error messages for empty/too small files.
+
+[OF#6896]: https://github.com/open-formulieren/open-forms/issues/6896
+
 ## 2.0.7 (2026-10-30)
 
 Bugfix release.
